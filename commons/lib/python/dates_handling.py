@@ -1,6 +1,8 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
+
+
 def compute_date_forecast_target(date, forecast_time_granularity, forecast_horizon):
     if forecast_time_granularity in ["days", "weeks"]:
         if forecast_time_granularity == "days":
