@@ -1,5 +1,8 @@
 import datetime
 from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
+
+
 
 def compute_date_forecast_target(date, forecast_time_granularity, forecast_horizon):
     if forecast_time_granularity in ["days", "weeks"]:
@@ -112,9 +115,7 @@ def compute_future_date(reference_date, time_unit, time_value):
 
 
 def from_dss_string_date_to_datetime(dss_string_date):
-    return datetime.datetime.strptime(dss_string_date, '%Y-%m-%dT%H:%M:%S.%f%z')
-    #return dateparser.parse(dss_string_date, date_formats=["yyyy-MM-ddTHH:mm:ss.SSS"])
-
+    return parse(dss_string_date)
 
 
 def fatten_time_value(time_value):
