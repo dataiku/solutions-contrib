@@ -1,12 +1,10 @@
 import os
 from flask import Response
-from flask import Flask
 from pathlib import Path
 from flask import Blueprint
 import datetime
 
-
-''''
+'''''
 to enable fetching resources from your web app backend include the following 
 
 
@@ -17,19 +15,18 @@ The route for fetching resources will be declared in flask application
 
 TODO: add possibility to configure cache control by resource type 
 
-''''
+'''''
 
 
 def get_commons_lib_directory():
     for lib_dir in os.environ.get('PYTHONPATH', '').split(os.pathsep):
         if lib_dir.endswith('python/commons'):
             return lib_dir
-    return None 
-       
-            
-fetch_route = Blueprint('fetch_route', __name__)
-sol_commons_lib_dir  = get_commons_lib_directory()
+    return None
 
+
+fetch_route = Blueprint('fetch_route', __name__)
+sol_commons_lib_dir = get_commons_lib_directory()
 
 
 def fetch_resource(lib_path, resource_type, resource_lib_name, resource_version, resource_file_name):
@@ -59,25 +56,32 @@ def fetch_resource(lib_path, resource_type, resource_lib_name, resource_version,
     return {'status': status, 'content': content}
 
 
-@fetch_route.route('/static/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>')
-@fetch_route.route('/static/<resource_type>/<resource_file_name>')
-@fetch_route.route('/static/<resource_file_name>')
-def get_static_resource(resource_file_name, resource_type=None, resource_lib_name=None, resource_version=None):
-    resource = fetch_resource(sol_commons_lib_dir, resource_type, resource_lib_name, resource_version, resource_file_name)
-    file_name, file_extension = os.path.splitext(resource_file_name)
+@fetch_route.route('/fetch/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>')
+def get_static_resource(resource_file_name, resource_type, resource_lib_name=None, resource_version=None):
+    # default response mime type
     mime_type = 'text/html'
-    if resource_type == 'js' or file_extension == 'js':
+
+    # 24h expiration delay
+    cache_days = 30
+
+    # Only allow js and css types under python/commons
+    if resource_type == 'js':
         mime_type = 'text/javascript'
-    elif resource_type == 'css' or file_extension == 'css':
+    elif resource_type == 'css':
         mime_type = 'text/css'
-    elif file_extension == 'js':
-        mime_type = 'text/css'
-        
-    expiry_time = datetime.datetime.utcnow() + datetime.timedelta(1)
+    else:
+        return Response(response='resource type not allowed', status=400, mimetype=mime_type)
+
+    # Fetch the requested resource
+    resource = fetch_resource(sol_commons_lib_dir, resource_type, resource_lib_name, resource_version,
+                              resource_file_name)
+
+    expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)
+
     status = resource['status']
     resp = Response(response=resource['content'], status=status, mimetype=mime_type)
     if status == 200:
         resp.headers['Cache-Control'] = 'public'
-        resp.cache_control.max_age = 86400
+        resp.cache_control.max_age = cache_days * 86400
         resp.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return resp
