@@ -1,154 +1,109 @@
-import os
-from flask import Response
-from pathlib import Path
-from flask import Blueprint
-import datetime
-import numpy as np
+/** 
+ * Copy this file to your application js file to be able to 
+ * fetch whatever static resource by your app backend 
+ **/
+async function load_resources(script_urls, styles_urls) {
+    function load_script(script_url) {
+        return new Promise(function(resolve, reject) {
+            if (load_resources.loaded.has(script_url)) {
+                resolve();
+            } else {
+                var script = document.createElement('script');
+                script.onload = resolve;
+                script.src = script_url
+                document.head.appendChild(script);
+            }
+        });
+    }
+
+    function load_link(style_url) {
+        return new Promise(function(resolve, reject) {
+            if (load_resources.loaded.has(style_url)) {
+                resolve();
+            } else {
+                var link = document.createElement('link');
+                link.onload = resolve;
+                link.href = style_url
+                link.rel = "stylesheet"
+                link.type = "text/css";
+
+                document.head.appendChild(link);
+            }
+        });
+    }
+    var promises = [];
+    for (const script_url of script_urls) {
+        promises.push(load_script(script_url));
+    }
+    for (const style_url of styles_urls) {
+        promises.push(load_link(style_url));
+    }
+    await Promise.all(promises);
+    for (const script_url of script_urls) {
+        load_resources.loaded.add(script_url);
+    }
+    for (const style_url of styles_urls) {
+        load_resources.loaded.add(style_url);
+    }
+}
+
+class BSStaticResources {
+
+    constructor() {
+        load_resources.loaded = new Set();
+        this.fetch_scripts = ['/fetch/commons/js/echarts/5.3.2/echarts.js',
+            '/fetch/commons/js/vue/3.2.33/vue.global.js',
+            '/fetch/commons/js/bootstrap/5.1.3/bootstrap.bundle.min.js'
+        ];
+        this.fetch_links = ['/fetch/commons/css/bootstrap/5.1.3/bootstrap.min.css'];
+    }
+
+    addScripts(my_scripts) {
+        for (const my_script of my_scripts) {
+            this.fetch_scripts.push(my_script)
+        }
+    }
+
+    addLinks(my_links) {
+        for (const my_link of my_links) {
+            this.fetch_links.push(my_link)
+        }
+    }
+
+    run() {
+        (async () => {
+            var scripts_urls = [];
+            var links_urls = [];
+            for (const scr of this.fetch_scripts) {
+                scripts_urls.push(getWebAppBackendUrl(scr))
+            }
+            for (const lnk of this.fetch_links) {
+                links_urls.push(getWebAppBackendUrl(lnk))
+            }
+            await load_resources(scripts_urls, links_urls);
+        })();
+    }
+}
+
+dku_bs_app = new BSStaticResources();
+dku_bs_app.addScripts(['/fetch/commons/js/echarts/5.3.2/echarts.js',
+    '/fetch/commons/js/vue/3.2.33/vue.global.js',
+    '/fetch/commons/js/bootstrap/5.1.3/bootstrap.bundle.min.js'
+])
+dku_bs_app.addLinks(['/fetch/commons/css/bootstrap/5.1.3/bootstrap.min.css'])
 
 
-"""''
-to enable fetching resources from your web app backend include the following 
 
+/** 
+ * add your resources here 
+ * resources should be uploaded into 
+ *     lib/python/project/js/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.js 
+ * and 
+ *.    lib/python/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css
+ *
+ * dku_bs_app.addScripts([/fetch/project/js/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.js])
+ * dku_bs_app.addLinks([/fetch/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css])
+ **/
 
-from commons.python.fetch.static_resources import fetch_route
-app.register_blueprint(fetch_route)
-
-The route for fetching resources will be declared in flask application
-
-TODO: add possibility to configure cache control by resource type 
-
-""" ""
-
-
-def get_lib_python_path():
-    for lib_dir in os.environ.get("PYTHONPATH", "").split(os.pathsep):
-        if lib_dir.endswith("python/commons"):
-            return os.path.dirname(lib_dir)
-    return None
-
-
-def get_granted_directory_list():
-    return np.array(["commons", "project"])
-
-
-def get_granted_resource_type_list():
-    return np.array(["js", "css"])
-
-
-fetch_route = Blueprint("fetch_route", __name__)
-lib_python_path = get_lib_python_path()
-granted_directory_list = get_granted_directory_list()
-resource_type_list = get_granted_resource_type_list()
-
-
-def is_directory_granted(directory):
-    return directory in granted_directory_list
-
-
-def is_resource_type_granted(resource):
-    return resource in resource_type_list
-
-
-def get_resource_mime_type(resource_type):
-    if resource_type == "js":
-        return "text/javascript"
-    elif resource_type == "css":
-        return "text/css"
-    else:
-        return "text/html"
-
-
-def fetch_resource(
-    lib_python_path,
-    resource_directory,
-    resource_type,
-    resource_lib_name,
-    resource_version,
-    resource_file_name,
-):
-    print(
-        " fetching .... \n\t lib_python_path : [{0}] \n\t resource_directory: [{1}] \n\t resource_type: [{2}] \n\t resource_lib_name: [{3}] \n\t resource_version: [{4}] \n\t resource_file_name: [{5}]".format(
-            lib_python_path,
-            resource_directory,
-            resource_type,
-            resource_lib_name,
-            resource_version,
-            resource_file_name,
-        )
-    )
-    path = Path(lib_python_path).joinpath(resource_directory)
-    content = None
-    status = 200
-    if resource_type:
-        path = path.joinpath(resource_type)
-    if resource_lib_name:
-        path = path.joinpath(resource_lib_name)
-    if resource_version:
-        path = path.joinpath(resource_version)
-    path = path.joinpath(resource_file_name)
-    try:
-        with open(path, "rb") as f:
-            content = f.read()
-    except FileNotFoundError as err:
-        status = 404  # not found
-        print("FileNotFoundError: {0}".format(err))
-    except PermissionError as err:
-        print("PermissionError: {0}".format(err))
-        status = 403  # forbidden
-    except OSError as err:
-        print("OSError: {0}".format(err))
-        status = 500  # Generic internal error
-
-    return {"status": status, "content": content}
-
-
-@fetch_route.route(
-    "/fetch/<resource_directory>/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>"
-)
-def get_static_resource(
-    resource_directory,
-    resource_type,
-    resource_lib_name,
-    resource_version,
-    resource_file_name,
-):
-
-    # default response mime type
-    mime_type = get_resource_mime_type(resource_type)
-
-    # check grants
-    if not is_directory_granted(resource_directory):
-        return Response(
-            response="resource directory not allowed {0}".format(resource_directory),
-            status=400,
-            mimetype=mime_type,
-        )
-    if not is_resource_type_granted(resource_type):
-        return Response(
-            response="resource type not allowed{0}".format(resource_type),
-            status=400,
-            mimetype=mime_type,
-        )
-
-    # 24h expiration delay
-    cache_days = 30
-
-    # Fetch the requested resource
-    resource = fetch_resource(
-        lib_python_path,
-        resource_directory,
-        resource_type,
-        resource_lib_name,
-        resource_version,
-        resource_file_name,
-    )
-
-    expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)
-
-    status = resource["status"]
-    resp = Response(response=resource["content"], status=status, mimetype=mime_type)
-    if status == 200:
-        resp.headers["Cache-Control"] = "public"
-        resp.cache_control.max_age = cache_days * 86400
-        resp.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    return resp
+/** run the app to load the scripts and links */
+dku_bs_app.run()

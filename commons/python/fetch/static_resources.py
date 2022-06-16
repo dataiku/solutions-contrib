@@ -67,8 +67,7 @@ def fetch_resource(
     resource_file_name,
 ):
     print(
-        " fetching .... \n\t lib_python_path : [{0}] \n\t resource_directory: [{1}] \n\t resource_type: [{2}] "
-        + "\n\t resource_lib_name: [{3}] \n\t resource_version: [{4}] \n\t resource_file_name: [{5}]".format(
+        " fetching .... \n\t lib_python_path : [{0}] \n\t resource_directory: [{1}] \n\t resource_type: [{2}] \n\t resource_lib_name: [{3}] \n\t resource_version: [{4}] \n\t resource_file_name: [{5}]".format(
             lib_python_path,
             resource_directory,
             resource_type,
