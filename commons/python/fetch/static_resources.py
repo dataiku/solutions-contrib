@@ -1,12 +1,12 @@
 import os
 from flask import Response
-from flask import Flask
 from pathlib import Path
 from flask import Blueprint
 import datetime
+import numpy as np
 
 
-'''''
+"""''
 to enable fetching resources from your web app backend include the following 
 
 
@@ -17,23 +17,67 @@ The route for fetching resources will be declared in flask application
 
 TODO: add possibility to configure cache control by resource type 
 
-'''''
+""" ""
 
 
-def get_commons_lib_directory():
-    for lib_dir in os.environ.get('PYTHONPATH', '').split(os.pathsep):
-        if lib_dir.endswith('python/commons'):
-            return lib_dir
-    return None 
-       
-            
-fetch_route = Blueprint('fetch_route', __name__)
-sol_commons_lib_dir  = get_commons_lib_directory()
+def get_lib_python_path():
+    for lib_dir in os.environ.get("PYTHONPATH", "").split(os.pathsep):
+        if lib_dir.endswith("python/commons"):
+            return os.path.dirname(lib_dir)
+    return None
 
 
+def get_granted_directory_list():
+    return np.array(["commons", "project"])
 
-def fetch_resource(lib_path, resource_type, resource_lib_name, resource_version, resource_file_name):
-    path = Path(lib_path)
+
+def get_granted_resource_type_list():
+    return np.array(["js", "css"])
+
+
+fetch_route = Blueprint("fetch_route", __name__)
+lib_python_path = get_lib_python_path()
+granted_directory_list = get_granted_directory_list()
+resource_type_list = get_granted_resource_type_list()
+
+
+def is_directory_granted(directory):
+    return directory in granted_directory_list
+
+
+def is_resource_type_granted(resource):
+    return resource in resource_type_list
+
+
+def get_resource_mime_type(resource_type):
+    if resource_type == "js":
+        return "text/javascript"
+    elif resource_type == "css":
+        return "text/css"
+    else:
+        return "text/html"
+
+
+def fetch_resource(
+    lib_python_path,
+    resource_directory,
+    resource_type,
+    resource_lib_name,
+    resource_version,
+    resource_file_name,
+):
+    print(
+        " fetching .... \n\t lib_python_path : [{0}] \n\t resource_directory: [{1}] \n\t resource_type: [{2}] "
+        + "\n\t resource_lib_name: [{3}] \n\t resource_version: [{4}] \n\t resource_file_name: [{5}]".format(
+            lib_python_path,
+            resource_directory,
+            resource_type,
+            resource_lib_name,
+            resource_version,
+            resource_file_name,
+        )
+    )
+    path = Path(lib_python_path).joinpath(resource_directory)
     content = None
     status = 200
     if resource_type:
@@ -44,7 +88,7 @@ def fetch_resource(lib_path, resource_type, resource_lib_name, resource_version,
         path = path.joinpath(resource_version)
     path = path.joinpath(resource_file_name)
     try:
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             content = f.read()
     except FileNotFoundError as err:
         status = 404  # not found
@@ -56,35 +100,56 @@ def fetch_resource(lib_path, resource_type, resource_lib_name, resource_version,
         print("OSError: {0}".format(err))
         status = 500  # Generic internal error
 
-    return {'status': status, 'content': content}
+    return {"status": status, "content": content}
 
 
-@fetch_route.route('/fetch/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>')
-def get_static_resource(resource_file_name, resource_type, resource_lib_name=None, resource_version=None):
-    
-    # default response mime type 
-    mime_type = 'text/html'
-    
+@fetch_route.route(
+    "/fetch/<resource_directory>/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>"
+)
+def get_static_resource(
+    resource_directory,
+    resource_type,
+    resource_lib_name,
+    resource_version,
+    resource_file_name,
+):
+
+    # default response mime type
+    mime_type = get_resource_mime_type(resource_type)
+
+    # check grants
+    if not is_directory_granted(resource_directory):
+        return Response(
+            response="resource directory not allowed {0}".format(resource_directory),
+            status=400,
+            mimetype=mime_type,
+        )
+    if not is_resource_type_granted(resource_type):
+        return Response(
+            response="resource type not allowed{0}".format(resource_type),
+            status=400,
+            mimetype=mime_type,
+        )
+
     # 24h expiration delay
     cache_days = 30
-    
-    # Only allow js and css types under python/commons
-    if resource_type == 'js':
-        mime_type = 'text/javascript'
-    elif resource_type == 'css':
-        mime_type = 'text/css'
-    else:
-        return Response(response='resource type not allowed', status=400, mimetype=mime_type)
-    
+
     # Fetch the requested resource
-    resource = fetch_resource(sol_commons_lib_dir, resource_type, resource_lib_name, resource_version, resource_file_name)
-   
+    resource = fetch_resource(
+        lib_python_path,
+        resource_directory,
+        resource_type,
+        resource_lib_name,
+        resource_version,
+        resource_file_name,
+    )
+
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)
-       
-    status = resource['status']
-    resp = Response(response=resource['content'], status=status, mimetype=mime_type)
+
+    status = resource["status"]
+    resp = Response(response=resource["content"], status=status, mimetype=mime_type)
     if status == 200:
-        resp.headers['Cache-Control'] = 'public'
+        resp.headers["Cache-Control"] = "public"
         resp.cache_control.max_age = cache_days * 86400
         resp.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return resp
