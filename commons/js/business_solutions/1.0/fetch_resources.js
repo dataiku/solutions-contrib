@@ -95,8 +95,6 @@ dku_bs_resources.addLinks(['/fetch/commons/css/bootstrap/5.1.3/bootstrap.min.css
  **/
 
 
-dku_bs_resources.addLinks(['/fetch/project/css/webapp/1.0/demos.css'])
-
 /** load business solution resources */
 dku_bs_resources.load_resources().then(console.log(' Business solutions resources loaded '));
 
