@@ -34,7 +34,7 @@ class BSStaticResources {
     }
 
     load_script(my_script, loaded) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             if (loaded.has(my_script)) {
                 resolve();
             } else {
@@ -47,7 +47,7 @@ class BSStaticResources {
     }
 
     load_link(my_link, loaded) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             if (loaded.has(my_link)) {
                 resolve();
             } else {
