@@ -4,9 +4,10 @@ from pathlib import Path
 from flask import Blueprint
 import datetime
 import numpy as np
+import mimetypes
 
 
-"""''
+"""
 to enable fetching resources from your web app backend include the following 
 
 
@@ -17,7 +18,7 @@ The route for fetching resources will be declared in flask application
 
 TODO: add possibility to configure cache control by resource type 
 
-""" ""
+"""
 
 
 def get_lib_python_path():
@@ -32,9 +33,9 @@ def get_granted_directory_list():
 
 
 def get_granted_resource_type_list():
-    return np.array(["js", "css"])
+    return np.array(["js", "css", "images"])
 
-
+mimetypes.init()
 fetch_route = Blueprint("fetch_route", __name__)
 lib_python_path = get_lib_python_path()
 granted_directory_list = get_granted_directory_list()
@@ -49,13 +50,14 @@ def is_resource_type_granted(resource):
     return resource in resource_type_list
 
 
-def get_resource_mime_type(resource_type):
+def get_resource_mime_type(resource_type, resource_file_name):
+    
     if resource_type == "js":
         return "text/javascript"
     elif resource_type == "css":
         return "text/css"
     else:
-        return "text/html"
+        return mimetypes.guess_type(resource_file_name)[0]
 
 
 def fetch_resource(
@@ -99,9 +101,38 @@ def fetch_resource(
         print("OSError: {0}".format(err))
         status = 500  # Generic internal error
 
-    return {"status": status, "content": content}
+    return {"status": status, "mimetype": get_resource_mime_type(resource_type, resource_file_name), "content": content}
 
 
+@fetch_route.route(
+    "/fetch/bs_init"
+)
+def business_solution_init ():
+    # 30d expiration delay
+    cache_days = 30
+
+    # Fetch the requested resource
+    resource = fetch_resource(
+        lib_python_path,
+        "commons",
+        "js",
+        "business_solutions",
+        "1.0",
+        "fetch_resources.js",
+    )
+
+    expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)
+
+    status = resource["status"]
+    resp = Response(response=resource["content"], status=status, mimetype="text/javascript")
+    if status == 200:
+        resp.headers["Cache-Control"] = "public"
+        resp.cache_control.max_age = cache_days * 86400
+        resp.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    return resp
+    
+    
+    
 @fetch_route.route(
     "/fetch/<resource_directory>/<resource_type>/<resource_lib_name>/<resource_version>/<resource_file_name>"
 )
@@ -113,21 +144,19 @@ def get_static_resource(
     resource_file_name,
 ):
 
-    # default response mime type
-    mime_type = get_resource_mime_type(resource_type)
-
+    
     # check grants
     if not is_directory_granted(resource_directory):
         return Response(
             response="resource directory not allowed {0}".format(resource_directory),
             status=400,
-            mimetype=mime_type,
+            mimetype="text/html",
         )
     if not is_resource_type_granted(resource_type):
         return Response(
             response="resource type not allowed{0}".format(resource_type),
             status=400,
-            mimetype=mime_type,
+            mimetype="text/html",
         )
 
     # 24h expiration delay
@@ -146,7 +175,8 @@ def get_static_resource(
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)
 
     status = resource["status"]
-    resp = Response(response=resource["content"], status=status, mimetype=mime_type)
+    mimetype = resource["mimetype"]
+    resp = Response(response=resource["content"], status=status, mimetype=mimetype)
     if status == 200:
         resp.headers["Cache-Control"] = "public"
         resp.cache_control.max_age = cache_days * 86400
