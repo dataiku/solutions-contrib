@@ -12,7 +12,7 @@ class LineGraph(Graph):
         self.y_values = y_values
 
 
-class DashBoard:
+class Dashboard:
     def __init__(self, title, status, graphs):
         self.title = title
         self.status = status
