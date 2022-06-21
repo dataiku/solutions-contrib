@@ -1,6 +1,6 @@
 class Graph:
-    def __init__(self, graph_name, graph_type, dom_id):
-        self.name = graph_name
+    def __init__(self, graph_title, graph_type, dom_id):
+        self.title = graph_title
         self.type = graph_type
         self.dom_id = dom_id
 
