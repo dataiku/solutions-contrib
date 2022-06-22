@@ -7,7 +7,7 @@ class Chart:
 
 
 class XYChart(Chart):
-    def __init__(self, graph_name, graph_type, dom_id, x_type, y_type, series, x_axis_values=None, y_axis_values=None):
+    def __init__(self, graph_name, dom_id, x_type, y_type, series, x_axis_values=None, y_axis_values=None):
         Chart.__init__(self, graph_name, 'XYChart', series, dom_id)
         self.x_type = x_type  # either 'value', 'category', 'time', 'log'
         self.y_type = y_type  # either 'value', 'category', 'time', 'log'
