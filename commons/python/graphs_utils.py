@@ -24,6 +24,19 @@ class LineSeries:
             self.stack = 'Total'
 
 
+class TestDataset:
+    def __init__(self, legend_name, dataset, series, stack=None):
+        self.legend_name = legend_name
+        self.dataset = dataset,
+        self.series = series,
+
+
+class DatasetSeries:
+    def __init__(self, series_type, encode_json=None):
+        self.type = series_type
+        self.encode = encode_json
+
+
 class Dashboard:
     def __init__(self, title, charts):
         self.title = title
