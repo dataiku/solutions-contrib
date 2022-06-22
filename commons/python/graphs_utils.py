@@ -1,3 +1,9 @@
+class Dashboard:
+    def __init__(self, title, charts):
+        self.title = title
+        self.charts = charts
+
+
 class Chart:
     def __init__(self, graph_title, canvas_type, series, dom_id):
         self.title = graph_title
@@ -15,29 +21,23 @@ class XYChart(Chart):
         self.y_axis_values = y_axis_values
 
 
-class LineSeries:
-    def __init__(self, legend_name, data, stack=None):
+class Series:
+    def __init__(self, data, legend_name=None):
         self.legend_name = legend_name
-        self.type = 'line'
         self.data = data
+
+
+class LineSeries(Series):
+    def __init__(self, data, legend_name=None, stack=None):
+        Series.__init__(self, data, legend_name)
+        self.type = 'line'
         if stack is not None:
             self.stack = 'Total'
 
 
-class TestDataset:
-    def __init__(self, legend_name, dataset, series, stack=None):
-        self.legend_name = legend_name
-        self.dataset = dataset,
-        self.series = series,
-
-
-class DatasetSeries:
-    def __init__(self, series_type, encode_json=None):
-        self.type = series_type
-        self.encode = encode_json
-
-
-class Dashboard:
-    def __init__(self, title, charts):
-        self.title = title
-        self.charts = charts
+class BarSeries(Series):
+    def __init__(self, data, legend_name=None, stack=None):
+        Series.__init__(self, data, legend_name)
+        self.type = 'bar'
+        if stack is not None:
+            self.stack = 'Total'
