@@ -61,7 +61,7 @@ class BSStaticResources {
         });
     }
 
-    async load_resources() {
+    async load_resources(callback) {
         var promises = [];
         for (const my_script of this.fetch_scripts) {
             promises.push(this.load_script(my_script, this.loaded));
@@ -76,7 +76,16 @@ class BSStaticResources {
         for (const my_link of this.fetch_links) {
             this.loaded.add(my_link);
         }
-    }
+        //wait for echarts to be available 
+        var interval = setInterval(function() {
+            if (typeof echarts == 'undefined') {
+                console.log('echarts object not yet defined, waiting')
+                return;
+            }
+            clearInterval(interval);
+            callback();
+        }, 10);
+     }
 }
 
 dku_bs_resources = new BSStaticResources();
@@ -88,6 +97,7 @@ dku_bs_resources = new BSStaticResources();
  * and 
  *.    lib/python/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css
  *
+ * a callback is to be provided to load_resources and it will be called back once resources are loaded and libs are initialized
     var bs_init_script = document.createElement("script");
     bs_init_script.type = "text/javascript";
     bs_init_script.src = getWebAppBackendUrl('/fetch/commons/js/business_solutions/1.0/fetch_resources.js');
@@ -96,7 +106,7 @@ dku_bs_resources = new BSStaticResources();
     // Add your own resources
     dku_bs_resources.addLinks(['/fetch/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css'])
     // Load resources
-    dku_bs_resources.load_resources().then(console.log(' Business solutions resources loaded '));
+    dku_bs_resources.load_resources(callback).then(console.log(' Business solutions resources loaded '));
  **/
 
 
