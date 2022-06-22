@@ -5,15 +5,17 @@ class Dashboard:
 
 
 class Chart:
-    def __init__(self, graph_title, series, dom_id, chart_type=None, graph_subtitle=None):
+    def __init__(self, graph_title, chart_type, series, dom_id, graph_subtitle=None):
         self.title = graph_title
         self.subtitle = graph_subtitle
         self.dom_id = dom_id
         self.series = series
-        if chart_type is not None:
-            self.type = chart_type
-        else:
-            self.type = 'base'
+        self.type = chart_type
+
+
+class BaseChart(Chart):
+    def __init__(self, graph_name, dom_id, series, graph_subtitle=None):
+        Chart.__init__(self, graph_name, 'BaseChart', series, dom_id, graph_subtitle)
 
 
 class XYChart(Chart):
