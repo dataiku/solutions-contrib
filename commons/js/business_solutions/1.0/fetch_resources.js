@@ -97,7 +97,9 @@ dku_bs_resources = new BSStaticResources();
  * and 
  *.    lib/python/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css
  *
+
  * a callback is to be provided to load_resources and it will be called back once resources are loaded and libs are initialized
+
     var bs_init_script = document.createElement("script");
     bs_init_script.type = "text/javascript";
     bs_init_script.src = getWebAppBackendUrl('/fetch/commons/js/business_solutions/1.0/fetch_resources.js');
@@ -107,6 +109,7 @@ dku_bs_resources = new BSStaticResources();
     dku_bs_resources.addLinks(['/fetch/project/css/MY_LIB_NAME/MY_LIB_VERSION/MY_FILE.css'])
     // Load resources
     dku_bs_resources.load_resources(callback).then(console.log(' Business solutions resources loaded '));
+
  **/
 
 
