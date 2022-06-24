@@ -52,6 +52,8 @@ class BarSeries(Series):
 
 class PieSeries(Series):
     def __init__(self, slice_names, slice_values):
-        data = {"name": slice_names, "value": slice_values}
+        data = [{'name': slice_names[i], 'value': slice_values[i]} for i in range(len(slice_names))]
         Series.__init__(self, data)
         self.type = 'pie'
+        self.radius = '50%'
+        self.minShowLabelAngle = '5'
