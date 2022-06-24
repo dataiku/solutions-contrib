@@ -37,6 +37,7 @@ class Series:
 class LineSeries(Series):
     def __init__(self, data, legend_name=None, stack=None):
         Series.__init__(self, data, legend_name)
+        # data is either [x, y, ..], or [[x, y], ..]
         self.type = 'line'
         if stack is not None:
             self.stack = 'Total'
@@ -45,6 +46,7 @@ class LineSeries(Series):
 class BarSeries(Series):
     def __init__(self, data, legend_name=None, stack=None):
         Series.__init__(self, data, legend_name)
+        # data is either [x, y, ..], or [[x, y], ..]
         self.type = 'bar'
         if stack is not None:
             self.stack = 'Total'
@@ -57,3 +59,11 @@ class PieSeries(Series):
         self.type = 'pie'
         self.radius = '50%'
         self.minShowLabelAngle = '5'
+
+
+class TreeMapSeries(Series):
+    def __init__(self, data, slice_values):
+        # data is either [{name: XX, value : y, children [{name: XX, value : y, ..}]}, ..]
+        Series.__init__(self, data)
+        self.type = 'treemap'
+        self.visibleMin = '300'
