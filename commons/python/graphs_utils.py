@@ -1,27 +1,34 @@
 class Dashboard:
-    def __init__(self, title, charts):
+    def __init__(self, title, charts, id=None):
         self.title = title
         self.charts = charts
+        if id is not None:
+            self.id = id
+        else:
+            self.id = ''.join(e for e in self.title if e.isalnum())
 
 
 class Chart:
-    def __init__(self, graph_title, chart_type, series, dom_id, graph_subtitle=None):
+    def __init__(self, graph_title, chart_type, series, id=None, graph_subtitle=None):
         self.title = graph_title
         self.subtitle = graph_subtitle
-        self.dom_id = dom_id
         self.series = series
         self.type = chart_type
+        if id is not None:
+            self.id = id
+        else:
+            self.id = ''.join(e for e in self.title if e.isalnum())
 
 
 class BaseChart(Chart):
-    def __init__(self, graph_name, dom_id, series, graph_subtitle=None):
-        Chart.__init__(self, graph_name, 'BaseChart', series, dom_id, graph_subtitle)
+    def __init__(self, graph_title, series, id=None, graph_subtitle=None):
+        Chart.__init__(self, graph_title, 'BaseChart', series, id, graph_subtitle)
 
 
 class XYChart(Chart):
-    def __init__(self, graph_name, dom_id, x_type, y_type, series, x_axis_values=None, y_axis_values=None,
+    def __init__(self, graph_title, x_type, y_type, series, x_axis_values=None, y_axis_values=None, id=None,
                  graph_subtitle=None):
-        Chart.__init__(self, graph_name, 'XYChart', series, dom_id, graph_subtitle)
+        Chart.__init__(self, graph_title, 'XYChart', series, id, graph_subtitle)
         self.x_type = x_type  # either 'value', 'category', 'time', 'log'
         self.y_type = y_type  # either 'value', 'category', 'time', 'log'
         self.x_axis_values = x_axis_values
