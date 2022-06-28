@@ -1,3 +1,5 @@
+
+
 /** load business solution resources */
 dku_bs_resources.load_resources(run()).then(console.log(' Business solutions resources loaded '));
 
@@ -5,7 +7,7 @@ dku_bs_resources.load_resources(run()).then(console.log(' Business solutions res
 function run(){
 
     setTimeout(function(){
-        $.getJSON(getWebAppBackendUrl('getData'), function(dashboard) {
+        $.getJSON(getWebAppBackendUrl('/getData'), function(dashboard) {
             console.log("this is running now");
             charts_generator.createOrUpdateDashboard(dashboard);
         });

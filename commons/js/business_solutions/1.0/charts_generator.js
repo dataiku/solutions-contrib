@@ -54,6 +54,10 @@ class ChartsGenerator{
                 console.log("creating BaseChart chart");
                 return this.createBaseChart(chart);
                 break;
+            case "MapChart":
+                console.log("creating MapChart chart");
+                return this.createMapChart(chart);
+                break;
             default:
                 break;
         }
@@ -117,6 +121,31 @@ class ChartsGenerator{
                 show: true,
                 data: chart.y_axis_values
             }],
+            series: chart.series
+        }
+    
+        myChart.setOption(option);
+        return myChart;
+    }
+
+    createMapChart(chart){
+        echarts.registerMap(chart.map_id, { geoJson: chart.geo_json });
+        var chartDom = document.getElementById(chart.id);
+        var myChart = echarts.init(chartDom);
+        
+        console.log("map_id : " + chart.map_id)
+        var option = {
+            title: {
+                text: chart.title,
+                subtext: chart.subtitle,
+                left: "center"
+            },
+            visualMap: {
+                min: chart.min,
+                max: chart.max,
+                realtime: false,
+                calculable: true
+            },
             series: chart.series
         }
     
