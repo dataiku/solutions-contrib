@@ -1,0 +1,16 @@
+<html>
+<head>
+    <link rel="stylesheet" href="./../../business_solutions/bs_style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script id="mock_dss">
+        function getWebAppBackendUrl(path){
+            path = path.replace('/fetch/commons', '');
+            return "http://localhost:81" + path;
+        }
+    </script>
+    <script src="./../../business_solutions/1.0/fetch_resources.js"></script>
+    <script src="./../../business_solutions/1.0/charts_generator.js"></script>
+
+    <script src="webapp.js"></script>
+</head>
+</html>

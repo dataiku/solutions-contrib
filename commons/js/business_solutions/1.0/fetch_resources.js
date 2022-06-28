@@ -82,12 +82,14 @@ class BSStaticResources {
                 console.log('echarts object not yet defined, waiting')
                 return;
             }
+            console.log("finished loading, calling callback");
             clearInterval(interval);
             callback();
         }, 10);
      }
 }
 
+console.log("creating dku resources");
 dku_bs_resources = new BSStaticResources();
 
 /** 
