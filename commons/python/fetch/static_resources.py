@@ -25,6 +25,12 @@ def get_lib_python_path():
     for lib_dir in os.environ.get("PYTHONPATH", "").split(os.pathsep):
         if lib_dir.endswith("python/commons"):
             return os.path.dirname(lib_dir)
+        # this is for vscode
+        if lib_dir.endswith("solutions-contrib"):
+            return lib_dir
+         # this is for vscode
+        if lib_dir.endswith("pqc"):
+            return lib_dir
     return None
 
 
