@@ -28,9 +28,7 @@ def get_lib_python_path():
         # this is for vscode
         if lib_dir.endswith("solutions-contrib"):
             return lib_dir
-         # this is for vscode
-        if lib_dir.endswith("pqc"):
-            return lib_dir
+         
     return None
 
 
