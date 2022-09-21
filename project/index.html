@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <script src="{{ lib_url }}/commons/js/vue/3.2.33/vue.global.js"></script>
+        <script type="module" src="{{ lib_url }}/project/app.js"></script>
+        <link rel="stylesheet" href="{{ lib_url}}/project/index.css">
     </head>
     <body>
         <h1>Welcome to test Infra !</h1>
+        <div id="app">
+            <button @click="count++">[[ count ]]</button>
+        </div>
+        <img src="{{ lib_url }}/commons/images/business_solutions/1.0/dku-business-solutions.png" alt="BS">
+        <div class="bs-logo"></div>
     </body>
 </html>

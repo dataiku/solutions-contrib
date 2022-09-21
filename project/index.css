@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+
+
+.bs-logo {
+    background-image: url("../commons/images/business_solutions/1.0/dku-business-solutions.png");
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+}
