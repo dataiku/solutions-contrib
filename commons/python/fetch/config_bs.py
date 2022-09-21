@@ -56,6 +56,7 @@ class ConfigBs(object):
         lib_url = None
         if cls.__get_env_mode() == EnvMode.DSS.value:
             lib_url = request.url_root + request.args.get(cls.arg_url_name)[1:] + dir_name
+            lib_url = lib_url.replace("http","https")
         else:
             lib_url = request.url_root + dir_name
         
