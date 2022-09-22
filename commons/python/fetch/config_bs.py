@@ -78,6 +78,10 @@ class ConfigBs(object):
     def lib_backend_url(cls, request):
         return cls.__get_lib_backend_url(request)
     
+    @classmethod
+    def mode(cls):
+        return cls.__get_env_mode()
+    
 
 
 if __name__ == "__main__":

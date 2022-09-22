@@ -3,6 +3,7 @@ import os
 import datetime
 import logging
 from .config_bs import ConfigBs
+from .vite_utils import make_vite_header_tag, after_request
 
 
 ## Setup logger
@@ -12,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 fetch_route =  Blueprint("fetch_route", __name__,template_folder=ConfigBs.template_folder(),static_folder=ConfigBs.static_folder())
-
+fetch_route.app_template_global("vite_header_tags")(make_vite_header_tag)
+fetch_route.after_request(after_request)
 
 @fetch_route.route('/fetch/bs_init')
 def init_project():
