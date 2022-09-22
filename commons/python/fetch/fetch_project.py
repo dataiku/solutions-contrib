@@ -3,7 +3,7 @@ import os
 import datetime
 import logging
 from .config_bs import ConfigBs
-from .vite_utils import make_vite_header_tag, after_request
+from .vite_utils import make_vite_header_tag
 
 
 ## Setup logger
@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 fetch_route =  Blueprint("fetch_route", __name__,template_folder=ConfigBs.template_folder(),static_folder=ConfigBs.static_folder())
 fetch_route.app_template_global("vite_header_tags")(make_vite_header_tag)
-fetch_route.after_request(after_request)
 
 @fetch_route.route('/fetch/bs_init')
 def init_project():
@@ -36,12 +35,16 @@ def init_project():
     else:
         logger.error("file index.html not found")
         status = 404 # Not found
-    
+    tag = make_vite_header_tag(lib_url)
     resource = {"status": status, "mimetype": "text/html", "content": content}
     cache_days = 30
     expiry_time = datetime.datetime.utcnow() + datetime.timedelta(cache_days)    
     status = resource["status"]
     response = make_response(render_template("index.html", lib_url=lib_url))
+    body = b"".join(response.response).decode()
+    body = body.replace("</head>", f"{tag}\n</head>")
+    response.response = [body.encode("utf8")]
+    response.content_length = len(response.response[0])
     if status == 200:
         response.headers["Cache-Control"] = "public"
         response.cache_control.max_age = cache_days * 86400

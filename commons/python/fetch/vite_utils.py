@@ -1,31 +1,38 @@
 from textwrap import dedent
 from flask import Response
+from .config_bs import ConfigBs, EnvMode
+from os.path import join, exists
+import json
 
 
-def make_vite_header_tag():
-    # TODO : ADD tags in prod mode
-    return dedent(
-        """
-            <!-- FLASK_VITE_HEADER -->
-            <script type="module" src="http://localhost:5173/@vite/client"></script>
-            <script type="module" src="http://localhost:5173/main.js"></script>
-        """
-    )
+def make_vite_header_tag(lib_url):
+    mode = ConfigBs.mode()
+    if mode == EnvMode.LOCAL.value:
+        return dedent(
+            """
+                <!-- FLASK_VITE_HEADER -->
+                <script type="module" src="http://localhost:5173/@vite/client"></script>
+                <script type="module" src="http://localhost:5173/main.js"></script>
+            """
+        ) 
+    else:
+        dir_path = ConfigBs.static_folder()
+        json_manifest_path = join(dir_path,"project","dist","manifest.json")
+        if exists(json_manifest_path):
+            with open(json_manifest_path,"r") as f:
+                manifest_obj = json.load(f)
+                main_js = manifest_obj['main.js']['file']
+                main_css = manifest_obj['main.css']['file']
+                main_js_path_str = f"{lib_url}/" + "project/dist/" + main_js
+                main_css_path_str = f"{lib_url}/" + "project/dist/" + main_css
 
-def after_request(response : Response):
-    if response.status_code != 200:
-            return response
 
-    mimetype = response.mimetype or ""
-    if not mimetype.startswith("text/html"):
-        return response
-    
-    if not isinstance(response.response, list):
-        return response
-    
-    body = b"".join(response.response).decode()
-    tag = make_vite_header_tag()
-    body = body.replace("</head>", f"{tag}\n</head>")
-    response.response = [body.encode("utf8")]
-    response.content_length = len(response.response[0])
-    return response
+            return  dedent(
+                f"""
+                    <!-- Production -->
+                    <link rel="stylesheet" href="{main_css_path_str}" />
+                    <script type="module" src="{main_js_path_str}"></script>
+                    
+                """
+            )
+        return ""
