@@ -2,9 +2,15 @@
 
 
 
-.bs-logo {
-    background-image: url("../commons/images/business_solutions/1.0/dku-business-solutions.png");
+#bs-logo {
+    background-image: url("./resources/background.png");
     background-size: cover;
     width: 100px;
     height: 100px;
+}
+
+#app {
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
 }

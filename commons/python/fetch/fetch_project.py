@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, make_response, render_template, request
+from flask import Blueprint, Response, make_response, render_template, request, send_from_directory, url_for, current_app
 import os
 import datetime
 import logging
@@ -51,6 +51,9 @@ def init_project():
         response.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return response
 
+# @fetch_route.route('/assets/<path:path>')
+# def send_asset(path):
+#     return send_from_directory(ConfigBs.static_folder(),path)
 
         
 

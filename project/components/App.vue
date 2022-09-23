@@ -2,20 +2,25 @@
     <div id="myApplication">
       <h1>Hello World</h1>
       <p>This is great</p>
+      <img :src="image"/>
+      <div id="bs-logo"></div>
     </div>
 </template>
   
 <script>
-export default {
-  name: 'app'
-}
-</script>
+  // const image = new URL('../resources/dku-business-solutions.png',import.meta.url).href
   
-<style>
-#app {
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  import image from "../resources/dku-business-solutions.png"
+  import style from "../index.css"
+  export default {
+    name: 'app',
+    data: function () {
+            return {
+                image: image,
+            }
+    }
+  }
+</script>
+
+
       
