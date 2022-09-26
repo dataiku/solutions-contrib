@@ -59,7 +59,7 @@ class ConfigBs(object):
             lib_url = lib_url.replace("http","https")
 
             ##################################################################### TEMP LINE #######################################################################################
-            if True:
+            if False:
                 lib_url = request.url_root + "solutions-contrib"
         else:
             lib_url = request.url_root + dir_name

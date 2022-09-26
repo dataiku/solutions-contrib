@@ -6,14 +6,11 @@ from .config_bs import ConfigBs
 from .vite_utils import make_vite_header_tag
 
 
-## Setup logger
 logger = logging.getLogger(__name__)
 
-# TODO : Node js server (src / build ) 
 
 
 fetch_route =  Blueprint("fetch_route", __name__,template_folder=ConfigBs.template_folder(),static_folder=ConfigBs.static_folder())
-fetch_route.app_template_global("vite_header_tags")(make_vite_header_tag)
 
 @fetch_route.route('/fetch/bs_init')
 def init_project():
@@ -51,11 +48,6 @@ def init_project():
         response.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return response
 
-# @fetch_route.route('/assets/<path:path>')
-# def send_asset(path):
-#     return send_from_directory(ConfigBs.static_folder(),path)
-
-        
 
 
 
