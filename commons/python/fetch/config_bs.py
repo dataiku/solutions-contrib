@@ -86,8 +86,18 @@ class ConfigBs(object):
     def mode(cls):
         return cls.__get_env_mode()
     
+    @classmethod
+    def get_project_name(cls):
+        root_path = cls.__get_lib_python_path()
+        project_list =  [folder for folder in os.listdir(root_path) if os.path.isdir(os.path.join(root_path,folder)) and not folder.startswith(".") and folder != "commons"]
+        if len(project_list) == 1:
+            return project_list[0]
+        return "project"
+
+    
 
 
 if __name__ == "__main__":
-    print(ConfigBs.static_folder())
-    print(ConfigBs.template_folder())
+    project_name = ConfigBs.get_project_name()
+    print(project_name)
+    
