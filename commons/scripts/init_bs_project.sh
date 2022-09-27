@@ -51,13 +51,16 @@ if [[ "$UPDATE" == "false" ]]; then
     mkdir ./"$ProjectName"
     unzip ./"$ProjectName.zip" -d ./"$ProjectName"
     cd ./"$ProjectName" && \
-    mv -v ./"$source_folder_name"/* . && \
+    mv  ./"$source_folder_name/commons" . && \
+    mv  ./"$source_folder_name/project" . && \
     rm -rf ./"$source_folder_name" && \
     cd ..
     rm ./"$ProjectName.zip"
     mv ./"$ProjectName/project"  ./"$ProjectName/$ProjectName"
+    touch ./"$ProjectName/$ProjectName/.gitignore"
+    echo "*.DS_Store\n*__pycache__\n*.venv\nnode_modules" >> ./"$ProjectName/$ProjectName/.gitignore"
 
-    # TODO : Add moving package.json
+    # TODO : Add moving package.json & renaming project in package.json
 
     cd ./"$ProjectName/$ProjectName" && \
     git init && \
