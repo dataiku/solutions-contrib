@@ -58,7 +58,7 @@ if [[ "$UPDATE" == "false" ]]; then
     rm ./"$ProjectName.zip"
     mv ./"$ProjectName/project"  ./"$ProjectName/$ProjectName"
     touch ./"$ProjectName/$ProjectName/.gitignore"
-    echo "*.DS_Store\n*__pycache__\n*.venv\nnode_modules" >> ./"$ProjectName/$ProjectName/.gitignore"
+    echo "*.DS_Store\n*__pycache__*\n.venv\nnode_modules" >> ./"$ProjectName/$ProjectName/.gitignore"
 
     # TODO : Add moving package.json & renaming project in package.json
 
