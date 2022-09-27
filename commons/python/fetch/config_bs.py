@@ -12,7 +12,7 @@ class EnvMode(Enum):
 
 class ConfigBs(object):
 
-    project_folder_name = "project"
+    # project_folder_name = "project"
     html_file_name = "index.html"
     arg_url_name = "URL"
 
@@ -33,9 +33,18 @@ class ConfigBs(object):
         return dirname(dirname(dirname(dirname(abspath(__file__)))))
     
     @classmethod
+    def __get_project_name(cls):
+        root_path = cls.__get_lib_python_path()
+        project_list =  [folder for folder in os.listdir(root_path) if os.path.isdir(os.path.join(root_path,folder)) and not folder.startswith(".") and folder != "commons"]
+        if len(project_list) == 1:
+            return project_list[0]
+        return "project"
+
+    @classmethod
     def __get_project_entry_file(cls):
         python_path = cls.__get_lib_python_path()
-        project_dir = join(python_path,cls.project_folder_name)
+        project_folder_name = cls.__get_project_name()
+        project_dir = join(python_path,project_folder_name)
         file_dir = join(project_dir,cls.html_file_name)
         if exists(file_dir):
             return file_dir
@@ -88,11 +97,7 @@ class ConfigBs(object):
     
     @classmethod
     def get_project_name(cls):
-        root_path = cls.__get_lib_python_path()
-        project_list =  [folder for folder in os.listdir(root_path) if os.path.isdir(os.path.join(root_path,folder)) and not folder.startswith(".") and folder != "commons"]
-        if len(project_list) == 1:
-            return project_list[0]
-        return "project"
+        return cls.__get_project_name()
 
     
 
