@@ -32,13 +32,3 @@ git branch -M main && \
 git remote add origin "$remote_git_url" && \
 git push -u origin main
 
-
-# Install dependencies
-## Intall Node & npm 
-
-
-
-## Install python & virtualenv setup 
-
-
-

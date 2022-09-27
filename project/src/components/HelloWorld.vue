@@ -10,7 +10,7 @@
 </template>
   
 <script>
-  import image from "@/_shared/resources/images/bs-logo.png"
+  import image from "@/commons/_shared/resources/images/bs-logo.png"
   export default {
     name: 'app',
     data: function () {
@@ -20,5 +20,5 @@
     }
   }
 </script>
-<style scoped src="@/src/assets/css/helloworld.css">
+<style scoped src="@/project/src/assets/css/helloworld.css">
 </style>
