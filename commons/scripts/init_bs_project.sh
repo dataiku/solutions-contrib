@@ -8,6 +8,8 @@ read -p "Enter your project name:"  projectname
 read -p "Enter your remote git url for this project:" remote_git_url
 
 
+
+
 # download zip 
 wget "$source_zip" -O "$projectname-root.zip"
 

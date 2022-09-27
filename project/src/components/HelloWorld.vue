@@ -20,5 +20,5 @@
     }
   }
 </script>
-<style scoped src="@/project/src/assets/css/helloworld.css">
+<style scoped src="../assets/css/helloworld.css">
 </style>
