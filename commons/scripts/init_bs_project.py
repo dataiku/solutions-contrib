@@ -123,7 +123,7 @@ class ProjectInstance(object):
         ######## Create git repo if not exists ##############
         is_repo_present = is_git_repo(os.path.join(os.getcwd(),self.projects_repo_name),self.projects_git_repo)
         if not is_repo_present:
-            repo = git.Repo.clone_from(self.projects_git_repo,to_path=os.path.join(os.getcwd(),self.projects_repo_name),no_checkout=True,filter="blob:none")
+            repo = git.Repo.clone_from(self.projects_git_repo,to_path=os.path.join(os.getcwd(),self.projects_repo_name),no_checkout=True)
         else:
             repo = git.Repo.init(os.path.join(os.getcwd(),self.projects_repo_name))
 
@@ -165,19 +165,19 @@ class ProjectInstance(object):
 
 
         repo.git.execute(
-            ["git","read-tree","-m","-u","HEAD"]
+            ["git","-C",path_to_workspace,"read-tree","-m","-u","HEAD"]
         )
 
         repo.git.execute(
-            ["git","add","."]
+            ["git","-C",path_to_workspace,"add","."]
         )
 
         repo.git.execute(
-            ["git","commit","-m",f"project {self.project_name} added"]
+            ["git","-C",path_to_workspace,"commit","-m",f"project {self.project_name} added"]
         )
         
         repo.git.execute(
-            ["git","push"]
+            ["git","-C",path_to_workspace,"push"]
         )
 
 
