@@ -11,6 +11,9 @@ import io
 import json
 
 
+# TODO : Verify if different projects are checked to other branches, what happens when updating, creating or pulling
+# TODO : Make all pulls and init come from the main branch
+# TODO : Stress test the script
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +106,12 @@ class ProjectInstance(object):
         self.projects_repo_name = get_repo_name_from_url(projects_git_repo)
         self.installation_type = self.get_installation_type()
 
-        self.create_new_project()
+        if self.installation_type == InstallationType.NEW.value:
+            self.create_new_project()
+        elif self.installation_type == InstallationType.UPDATE.value:
+            self.update_commons()
+        else:
+            self.pull_project()
 
     
     
@@ -141,7 +149,7 @@ class ProjectInstance(object):
 
         path_to_deps = os.path.join(path_to_workspace,"project","deps.json")
 
-        assert not os.path.isfile(path_to_deps), "No dependencies file is found"
+        assert os.path.isfile(path_to_deps), "No dependencies file is found"
 
         with open(path_to_deps,"r") as f:
             deps = json.load(f)
@@ -151,7 +159,7 @@ class ProjectInstance(object):
         with open(path_to_deps,"w") as f:
             json.dump(deps,f)
         
-        
+
 
 
 
@@ -222,7 +230,45 @@ class ProjectInstance(object):
 
 
     def pull_project(self):
-        return 
+
+        is_repo_present = is_git_repo(os.path.join(os.getcwd(),self.projects_repo_name),self.projects_git_repo)
+        if not is_repo_present:
+            repo_projects = git.Repo.clone_from(self.projects_git_repo,to_path=os.path.join(os.getcwd(),self.projects_repo_name),no_checkout=True)
+        else:
+            repo_projects = git.Repo.init(os.path.join(os.getcwd(),self.projects_repo_name))
+        
+        repo_projects.git.execute(
+            ["git","config","core.sparsecheckout","true"]
+        )  
+
+        with open(os.path.join(os.getcwd(),self.projects_repo_name,".git","info","sparse-checkout"),"w") as f:
+            f.write(self.project_name + "/")
+        
+        repo_projects.git.execute(
+            ["git","read-tree","-m","-u","HEAD"]
+        )
+
+        repo_projects.git.execute(
+            ["git","pull"]
+        )
+        path_to_workspace = os.path.join(os.getcwd(),self.projects_repo_name,self.project_name)
+        assert os.path.isdir(path_to_workspace), "Project creation failed"
+
+        path_to_deps = os.path.join(path_to_workspace,"project","deps.json")
+
+        assert os.path.isfile(path_to_deps), "No dependencies file is found"
+
+
+        with open(path_to_deps,"r") as f:
+            deps = json.load(f)
+            tag = deps["tag"]
+        
+        tag_url = self.base_zip_url + tag + ".zip"
+        r = requests.get(tag_url,stream=True)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+
+        z.extractall(path_to_workspace,get_members(z,filters=["commons"]))
+ 
     
 
 
