@@ -271,18 +271,6 @@ class ProjectInstance(object):
  
     
 
-
-
-    
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
 
     ORG_NAME = "dataiku"

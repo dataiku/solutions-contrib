@@ -1,10 +1,19 @@
 import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from "path"
+import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
+
 
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      template: { transformAssetUrls }
+    }),
+    quasar({
+      sassVariables: 'src/quasar-variables.sass'
+    })
+  ],
   build: {
     manifest: true,
     rollupOptions: {
