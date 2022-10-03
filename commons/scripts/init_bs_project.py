@@ -116,19 +116,57 @@ class ProjectInstance(object):
         return InstallationType.PULL.value
     
     def update_commons(self):
-        return 
+
+        is_repo_present =  is_git_repo(os.path.join(os.getcwd(),self.projects_repo_name),self.projects_git_repo)
+        assert is_repo_present, "No projects git repo is present"
+
+        path_to_workspace = os.path.join(os.getcwd(),self.projects_repo_name,self.project_name)
+        assert os.path.isdir(path_to_workspace), f"Project {self.project_name} is not present"
+
+        path_to_tmp_dir, repo_tags = create_bare_repo(self.commons_git_repo,depth=False,bare=True)
+        tags = sorted(repo_tags.tags, key=lambda t: t.commit.committed_date)
+        tags = [tag.name for tag in tags]
+        shutil.rmtree(path_to_tmp_dir)
+        
+        assert len(tags) >= 1, "No tag exists on solutions-contrib project"
+
+        latest_tag = tags[-1]
+        tag_url = self.base_zip_url + latest_tag + ".zip"
+        r = requests.get(tag_url,stream=True)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+
+        shutil.rmtree(os.path.join(path_to_workspace,"commons"))
+
+        z.extractall(path_to_workspace,get_members(z,filters=["commons"]))
+
+        path_to_deps = os.path.join(path_to_workspace,"project","deps.json")
+
+        assert not os.path.isfile(path_to_deps), "No dependencies file is found"
+
+        with open(path_to_deps,"r") as f:
+            deps = json.load(f)
+            deps["tag"] = latest_tag
+        
+        os.remove(path_to_deps)
+        with open(path_to_deps,"w") as f:
+            json.dump(deps,f)
+        
+        
+
+
+
 
     def create_new_project(self):
 
         ######## Create git repo if not exists ##############
         is_repo_present = is_git_repo(os.path.join(os.getcwd(),self.projects_repo_name),self.projects_git_repo)
         if not is_repo_present:
-            repo = git.Repo.clone_from(self.projects_git_repo,to_path=os.path.join(os.getcwd(),self.projects_repo_name),no_checkout=True)
+            repo_projects = git.Repo.clone_from(self.projects_git_repo,to_path=os.path.join(os.getcwd(),self.projects_repo_name),no_checkout=True)
         else:
-            repo = git.Repo.init(os.path.join(os.getcwd(),self.projects_repo_name))
+            repo_projects = git.Repo.init(os.path.join(os.getcwd(),self.projects_repo_name))
 
         ####### Add sparse checkout and project folder ########
-        repo.git.execute(
+        repo_projects.git.execute(
             ["git","config","core.sparsecheckout","true"]
         )  
 
@@ -138,8 +176,8 @@ class ProjectInstance(object):
         path_to_workspace = os.path.join(os.getcwd(),self.projects_repo_name,self.project_name)
         assert not os.path.isdir(path_to_workspace), "The project alredy exists in this directory use -u to update commons"
 
-        path_to_tmp_dir, repo = create_bare_repo(self.commons_git_repo,depth=False,bare=True)
-        tags = sorted(repo.tags, key=lambda t: t.commit.committed_date)
+        path_to_tmp_dir, repo_tags = create_bare_repo(self.commons_git_repo,depth=False,bare=True)
+        tags = sorted(repo_tags.tags, key=lambda t: t.commit.committed_date)
         tags = [tag.name for tag in tags]
         shutil.rmtree(path_to_tmp_dir)
         
@@ -164,19 +202,19 @@ class ProjectInstance(object):
             f.write('{}\n{}\n{}\n{}\n{}\n'.format("commons","node_modules","*.DS_Store","*__pycache__*",".venv"))
 
 
-        repo.git.execute(
+        repo_projects.git.execute(
             ["git","-C",path_to_workspace,"read-tree","-m","-u","HEAD"]
         )
 
-        repo.git.execute(
+        repo_projects.git.execute(
             ["git","-C",path_to_workspace,"add","."]
         )
 
-        repo.git.execute(
+        repo_projects.git.execute(
             ["git","-C",path_to_workspace,"commit","-m",f"project {self.project_name} added"]
         )
         
-        repo.git.execute(
+        repo_projects.git.execute(
             ["git","-C",path_to_workspace,"push"]
         )
 
