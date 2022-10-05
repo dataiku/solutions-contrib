@@ -75,3 +75,20 @@ def read_picture_from_managed_folder(project, managed_folder_name, picture_path_
         raise Exception(log_message)
     
     return picture_data
+
+
+def write_bytes_picture_in_managed_folder(project, managed_folder_name, bytes_picture, picture_file_name):
+    """
+    Writes a pickle file in a project managed folder.
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param managed_folder_name: str: Name of the project managed folder.
+    :param bytes_picture: bytes: The picture in 'bytes' format.
+    :param picture_file_name: str: String used for naming the picture file
+        (DISCLAIMER: it should contain the picture file format!).
+    """
+    managed_folder_id = get_managed_folder_id(project, managed_folder_name)
+    managed_folder = dataiku.Folder(managed_folder_id)
+    with managed_folder.get_writer("{}".format(picture_file_name)) as w:
+        w.write(bytes_picture)
+    pass
