@@ -11,6 +11,21 @@ def get_all_flow_dataset_names(project):
     return project_dataset_names
 
 
+def get_flow_input_dataset_names(project):
+    """
+    Retrieves all project input dataset names. 
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+
+    :returns: project_dataset_names: list: List of all project input dataset names.
+    """
+    flow = project.get_flow()
+    flow_graph = flow.get_graph()
+    flow_inputs = flow_graph.get_source_datasets()
+    project_input_dataset_names = [dataiku_dataset.name for dataiku_dataset in flow_inputs]
+    return project_input_dataset_names
+
+
 def get_all_flow_folder_names(project):
     """
     Retrieves all project folder names. 
