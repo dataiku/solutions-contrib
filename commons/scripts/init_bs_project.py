@@ -153,7 +153,7 @@ class ProjectInstance(object):
 
         with open(path_to_deps,"r") as f:
             deps = json.load(f)
-            deps["tag"] = latest_tag
+            deps["commons"]["tag"] = latest_tag
         
         os.remove(path_to_deps)
         with open(path_to_deps,"w") as f:
@@ -203,7 +203,7 @@ class ProjectInstance(object):
         assert os.path.isdir(os.path.join(path_to_workspace,"project")), "No folder project created"
 
         with open(os.path.join(path_to_workspace,"project","deps.json"),"w") as f:
-            json.dump({"tag" : latest_tag},f)
+            json.dump({"commons" : {"tag" : latest_tag}},f)
         
         #### Add .gitignore #####
         with open(os.path.join(path_to_workspace,".gitignore"),"w") as f:
@@ -261,7 +261,7 @@ class ProjectInstance(object):
 
         with open(path_to_deps,"r") as f:
             deps = json.load(f)
-            tag = deps["tag"]
+            tag = deps["commons"]["tag"]
         
         tag_url = self.base_zip_url + tag + ".zip"
         r = requests.get(tag_url,stream=True)
@@ -276,7 +276,7 @@ if __name__ == "__main__":
     ORG_NAME = "dataiku"
     PROJECT_COMMONS = "solutions-contrib"
     COMMONS_GIT_REPO_SSH = "git@github.com:dataiku/solutions-contrib.git"
-    PROJECTS_GIT_REPO_SSH = "git@github.com:anaslaaroussi1/test-repo.git"
+    PROJECTS_GIT_REPO_SSH = "git@github.com:dataiku/solution-projects.git"
     BASE_GIT_URL = "https://github.com/"
     BASE_ZIP_URL = get_base_zip_tag_url(BASE_GIT_URL,ORG_NAME,PROJECT_COMMONS)
 
