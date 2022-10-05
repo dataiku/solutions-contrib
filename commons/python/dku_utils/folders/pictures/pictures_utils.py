@@ -127,13 +127,11 @@ def convert_picture_from_bytes_to_pillow(bytes_picture):
 def convert_picture_from_pillow_to_bytes(pillow_picture, output_picture_file_format):
     """
     Converts a picture in 'pillow' format into a bytes object, with a chosen file format.
-
     :param pillow_picture: PIL.Image.Image: The picture in pillow format.
     :param output_picture_file_format: str: File format associated with the bytes picture.
-
     :returns: bytes_picture: bytes: The picture in 'bytes' format.
     """
-    ALLOWED_IMAGE_FILE_FORMATS = ["png"]
+    ALLOWED_IMAGE_FILE_FORMATS = ["png", "jpeg"]
     if output_picture_file_format not in ALLOWED_IMAGE_FILE_FORMATS:
         log_message = "Picture file format '{}' is not allowed in this function. Allowed picture file formats are '{}'"\
             .format(output_picture_file_format, ALLOWED_IMAGE_FILE_FORMATS)
