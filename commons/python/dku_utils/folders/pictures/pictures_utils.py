@@ -92,15 +92,15 @@ def convert_picture_from_pillow_to_np_array(pillow_picture):
     """
     Converts a picture in 'pillow' format into a numpy object.
 
-    :param pillow_picture: PIL.JpegImagePlugin.JpegImageFile: The picture in pillow format.
+    :param pillow_picture: PIL.Image.Image: The picture in pillow format.
 
     :returns: np_array_picture: numpy.ndarray: The picture in numpy format.
     """
-    if isinstance(pillow_picture, PIL.JpegImagePlugin.JpegImageFile):
+    if isinstance(pillow_picture, PIL.Image.Image):
         np_array_picture = asarray(pillow_picture)
     else:
         log_message = "You can't handle data of type '{}': "\
-        "This function expects to have data of type 'PIL.JpegImagePlugin.JpegImageFile'".format(type(pillow_picture))
+        "This function expects to have data of type 'PIL.Image.Image'".format(type(pillow_picture))
         raise Exception(log_message)
     
     return np_array_picture
@@ -113,7 +113,7 @@ def convert_picture_from_bytes_to_pillow(bytes_picture):
     :param bytes_picture: bytes: The picture in 'bytes' format (as get from the function
         'read_picture_bytes_from_managed_folder' in './folder_pictures.py').
 
-    :returns: pillow_picture: PIL.JpegImagePlugin.JpegImageFile: The picture in pillow format.
+    :returns: pillow_picture: PIL.Image.Image: The picture in pillow format.
     """
     if isinstance(bytes_picture, bytes):
         pillow_picture = Image.open(io.BytesIO(bytes_picture))
@@ -128,7 +128,7 @@ def convert_picture_from_pillow_to_bytes(pillow_picture, output_picture_file_for
     """
     Converts a picture in 'pillow' format into a bytes object, with a chosen file format.
 
-    :param pillow_picture: PIL.JpegImagePlugin.JpegImageFile: The picture in pillow format.
+    :param pillow_picture: PIL.Image.Image: The picture in pillow format.
     :param output_picture_file_format: str: File format associated with the bytes picture.
 
     :returns: bytes_picture: bytes: The picture in 'bytes' format.
@@ -138,13 +138,13 @@ def convert_picture_from_pillow_to_bytes(pillow_picture, output_picture_file_for
         log_message = "Picture file format '{}' is not allowed in this function. Allowed picture file formats are '{}'"\
             .format(output_picture_file_format, ALLOWED_IMAGE_FILE_FORMATS)
         raise Exception(log_message)
-    if isinstance(pillow_picture, PIL.JpegImagePlugin.JpegImageFile):
+    if isinstance(pillow_picture, PIL.Image.Image):
         buffer = io.BytesIO()
         pillow_picture.save(buffer, format=output_picture_file_format)
         bytes_picture = buffer.getvalue()
     else:
         log_message = "You can't handle data of type '{}': "\
-        "This function expects to have data of type 'PIL.JpegImagePlugin.JpegImageFile'".format(type(pillow_picture))
+        "This function expects to have data of type 'PIL.Image.Image'".format(type(pillow_picture))
         raise Exception(log_message)
     return bytes_picture
 
@@ -165,8 +165,6 @@ def get_homothetic_rescale_params(np_array_picture, picture_max_shape):
     :returns: homothetic_rescale_params: dict: The information required to apply the homothetic picture rescaling transform.
     """
     picture_shape = np_array_picture.shape
-    print("Original picture shape : ")
-    print(picture_shape)
     initial_height = picture_shape[0]
     initial_width = picture_shape[1]
     initial_shapes = np.array([initial_height, initial_width])
@@ -174,12 +172,12 @@ def get_homothetic_rescale_params(np_array_picture, picture_max_shape):
         picture_should_be_rescaled = True
         highest_shape = np.max(initial_shapes)
         homothetic_factor = highest_shape / picture_max_shape
-        print("For this picture, homothetic factor will be : {}".format(homothetic_factor))
         final_height = initial_height / homothetic_factor
         final_width = initial_width / homothetic_factor
         final_height = int(final_height)
         final_width = int(final_width)
     else:
+        print("No need for homothetic rescale for this picture ...")
         homothetic_rescale_params = 1.0
         picture_should_be_rescaled = False
         final_height = initial_height
@@ -192,7 +190,6 @@ def get_homothetic_rescale_params(np_array_picture, picture_max_shape):
         "final_width": final_width,
         "final_height": final_height 
     }
-    print("'homothetic_rescale_params' for this picture : {}".format(homothetic_rescale_params))
     return homothetic_rescale_params
 
 
@@ -226,14 +223,14 @@ def homothetic_rescale_pillow_picture(pillow_picture, picture_max_shape):
     Applies a homothetic transform to a picture in 'pillow' format
         (Please see the function 'get_homothetic_rescale_params' to know more about it).
 
-    :param pillow_picture: PIL.JpegImagePlugin.JpegImageFile: The picture in pillow format.
+    :param pillow_picture: PIL.Image.Image: The picture in pillow format.
     :param picture_max_shape: int: Value of the maximum dimension (either height or width) size allowed in the output rescaled picture.
         Example: If 'picture_max_shape' is 100:
             - A 400x200 picture will be rescaled to 100x50
             - A 200x400 picture will be rescaled to 50x100.
             - A 300x100 picture will be rescaled to 100x33
 
-    :returns: pillow_picture_rescaled: PIL.JpegImagePlugin.JpegImageFile: The rescaled image in 'pillow' format.
+    :returns: pillow_picture_rescaled: PIL.Image.Image: The rescaled image in 'pillow' format.
     """
     np_array_picture = convert_picture_from_pillow_to_np_array(pillow_picture)
     homothetic_rescale_params = get_homothetic_rescale_params(np_array_picture, picture_max_shape)
@@ -241,7 +238,7 @@ def homothetic_rescale_pillow_picture(pillow_picture, picture_max_shape):
     if picture_should_be_rescaled:
         final_width = homothetic_rescale_params["final_width"]
         final_height = homothetic_rescale_params["final_height"]
-        pillow_picture_rescaled = pillow_picture.resize((final_height, final_width))
+        pillow_picture_rescaled = pillow_picture.resize((final_width, final_height))
     else:
         pillow_picture_rescaled = pillow_picture
     return pillow_picture_rescaled
