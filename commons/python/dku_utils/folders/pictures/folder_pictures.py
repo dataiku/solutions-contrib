@@ -1,4 +1,3 @@
-
 import dataiku
 from .pictures_utils import (convert_picture_from_bytes_to_pillow,
                              homothetic_rescale_pillow_picture,
