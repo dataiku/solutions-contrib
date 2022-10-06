@@ -1,6 +1,7 @@
 import hashlib
-from ...datasets.dataset_commons import get_dataset_schema, get_dataset_settings_and_dictionary
-from ..connection_commons import get_dataset_in_connection_settings
+from ...datasets.dataset_commons import (get_dataset_schema,
+                                         get_dataset_settings_and_dictionary,
+                                         get_dataset_in_connection_settings)
 
 
 def change_sql_dataset_table(project, dataset_name, table_name):
