@@ -1,7 +1,8 @@
 import re 
-from ...datasets.dataset_commons import get_dataset_schema, get_dataset_settings_and_dictionary
-from ...folders.folder_commons import get_managed_folder_id_with_folder_name
-from ..connection_commons import get_dataset_in_connection_settings
+from ...datasets.dataset_commons import (get_dataset_schema,
+                                         get_dataset_settings_and_dictionary,
+                                         get_dataset_in_connection_settings)
+from ...folders.folder_commons import get_managed_folder_id
 
 
 def change_filesystem_dataset_path(project, dataset_name, path):
@@ -26,7 +27,7 @@ def change_folder_path(project, folder_name, path):
     :param folder_name: str: Name of the folder.
     :param path: str: New folder path.
     """
-    folder_id = get_managed_folder_id_with_folder_name(project, folder_name)
+    folder_id = get_managed_folder_id(project, folder_name)
     folder = project.get_managed_folder(folder_id)
     folder_definition = folder.get_definition()
     folder_definition["params"]["path"] = path
@@ -155,7 +156,7 @@ def switch_managed_folder_connection_to_cloud_storage(project, folder_name, conn
     """
     ALLOWED_CLOUD_STORAGES = ["S3", "Azure"]
     
-    folder_id = get_managed_folder_id_with_folder_name(project, folder_name)
+    folder_id = get_managed_folder_id(project, folder_name)
     folder = project.get_managed_folder(folder_id)
     folder_definition = folder.get_definition()
     
