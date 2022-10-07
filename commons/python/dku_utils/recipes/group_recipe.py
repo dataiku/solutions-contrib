@@ -1,7 +1,7 @@
 from .recipe_commons import get_recipe_settings_and_dictionary
 
 
-def change_group_key_in_group_recipe(project, recipe_name, group_key, replace_existing_key):
+def define_group_recipe_aggregation_key(project, recipe_name, group_key, replace_existing_key):
     """
     Changes the aggregation key of a group recipe. It can either add a column in the group key
         or replace the existing group key.
