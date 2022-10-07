@@ -21,13 +21,13 @@ def change_group_recipe_aggregation_key(project, recipe_name, group_key, replace
     pass
 
 
-def change_group_recipe_aggregations(project, recipe_name, columns_aggregations_mapping, bool_compute_global_count):
+def define_group_recipe_aggregations(project, recipe_name, column_aggregations_mapping, bool_compute_global_count):
     """
     Set aggregations done by a group recipe.
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
-    :param columns_aggregations_mapping: dict: Mapping between the columns and the list of aggregations to apply to each one.
+    :param column_aggregations_mapping: dict: Mapping between the columns and the list of aggregations to apply to each one.
         Example: {'column_1': ['min', 'concat'], 'column_2': ['avg', 'sum']} 
     :param bool_compute_global_count: bool: Precise whether you want to compute the global count of the recipe or not.
     """
@@ -38,8 +38,8 @@ def change_group_recipe_aggregations(project, recipe_name, columns_aggregations_
     recipe_settings, __ = get_recipe_settings_and_dictionary(project, recipe_name, False)
     recipe_json_payload = recipe_settings.get_json_payload()
     recipe_aggregations = []
-    for column in columns_aggregations_mapping.keys():
-        column_asked_aggregations = columns_aggregations_mapping[column]
+    for column in column_aggregations_mapping.keys():
+        column_asked_aggregations = column_aggregations_mapping[column]
         recipe_column_settings = recipe_settings.get_or_create_column_settings(column)
         for aggregation in POSSIBLE_AGGREGATIONS:
             if aggregation in column_asked_aggregations:
