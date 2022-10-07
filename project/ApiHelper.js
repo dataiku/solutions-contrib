@@ -15,4 +15,4 @@ axios.interceptors.response.use((response) => {
 
 export let APIErrors = [];
 
-export let InspectorAPI = {}
+export let API = {}
