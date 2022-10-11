@@ -32,11 +32,12 @@ def get_per_clusters_features_distribution_data(ml_task, model_id):
     return per_clusters_features_distribution_data
 
 
-def rename_dss_default_clusters(ml_task, cluster_renamings):
+def rename_dss_default_clusters(ml_task, model_id, cluster_renamings):
     """
     Renames default clusters computed by DSS. 
     
-    :param: ml_task_settings: dataikuapi.dss.ml.DSSClusteringMLTaskSettings: DSS MLTask settings object.
+    :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
+        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     :param: clusters_renaming: dict: Dictionary containing the mapping between the default cluster labels 
         and their new names. 
         Example = {'cluster_0': 'new_name_for_cluster_0',
