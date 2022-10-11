@@ -237,7 +237,7 @@ def get_models_per_sessions_dataframe(ml_task):
     return models_per_sessions_dataframe
 
 
-def get_ml_task_best_model(ml_task, list_of_model_ids, metric_name, bool_greater_metric_is_better):
+def get_ml_task_best_model_id(ml_task, list_of_model_ids, metric_name, bool_greater_metric_is_better):
     """
     Retrieves the model ID that get the best performance in the ML task.
     
