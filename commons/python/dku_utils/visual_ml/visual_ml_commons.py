@@ -1,7 +1,7 @@
 import pandas as pd 
 from ..datasets.dataset_commons import (get_dataset_schema,
                                         extract_dataset_schema_information)
-
+import re
 
 def get_ml_task_and_settings(project, visual_analysis_id, ml_task_id):
     """
@@ -174,3 +174,31 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
                              activate=True)
     print("Model with the best performances has been deployed!")
     pass
+  
+  
+  def get_models_per_sessions_dataframe(ml_task):
+    """
+    Retrieves a pandas DataFrame containing relations between trained models and their sessions IDs.
+        
+    :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
+        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
+    :returns: models_per_sessions_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing relations between trained models and their sessions IDs.
+    """
+    SESSION_INDEX_IN_MODEL_ID = 4
+    all_trained_model_ids = ml_task.get_trained_models_ids()
+    all_sessions_data = []
+    all_session_ids_numerical = []
+    for model_id in all_trained_model_ids:
+        model_session_id = model_id.split('-')[SESSION_INDEX_IN_MODEL_ID]
+        model_session_id_numerical = int(re.sub('s', '', model_session_id))
+        all_session_ids_numerical.append(model_session_id_numerical)
+        all_sessions_data.append({"session_id": model_session_id,
+                                  "session_id_numerical": model_session_id_numerical,
+                                  "model_id": model_id})
+    last_session_id_numerical = max(all_session_ids_numerical)
+    models_per_sessions_dataframe = pd.DataFrame(all_sessions_data)
+    models_per_sessions_dataframe.sort_values(by="session_id_numerical", axis=0, ascending=False, inplace=True)
+    models_per_sessions_dataframe["last_session_id_numerical"] = last_session_id_numerical
+    models_per_sessions_dataframe.index = range(len(models_per_sessions_dataframe))
+    return models_per_sessions_dataframe
