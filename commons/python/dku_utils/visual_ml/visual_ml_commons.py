@@ -129,7 +129,7 @@ def get_last_session_trained_model_ids(ml_task):
         
     :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
         '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
-    :returns: last_session_trained_model_ids: list: List of all models trained in the last ML task session.
+    :returns: last_session_trained_model_ids: list: List of all models IDs trained in the last ML task session.
     """
     models_per_sessions_dataframe = get_models_per_sessions_dataframe(ml_task)
     models_per_sessions_dataframe = models_per_sessions_dataframe\
@@ -235,3 +235,39 @@ def get_models_per_sessions_dataframe(ml_task):
     models_per_sessions_dataframe["last_session_id_numerical"] = last_session_id_numerical
     models_per_sessions_dataframe.index = range(len(models_per_sessions_dataframe))
     return models_per_sessions_dataframe
+
+
+def get_ml_task_best_model(ml_task, list_of_model_ids, metric_name, bool_greater_metric_is_better):
+    """
+    Retrieves the model ID that get the best performance in the ML task.
+    
+    :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
+        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
+    :param: list_of_model_ids: list: List of trained model IDs.
+    :param metric_name: str: Name of the metric against which models are compared.
+        Some of the native DSS metrics are:
+        - Regression: {'EVS': 'Explained Variance Score',
+            'MAPE': 'Mean Absolute Percentage Error',
+            'MAE': 'Mean Absolute Error',
+            'MSE': 'Mean Squared Error',
+            'RMSE': 'Root Mean Square Error',
+            'RMSLE': 'Root Mean Square Logarithmic Error',
+            'R2': 'R2 Score',
+            'CUSTOM': 'Custom code'}
+        - Classification: 
+        - Clustering: {'silhouette': 'Silhouette coefficient'}
+    :param bool_greater_metric_is_better: bool: Boolean parameter to precise if having a greater metric is beter.
+    :returns: ml_task_best_model str: Model ID from 'list_of_model_ids' that get the best performance in the ML task.
+    """
+    models_metrics_dataframe = get_models_metrics_dataframe(ml_task, list_of_model_ids)
+    if bool_greater_metric_is_better:
+        sort_metrics_ascending = False
+    else:
+        sort_metrics_ascending = True
+    models_metrics_dataframe.sort_values(by=metric_name,
+                                         ascending=sort_metrics_ascending,
+                                         axis=0,
+                                         inplace=True)
+    models_metrics_dataframe.index = range(len(models_metrics_dataframe))
+    ml_task_best_model = models_metrics_dataframe["model_id"][0]
+    return ml_task_best_model
