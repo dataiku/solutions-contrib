@@ -4,7 +4,8 @@ def get_per_clusters_features_distribution_data(ml_task, model_id):
         
     :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
         '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
-    :param model_id: str: ID of the model from which we want to retrieve the information.
+    :param model_id: str: ID of the model from which we want to retrieve the information, as we get from
+        'ml_task.get_trained_models_ids()'.
     
     :returns: per_clusters_features_distribution_data: dict: Dictionary containing
         for each feature, its distribution per cluster data.
