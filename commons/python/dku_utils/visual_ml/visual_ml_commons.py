@@ -3,6 +3,7 @@ from ..datasets.dataset_commons import (get_dataset_schema,
                                         extract_dataset_schema_information)
 import re
 
+
 def get_ml_task_and_settings(project, visual_analysis_id, ml_task_id):
     """
     Retrieves the settings of a project recipe
