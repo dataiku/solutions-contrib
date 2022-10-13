@@ -4,6 +4,7 @@ def get_recipe_settings_and_dictionary(project, recipe_name, bool_get_settings_d
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
+    :param bool_get_settings_dictionary: bool: Precise if you to rerieve the recipe settings dictionary.
 
     :returns: recipe_settings: dataikuapi.dss.recipe.[RecipeType]Settings: Settings for a recipe. 
     :returns: recipe_settings_dict: dict: Dictionary containing recipe settings.
