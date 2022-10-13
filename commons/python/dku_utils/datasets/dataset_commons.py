@@ -8,6 +8,7 @@ def get_dataset_settings_and_dictionary(project, dataset_name, bool_get_settings
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
+    :param bool_get_settings_dictionary: bool: Precise if you to rerieve the dataset settings dictionary.
 
     :returns: 
         - dataset_settings: dataikuapi.dss.dataset.[DatasetType]DatasetSettings: Settings for a dataset. 
