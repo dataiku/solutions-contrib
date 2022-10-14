@@ -7,11 +7,14 @@ import 'quasar/src/css/index.sass'
 
 import 'vite/modulepreload-polyfill'
 
+import plugin from 'bs-components-library'
+
 
 const myApp = createApp(App)
 
+
 myApp.use(Quasar, {
     plugins: {},
-})
+}).use(plugin)
 
 myApp.mount('#app')
