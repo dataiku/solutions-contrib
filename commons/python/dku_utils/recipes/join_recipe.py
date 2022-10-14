@@ -1,12 +1,38 @@
 from ..datasets.dataset_commons import get_dataset_column_datatype
 
 
+def compute_join_recipe_computed_column_settings(computed_column_name, computed_column_datatype, formula_expression):
+    """
+    Computes the settings of a join recipe computed column, using DSS formula expressions.
+
+    :param computed_column_name: str: Name of the computed column.
+    :param computed_column_datatype: str: Datatype of the computed column.
+    :param formula_expression: str: Expression of the formula leading to the computed column, following the 
+        DSS formula language (https://doc.dataiku.com/dss/latest/formula/index.html).
+
+    :returns: compute_join_recipe_computed_column_settings: dict: Join recipe computed column settings.
+
+    Example: 
+        >>> res = compute_join_recipe_computed_column_settings('hello_world_column', 'string', 'Helloworld')
+        >>> res
+        {'expr': 'Helloworld',
+         'mode': 'GREL',
+         'name': 'hello_world_column',
+         'type': 'string'}
+    """
+    compute_join_recipe_computed_column_settings = {'expr': '{}'.format(formula_expression),
+                                                    'mode': 'GREL',
+                                                    'name': computed_column_name,
+                                                    'type': computed_column_datatype}
+    return compute_join_recipe_computed_column_settings
+
+
 class programmaticJoinHandler:
     """
     This class allows to programatically update DSS 'join' recipes.
     """
 
-    def __init__(self, project, recipe_name, main_dataset_name, main_dataset_columns_to_select):
+    def __init__(self, project, recipe_name, main_dataset_name, main_dataset_columns_to_select, main_dataset_computed_columns):
         """        
         :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
         :param recipe_name: str: Name of the recipe.
@@ -22,6 +48,7 @@ class programmaticJoinHandler:
         self.recipe_last_join_input_id = 0 # Refers to the inputs as we see them in the "Join" and "Selected columns" (<-> The same dataset can be added several time in a join).
         self.main_dataset_name = main_dataset_name
         self.main_dataset_columns_to_select = main_dataset_columns_to_select
+        self.main_dataset_computed_columns = main_dataset_computed_columns
         self.initialize_recipe_settings()
         pass
     
@@ -43,7 +70,7 @@ class programmaticJoinHandler:
                                                                None,
                                                                self.main_dataset_name,
                                                                self.recipe_last_virtual_input_id,
-                                                               None)
+                                                               self.main_dataset_computed_columns)
         self.recipe_input_datasets_virtual_input_ids = {self.main_dataset_name: self.recipe_last_virtual_input_id}
         self.recipe_payload["virtualInputs"] = [join_recipe_virtual_input]
         pass
@@ -76,7 +103,7 @@ class programmaticJoinHandler:
         pass
     
     def compute_virtual_input(self, pre_filter, bool_auto_select_columns, prefix,
-                                          dataset_name, virtual_index, computed_columns):
+                              dataset_name, virtual_index, computed_columns):
         """
         Computes the settings associated with a join recipe virtual inputs. 
             Virtual inputs directly refers to the table associated with the recipe's inputs.
@@ -151,7 +178,7 @@ class programmaticJoinHandler:
         self.recipe_input_datasets_virtual_input_ids[dataset_name] = self.recipe_last_virtual_input_id
         pass
 
-    def update_virtual_inputs(self, dataset_name, virtual_input_prefix):
+    def update_virtual_inputs(self, dataset_name, dataset_computed_columns, virtual_input_prefix):
         """
         Updates recipe virtual input settings.
         
@@ -164,7 +191,7 @@ class programmaticJoinHandler:
                                                                virtual_input_prefix,
                                                                dataset_name,
                                                                dataset_virtual_input_id,
-                                                               None)
+                                                               dataset_computed_columns)
         self.recipe_payload["virtualInputs"].append(join_recipe_virtual_input)
         pass
 
@@ -285,6 +312,7 @@ class programmaticJoinHandler:
     def add_one_join_on_main_dataset(self,
                                      dataset_to_join_name,
                                      dataset_to_join_columns_to_select,
+                                     dataset_computed_columns,
                                      join_type,
                                      columns_prefix,
                                      left_join_key,
@@ -294,6 +322,8 @@ class programmaticJoinHandler:
 
         :param: dataset_to_join_name: str: Name of a dataset to join on the recipe's 'main dataset'.
         :param: dataset_to_join_columns_to_select: list: List of the columns to select from the dataset to join.
+        :param: dataset_computed_columns: list: List of the computed columns for the join, as we can get using the
+            function ''. 
         :param: join_type: str: Type of the join. It should be in ['LEFT', 'RIGHT'].
         :param columns_prefix: str: Prefix to add to the columns of the dataset to join.
         :param: left_join_key: list: List containing all the columns of the 'main/left dataset' join key.
@@ -306,7 +336,7 @@ class programmaticJoinHandler:
         recipe_virtual_input_dataset_exists = self.check_if_virtual_input_dataset_exists(dataset_to_join_name)
         if not recipe_virtual_input_dataset_exists:
             self.update_virtual_input_ids(dataset_to_join_name)
-        self.update_virtual_inputs(dataset_to_join_name, columns_prefix)
+        self.update_virtual_inputs(dataset_to_join_name, dataset_computed_columns, columns_prefix)
         self.update_join_input_ids()
         selected_columns_settings =\
         self.compute_recipe_selected_columns_settings(dataset_to_join_name,
