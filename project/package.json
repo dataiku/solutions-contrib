@@ -11,8 +11,8 @@
   "dependencies": {
     "@quasar/extras": "^1.15.4",
     "axios": "^1.1.2",
-    "bs-components-library": "file:../commons/_shared/bs-components-library",
     "quasar": "^2.9.1",
+    "quasar-ui-bs": "file:../commons/_shared/bs-lib-components/ui",
     "vue": "^3.2.37"
   },
   "devDependencies": {

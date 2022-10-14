@@ -1,8 +1,8 @@
 <script>
-    export default {
-    }
+    
+    export default {}
 </script>
 
 <template>
-    <InputText />
+    <bs-button label="new"/>
 </template>

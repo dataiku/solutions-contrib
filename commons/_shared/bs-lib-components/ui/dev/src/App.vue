@@ -1,8 +1,9 @@
 <template>
-    <input type="text" />
+  <router-view />
 </template>
+
 <script>
 export default {
-  name: 'InputText'
+  name: 'App'
 }
 </script>
