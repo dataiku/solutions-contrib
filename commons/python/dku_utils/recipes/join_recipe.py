@@ -32,12 +32,15 @@ class programmaticJoinHandler:
     This class allows to programatically update DSS 'join' recipes.
     """
 
-    def __init__(self, project, recipe_name, main_dataset_name, main_dataset_columns_to_select, main_dataset_computed_columns):
+    def __init__(self, project, recipe_name, main_dataset_name, main_dataset_columns_to_select, main_dataset_columns_to_select_alias, main_dataset_computed_columns):
         """        
         :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
         :param recipe_name: str: Name of the recipe.
         :param main_dataset_name: str: Name of the recipe's main dataset (<-> The first dataset selected in the recipe).
         :param main_dataset_columns_to_select: list: List of the columns to retrieve from the main dataset. 
+        :param main_dataset_columns_to_select_alias: dict: Can be an empty dict. Mapping between columns present in 'main_dataset_columns_to_select'
+            and the alias they should have post join.
+        :param main_dataset_computed_columns: list: Settings associated with the dataset's computed columns.
         """
         self.project = project
         self.recipe_settings = project.get_recipe(recipe_name).get_settings()
@@ -48,6 +51,7 @@ class programmaticJoinHandler:
         self.recipe_last_join_input_id = 0 # Refers to the inputs as we see them in the "Join" and "Selected columns" (<-> The same dataset can be added several time in a join).
         self.main_dataset_name = main_dataset_name
         self.main_dataset_columns_to_select = main_dataset_columns_to_select
+        self.main_dataset_columns_to_select_alias = main_dataset_columns_to_select_alias
         self.main_dataset_computed_columns = main_dataset_computed_columns
         self.initialize_recipe_settings()
         pass
@@ -87,7 +91,9 @@ class programmaticJoinHandler:
         """
         selected_columns_settings =\
         self.compute_recipe_selected_columns_settings(self.main_dataset_name,
-                                                      self.main_dataset_columns_to_select)
+                                                      self.main_dataset_columns_to_select,
+                                                      self.main_dataset_columns_to_select_alias
+                                                      )
         self.recipe_payload["selectedColumns"] = selected_columns_settings
         pass
 
@@ -217,15 +223,21 @@ class programmaticJoinHandler:
         :returns: selected_columns_settings: list: Settings defining the columns
             to select from the dataset to join.
         """
+        alias_are_defined =  not ((columns_to_select_alias == {}) or (columns_to_select_alias == None))
         selected_columns_settings = []
         for column_name in columns_to_select_in_dataset:
             column_datatype = get_dataset_column_datatype(self.project,
                                                           dataset_name,
                                                           column_name)
-            selected_columns_settings.append({'name': column_name,
-                                              'alias': columns_to_select_alias,
-                                              'table': self.recipe_last_join_input_id,
-                                              'type': column_datatype})
+            column_settings =  {'name': column_name,
+                                'table': self.recipe_last_join_input_id,
+                                'type': column_datatype}    
+            if alias_are_defined:
+                if column_name in columns_to_select_alias.keys():
+                    column_settings['alias'] = columns_to_select_alias[column_name]
+                    pass
+                pass
+            selected_columns_settings.append(column_settings)
         return selected_columns_settings
     
     def update_recipe_selected_columns_settings(self, selected_columns_settings):
