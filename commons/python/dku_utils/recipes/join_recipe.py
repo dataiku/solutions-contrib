@@ -204,13 +204,15 @@ class programmaticJoinHandler:
         self.recipe_last_join_input_id += 1
         pass
 
-    def compute_recipe_selected_columns_settings(self, dataset_name, columns_to_select_in_dataset):
+    def compute_recipe_selected_columns_settings(self, dataset_name, columns_to_select_in_dataset, columns_to_select_alias):
         """
         Computes the join settings associated with the columns we want to select 
             from a dataset to join with the main dataset.
         
         :param dataset_name: str: Name of a dataset to join.
         :param columns_to_select_in_dataset: list: List of the columns to select from the main dataset.
+        :param columns_to_select_alias: dict: Can be an empty dict. Mapping between columns present in 'columns_to_select_in_dataset'
+            and the alias they should have post join.
 
         :returns: selected_columns_settings: list: Settings defining the columns
             to select from the dataset to join.
@@ -221,6 +223,7 @@ class programmaticJoinHandler:
                                                           dataset_name,
                                                           column_name)
             selected_columns_settings.append({'name': column_name,
+                                              'alias': columns_to_select_alias,
                                               'table': self.recipe_last_join_input_id,
                                               'type': column_datatype})
         return selected_columns_settings
@@ -312,6 +315,7 @@ class programmaticJoinHandler:
     def add_one_join_on_main_dataset(self,
                                      dataset_to_join_name,
                                      dataset_to_join_columns_to_select,
+                                     columns_to_select_alias,
                                      dataset_computed_columns,
                                      join_type,
                                      columns_prefix,
@@ -340,7 +344,8 @@ class programmaticJoinHandler:
         self.update_join_input_ids()
         selected_columns_settings =\
         self.compute_recipe_selected_columns_settings(dataset_to_join_name,
-                                                      dataset_to_join_columns_to_select)
+                                                      dataset_to_join_columns_to_select,
+                                                      columns_to_select_alias)
         self.update_recipe_selected_columns_settings(selected_columns_settings)
         self.add_one_join(join_type, left_join_key, right_join_key)
         self.update_recipe_definition()
