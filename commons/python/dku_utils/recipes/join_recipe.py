@@ -10,7 +10,7 @@ def compute_join_recipe_computed_column_settings(computed_column_name, computed_
     :param formula_expression: str: Expression of the formula leading to the computed column, following the 
         DSS formula language (https://doc.dataiku.com/dss/latest/formula/index.html).
 
-    :returns: compute_join_recipe_computed_column_settings: dict: Join recipe computed column settings.
+    :returns: join_recipe_computed_column_settings: dict: Join recipe computed column settings.
 
     Example: 
         >>> res = compute_join_recipe_computed_column_settings('hello_world_column', 'string', 'Helloworld')
@@ -20,11 +20,11 @@ def compute_join_recipe_computed_column_settings(computed_column_name, computed_
          'name': 'hello_world_column',
          'type': 'string'}
     """
-    compute_join_recipe_computed_column_settings = {'expr': '{}'.format(formula_expression),
+    join_recipe_computed_column_settings = {'expr': '{}'.format(formula_expression),
                                                     'mode': 'GREL',
                                                     'name': computed_column_name,
                                                     'type': computed_column_datatype}
-    return compute_join_recipe_computed_column_settings
+    return join_recipe_computed_column_settings
 
 
 class programmaticJoinHandler:
@@ -97,15 +97,25 @@ class programmaticJoinHandler:
         self.recipe_payload["selectedColumns"] = selected_columns_settings
         pass
 
+    def initialize_post_join_computed_columns(self):
+        self.recipe_payload["computedColumns"] = []
+        pass
+
+    def initialize_post_join_filter_expression(self):
+        self.recipe_payload["postFilter"]["uiData"]["conditions"] = []
+        self.recipe_payload["postFilter"]["expression"] = ""
+        pass
+
     def initialize_recipe_settings(self):
         """
         Initializes all recipe's settings based on the main dataset.
         """
         self.initialize_recipe_inputs()
-        #self.add_input_in_recipe(self.main_dataset_name)
         self.initialize_recipe_virtual_inputs()
         self.initialize_joins()
         self.initialize_selected_columns()
+        self.initialize_post_join_computed_columns()
+        self.initialize_post_join_filter_expression()
         pass
     
     def compute_virtual_input(self, pre_filter, bool_auto_select_columns, prefix,
@@ -360,6 +370,28 @@ class programmaticJoinHandler:
                                                       columns_to_select_alias)
         self.update_recipe_selected_columns_settings(selected_columns_settings)
         self.add_one_join(join_type, left_join_key, right_join_key)
+        self.update_recipe_definition()
+        pass
+    
+    def add_post_join_computed_column(self, join_recipe_computed_column_settings):
+        """
+        Adds post join computed columns to the recipe's settings.
+
+        :param: join_recipe_computed_column_settings: dict: Join recipe computed column settings,
+            as we can get when using the function 'compute_join_recipe_computed_column_settings'.
+        """
+        self.recipe_payload["computedColumns"].append(join_recipe_computed_column_settings)
+        self.update_recipe_definition()
+        pass
+    
+    def set_post_join_filter_expression(self, post_join_filter_formula_expression):
+        """
+        Sets the post join rows filtering expression, with a DSS formula.
+        
+        :param post_join_filter_formula_expression: str: Expression of the formula leading to the computed column, following the 
+        DSS formula language (https://doc.dataiku.com/dss/latest/formula/index.html).
+        """
+        self.recipe_payload["postFilter"]["expression"] = post_join_filter_formula_expression
         self.update_recipe_definition()
         pass
     pass
