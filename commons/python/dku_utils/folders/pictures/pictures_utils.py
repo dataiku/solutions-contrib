@@ -24,6 +24,18 @@ def convert_picture_from_np_array_to_base64_bytes(np_array_picture):
         raise Exception(log_message)
     return base64_bytes_picture
 
+    
+def convert_picture_from_np_array_to_pillow(np_array_picture):
+    """
+    Converts a picture in numpy format into a pillow object.
+
+    :param np_array_picture: numpy.ndarray: The picture in numpy format.
+
+    :returns: pillow_picture: PIL.Image.Image: The picture in pillow format.
+    """
+    pillow_picture = Image.fromarray(np_array_picture)
+    return pillow_picture
+
 
 def convert_picture_from_base64_bytes_to_base64_string(base64_bytes):
     """
