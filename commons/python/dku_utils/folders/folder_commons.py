@@ -34,3 +34,15 @@ def get_managed_folder_id(project, managed_folder_name):
     managed_folder_metadata = get_managed_folder_metadata(project, managed_folder_name)
     managed_folder_id = managed_folder_metadata["id"]
     return managed_folder_id
+
+
+def create_managed_folder_in_connection(project, managed_folder_name, connection_name):
+    """
+    Creates a managed folder in a given connection.
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param managed_folder_name: str: Name of the project managed folder.
+    :param connection_name: str: Name of the connection.
+    """
+    project.create_managed_folder(managed_folder_name, connection_name=connection_name)
+    pass
