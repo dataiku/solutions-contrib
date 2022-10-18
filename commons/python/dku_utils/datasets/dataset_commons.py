@@ -155,6 +155,19 @@ def get_dataset_connection_type(project, dataset_name):
     return dataset_connection_type
 
 
+def create_dataset_in_connection(project, dataset_name, connection_name):
+    """
+    Creates a dataset in a given connection.
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :param connection_name: str: Name of the connection.
+    """
+    builder = dataikuapi.CodeRecipeCreator("TMP_RECIPE", "python", project)
+    builder = builder.with_new_output_dataset(connection_name, connection_name)
+    pass
+
+
 def get_dataset_in_connection_settings(project, connection_name):
     """
     Retrieves the connection settings of a project dataset in connection 'connection_name'.
