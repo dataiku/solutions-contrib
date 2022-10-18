@@ -28,7 +28,7 @@
 
       return (vue.openBlock(), vue.createBlock(_component_q_btn, {
         label: $props.label,
-        color: "primary"
+        color: "secondary"
       }, null, 8, ["label"]))
     }
 

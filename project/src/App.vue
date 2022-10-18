@@ -1,8 +1,11 @@
 <script>
-    
-    export default {}
+    import { BsButton } from "quasar-ui-bs"
+    export default {
+        components: {
+            BsButton
+        }
+    }
 </script>
-
 <template>
-    <bs-button label="new"/>
+    <BsButton label="new"></BsButton>
 </template>

@@ -6,7 +6,6 @@ import 'quasar/src/css/index.sass'
 
 
 import 'vite/modulepreload-polyfill'
-
 import VuePlugin from "quasar-ui-bs"
 
 const myApp = createApp(App)

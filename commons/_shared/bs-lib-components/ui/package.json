@@ -9,6 +9,7 @@
   "files": [
     "dist/*"
   ],
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "dev": "cd dev && yarn dev && cd ..",
     "dev:umd": "yarn build && node build/script.open-umd.js",
@@ -34,7 +35,6 @@
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-replace": "^2.4.2",
     "autoprefixer": "^10.0.2",
-    "chalk": "^4.1.0",
     "core-js": "^3.0.0",
     "cssnano": "^4.1.10",
     "fs-extra": "^8.1.0",
