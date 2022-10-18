@@ -1,5 +1,16 @@
 
-import * as VuePlugin from './vue-plugin'
+import installApp from "./install-lib";
 
-export * from './vue-plugin'
-export default VuePlugin
+import * as components from "./components";
+
+export const QuasarBs = {
+    version: __UI_VERSION__,
+    install (app) {
+        installApp(
+        app,
+        { components },
+        )
+    }
+}
+
+export * from "./components"

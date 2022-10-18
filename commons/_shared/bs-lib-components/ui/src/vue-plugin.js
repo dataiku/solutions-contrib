@@ -1,16 +1,8 @@
-import BsButton from './components/BsButton.vue'
-
+import installApp from './install-lib'
 
 const version = __UI_VERSION__
 
-function install (app) {
-  app.component(BsButton.name, BsButton)
-
-}
-
-export {
-  version,
-  BsButton,
-
-  install
+export default {
+  version: version,
+  install: installApp,
 }

@@ -27,7 +27,7 @@ const rollupPlugins = [
   }),
   VuePlugin(),
   nodeResolve({
-    extensions: ['.js'],
+    extensions: ['.js','.vue'],
     preferBuiltins: false
   }),
   json(),

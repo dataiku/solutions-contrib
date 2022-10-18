@@ -10,6 +10,14 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.global = factory(global.Quasar, global.Vue));
 })(this, (function (quasar, vue) { 'use strict';
 
+    function installApp(app, uiOpts) {
+        uiOpts.components !== void 0 && Object.values(uiOpts.components).forEach(function (c) {
+            // if (isObject(c) === true && c.name !== void 0) {
+              app.component(c.name, c);
+            // }
+        });
+    }
+
     var script = {
         name: 'BsButton',
         props: {
@@ -34,20 +42,19 @@
 
     script.render = render;
 
-    var version = '0.0.1';
-
-    function install (app) {
-      app.component(script.name, script);
-
-    }
-
-    var VuePlugin = /*#__PURE__*/Object.freeze({
+    var components = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        version: version,
-        BsButton: script,
-        install: install
+        BsButton: script
     });
 
-    return VuePlugin;
+    var index_umd = Object.assign({}, {version: '0.0.1',
+      install: function install (app) {
+        installApp(app, {
+          components: components,
+        });
+      }},
+      components);
+
+    return index_umd;
 
 }));
