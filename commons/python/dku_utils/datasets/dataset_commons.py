@@ -29,7 +29,7 @@ def get_dataset_schema(project, dataset_name):
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
 
-    :returns: dataset_schema: list: the schema of the dataset, with format format: 
+    :returns: dataset_schema: list: the schema of the dataset, with format: 
         [{'name': 'column_1', 'type': 'column_1_datatype'}, 
         {'name': 'column_2', 'type': 'column_2_datatype'}| 
     """
