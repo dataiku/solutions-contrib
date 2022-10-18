@@ -164,7 +164,8 @@ def create_dataset_in_connection(project, dataset_name, connection_name):
     :param connection_name: str: Name of the connection.
     """
     builder = dataikuapi.CodeRecipeCreator("TMP_RECIPE", "python", project)
-    builder = builder.with_new_output_dataset(connection_name, connection_name)
+    builder = builder.with_new_output_dataset(dataset_name, connection_name)
+    print("Dataset '{}' has been successfully created in connection '{}'.".format(dataset_name, connection_name))
     pass
 
 
