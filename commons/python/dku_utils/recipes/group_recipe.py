@@ -1,7 +1,28 @@
+import dataikuapi
 from .recipe_commons import get_recipe_settings_and_dictionary
+from ..datasets.dataset_commons import create_dataset_in_connection
 
 
-def change_group_recipe_aggregation_key(project, recipe_name, group_key, replace_existing_key):
+def instantiate_group_recipe(project, recipe_name, recipe_input_dataset_name,
+                             recipe_output_dataset_name, connection_name):
+    """
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param recipe_input_dataset_name: str: Name of the dataset that must be the recipe input.
+    :param recipe_output_dataset_name: str: Name of the dataset that must be the recipe output.
+    :param :connection_name: str: Name of the recipe output dataset connection.
+    """
+    print("Creating group recipe '{}' ...".format(recipe_name))
+    builder = dataikuapi.GroupingRecipeCreator(recipe_name, project)
+    builder.with_input(recipe_input_dataset_name)    
+    create_dataset_in_connection(project, recipe_output_dataset_name, connection_name)
+    builder.with_output(recipe_output_dataset_name)
+    builder.build()
+    print("Group recipe '{}' sucessfully created!".format(recipe_name))
+    pass
+
+
+def define_group_recipe_aggregation_key(project, recipe_name, group_key, replace_existing_key):
     """
     Changes the aggregation key of a group recipe. It can either add a column in the group key
         or replace the existing group key.
