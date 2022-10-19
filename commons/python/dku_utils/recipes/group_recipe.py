@@ -6,6 +6,8 @@ from ..datasets.dataset_commons import create_dataset_in_connection
 def instantiate_group_recipe(project, recipe_name, recipe_input_dataset_name,
                              recipe_output_dataset_name, connection_name):
     """
+    Instantiates a group recipe in the flow.
+    
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
     :param recipe_input_dataset_name: str: Name of the dataset that must be the recipe input.
