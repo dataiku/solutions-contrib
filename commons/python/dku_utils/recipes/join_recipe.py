@@ -127,7 +127,8 @@ class programmaticJoinHandler:
         pass
 
     def initialize_post_join_filter_expression(self):
-        self.recipe_payload["postFilter"] = []
+        self.recipe_payload["postFilter"] = {}
+        self.recipe_payload["postFilter"]["uiData"] = {}
         self.recipe_payload["postFilter"]["uiData"]["conditions"] = []
         self.recipe_payload["postFilter"]["expression"] = ""
         self.recipe_payload["postFilter"]["enabled"] = False
