@@ -5,7 +5,7 @@ from ...datasets.dataset_commons import create_dataset_in_connection
 from ...folders.folder_commons import create_managed_folder_in_connection, get_managed_folder_id
 
 
-class PluginRecipeInstantiator():
+class PluginRecipeHandler():
     """
     Allows to instanciate plugin recipes programmatically.
     """
