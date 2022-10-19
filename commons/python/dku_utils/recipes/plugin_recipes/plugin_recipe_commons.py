@@ -38,10 +38,10 @@ class PluginRecipeInstantiator():
                     --> So we will have plugin_output_references_mapping =  {'output_dataset_from_my_flow': 'dataset_with_reduced_dimensionality'}
         :param :input_dataset_names: list: List containing all recipe input dataset names.
         :param :output_dataset_names: list: List containing all recipe output dataset names.
-        :param :datasets_connection_name: str: Name of the datasets connection.
+        :param :datasets_connection_name: str: Name of the recipe output datasets connection.
         :param :input_folder_names: list: List containing all recipe input folder NAMES.
         :param :output_folder_names: list: List containing all recipe output folder NAMES.
-        :param :folders_connection_name: str: Name of the folders connection.
+        :param :folders_connection_name: str: Name of the recipe output folders connection.
         """
         
         if plugin_recipe_type not in self.ALLOWED_PLUGIN_RECIPE_TYPES:
