@@ -190,12 +190,15 @@ class PluginRecipeInstantiator():
         """
         Instantiates the plugin recipe and connects it to its flow dependencies.
         """
+        print("Creating plugin recipe '{}' (recipe of type '{}')...".format(self.recipe_name, self.plugin_recipe_type))
         self.check_datasources_references_consistency()
         self.create_plugin_recipe()
         self.load_plugin_settings()
         self.create_plugin_recipe_flow_outputs()
         self.connect_recipe_to_flow_inputs()
         self.connect_recipe_to_flow_outputs()
+        print("Plugin recipe '{}' sucessfully created!".format(self.recipe_name))
+        print("Please don't forget to set its parameters with method 'PluginRecipeInstantiator.set_recipe_parameters()'.")
         pass
 
     def set_recipe_parameters(self, recipe_parameters):
