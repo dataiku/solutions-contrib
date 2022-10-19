@@ -8,7 +8,7 @@ def instantiate_stack_recipe(project, recipe_name, recipe_input_datasets,
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
     :param recipe_input_datasets: list: List containing all recipe input dataset names. 
-    :param recipe_output_dataset_name: str: Name of the dataset that msut be the recipe output.
+    :param recipe_output_dataset_name: str: Name of the dataset that must be the recipe output.
     :param :connection_name: str: Name of the recipe output dataset connection.
     """
     print("Creating stack recipe '{}' ...".format(recipe_name))
