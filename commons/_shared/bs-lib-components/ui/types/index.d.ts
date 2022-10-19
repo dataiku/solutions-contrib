@@ -1,8 +1,9 @@
-import { GlobalComponentConstructor, QBtn, QBtnProps, QBtnSlots } from "quasar"
+import { ComponentConstructor, GlobalComponentConstructor, QBtn, QBtnProps, QBtnSlots } from "quasar"
 import { App } from "vue";
 
 
 export const BsButton: QBtn;
+
 
 declare module "@vue/runtime-core" {
     interface GlobalComponents {

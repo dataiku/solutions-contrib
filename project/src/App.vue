@@ -1,5 +1,6 @@
 <script>
+    
 </script>
 <template>
-    <bs-button label="new"></bs-button>
+    <BsButton></BsButton>
 </template>

@@ -1,0 +1,3 @@
+{
+    "exclude": ["../commons/_shared/bs-lib-components"]
+}

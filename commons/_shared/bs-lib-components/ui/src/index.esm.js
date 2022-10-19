@@ -13,4 +13,5 @@ export const QuasarBs = {
     }
 }
 
-export * from "./components"
+export * from "./components";
+export const version = __UI_VERSION__;
