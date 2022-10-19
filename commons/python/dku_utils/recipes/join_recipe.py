@@ -6,6 +6,8 @@ from ..datasets.dataset_commons import get_dataset_column_datatype
 def instantiate_join_recipe(project, recipe_name, recipe_input_datasets,
                             recipe_output_dataset_name, connection_name):
     """
+    Instantiates a join recipe in the flow.
+    
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
     :param recipe_input_datasets: list: List containing all recipe input dataset names. 
