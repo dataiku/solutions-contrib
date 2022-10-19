@@ -78,6 +78,24 @@ def define_group_recipe_aggregations(project, recipe_name, column_aggregations_m
     pass
 
 
+def override_group_recipe_output_column_names(project, recipe_name, column_name_overrides):
+    """
+    Overrides the names of the output columns of a group recipe.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param column_name_overrides: dict: Columns overrides, with format:
+        {'default_name_from_the_group_recipe_1': 'new_name_1',
+        'default_name_from_the_group_recipe_2': 'new_name_2'}
+    """
+    recipe_settings, __ = get_recipe_settings_and_dictionary(project, recipe_name, False)
+    recipe_json_payload = recipe_settings.get_json_payload()
+    recipe_json_payload["outputColumnNameOverrides"] = column_name_overrides
+    recipe_settings.set_json_payload(recipe_json_payload)
+    recipe_settings.save()
+    pass
+
+
 def change_group_recipe_concatenation(project, recipe_name, column_name, bool_activate_concatenation, separator):
     """
     Updates, for one column, the settings related to the 'concat' aggregation of the group recipe
