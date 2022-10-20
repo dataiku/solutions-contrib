@@ -1,19 +1,32 @@
-import { ComponentConstructor, GlobalComponentConstructor, QBtn, QBtnProps, QBtnSlots } from "quasar"
-import { App } from "vue";
+import { ComponentConstructor, GlobalComponentConstructor } from "quasar"
+import { App, ComponentPublicInstance, VNode } from "vue";
 
 
-export const BsButton: QBtn;
+export interface BSLayoutDefaultSlots {
+    default: () => VNode[];
+    head: () => VNode[];
+    content: () => VNode[];
+    leftpanel: () => VNode[];
+}
+
+export interface BSLayoutDefaultProps {
+    LeftPanelTitle?: String;
+}
+
+export interface BSLayoutDefault extends ComponentPublicInstance<BSLayoutDefaultProps> {}
+
+export const BSLayoutDefault: ComponentConstructor<BSLayoutDefault>
 
 
 declare module "@vue/runtime-core" {
     interface GlobalComponents {
-        BsButton: GlobalComponentConstructor<QBtnProps,QBtnSlots>;
+        BSLayoutDefault: GlobalComponentConstructor<BSLayoutDefaultProps,BSLayoutDefaultSlots>;
     }
 }
 
 declare module "./plugin" {
     interface BsComponents {
-        BsButton?: QBtn,
+        BSLayoutDefault?: BSLayoutDefault,
     }
 }
 

@@ -1,4 +1,6 @@
 .bs-layout
+    min-width: 900px
+
     .bs-left-panel
         overflow: auto
         min-width: 300px
@@ -6,17 +8,19 @@
         height: 100vh
 
     .bs-right-panel
+        height: 100vh
+        border: 1px solid #CCCCCC
+        
+
         .bs-header
             overflow: auto
-            border-left: 1px solid #CCCCCC
+            border-bottom: 1px solid #CCCCCC
             padding: 16px
             padding-left: 24px
             
             
         .bs-content
             overflow: auto
-            height: calc(100vh - 75px)
-            border: 1px solid #CCCCCC
             
             .bs-toggle-left
                 min-width: 24px

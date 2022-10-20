@@ -3,7 +3,7 @@
       <template #leftpanel>
       </template>
       <template #header>
-          <div class="fit row wrap justify-between items-center content-start">
+          <div class="fit row justify-between items-center content-start">
             <div class="dku-text">
               Number of records
             </div>
@@ -18,7 +18,6 @@
             <q-btn label="Save"></q-btn>
           </div>
       </template>
-      
     </BsLayoutDefault>
 </template>
   

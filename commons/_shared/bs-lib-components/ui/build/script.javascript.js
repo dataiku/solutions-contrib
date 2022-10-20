@@ -14,6 +14,8 @@ const buildConf = require('./config')
 const buildUtils = require('./utils')
 
 const VuePlugin = require('rollup-plugin-vue')
+const image = require('@rollup/plugin-image')
+
 
 
 
@@ -33,7 +35,8 @@ const rollupPlugins = [
   json(),
   buble({
     objectAssign: 'Object.assign'
-  })
+  }),
+  image()
 ]
 
 const builds = [

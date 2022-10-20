@@ -33,7 +33,7 @@
 <script>
     import btnImg from "../assets/images/BtnImg.svg"
     export default {
-        name:"BsDefaultLayout",
+        name:"BSLayoutDefault",
         data() {
             return {
                 isHidden : false,
