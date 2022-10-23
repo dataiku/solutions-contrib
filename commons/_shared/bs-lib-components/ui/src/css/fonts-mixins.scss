@@ -1,0 +1,48 @@
+@mixin mx-ssp($size, $weight) {
+    font-family: 'SourceSansPro';
+    font-weight: $weight;
+    font-size: $size;
+}
+
+@mixin mx-typography($font-weight, $font-size, $line-height) {
+    font-weight: $font-weight;
+    font-size: $font-size;
+    line-height: $line-height;
+    color: $text-important;
+}
+
+@mixin mx-huge-title($font-weight) {
+    @include mx-typography($font-weight, 38px, 48px);
+}
+
+@mixin mx-ultralarge-title($font-weight) {
+    @include mx-typography($font-weight, 32px, 40px);
+}
+
+@mixin mx-extralarge-title($font-weight) {
+    @include mx-typography($font-weight, 30px, 38px);
+}
+
+@mixin mx-large-title($font-weight) {
+    @include mx-typography($font-weight, 26px, 33px);
+}
+
+@mixin mx-grand-title($font-weight) {
+    @include mx-typography($font-weight, 22px, 28px);
+}
+
+@mixin mx-medium-title($font-weight) {
+    @include mx-typography($font-weight, 18px, 23px);
+}
+
+@mixin mx-small-title($font-weight) {
+    @include mx-typography($font-weight, 16px, 20px);
+}
+
+@mixin mx-text($font-weight) {
+    @include mx-typography($font-weight, 13px, 16px);
+}
+
+@mixin mx-tiny-text($font-weight) {
+    @include mx-typography($font-weight, 10px, 13px);
+}

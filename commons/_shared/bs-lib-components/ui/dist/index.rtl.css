@@ -3,7 +3,185 @@
  * (c) 2022 anas laaroussi <anas.laaroussi@dataiku.com>
  * Released under the MIT License.
  */
-@import 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap';
+/***** Dataiku Brand Color *****/
+/***** Universe color *****/
+/***** Primary action colors *****/
+/***** Greyscale *****/
+/***** Status colors *****/
+/******* Chart color *******/
+/******* Colors per object types *******/
+/******* Custom colors for plugin recipes *******/
+/******* Variables helpers *******/
+/****** Components *******/
+/* Dropdowns */
+/* Buttons */
+/* Alerts */
+@font-face {
+  font-family: SourceSansPro;
+  src: url(/assets/fonts/SourceSansPro-Bold.woff);
+  font-weight: 600;
+}
+@font-face {
+  font-family: SourceSansPro;
+  src: url(/assets/fonts/SourceSansPro-Semibold.woff);
+  font-weight: 500;
+}
+@font-face {
+  font-family: SourceSansPro;
+  src: url(/assets/fonts/SourceSansPro-Regular.woff);
+  font-weight: 400;
+}
+.font-weight-normal {
+  font-weight: 400;
+}
+
+.font-weight-semi-bold {
+  font-weight: 500;
+}
+
+.font-weight-bold {
+  font-weight: 600;
+}
+
+.dku-huge-title {
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 48px;
+  color: #222222;
+}
+
+.dku-huge-title-sb {
+  font-weight: 500;
+  font-size: 38px;
+  line-height: 48px;
+  color: #222222;
+}
+
+.dku-ultralarge-title {
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 40px;
+  color: #222222;
+}
+
+.dku-ultralarge-title-sb {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 40px;
+  color: #222222;
+}
+
+.dku-extralarge-title-sb {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 38px;
+  color: #222222;
+}
+
+.dku-large-title {
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 33px;
+  color: #222222;
+}
+
+.dku-large-title-sb {
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 33px;
+  color: #222222;
+}
+
+.dku-grand-title {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 28px;
+  color: #222222;
+}
+
+.dku-grand-title-sb {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 28px;
+  color: #222222;
+}
+
+.dku-medium-title-sb {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 23px;
+  color: #222222;
+}
+
+.dku-medium-title {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 23px;
+  color: #222222;
+}
+
+.dku-small-title-sb {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #222222;
+}
+
+.dku-small-title {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #222222;
+}
+
+.dku-text {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #222222;
+}
+
+.dku-text-sb {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+  color: #222222;
+}
+
+.dku-text-b {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  color: #222222;
+}
+
+.dku-tiny-text {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 13px;
+  color: #222222;
+}
+
+.dku-tiny-text-sb {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 13px;
+  color: #222222;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  /* added line */
+  border: 0;
+}
+
 .bs-layout {
   min-width: 900px;
 }
@@ -43,122 +221,81 @@
   padding-right: 0;
 }
 
-.dku-tiny-text {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 10px;
+.q-btn.bs-btn {
+  text-transform: none;
+  background: #3B99FC;
+  border-radius: 4px !important;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  box-shadow: none;
 }
-
-.dku-tiny-text-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 10px;
+.q-btn.bs-btn:hover {
+  background: #2D86FB;
+  color: #FFFFFF;
 }
-
-.dku-text {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
+.q-btn.bs-btn:focus {
+  background: #2D86FB;
+  border: 2px solid rgba(59, 153, 252, 0.31);
 }
-
-.dku-text-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 13px;
+.q-btn.bs-btn.bs-btn-disabled {
+  background: #F2F2F2;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }
-
-.dku-text-b {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 13px;
+.q-btn.bs-btn.bs-btn-disabled:hover {
+  background: #F2F2F2;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }
-
-.button-text {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: uppercase;
+.q-btn.bs-btn-outline {
+  text-transform: none;
+  background: #FFFFFF;
+  border-radius: 4px !important;
+  color: #3B99FC;
+  padding: 4px 8px;
+  box-shadow: none;
 }
-
-.dku-small-title {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
+.q-btn.bs-btn-outline:hover {
+  background: #FFFFFF;
+  color: #2D86FB;
 }
-
-.dku-small-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
+.q-btn.bs-btn-outline:focus {
+  background: #FFFFFF;
+  border: 1px solid rgba(59, 153, 252, 0.2);
 }
-
-.dku-medium-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
+.q-btn.bs-btn-outline.bs-btn-disabled {
+  background: #FFFFFF;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }
-
-.dku-grand-title {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 22px;
+.q-btn.bs-btn-outline.bs-btn-disabled:hover {
+  background: #FFFFFF;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }
-
-.dku-grand-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 22px;
+.q-btn.bs-btn-flat {
+  text-transform: none;
+  background: #FFFFFF;
+  border-radius: 4px !important;
+  color: #3B99FC;
+  padding: 4px 8px;
+  box-shadow: none;
 }
-
-.dku-large-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 26px;
+.q-btn.bs-btn-flat:hover {
+  background: #FFFFFF;
+  color: #2D86FB;
 }
-
-.dku-extralarge-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 30px;
+.q-btn.bs-btn-flat:focus {
+  background: #FFFFFF;
+  border: 1px solid rgba(59, 153, 252, 0.2);
 }
-
-.dku-ultralarge-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 32px;
+.q-btn.bs-btn-flat.bs-btn-disabled {
+  background: #FFFFFF;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }
-
-.dku-huge-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 38px;
-}
-
-.dku-medium-title-sb {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 18px;
-}
-
-.dku-medium-title {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
+.q-btn.bs-btn-flat.bs-btn-disabled:hover {
+  background: #FFFFFF;
+  color: #CCCCCC;
+  opacity: 1 !important;
 }

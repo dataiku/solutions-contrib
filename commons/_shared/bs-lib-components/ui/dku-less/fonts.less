@@ -1,0 +1,116 @@
+@import 'fonts-variables.less';
+@import 'fonts-mixins.less';
+
+@font-face {
+    font-family : SourceSansPro;
+    src : url(/assets/fonts/SourceSansPro-Bold.woff);
+    font-weight: @font-weight-bold;
+}
+
+@font-face {
+    font-family : SourceSansPro;
+    src : url(/assets/fonts/SourceSansPro-Semibold.woff);
+    font-weight: @font-weight-semi-bold;
+}
+
+@font-face {
+    font-family : SourceSansPro;
+    src : url(/assets/fonts/SourceSansPro-Regular.woff);
+    font-weight: @font-weight-normal;
+}
+
+.font-weight-normal {
+    font-weight: @font-weight-normal;
+}
+
+.font-weight-semi-bold {
+    font-weight: @font-weight-semi-bold;
+}
+
+.font-weight-bold {
+    font-weight: @font-weight-bold;
+}
+
+.dku-huge-title {
+    .mx-huge-title(@font-weight-normal);
+}
+
+.dku-huge-title-sb {
+    .mx-huge-title(@font-weight-semi-bold);
+}
+
+.dku-ultralarge-title {
+    .mx-ultralarge-title(@font-weight-normal);
+}
+
+.dku-ultralarge-title-sb {
+    .mx-ultralarge-title(@font-weight-semi-bold);
+}
+
+.dku-extralarge-title-sb {
+    .mx-extralarge-title(@font-weight-semi-bold);
+}
+
+.dku-large-title {
+    .mx-large-title(@font-weight-normal);
+}
+
+.dku-large-title-sb {
+    .mx-large-title(@font-weight-semi-bold);
+}
+
+.dku-grand-title {
+    .mx-grand-title(@font-weight-normal);
+}
+
+.dku-grand-title-sb {
+    .mx-grand-title(@font-weight-semi-bold);
+}
+
+.dku-medium-title-sb {
+    .mx-medium-title(@font-weight-semi-bold);
+}
+
+.dku-medium-title {
+    .mx-medium-title(@font-weight-normal);
+}
+
+.dku-small-title-sb {
+    .mx-small-title(@font-weight-semi-bold);
+}
+
+.dku-small-title {
+    .mx-small-title(@font-weight-normal);
+}
+
+.dku-text {
+    .mx-text(@font-weight-normal);
+}
+
+.dku-text-sb {
+    .mx-text(@font-weight-semi-bold);
+}
+
+.dku-text-b {
+    .mx-text(@font-weight-bold);
+}
+
+.dku-tiny-text {
+    .mx-tiny-text(@font-weight-normal);
+}
+
+.dku-tiny-text-sb {
+    .mx-tiny-text(@font-weight-semi-bold);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap; /* added line */
+    border: 0;
+}

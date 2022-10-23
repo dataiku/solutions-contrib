@@ -1,0 +1,75 @@
+@mixin bsbtnbase($background,$color) {
+    text-transform: none;
+    background: $background;
+    border-radius: 4px !important;
+    color: $color;
+    padding: 4px 8px;
+    box-shadow: none;
+}
+
+@mixin bsbtndisable($background,$color) {
+    background: $background;
+    color: $color;
+    opacity: 1 !important;
+}
+
+@mixin btnhover($background,$color) {
+    background: $background;
+    color: $color;
+}
+
+@mixin btnfocus($background,$border) {
+    background: $background;
+    border: $border;
+}
+
+@mixin btnvariant($background,$color,$backgroud-hover,$color-hover,$border-focus,$background-disable,$color-disable) {
+    @include bsbtnbase($background: $background,$color: $color);
+
+    &:hover {
+        @include btnhover($background: $backgroud-hover,$color: $color-hover);
+    }   
+    &:focus {
+        @include btnfocus($background: $backgroud-hover,$border: $border-focus);
+    }    
+    &.bs-btn-disabled {
+        @include bsbtndisable($background: $background-disable,$color: $color-disable);
+        
+        &:hover {
+            @include bsbtndisable($background: $background-disable,$color: $color-disable);
+        }
+    }
+}
+
+
+
+.bs-btn {
+    @include btnvariant($background: $digital-blue-base,$color: $white-base,$backgroud-hover: $digital-blue-darken-2,$color-hover: $white-base,
+    $border-focus: 2px solid rgba(59, 153, 252, 0.31),$background-disable: $grey-background, $color-disable: $text-disabled);
+}
+.bs-btn-outline {
+    @include btnvariant($background: $white-base,$color: $digital-blue-base,$backgroud-hover: $white-base,$color-hover: $digital-blue-darken-2,
+    $border-focus: 1px solid rgba(59, 153, 252, 0.2),$background-disable: $white-base, $color-disable: $text-disabled);
+}   
+.bs-btn-flat {
+    @include btnvariant($background: $white-base,$color: $digital-blue-base,$backgroud-hover: $white-base,$color-hover: $digital-blue-darken-2,
+    $border-focus: 1px solid rgba(59, 153, 252, 0.2),$background-disable: $white-base, $color-disable: $text-disabled);
+}
+.bs-btn-danger {
+    @include btnvariant($background: $btn-contained-danger-background,$color: $btn-contained-danger-text,$backgroud-hover: $btn-contained-danger-background-hover,
+    $color-hover: $btn-contained-danger-text,$border-focus: 1px solid $btn-contained-danger-border,$background-disable: $white-base, $color-disable: $text-disabled);
+}
+.bs-btn-sucess {
+    @include btnvariant($background: $btn-contained-success-background,$color: $btn-contained-success-text,$backgroud-hover: $btn-contained-success-background-hover,
+    $color-hover: $btn-contained-success-text,$border-focus: 1px solid $btn-contained-success-border,$background-disable: $white-base, $color-disable: $text-disabled);
+}
+
+
+
+
+        
+        
+        
+        
+        
+    
