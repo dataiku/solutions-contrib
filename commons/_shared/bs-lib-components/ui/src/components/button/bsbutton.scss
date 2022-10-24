@@ -57,11 +57,11 @@
 }
 .bs-btn-danger {
     @include btnvariant($background: $btn-contained-danger-background,$color: $btn-contained-danger-text,$backgroud-hover: $btn-contained-danger-background-hover,
-    $color-hover: $btn-contained-danger-text,$border-focus: 1px solid $btn-contained-danger-border,$background-disable: $white-base, $color-disable: $text-disabled);
+    $color-hover: $btn-contained-danger-text,$border-focus: 1px solid $btn-contained-danger-border,$background-disable: $grey-background, $color-disable: $text-disabled);
 }
 .bs-btn-sucess {
     @include btnvariant($background: $btn-contained-success-background,$color: $btn-contained-success-text,$backgroud-hover: $btn-contained-success-background-hover,
-    $color-hover: $btn-contained-success-text,$border-focus: 1px solid $btn-contained-success-border,$background-disable: $white-base, $color-disable: $text-disabled);
+    $color-hover: $btn-contained-success-text,$border-focus: 1px solid $btn-contained-success-border,$background-disable: $grey-background, $color-disable: $text-disabled);
 }
 
 

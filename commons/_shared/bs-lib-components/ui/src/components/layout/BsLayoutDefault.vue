@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-    import btnImg from "../assets/images/BtnImg.svg"
+    import btnImg from "../../assets/images/BtnImg.svg"
     export default {
         name:"BSLayoutDefault",
         data() {
