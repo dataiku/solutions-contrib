@@ -6,7 +6,7 @@ from ...datasets.dataset_commons import (get_dataset_schema,
 
 def change_sql_dataset_table(project, dataset_name, table_name):
     """
-    Changes the path of a filesystem project dataset
+    Changes the table associated with a SQL project dataset.
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
@@ -16,6 +16,20 @@ def change_sql_dataset_table(project, dataset_name, table_name):
     dataset_settings.settings["params"]["table"] = table_name
     dataset_settings.save()
     pass
+
+
+def get_sql_dataset_table(project, dataset_name):
+    """
+    Retrieves the name of a table associated with a SQL project dataset.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :returns: table_name: str: Name of the table associated with the SQL project dataset.
+    """
+    dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
+    table_name = dataset_settings.settings["params"]["table"]
+    return table_name
+    
 
 def switch_managed_dataset_connection_to_sql(project, dataset_name, connection_name, bool_use_project_key_for_table_naming):
     """
