@@ -1,15 +1,17 @@
 <template>
-    <section
-    @click="onClick"
-    @keydown="onKeydown"
-    @keyup="onKeyup"
+    <div
+    :class="{
+      'bs-toggle--is-disabled': disable,
+    }"
     class="bs-toggle"
+    
     >
         <input 
         type="checkbox"
         :checked="isTrue === true"
         :value="modelIsArray === true ? val : trueValue"
         class="bs-toggle__input"
+                
         />
         <div
             :aria-checked="isTrue === true"
@@ -20,13 +22,16 @@
             role="checkbox"
             @mouseover="mouseover"
             @mouseleave="mouseleave"
+            @click="onClick"
+            @keydown="onKeydown"
+            @keyup="onKeyup"
             :tabindex="tabIndex"
         ></div>
        
-    </section>
+    </div>
 </template>
 <script>
-    import {useToggleProps, useToggleEmits} from "./use-toggle";
+    import {useToggleProps, useToggleEmits, fontSize} from "./use-toggle";
     import {stopAndPrevent} from "../../utils/events";
     export default {
         name: "BsButtonToggleTest",
@@ -61,6 +66,9 @@
             },
             tabIndex() {
                 return this.disable === true ? -1 : this.tabindex || 0;
+            },
+            fontSize() {
+                return fontSize(this.size);
             }
         },
         methods: {
@@ -119,10 +127,10 @@
 @import "../../css/color-variables.scss";
 .bs-toggle {
   $self: &;
-  $toggle-spacing: 2px;
+  $toggle-spacing: 0.05em;
   align-items: center;
   display: flex;
-  margin: 0 -5px;
+  font-size: v-bind(fontSize);
   > * {
     cursor: pointer;
     margin: 0 5px;
@@ -142,23 +150,20 @@
         }
       }
     }
-    &:focus {
-      background: black;
-    }
   }
   &__content {
     background: $grey-lighten-6;
-    border-radius: 50px;
+    border-radius: 2.5em;
     box-sizing: border-box;
-    height: 20px;
+    height: .9em;
     outline: 0;
     overflow: hidden;
     padding: $toggle-spacing;
     transition: background-color .4s ease;
-    width: 40px;
+    width: 1.8em;
     will-change: background-color;
     &--active {
-      background-color: v-bind(activeColor);
+      background-color: v-bind(color);
     }
     &:after {
       background: white;
@@ -176,10 +181,11 @@
     }
     #{$self}--is-disabled & {
       cursor: not-allowed;
-      opacity: 50%;
+      background: $grey-background;
     }
+
     &:focus {
-        border: 1px solid black;
+        outline: 2px solid rgba(59, 153, 252, 0.3);
     }
   }
 }
