@@ -29,6 +29,20 @@ def get_sql_dataset_table(project, dataset_name):
     dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
     table_name = dataset_settings.settings["params"]["table"]
     return table_name
+  
+  
+def set_sql_dataset_table(project, dataset_name, table_name):
+    """
+    Retrieves the name of a table associated with a SQL project dataset.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :param table_name: str: New name of the table associated with the dataset.
+    """
+    dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
+    dataset_settings.settings["params"]["table"] = table_name
+    dataset_settings.save()
+    pass
     
 
 def switch_managed_dataset_connection_to_sql(project, dataset_name, connection_name, bool_use_project_key_for_table_naming):
