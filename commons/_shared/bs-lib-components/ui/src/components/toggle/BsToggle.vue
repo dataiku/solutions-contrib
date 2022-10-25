@@ -6,12 +6,18 @@
     class="bs-toggle"
     
     >
+        <label
+            class="bs-toggle__label"
+            :class="[labelClass]"
+            v-if="labelLeft"
+        >
+            {{ labelLeft }}
+        </label>
         <input 
         type="checkbox"
         :checked="isTrue === true"
         :value="modelIsArray === true ? val : trueValue"
-        class="bs-toggle__input"
-                
+        class="bs-toggle__input"     
         />
         <div
             :aria-checked="isTrue === true"
@@ -20,13 +26,18 @@
             class="bs-toggle__content"
             :class="{'bs-toggle__content--active': isTrue === true}"
             role="checkbox"
-            @mouseover="mouseover"
-            @mouseleave="mouseleave"
             @click="onClick"
             @keydown="onKeydown"
             @keyup="onKeyup"
             :tabindex="tabIndex"
         ></div>
+        <label
+            class="bs-toggle__label"
+            :class="[labelClass]"
+            v-if="labelRight"
+        >
+            {{ labelRight }}
+        </label>
        
     </div>
 </template>
@@ -34,7 +45,7 @@
     import {useToggleProps, useToggleEmits, fontSize} from "./use-toggle";
     import {stopAndPrevent} from "../../utils/events";
     export default {
-        name: "BsButtonToggleTest",
+        name: "BsToggle",
         data() {
             return {
 
@@ -69,6 +80,9 @@
             },
             fontSize() {
                 return fontSize(this.size);
+            },
+            focusBorder() {
+                return this.isTrue === true ? "rgba(59, 153, 252, 0.3)" : "rgba(204, 204, 204, 0.3)"; 
             }
         },
         methods: {
@@ -112,12 +126,6 @@
                 if (e.keyCode === 13 || e.keyCode === 32) {
                     this.onClick(e)
                 }
-            },
-            mouseover() {
-                console.log("IN");
-            },
-            mouseleave() {
-                console.log("OUT")
             }
         }
 
@@ -185,7 +193,7 @@
     }
 
     &:focus {
-        outline: 2px solid rgba(59, 153, 252, 0.3);
+        outline: 2px solid v-bind(focusBorder);
     }
   }
 }

@@ -31,8 +31,9 @@ export const useToggleProps = {
     val: {},
     trueValue: { default: true },
     falseValue: { default: false },
-    leftLabel: String,
-    rightLabel: String,
+    labelLeft: String,
+    labelRight: String,
+    labelClass: { type: String, default: "dku-text"},
     color : { type: String, default: 'rgba(111, 125, 137, 0.8)' },
     disable: Boolean,
     tabindex: [ String, Number ]
