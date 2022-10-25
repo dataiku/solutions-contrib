@@ -17,7 +17,7 @@ def update_ml_task_regression_metric(ml_task_settings, regression_metric):
     ALLOWED_REGRESSION_METRICS = ["EVS", "MAPE", "MAE", "MSE", "RMSE", "RMSLE", "R2", "CUSTOM"]
     if regression_metric not in ALLOWED_REGRESSION_METRICS:
         log_message = "You can't use metric '{}' in this function! Allowed metrics are '{}'"\
-        .format(ALLOWED_REGRESSION_METRICS)
+        .format(regression_metric, ALLOWED_REGRESSION_METRICS)
         raise Exception(log_message)
     ml_task_settings.set_metric(metric=regression_metric)
     ml_task_settings.save()
