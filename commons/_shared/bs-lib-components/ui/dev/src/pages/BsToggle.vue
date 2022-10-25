@@ -65,7 +65,6 @@
     </div>
 </template>
 <script>
-import {BsButtonToggle} from "ui"
 import {BsToggle} from "ui";
 
 export default {
@@ -77,7 +76,6 @@ export default {
     }
   },
   components: {
-    BsButtonToggle,
     BsToggle,
   },
   methods: {
