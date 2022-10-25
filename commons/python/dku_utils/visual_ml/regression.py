@@ -1,7 +1,7 @@
 def update_ml_task_regression_metric(ml_task_settings, regression_metric):
     """
     Updates the optimization metric set in a ml_task regression model.
-    :param ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
+    :param ml_task_settings: dataikuapi.dss.ml.DSSRegressionMLTaskSettings: DSS MLTask settings object.
     :param regression_metric: str: Regression metric to set. It must be in 
         ["EVS", "MAPE", "MAE", "MSE", "RMSE", "RMSLE", "R2", "CUSTOM"]
         With: 
