@@ -23,4 +23,4 @@ def update_ml_task_classification_metric(ml_task_settings, classification_metric
         raise Exception(log_message)
     ml_task_settings.set_metric(metric=classification_metric)
     ml_task_settings.save()
-    return ml_task_settings
+    pass
