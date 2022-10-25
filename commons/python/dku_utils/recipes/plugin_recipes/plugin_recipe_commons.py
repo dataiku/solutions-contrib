@@ -5,6 +5,21 @@ from ...datasets.dataset_commons import create_dataset_in_connection
 from ...folders.folder_commons import create_managed_folder_in_connection, get_managed_folder_id
 
 
+def update_plugin_recipe_parameters(project, recipe_name, recipe_parameters):
+    """
+    Updates the parameters of a plugin recipe.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param :recipe_name: str: Name of the recipe to create.
+    :param :recipe_parameters: dict: Parameters of the recipe.
+    """
+    recipe_settings, recipe_settings_dict = get_recipe_settings_and_dictionary(project, recipe_name, True)
+    recipe_settings_dict["params"]["customConfig"] = recipe_parameters
+    recipe_settings.recipe_settings = recipe_settings_dict
+    recipe_settings.save()
+    pass
+
+
 class PluginRecipeHandler():
     """
     Allows to instanciate plugin recipes programmatically.
