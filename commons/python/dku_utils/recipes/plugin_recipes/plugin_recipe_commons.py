@@ -10,7 +10,7 @@ def update_plugin_recipe_parameters(project, recipe_name, recipe_parameters):
     Updates the parameters of a plugin recipe.
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param :recipe_name: str: Name of the recipe to create.
+    :param :recipe_name: str: Name of the plugin recipe.
     :param :recipe_parameters: dict: Parameters of the recipe.
     """
     recipe_settings, recipe_settings_dict = get_recipe_settings_and_dictionary(project, recipe_name, True)
