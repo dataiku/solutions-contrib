@@ -21,4 +21,4 @@ def update_ml_task_regression_metric(ml_task_settings, regression_metric):
         raise Exception(log_message)
     ml_task_settings.set_metric(metric=regression_metric)
     ml_task_settings.save()
-    return ml_task_settings
+    pass
