@@ -31,9 +31,6 @@ def remove_unavailable_features_from_ml_task_features_handling(project, ml_task_
     :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
         '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     :param ml_task_dataset_name: str: Name of the dataset linked with the ML task.
-
-    :returns: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
-        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     """
     ml_task_dataset_schema = get_dataset_schema(project, ml_task_dataset_name)
     ml_task_dataset_columns, __ = extract_dataset_schema_information(ml_task_dataset_schema)
@@ -48,7 +45,7 @@ def remove_unavailable_features_from_ml_task_features_handling(project, ml_task_
     
     ml_task_settings.get_raw()["preprocessing"]["per_feature"] = new_per_feature_handling
     ml_task_settings.save()
-    return ml_task_settings
+    pass
 
 
 def enable_features_in_ml_task_settings(ml_task_settings, list_of_features_to_enable):
@@ -58,14 +55,11 @@ def enable_features_in_ml_task_settings(ml_task_settings, list_of_features_to_en
     :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
         '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     :param list_of_features_to_enable: list: List of the ML task features to enable.
-
-    :returns: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
-        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     """
     for feature in list_of_features_to_enable:
         ml_task_settings.use_feature(feature)
     ml_task_settings.save()
-    return ml_task_settings
+    pass
 
 
 def reject_features_from_ml_task_settings(ml_task_settings, list_of_features_to_reject):
@@ -75,14 +69,11 @@ def reject_features_from_ml_task_settings(ml_task_settings, list_of_features_to_
     :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
         '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     :param list_of_features_to_reject: list: List of the ML task features to reject.
-
-    :returns: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
-        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
     """
     for feature in list_of_features_to_reject:
         ml_task_settings.reject_feature(feature)
     ml_task_settings.save()
-    return ml_task_settings
+    pass
 
 
 def get_models_metrics_dataframe(ml_task, list_of_model_ids):
@@ -120,7 +111,7 @@ def update_ml_task_feature_preprocessing(ml_task_settings, column, new_preproces
         ml_task_settings.get_raw()["preprocessing"]["per_feature"][column] = new_preprocessing_parameters
     print("Feature '{}' preprocessing Updated !\n".format(column, new_preprocessing_parameters))
     ml_task_settings.save()
-    return ml_task_settings
+    pass
 
 
 def get_last_session_trained_model_ids(ml_task):
