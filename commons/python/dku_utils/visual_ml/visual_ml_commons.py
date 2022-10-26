@@ -184,6 +184,22 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
     pass
 
 
+def get_last_session_trained_model_ids(ml_task):
+    """
+    Retrieves the IDs of the models trained during the last ML task session.
+        
+    :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
+        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
+    :returns: last_session_trained_model_ids: list: List of all models trained in the last ML task session.
+    """
+    models_per_sessions_dataframe = get_models_per_sessions_dataframe(ml_task)
+    models_per_sessions_dataframe = models_per_sessions_dataframe\
+    [models_per_sessions_dataframe["session_id_numerical"] ==\
+     models_per_sessions_dataframe["last_session_id_numerical"]]
+    last_session_trained_model_ids = list(models_per_sessions_dataframe["model_id"])
+    return last_session_trained_model_ids
+
+
 def get_models_per_sessions_dataframe(ml_task):
     """
     Retrieves a pandas DataFrame containing relations between trained models and their sessions IDs.
@@ -204,12 +220,16 @@ def get_models_per_sessions_dataframe(ml_task):
         all_sessions_data.append({"session_id": model_session_id,
                                   "session_id_numerical": model_session_id_numerical,
                                   "model_id": model_id})
-    last_session_id_numerical = max(all_session_ids_numerical)
-    models_per_sessions_dataframe = pd.DataFrame(all_sessions_data)
-    models_per_sessions_dataframe.sort_values(by="session_id_numerical", axis=0, ascending=False, inplace=True)
-    models_per_sessions_dataframe["last_session_id_numerical"] = last_session_id_numerical
-    models_per_sessions_dataframe.index = range(len(models_per_sessions_dataframe))
-    return models_per_sessions_dataframe
+    if len(all_session_ids_numerical) > 0:
+        last_session_id_numerical = max(all_session_ids_numerical)
+        models_per_sessions_dataframe = pd.DataFrame(all_sessions_data)
+        models_per_sessions_dataframe.sort_values(by="session_id_numerical", axis=0, ascending=False, inplace=True)
+        models_per_sessions_dataframe["last_session_id_numerical"] = last_session_id_numerical
+        models_per_sessions_dataframe.index = range(len(models_per_sessions_dataframe))
+    else:
+        models_per_sessions_dataframe = pd.DataFrame(columns=["session_id", "session_id_numerical",
+                                                              "model_id", "last_session_id_numerical"])
+        return models_per_sessions_dataframe
 
 
 def get_ml_task_best_model_id(ml_task, list_of_model_ids, metric_name, bool_greater_metric_is_better):
