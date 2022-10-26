@@ -149,7 +149,15 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
             'RMSLE': 'Root Mean Square Logarithmic Error',
             'R2': 'R2 Score',
             'CUSTOM': 'Custom code'}
-        - Classification: 
+        - Classification: {'F1': 'F1 score', 
+            'ACCURACY': 'Accuracy',
+            'PRECISION': 'Precision',
+            'RECALL': 'Recall',
+            'COST_MATRIX': 'Cost matrix',
+            'AUC': 'Area Under the Curve',
+            'LOG_LOSS': 'Log loss',
+            'CUMULATIVE_LIFT': 'Cumulative lift',
+            'CUSTOM': 'Custom code'}
         - Clustering: {'silhouette': 'Silhouette coefficient'}
     :param bool_greater_metric_is_better: bool: Boolean parameter to precise if having a greater metric is beter.
     :param flow_training_recipe_name: str: Name of the flow model training recipe associated with the ML task.
