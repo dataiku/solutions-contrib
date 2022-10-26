@@ -241,7 +241,15 @@ def get_ml_task_best_model_id(ml_task, list_of_model_ids, metric_name, bool_grea
             'RMSLE': 'Root Mean Square Logarithmic Error',
             'R2': 'R2 Score',
             'CUSTOM': 'Custom code'}
-        - Classification: 
+        - Classification: {'F1': 'F1 score', 
+            'ACCURACY': 'Accuracy',
+            'PRECISION': 'Precision',
+            'RECALL': 'Recall',
+            'COST_MATRIX': 'Cost matrix',
+            'AUC': 'Area Under the Curve',
+            'LOG_LOSS': 'Log loss',
+            'CUMULATIVE_LIFT': 'Cumulative lift',
+            'CUSTOM': 'Custom code'} 
         - Clustering: {'silhouette': 'Silhouette coefficient'}
     :param bool_greater_metric_is_better: bool: Boolean parameter to precise if having a greater metric is beter.
     :returns: ml_task_best_model str: Model ID from 'list_of_model_ids' that get the best performance in the ML task.
