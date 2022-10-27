@@ -1,6 +1,7 @@
 import pandas as pd 
 from ..datasets.dataset_commons import (get_dataset_schema,
                                         extract_dataset_schema_information)
+import time
 import re
 
 
@@ -134,15 +135,20 @@ def get_last_session_trained_model_ids(ml_task):
     return last_session_trained_model_ids
 
 
-def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool_greater_metric_is_better,
-                                                      flow_training_recipe_name, flow_saved_model_id):
+def train_models_then_deploy_best_from_last_session(ml_task, metric_name, bool_greater_metric_is_better,
+                                                    bool_compute_sub_population_analysis,
+                                                    sub_population_analysis_variables,
+                                                    sub_population_analysis_test_set_fraction_to_sample,
+                                                    bool_compute_partial_dependencies,
+                                                    partial_dependencies_variables,
+                                                    partial_dependencies_test_set_fraction_to_sample,
+                                                    flow_training_recipe_name, flow_saved_model_id):
     """
-    Retain models defined in a ML task in a new training session. 
-        Then the model that get the bests performances in the training session is deployed 
-        (DISCLAIMER: the model deployed can be different from the one already deployed in the flow).
+    Train models defined in a ML task in a new training session. 
+    Then the model that get the bests performances in the training session is deployed on an existing flow model. 
+    (DISCLAIMER: the model deployed can be different from the one previously deployed in the flow).
         
-    :param: ml_task_settings: dataikuapi.dss.ml.DSS[MLTaskType]MLTaskSettings: DSS MLTask settings object.
-        '[MLTaskType]' varies depending on the type of MLTask (Regression, Classification, Clustering).
+    :param: ml_task: dataikuapi.dss.ml.DSSMLTask: DSS MLTask object.
     :param metric_name: str: Name of the metric against which models are compared.
         Some of the native DSS metrics are:
         - Regression: {'EVS': 'Explained Variance Score',
@@ -164,16 +170,32 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
             'CUSTOM': 'Custom code'}
         - Clustering: {'silhouette': 'Silhouette coefficient'}
     :param bool_greater_metric_is_better: bool: Boolean parameter to precise if having a greater metric is beter.
+    :param: bool_compute_sub_population_analysis: bool: Parameter precising if a Subpopulation analysis must be
+        computed on the model test set, before it is deployed.
+    :param: sub_population_analysis_variables: list: List of the features on which the subpopulation analysis
+        must be computed.
+    :param: sub_population_analysis_test_set_fraction_to_sample: double: Fraction/percent (Value must be in ]0, 1] !)
+        of the trained model test set to use in the Subpopulation analysis computation.
+    :param: bool_compute_partial_dependencies: bool: Parameter precising if a Partial dependencies must be
+        computed on the model test set, before it is deployed.
+    :param: partial_dependencies_variables: list: List of the features on which the partial dependencies
+        must be computed.
+    :param: partial_dependencies_test_set_fraction_to_sample: double: Fraction/percent (Value must be in ]0, 1] !)
+        of the trained model test set to use in the Partial dependencies computation.
     :param flow_training_recipe_name: str: Name of the flow model training recipe associated with the ML task.
     :param flow_saved_model_id: str: ID of the flow deployed model associated with the ML task.
     """
     # Model retrain:
-    print("Model retraining ...")
+    print("Models training ...")
     previously_trained_models_ids = ml_task.get_trained_models_ids()
+    train_start_time = time.time()
     ml_task.train()
-    print("Model retrained !")
+    train_end_time = time.time()
+    print("Models trained !")
+    models_training_duration = (train_end_time - train_start_time) / 60.0
+    print("Models train duration : {} min ...\n".format(models_training_duration))
     all_trained_models_ids = ml_task.get_trained_models_ids()
-    print("Deploying the model having the best performances among the last trained models ...")
+    print("Looking for the model having the best performances among the last trained models ...")
     last_session_models_ids = [model_id for model_id in all_trained_models_ids
                                if model_id not in previously_trained_models_ids]
     models_metrics_dataframe = get_models_metrics_dataframe(ml_task, last_session_models_ids)
@@ -190,7 +212,17 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
         
     models_metrics_dataframe.index = range(len(models_metrics_dataframe))
     best_model_in_last_session = models_metrics_dataframe["model_id"][0]
-    
+    print("Best model is '{}'!".format(best_model_in_last_session))
+    if bool_compute_sub_population_analysis:
+        compute_sub_population_analysis(ml_task, best_model_in_last_session, sub_population_analysis_variables,
+                                        sub_population_analysis_test_set_fraction_to_sample)
+        pass
+
+    if bool_compute_partial_dependencies:
+        compute_partial_dependencies(ml_task, best_model_in_last_session, partial_dependencies_variables,
+                                     partial_dependencies_test_set_fraction_to_sample)
+        pass
+    print("Deploying the best model ...")
     ml_task.redeploy_to_flow(model_id=best_model_in_last_session,
                              recipe_name=flow_training_recipe_name,
                              saved_model_id=flow_saved_model_id,
@@ -273,3 +305,80 @@ def get_ml_task_best_model_id(ml_task, list_of_model_ids, metric_name, bool_grea
     models_metrics_dataframe.index = range(len(models_metrics_dataframe))
     ml_task_best_model = models_metrics_dataframe["model_id"][0]
     return ml_task_best_model
+
+
+def get_trained_model_test_set_size(ml_task, trained_model_id):
+    """
+    Retrieves the test set size of a ML task trained model.
+
+    :param: ml_task: dataikuapi.dss.ml.DSSMLTask: DSS MLTask object.
+    :param: trained_model_id: str: ID of the ML task trained model.
+    :returns: model_test_set_size int: Model's test set size.
+    """
+    model_details = ml_task.get_trained_model_details(trained_model_id)
+    model_test_set_size = model_details.details["splitDesc"]["testRows"]
+    return model_test_set_size
+
+
+def compute_sub_population_analysis(ml_task, trained_model_id, sub_population_analysis_variables,
+                                    test_set_fraction_to_sample):
+    """
+    Computes a Subpopulation analysis on a ML task trained model test set.
+
+    :param: ml_task: dataikuapi.dss.ml.DSSMLTask: DSS MLTask object.
+    :param: trained_model_id: str: ID of the ML task trained model.
+    :param: sub_population_analysis_variables: list: List of the features on which the subpopulation analysis
+        must be computed.
+    :param: test_set_fraction_to_sample: double: Fraction/percent (Value must be in ]0, 1] !)
+        of the trained model test set to use in the Subpopulation analysis computation.
+    """
+    if (test_set_fraction_to_sample < 0) or (test_set_fraction_to_sample > 1):
+        log_message = "Parameter '{}' must be in ]0, 1] ! Please update it.".format(test_set_fraction_to_sample)
+        raise Exception(log_message)
+    print("Computing the subpopulation analysis (model_id = '{}') on the test set, with variables '{}'\n"\
+        .format(trained_model_id, sub_population_analysis_variables))
+    sub_population_analysis_start_time = time.time()
+    model_test_set_size = get_trained_model_test_set_size(ml_task, trained_model_id)
+    sample_size_in_sub_population_analysis = int(model_test_set_size * test_set_fraction_to_sample)
+    model_details = ml_task.get_trained_model_details(trained_model_id)
+    model_details.compute_subpopulation_analyses(split_by=sub_population_analysis_variables,
+                                                 wait=True,
+                                                 sample_size=sample_size_in_sub_population_analysis,
+                                                 n_jobs=-1)
+    sub_population_analysis_end_time = time.time()
+    print("Subpopulation analysis computed!\n")
+    sub_population_analysis_duration = (sub_population_analysis_end_time - sub_population_analysis_start_time) / 60.0
+    print("Subpopulation analysis computation time : {} min ...\n".format(sub_population_analysis_duration))
+    pass
+
+
+def compute_partial_dependencies(ml_task, trained_model_id, partial_dependencies_variables,
+                                 test_set_fraction_to_sample):
+    """
+    Computes a Partial dependencies on a ML task trained model test set.
+
+    :param: ml_task: dataikuapi.dss.ml.DSSMLTask: DSS MLTask object.
+    :param: trained_model_id: str: ID of the ML task trained model.
+    :param: partial_dependencies_variables: list: List of the features on which the partial dependencies
+        must be computed.
+    :param: test_set_fraction_to_sample: double: Fraction/percent (Value must be in ]0, 1] !)
+        of the trained model test set to use in the Subpopulation analysis computation.
+    """
+    if (test_set_fraction_to_sample < 0) or (test_set_fraction_to_sample > 1):
+        log_message = "Parameter '{}' must be in ]0, 1] ! Please update it.".format(test_set_fraction_to_sample)
+        raise Exception(log_message)
+    print("Computing the partial depencencies (model_id = '{}') on the test set, with variables '{}'\n"\
+          .format(trained_model_id, partial_dependencies_variables))
+    partial_dependencies_start_time = time.time()
+    model_test_set_size = get_trained_model_test_set_size(ml_task, trained_model_id)
+    sample_size_in_partial_dependencies = int(model_test_set_size * test_set_fraction_to_sample)
+    model_details = ml_task.get_trained_model_details(trained_model_id)
+    model_details.compute_partial_dependencies(partial_dependencies_variables,
+                                               wait=True,
+                                               sample_size=sample_size_in_partial_dependencies,
+                                               n_jobs=-1)
+    partial_dependencies_end_time = time.time()
+    print("Partial depencencies computed!\n")
+    partial_dependencies_duration = (partial_dependencies_end_time - partial_dependencies_start_time) / 60.0
+    print("Partial depencencies computation time : {} min ...\n".format(partial_dependencies_duration))
+    pass
