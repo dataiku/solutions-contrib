@@ -1,7 +1,3 @@
-import { h, toRaw } from "vue";
-import { stopAndPrevent,} from "../../utils/events"
-
-
 export const useSizeDefaults = {
     xs: 18,
     sm: 22,
