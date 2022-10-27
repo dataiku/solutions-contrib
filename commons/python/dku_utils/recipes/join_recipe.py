@@ -264,12 +264,19 @@ class programmaticJoinHandler:
         alias_are_defined =  not ((columns_to_select_alias == {}) or (columns_to_select_alias == None))
         selected_columns_settings = []
         for column_name in columns_to_select_in_dataset:
-            column_datatype = get_dataset_column_datatype(self.project,
-                                                          dataset_name,
-                                                          column_name)
+            try:
+                column_datatype = get_dataset_column_datatype(self.project,
+                                                            dataset_name,
+                                                            column_name)
+            except:
+                print("Exception encountered! Column '{}' will be considered as a pre-join computed column...")
+                computed_column_virtual_input_settings, computed_column_datatype =\
+                    self.get_computed_column_virtual_input_information(column_name)
+                column_datatype = computed_column_datatype
+            
             column_settings =  {'name': column_name,
                                 'table': self.recipe_last_join_input_id,
-                                'type': column_datatype}    
+                                'type': column_datatype}
             if alias_are_defined:
                 if column_name in columns_to_select_alias.keys():
                     column_settings['alias'] = columns_to_select_alias[column_name]
@@ -278,6 +285,17 @@ class programmaticJoinHandler:
             selected_columns_settings.append(column_settings)
         return selected_columns_settings
     
+    def get_computed_column_virtual_input_information(self, computed_column_name):
+        computed_column_virtual_input_settings = {}
+        for virtual_input_settings in self.recipe_payload["virtualInputs"]:
+            all_virtual_input_computed_column_settings = virtual_input_settings["computedColumns"]
+            for computed_column_settings in all_virtual_input_computed_column_settings:
+                column_name = computed_column_settings.get("name")
+                if column_name == computed_column_name:
+                    computed_column_virtual_input_settings = virtual_input_settings
+                    computed_column_datatype = computed_column_settings["type"]
+        return computed_column_virtual_input_settings, computed_column_datatype
+
     def update_recipe_selected_columns_settings(self, selected_columns_settings):
         """
         Updates the recipe's selected columns with new settings.
