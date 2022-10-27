@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="bs-select__label dss-caption-400" :for="bsLabelId" v-if="bsLabel">{{ bsLabel }}</label>
+        <label class="bs-select__label dss-caption-400 q-mb-xs" :for="bsLabelId" v-if="bsLabel">{{ bsLabel }}</label>
         <q-select
             v-bind="$attrs"
             v-on="$listeners"
