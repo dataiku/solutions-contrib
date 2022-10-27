@@ -77,6 +77,10 @@ def reject_features_from_ml_task_settings(ml_task_settings, list_of_features_to_
 
 
 def get_models_metrics_dataframe(ml_task, list_of_model_ids):
+    if len(list_of_model_ids) == 0:
+        log_message = "Not any model set in variable '{}'! Please check its content "\
+        "or if ml_task has some trained models.".format(list_of_model_ids)
+        raise Exception(log_message)
     models_metrics = []
     
     for model_id in list_of_model_ids:
@@ -177,10 +181,13 @@ def retrain_models_then_deploy_best_from_last_session(ml_task, metric_name, bool
         sort_metrics_ascending = False
     else:
         sort_metrics_ascending = True
-    models_metrics_dataframe.sort_values(by=metric_name,
-                                         ascending=sort_metrics_ascending,
-                                         axis=0,
-                                         inplace=True)
+    try:
+        models_metrics_dataframe.sort_values(by=metric_name, ascending=sort_metrics_ascending,
+                                             axis=0, inplace=True)
+    except KeyError:
+        models_metrics_dataframe.sort_values(by=metric_name.lower(), ascending=sort_metrics_ascending,
+                                             axis=0, inplace=True)
+        
     models_metrics_dataframe.index = range(len(models_metrics_dataframe))
     best_model_in_last_session = models_metrics_dataframe["model_id"][0]
     
