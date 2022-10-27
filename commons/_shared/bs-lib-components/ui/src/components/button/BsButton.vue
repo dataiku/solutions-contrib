@@ -1,7 +1,6 @@
 <template>
     <q-btn
         v-bind="$attrs"
-        v-on="$listeners"
         unelevated
     >
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">

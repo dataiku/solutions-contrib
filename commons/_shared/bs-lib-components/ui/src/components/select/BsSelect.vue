@@ -3,7 +3,6 @@
         <label class="bs-select__label dss-caption-400 q-mb-xs" :for="bsLabelId" v-if="bsLabel">{{ bsLabel }}</label>
         <q-select
             v-bind="$attrs"
-            v-on="$listeners"
             dropdown-icon="r_expand_more"
             class="bs-select"
             popup-content-class="bs-select__popup dds-text-400"

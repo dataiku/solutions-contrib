@@ -2,20 +2,20 @@
 @import 'fonts-mixins.scss';
 
 @font-face {
-    font-family : SourceSansPro;
-    src : url(/assets/fonts/SourceSansPro-Bold.woff);
+    font-family : 'SourceSansPro';
+    src : url("./fonts/SourceSansPro-Bold.woff") format('woff');
     font-weight: $font-weight-bold;
 }
 
 @font-face {
-    font-family : SourceSansPro;
-    src : url(/assets/fonts/SourceSansPro-Semibold.woff);
+    font-family : 'SourceSansPro';
+    src : url("./fonts/SourceSansPro-Semibold.woff") format('woff');
     font-weight: $font-weight-semi-bold;
 }
 
 @font-face {
-    font-family : SourceSansPro;
-    src : url(/assets/fonts/SourceSansPro-Regular.woff);
+    font-family : 'SourceSansPro';
+    src : url("./fonts/SourceSansPro-Regular.woff") format('woff');
     font-weight: $font-weight-normal;
 }
 
