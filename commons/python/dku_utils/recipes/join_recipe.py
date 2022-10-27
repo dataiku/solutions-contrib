@@ -286,6 +286,14 @@ class programmaticJoinHandler:
         return selected_columns_settings
     
     def get_computed_column_virtual_input_information(self, computed_column_name):
+        """
+        Retrieves the information associated with a computed column virtual inputs.
+        :param: computed_column_name: str: Name of the recipe computed columns
+
+        :returns: computed_column_virtual_input_settings: dict: Settings associated
+            with the computed column virtual inputs.
+        :returns: computed_column_datatype: str: Datatype of the computed column. 
+        """
         computed_column_virtual_input_settings = {}
         for virtual_input_settings in self.recipe_payload["virtualInputs"]:
             all_virtual_input_computed_column_settings = virtual_input_settings["computedColumns"]
