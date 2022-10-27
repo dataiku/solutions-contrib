@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-md q-gutter-lg" style="max-width: 200px">
+    <div class="q-pa-md q-gutter-lg" style="max-width: 300px">
         <BsSelect v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test"></BsSelect>
         <BsSelect v-model="model" :options="options" borderless bsLabel="Font Size" bsLabelId="test_2"></BsSelect>
         <BsSelect v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test">

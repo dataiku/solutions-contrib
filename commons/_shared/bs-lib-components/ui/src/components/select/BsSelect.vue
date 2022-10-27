@@ -24,7 +24,7 @@
         },
         bsLabelId: {
             type: String,
-        }
+        },
     },
     
 }
