@@ -1,7 +1,7 @@
 #!/bin/bash
 
 searchString="url(/static/dataiku/fonts/"
-replaceString="url(/assets/fonts/"
+replaceString="url(./fonts/"
 
 sed -i '' "s#$searchString#$replaceString#g" dku-less/fonts.less && \
 rm -f dku-less/*.scss && \

@@ -4,6 +4,7 @@ import { Quasar } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 import 'quasar-ui-bs/src/index.sass'
+import './src/app.scss'
 
 
 import 'vite/modulepreload-polyfill'
