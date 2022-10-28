@@ -60,7 +60,7 @@ module.exports = function (ctx) {
     },
 
     devServer: {
-      // port: 8080,
+      port: 31100,
       open: true // opens browser window automatically
     },
 
