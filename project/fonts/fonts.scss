@@ -4,19 +4,19 @@ $font-weight-bold: 600;
 
 @font-face {
     font-family : 'SourceSansPro';
-    src : url("./assets/fonts/SourceSansPro-Bold.woff") format('woff');
+    src : url("./SourceSansPro-Bold.woff") format('woff');
     font-weight: $font-weight-bold;
 }
 
 @font-face {
     font-family : 'SourceSansPro';
-    src : url("./assets/fonts/SourceSansPro-Semibold.woff") format('woff');
+    src : url("./SourceSansPro-Semibold.woff") format('woff');
     font-weight: $font-weight-semi-bold;
 }
 
 @font-face {
     font-family : 'SourceSansPro';
-    src : url("./assets/fonts/SourceSansPro-Regular.woff") format('woff');
+    src : url("./SourceSansPro-Regular.woff") format('woff');
     font-weight: $font-weight-normal;
 }
 
