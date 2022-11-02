@@ -260,7 +260,7 @@ def get_models_per_sessions_dataframe(ml_task):
     else:
         models_per_sessions_dataframe = pd.DataFrame(columns=["session_id", "session_id_numerical",
                                                               "model_id", "last_session_id_numerical"])
-        return models_per_sessions_dataframe
+    return models_per_sessions_dataframe
 
 
 def get_ml_task_best_model_id(ml_task, list_of_model_ids, metric_name, bool_greater_metric_is_better):
