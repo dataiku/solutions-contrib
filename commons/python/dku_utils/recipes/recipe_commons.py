@@ -31,7 +31,7 @@ def switch_recipe_engine(project, recipe_name, new_engine):
     recipe = project.get_recipe(recipe_name)
     recipe_settings = recipe.get_settings()
     recipe_type = recipe_settings.type
-    print("Switching recipe '{}' engine: recipe_type : '{}'".format(recipe_name, recipe_type))
+    print("Switching recipe '{}' engine (recipe_type : '{}') ...".format(recipe_name, recipe_type))
     
     if recipe_type in ["prepare", "shaker", "sampling"]:
         recipe_settings.get_recipe_params()["engineType"] = new_engine
@@ -42,6 +42,7 @@ def switch_recipe_engine(project, recipe_name, new_engine):
     else:
         recipe_settings.get_json_payload()["engineType"] = new_engine
     recipe_settings.save()
+    print("Recipe '{}' engine successfully switched toward '{}'!".format(recipe_name, new_engine))
     pass
 
 
