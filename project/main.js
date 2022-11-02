@@ -1,16 +1,11 @@
-import { createApp } from 'vue'
-import App from "./src/App.vue"
 import { Quasar } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 import 'quasar-ui-bs/src/index.sass'
 import './fonts/fonts.scss'
-
-
 import 'vite/modulepreload-polyfill'
 import { QuasarBs } from 'quasar-ui-bs'
-
-const myApp = createApp(App)
+import { myApp } from './src/main'
 
 
 myApp.use(Quasar, {
@@ -18,5 +13,6 @@ myApp.use(Quasar, {
 })
 
 myApp.use(QuasarBs)
+
 
 myApp.mount('#app')

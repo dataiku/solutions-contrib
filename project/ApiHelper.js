@@ -1,9 +1,12 @@
-import axios from "axios";
+import axios_ from "axios";
 
 
 const mode = process.env.NODE_ENV
 
-axios.defaults.baseURL = mode === "production" ?  parent.getWebAppBackendUrl('') : "http://127.0.0.1:5000";
+
+const axios = axios_.create({
+    baseURL: mode === "production" ?  parent.getWebAppBackendUrl('') : "http://127.0.0.1:5000",
+})
 
 axios.interceptors.response.use((response) => {
     return response.data
@@ -12,7 +15,6 @@ axios.interceptors.response.use((response) => {
     return Promise.reject(error);
 })
 
-
 export let APIErrors = [];
 
-export let API = {}
+export default axios;

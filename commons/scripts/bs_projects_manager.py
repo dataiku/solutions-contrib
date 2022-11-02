@@ -15,6 +15,10 @@ class InstallationType(Enum):
     PULL="p"
 
 
+# TODO : Split part of these files in src folder to make them general for the template
+DYNAMIC_TEMPLATE_FILES_FOLDERS = ["package.json","requirements.txt","src","index.html"]
+
+
 def is_git_repo(path,remote_url=None):
     try:
         repo = git.Repo(path)
@@ -66,9 +70,33 @@ def get_members(zip,filters=["commons","project"]):
         name = zipinfo.filename
         # only check files (not directories)
         if len(name) > offset and any([part in name for part in filters]):
+            removed_prefix_name = name[offset:]
+            if len(filters) == 1 and filters[0] == "project":
+                if not any([file_folder in removed_prefix_name for file_folder in DYNAMIC_TEMPLATE_FILES_FOLDERS]):
+                    zipinfo.filename = removed_prefix_name
+                    yield zipinfo
+            else:
+                zipinfo.filename = removed_prefix_name
+                yield zipinfo
             # remove the common prefix
-            zipinfo.filename = name[offset:]
-            yield zipinfo
+
+def merge_npm_packages(new_template_package, package_dest):
+    merged_package = {}
+    for key in new_template_package:
+        if key != "dependencies" and key != "devDependencies":
+            merged_package[key] = new_template_package[key]
+        else:
+            merged_package[key] = {dep_ : package_dest[key][dep_] for dep_ in package_dest[key]}
+            for dep in new_template_package[key]:
+                if not dep in package_dest[key]:
+                    merged_package[key][dep] =  package_dest[key][dep]
+    
+    return merged_package
+
+            
+
+
+
 
 def get_base_zip_tag_url(base_git_url,org_name,project_name):
     return f"{base_git_url}/{org_name}/{project_name}/archive/refs/tags/"
@@ -165,7 +193,6 @@ class ProjectInstance(object):
 
     
     def update_commons(self):
-
         path_to_repo = os.path.join(os.getcwd(),self.project_path)
         is_repo_present = is_git_repo(path_to_repo)
         assert is_repo_present, "No projects git repo is present"
@@ -189,6 +216,23 @@ class ProjectInstance(object):
         shutil.rmtree(os.path.join(path_to_repo,"commons"))
 
         z.extractall(path_to_repo,get_members(z,filters=["commons"]))
+
+        # Extracting infra files
+        z.extractall(path_to_repo,get_members(z,filters=["project"]))
+
+        # Extract and merge package.json file
+        with z.open("package.json") as f:
+            new_template_package = json.load(f)
+        
+        path_to_npm_package = os.path.join(path_to_repo,"project","package.json")
+        with open(path_to_npm_package) as f:
+            package_dest = json.load(f)
+        
+        merged_package = merge_npm_packages(new_template_package,package_dest)
+
+        os.remove(path_to_npm_package)
+        with open(path_to_npm_package,"w") as f:
+            json.dump(merged_package,f)
 
         path_to_deps = os.path.join(path_to_repo,"project","deps.json")
 
@@ -271,6 +315,13 @@ if __name__ == "__main__":
 
     ProjectInstance(is_update,project_remote_url,COMMONS_GIT_REPO_SSH,BASE_ZIP_URL,
                         commons_tag,project_path)
+
+    
+
+
+    
+
+
 
 
 
