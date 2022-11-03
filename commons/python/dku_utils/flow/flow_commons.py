@@ -28,8 +28,10 @@ def get_flow_input_dataset_names(project):
 
 def get_all_flow_recipe_names(project):
     """
-    Retrieves all project recipe names. 
+    Retrieves all project recipe names.
+    
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    
     :returns: project_recipe_names: list: List of all project recipe names.
     """
     flow_recipes = project.list_recipes()
