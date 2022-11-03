@@ -214,14 +214,18 @@ def train_models_then_deploy_best_from_last_session(ml_task, metric_name, bool_g
     best_model_in_last_session = models_metrics_dataframe["model_id"][0]
     print("Best model is '{}'!".format(best_model_in_last_session))
     if bool_compute_sub_population_analysis:
-        compute_sub_population_analysis(ml_task, best_model_in_last_session, sub_population_analysis_variables,
-                                        sub_population_analysis_test_set_fraction_to_sample)
-        pass
+        if len(sub_population_analysis_variables) > 0:
+            compute_sub_population_analysis(ml_task, best_model_in_last_session, sub_population_analysis_variables,
+                                            sub_population_analysis_test_set_fraction_to_sample)
+        else:
+            print("Subpopulation analysis has not been computed because no variables were set in 'sub_population_analysis_variables'!")
 
     if bool_compute_partial_dependencies:
-        compute_partial_dependencies(ml_task, best_model_in_last_session, partial_dependencies_variables,
-                                     partial_dependencies_test_set_fraction_to_sample)
-        pass
+        if len(partial_dependencies_variables) > 0:
+            compute_partial_dependencies(ml_task, best_model_in_last_session, partial_dependencies_variables,
+                                         partial_dependencies_test_set_fraction_to_sample)
+        else:
+            print("Partial dependencies has not been computed because no variables were set in 'partial_dependencies_variables'!")
     print("Deploying the best model ...")
     ml_task.redeploy_to_flow(model_id=best_model_in_last_session,
                              recipe_name=flow_training_recipe_name,
