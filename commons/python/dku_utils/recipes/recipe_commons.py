@@ -136,3 +136,22 @@ def override_aggregation_recipe_output_column_names(project, recipe_name, output
     recipe_settings.save()
     print("Recipe '{}' column names successfully overrided!".format(recipe_name))
     pass
+
+
+def switch_visual_recipe_input(project, recipe_name, current_input_dataset_name, new_input_dataset_name):
+    """
+    Changes the input of a VISUAL recipe (this function has not been tried on plugin recipes).
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param current_input_dataset_name: str: Name of the dataset that is currently the recipe input.
+    :param new_input_dataset_name: str: Name of the dataset that should be the new recipe input.
+    """
+    print("Changing recipe '{}' current input dataset '{}'  with dataset '{}'...".format(recipe_name,
+                                                                                      current_input_dataset_name,
+                                                                                      new_input_dataset_name))
+    recipe_settings, __ = get_recipe_settings_and_dictionary(project, recipe_name, False)
+    recipe_settings.replace_input(current_input_dataset_name, new_input_dataset_name)
+    recipe_settings.save()
+    print("Recipe '{}' input dataset successfully changed!".format(recipe_name))
+    pass
