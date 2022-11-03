@@ -24,7 +24,7 @@ def set_python_recipe_inputs(project, recipe_name, recipe_inputs):
 
 def set_python_recipe_outputs(project, recipe_name, recipe_outputs):
     """
-    Sets the output of a python recipe. 
+    Sets the outputs of a python recipe. 
     
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
