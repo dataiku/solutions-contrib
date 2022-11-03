@@ -17,18 +17,18 @@
 /* Buttons */
 /* Alerts */
 @font-face {
-  font-family: SourceSansPro;
-  src: url(/assets/fonts/SourceSansPro-Bold.woff);
+  font-family: "SourceSansPro";
+  src: url("./fonts/SourceSansPro-Bold.woff") format("woff");
   font-weight: 600;
 }
 @font-face {
-  font-family: SourceSansPro;
-  src: url(/assets/fonts/SourceSansPro-Semibold.woff);
+  font-family: "SourceSansPro";
+  src: url("./fonts/SourceSansPro-Semibold.woff") format("woff");
   font-weight: 500;
 }
 @font-face {
-  font-family: SourceSansPro;
-  src: url(/assets/fonts/SourceSansPro-Regular.woff);
+  font-family: "SourceSansPro";
+  src: url("./fonts/SourceSansPro-Regular.woff") format("woff");
   font-weight: 400;
 }
 .font-weight-normal {
@@ -600,4 +600,8 @@
 }
 .bs-toggle__content__active:focus {
   outline: 2px solid rgba(59, 153, 252, 0.3);
+}
+
+body {
+  font-family: "SourceSansPro";
 }

@@ -55,7 +55,7 @@ def get_members(zip,filters=["commons","project"]):
     # get all the path prefixes
     for name in zip.namelist():
         # only check files (not directories)
-        if not name.endswith('/'):
+        if not name.endswith('/') :
             # keep list of path elements (minus filename)
             parts.append(name.split('/')[:-1])
     # now find the common path prefix (if any)
@@ -68,17 +68,21 @@ def get_members(zip,filters=["commons","project"]):
     # now re-set the filenames
     for zipinfo in zip.infolist():
         name = zipinfo.filename
+        removed_prefix_name = name[offset:]
         # only check files (not directories)
-        if len(name) > offset and any([part in name for part in filters]):
-            removed_prefix_name = name[offset:]
+
+        if len(name) > offset and any([removed_prefix_name.startswith(val) for val in filters]):
             if len(filters) == 1 and filters[0] == "project":
                 if not any([file_folder in removed_prefix_name for file_folder in DYNAMIC_TEMPLATE_FILES_FOLDERS]):
+                    # remove the common prefix
                     zipinfo.filename = removed_prefix_name
                     yield zipinfo
+                
             else:
+                # remove the common prefix
                 zipinfo.filename = removed_prefix_name
                 yield zipinfo
-            # remove the common prefix
+            
 
 def merge_npm_packages(new_template_package, package_dest):
     merged_package = {}
@@ -89,7 +93,7 @@ def merge_npm_packages(new_template_package, package_dest):
             merged_package[key] = {dep_ : package_dest[key][dep_] for dep_ in package_dest[key]}
             for dep in new_template_package[key]:
                 if not dep in package_dest[key]:
-                    merged_package[key][dep] =  package_dest[key][dep]
+                    merged_package[key][dep] =  new_template_package[key][dep]
     
     return merged_package
 
@@ -193,6 +197,8 @@ class ProjectInstance(object):
 
     
     def update_commons(self):
+
+
         path_to_repo = os.path.join(os.getcwd(),self.project_path)
         is_repo_present = is_git_repo(path_to_repo)
         assert is_repo_present, "No projects git repo is present"
@@ -212,16 +218,23 @@ class ProjectInstance(object):
         tag_url = self.base_zip_url + requested_tag + ".zip"
         r = requests.get(tag_url,stream=True)
         z = zipfile.ZipFile(io.BytesIO(r.content))
+        z_ = zipfile.ZipFile(io.BytesIO(r.content))
+        relative_path, = zipfile.Path(z).iterdir()
 
-        shutil.rmtree(os.path.join(path_to_repo,"commons"))
 
-        z.extractall(path_to_repo,get_members(z,filters=["commons"]))
+        if os.path.isdir(os.path.join(path_to_repo,"commons")):
+            shutil.rmtree(os.path.join(path_to_repo,"commons"))
 
-        # Extracting infra files
         z.extractall(path_to_repo,get_members(z,filters=["project"]))
 
+        z_.extractall(path_to_repo,get_members(z_,filters=["commons"]))
+
+        # Extracting infra files
+        
+
         # Extract and merge package.json file
-        with z.open("package.json") as f:
+
+        with z.open(relative_path.name + "/project/" + "package.json") as f:
             new_template_package = json.load(f)
         
         path_to_npm_package = os.path.join(path_to_repo,"project","package.json")
@@ -232,7 +245,7 @@ class ProjectInstance(object):
 
         os.remove(path_to_npm_package)
         with open(path_to_npm_package,"w") as f:
-            json.dump(merged_package,f)
+            json.dump(merged_package,f,indent=4)
 
         path_to_deps = os.path.join(path_to_repo,"project","deps.json")
 
@@ -244,7 +257,7 @@ class ProjectInstance(object):
         
         os.remove(path_to_deps)
         with open(path_to_deps,"w") as f:
-            json.dump(deps,f)
+            json.dump(deps,f,indent=4)
     
     
     def pull_project(self):

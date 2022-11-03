@@ -321,7 +321,7 @@
               for: $props.bsLabelId
             }, vue.toDisplayString($props.bsLabel), 9, _hoisted_1))
           : vue.createCommentVNode("", true),
-        vue.createVNode(_component_q_select, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners), {
+        vue.createVNode(_component_q_select, vue.mergeProps(_ctx.$attrs, {
           "dropdown-icon": "r_expand_more",
           class: "bs-select",
           "popup-content-class": "bs-select__popup dds-text-400"
@@ -347,7 +347,7 @@
     function render$7(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_btn = vue.resolveComponent("q-btn");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_btn, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners), { unelevated: "" }), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_btn, vue.mergeProps(_ctx.$attrs, { unelevated: "" }), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -368,7 +368,7 @@
     function render$6(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_tooltip = vue.resolveComponent("q-tooltip");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_tooltip, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_tooltip, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -389,7 +389,7 @@
     function render$5(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_slider = vue.resolveComponent("q-slider");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_slider, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_slider, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -410,7 +410,7 @@
     function render$4(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_range = vue.resolveComponent("q-range");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_range, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_range, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -431,7 +431,7 @@
     function render$3(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_spinner = vue.resolveComponent("q-spinner");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_spinner, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_spinner, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -452,7 +452,7 @@
     function render$2(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_table = vue.resolveComponent("q-table");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_table, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_table, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -473,7 +473,7 @@
     function render$1(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_img = vue.resolveComponent("q-img");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_img, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_img, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,
@@ -494,7 +494,7 @@
     function render(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_q_icon = vue.resolveComponent("q-icon");
 
-      return (vue.openBlock(), vue.createBlock(_component_q_icon, vue.mergeProps(_ctx.$attrs, vue.toHandlers(_ctx.$listeners)), vue.createSlots({ _: 2 }, [
+      return (vue.openBlock(), vue.createBlock(_component_q_icon, vue.normalizeProps(vue.guardReactiveProps(_ctx.$attrs)), vue.createSlots({ _: 2 }, [
         vue.renderList(_ctx.$slots, function (_, slot) {
           return {
             name: slot,

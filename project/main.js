@@ -5,7 +5,7 @@ import 'quasar-ui-bs/src/index.sass'
 import './fonts/fonts.scss'
 import 'vite/modulepreload-polyfill'
 import { QuasarBs } from 'quasar-ui-bs'
-import { myApp } from './src/main'
+import { myApp } from './src/index'
 
 
 myApp.use(Quasar, {

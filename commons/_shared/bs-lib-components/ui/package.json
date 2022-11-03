@@ -54,6 +54,10 @@
     "vue-template-compiler": "^2.7.13",
     "zlib": "^1.0.5"
   },
+  "peerDependencies": {
+    "vue": "^3.0.0",
+    "quasar": "^2.0.0"
+  },
   "browserslist": [
     "last 4 Chrome versions",
     "last 4 Firefox versions",
