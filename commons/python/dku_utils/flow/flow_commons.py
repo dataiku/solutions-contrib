@@ -65,7 +65,7 @@ def move_dataset_in_flow_zone(project, dataset_name, flow_zone_name):
         flow_zone_id = get_flow_zone_id(project, flow_zone_name)
         project_dataset = project.get_dataset(dataset_name)
         project_dataset.move_to_zone(flow_zone_id)
-        print("Dataset '{}' moved in flow zone '{}'".format(dataset_name, flow_zone_name))
+        print("Dataset '{}' successfully moved in flow zone '{}'!".format(dataset_name, flow_zone_name))
         pass
     pass
 
@@ -83,7 +83,7 @@ def share_dataset_in_flow_zone(project, dataset_name, flow_zone_name):
         flow_zone_id = get_flow_zone_id(project, flow_zone_name)
         project_dataset = project.get_dataset(dataset_name)
         project_dataset.share_to_zone(flow_zone_id)
-        print("Dataset '{}' shared with flow zone '{}'".format(dataset_name, flow_zone_name))
+        print("Dataset '{}' successfully shared with flow zone '{}'!".format(dataset_name, flow_zone_name))
         pass
     pass
 
@@ -101,7 +101,24 @@ def unshare_dataset_from_flow_zone(project, dataset_name, flow_zone_name):
         flow_zone_id = get_flow_zone_id(project, flow_zone_name)
         project_dataset = project.get_dataset(dataset_name)
         project_dataset.unshare_from_zone(flow_zone_id)
-        print("Dataset '{}' unshared from flow zone '{}'".format(dataset_name, flow_zone_name))
+        print("Dataset '{}' successfully unshared from flow zone '{}'!".format(dataset_name, flow_zone_name))
+        pass
+    pass
+
+
+def move_recipe_in_flow_zone(project, recipe_name, flow_zone_name):
+    """
+    Moves a project recipe in a flow zone. 
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: string: Name of the recipe.
+    :param flow_zone_name: string: Name of the flow zone.
+    """
+    flow_zone_exists = check_if_flow_zone_exists(project, flow_zone_name)
+    if flow_zone_exists:
+        flow_zone_id = get_flow_zone_id(project, flow_zone_name)
+        project_recipe = project.get_recipe(recipe_name)
+        project_recipe.move_to_zone(flow_zone_id)
+        print("Recipe '{}' successfully moved in flow zone '{}'!".format(recipe_name, flow_zone_name))
         pass
     pass
 
