@@ -5,10 +5,9 @@ import pandas as pd
 def get_dataset_settings_and_dictionary(project, dataset_name, bool_get_settings_dictionary):
     """
     Retrieves the settings of a project dataset.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-
+    :param bool_get_settings_dictionary: bool: Precise if you to rerieve the dataset settings dictionary.
     :returns: 
         - dataset_settings: dataikuapi.dss.dataset.[DatasetType]DatasetSettings: Settings for a dataset. 
         - dataset_settings_dict: dict: Dictionary containing dataset settings.
@@ -27,8 +26,7 @@ def get_dataset_schema(project, dataset_name):
     
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-
-    :returns: dataset_schema: list: the schema of the dataset, with format format: 
+    :returns: dataset_schema: list: The schema of the dataset, with format: 
         [{'name': 'column_1', 'type': 'column_1_datatype'}, 
         {'name': 'column_2', 'type': 'column_2_datatype'}| 
     """
@@ -36,10 +34,26 @@ def get_dataset_schema(project, dataset_name):
     return dataset_schema
 
 
+def set_dataset_schema(project, dataset_name, new_dataset_schema):
+    """
+    Updates a dataset's schema.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param new_dataset_schema: list: The new schema the dataset must have, with format: 
+        [{'name': 'column_1', 'type': 'column_1_datatype'}, 
+        {'name': 'column_2', 'type': 'column_2_datatype'}| 
+    """
+    dataset_settings, dataset_settings_dict = get_dataset_settings_and_dictionary(project, dataset_name, True)
+    dataset_settings_dict["schema"]["columns"] = new_dataset_schema
+    dataset_settings.settings = dataset_settings_dict
+    dataset_settings.save()
+    pass
+
+
 def extract_dataset_schema_information(dataset_schema):
     """
     Extracts all schema information as lists from a 'dataset_schema'.
-
     :param dataset_schema: list: Schema of the dataset, with format: 
             [{'name': 'column_1', 'type': 'column_1_datatype'}, 
              {'name': 'column_2', 'type': 'column_2_datatype'}| 
@@ -56,7 +70,6 @@ def extract_dataset_schema_information(dataset_schema):
 def change_dataset_column_datatype(project, dataset_name, column_name, new_datatype):
     """
     Updates the datatype of one project dataset column, it its settings.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     """
@@ -80,10 +93,8 @@ def change_dataset_column_datatype(project, dataset_name, column_name, new_datat
 def get_dataset_column_datatype(project, dataset_name, column_name):
     """
     Retrieves the datatype of one project dataset column.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-
     :returns: column_datatype: str: Resquested dataset column datatype.
     """
     dataset_schema = get_dataset_schema(project, dataset_name)
@@ -105,7 +116,6 @@ def get_dataset_column_datatype(project, dataset_name, column_name):
 def clear_dataset(project, dataset_name):
     """
     Clears a project dataset.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     """
@@ -117,10 +127,8 @@ def clear_dataset(project, dataset_name):
 def get_last_dataset_metrics_information(project, dataset_name):
     """
     Retrieves all the last metrics information of a project dataset. 
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-
     :returns: last_metrics_information_df: pandas.core.frame.DataFrame: DataFrame containing all last dataset metrics information.
     """
     dataset = project.get_dataset(dataset_name)
@@ -143,15 +151,27 @@ def get_last_dataset_metrics_information(project, dataset_name):
 def get_dataset_connection_type(project, dataset_name):
     """
     Retrieves the connection type of a project dataset.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-
     :returns: dataset_connection_type: str: Dataset's connection type.
     """
     __, dataset_settings_dict = get_dataset_settings_and_dictionary(project, dataset_name, True)
     dataset_connection_type = dataset_settings_dict["type"]
     return dataset_connection_type
+
+
+def create_dataset_in_connection(project, dataset_name, connection_name):
+    """
+    Creates a dataset in a given connection.
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :param connection_name: str: Name of the connection.
+    """
+    builder = dataikuapi.CodeRecipeCreator("TMP_RECIPE", "python", project)
+    builder = builder.with_new_output_dataset(dataset_name, connection_name)
+    print("Dataset '{}' has been successfully created in connection '{}'.".format(dataset_name, connection_name))
+    pass
 
 
 def get_dataset_in_connection_settings(project, connection_name):
@@ -162,10 +182,8 @@ def get_dataset_in_connection_settings(project, connection_name):
             - It has no input.
             - Output is a temporary dataset in connection 'connection_name'.
         - Looking at the settings of the temporary dataset outputed by the recipe.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param connection_name: str: Name of the connection.
-
     :returns: dataset_in_connection_settings: dict: Settings of a project dataset in connection 'connection_name'.
     """
     TMP_DATASET_NAME = "dataset_for_connection_settings_extraction"
@@ -192,7 +210,6 @@ def infer_and_update_dataset_schema(project, dataset_name, connection_name):
             - Input is 'dataset_name'
             - Output is a temporary dataset.
         - Looking at the schema of the temporary dataset outputed by the recipe. 
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     :param connection_name: str: Name of the connection.
@@ -221,7 +238,6 @@ def infer_and_update_dataset_schema(project, dataset_name, connection_name):
 def update_dataset_varchar_limit(project, dataset_name, new_varchar_limit):
     """
     Updates a project dataset varchar limit to avoid connection issues while writing data.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     :param new_varchar_limit: int: New dataset varchar limit.
@@ -242,7 +258,6 @@ def update_dataset_varchar_limit(project, dataset_name, new_varchar_limit):
 def change_dataset_managed_state(project, dataset_name, bool_should_be_managed_state):
     """
     Changes the state a project dataset so that it becomes a 'managed' or a 'not managed' one.
-
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     :param bool_should_be_managed_state: bool: Precise if you want the dataset to be managed.

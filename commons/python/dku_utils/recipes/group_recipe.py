@@ -1,7 +1,30 @@
+import dataikuapi
 from .recipe_commons import get_recipe_settings_and_dictionary
+from ..datasets.dataset_commons import create_dataset_in_connection
 
 
-def change_group_recipe_aggregation_key(project, recipe_name, group_key, replace_existing_key):
+def instantiate_group_recipe(project, recipe_name, recipe_input_dataset_name,
+                             recipe_output_dataset_name, connection_name):
+    """
+    Instantiates a group recipe in the flow.
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param recipe_input_dataset_name: str: Name of the dataset that must be the recipe input.
+    :param recipe_output_dataset_name: str: Name of the dataset that must be the recipe output.
+    :param :connection_name: str: Name of the recipe output dataset connection.
+    """
+    print("Creating group recipe '{}' ...".format(recipe_name))
+    builder = dataikuapi.GroupingRecipeCreator(recipe_name, project)
+    builder.with_input(recipe_input_dataset_name)    
+    create_dataset_in_connection(project, recipe_output_dataset_name, connection_name)
+    builder.with_output(recipe_output_dataset_name)
+    builder.build()
+    print("Group recipe '{}' sucessfully created!".format(recipe_name))
+    pass
+
+
+def define_group_recipe_aggregation_key(project, recipe_name, group_key, replace_existing_key):
     """
     Changes the aggregation key of a group recipe. It can either add a column in the group key
         or replace the existing group key.
@@ -52,6 +75,24 @@ def define_group_recipe_aggregations(project, recipe_name, column_aggregations_m
     recipe_settings.set_global_count_enabled(bool_compute_global_count)
     recipe_settings.save()
     print("Recipe '{}' aggregations updated !".format(recipe_name))
+    pass
+
+
+def override_group_recipe_output_column_names(project, recipe_name, column_name_overrides):
+    """
+    Overrides the names of the output columns of a group recipe.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param column_name_overrides: dict: Columns overrides, with format:
+        {'default_name_from_the_group_recipe_1': 'new_name_1',
+        'default_name_from_the_group_recipe_2': 'new_name_2'}
+    """
+    recipe_settings, __ = get_recipe_settings_and_dictionary(project, recipe_name, False)
+    recipe_json_payload = recipe_settings.get_json_payload()
+    recipe_json_payload["outputColumnNameOverrides"] = column_name_overrides
+    recipe_settings.set_json_payload(recipe_json_payload)
+    recipe_settings.save()
     pass
 
 

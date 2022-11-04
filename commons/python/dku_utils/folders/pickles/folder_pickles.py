@@ -35,7 +35,6 @@ def write_pickle_in_managed_folder(project, managed_folder_name, data, pickle_na
     with managed_folder.get_writer(f"{pickle_name}.p") as w:
         w.write(pickle_bytes.getvalue())
         pass
-    w.close()
     pass
 
 

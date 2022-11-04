@@ -4,6 +4,7 @@ def get_recipe_settings_and_dictionary(project, recipe_name, bool_get_settings_d
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
+    :param bool_get_settings_dictionary: bool: Precise if you to rerieve the recipe settings dictionary.
 
     :returns: recipe_settings: dataikuapi.dss.recipe.[RecipeType]Settings: Settings for a recipe. 
     :returns: recipe_settings_dict: dict: Dictionary containing recipe settings.
@@ -30,7 +31,7 @@ def switch_recipe_engine(project, recipe_name, new_engine):
     recipe = project.get_recipe(recipe_name)
     recipe_settings = recipe.get_settings()
     recipe_type = recipe_settings.type
-    print("Switching recipe '{}' engine: recipe_type : '{}'".format(recipe_name, recipe_type))
+    print("Switching recipe '{}' engine (recipe_type : '{}') ...".format(recipe_name, recipe_type))
     
     if recipe_type in ["prepare", "shaker", "sampling"]:
         recipe_settings.get_recipe_params()["engineType"] = new_engine
@@ -41,6 +42,7 @@ def switch_recipe_engine(project, recipe_name, new_engine):
     else:
         recipe_settings.get_json_payload()["engineType"] = new_engine
     recipe_settings.save()
+    print("Recipe '{}' engine successfully switched toward '{}'!".format(recipe_name, new_engine))
     pass
 
 
@@ -106,3 +108,50 @@ def get_recipe_input_datasets(project, recipe_name):
     recipe_input_items = recipe_settings.get_recipe_inputs()["main"]["items"]
     recipe_input_datasets = [item["ref"] for item in recipe_input_items]
     return recipe_input_datasets
+
+
+def override_aggregation_recipe_output_column_names(project, recipe_name, output_column_name_overrides):
+    """
+    Overrides the output column names from recipes aggregating data.
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param output_column_name_overrides: dict: Dictionary containing the mapping between the output columns coming
+        from the recipe and the names they should have after column names overriding.
+        Example: {'column_1_min': 'minimum_value_from_column_1',
+                  'column_2_max': 'maximum_value_from_column_2'}
+    """
+    ALLOWED_RECIPE_TYPES = ["grouping", "window", "distinct", "topn"]
+    print("Overriding recipe '{}' output column names with dictionary: '{}'"\
+          .format(recipe_name, output_column_name_overrides))
+    recipe_settings, recipe_settings_dict = get_recipe_settings_and_dictionary(project, recipe_name, True)
+    recipe_type = recipe_settings_dict["type"]
+    if not recipe_type in ALLOWED_RECIPE_TYPES:
+        log_message = "Recipe '{}' is of type '{}', which is not allowed in this funtion. "\
+            "Allowed recipe types are: '{}'".format(recipe_name, recipe_type, ALLOWED_RECIPE_TYPES)
+        raise Exception(log_message)
+    recipe_payload = recipe_settings.get_json_payload()
+    recipe_payload["outputColumnNameOverrides"] = output_column_name_overrides
+    recipe_settings.set_json_payload(recipe_payload)
+    recipe_settings.save()
+    print("Recipe '{}' column names successfully overrided!".format(recipe_name))
+    pass
+
+
+def switch_visual_recipe_input(project, recipe_name, current_input_dataset_name, new_input_dataset_name):
+    """
+    Changes the input of a VISUAL recipe (this function has not been tried on plugin recipes).
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param recipe_name: str: Name of the recipe.
+    :param current_input_dataset_name: str: Name of the dataset that is currently the recipe input.
+    :param new_input_dataset_name: str: Name of the dataset that should be the new recipe input.
+    """
+    print("Changing recipe '{}' current input dataset '{}'  with dataset '{}'...".format(recipe_name,
+                                                                                      current_input_dataset_name,
+                                                                                      new_input_dataset_name))
+    recipe_settings, __ = get_recipe_settings_and_dictionary(project, recipe_name, False)
+    recipe_settings.replace_input(current_input_dataset_name, new_input_dataset_name)
+    recipe_settings.save()
+    print("Recipe '{}' input dataset successfully changed!".format(recipe_name))
+    pass
