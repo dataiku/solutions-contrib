@@ -76,7 +76,7 @@ const builds = [
         input: pathResolve('../src/index.umd.js')
       },
       output: {
-        name: 'global',
+        name: 'QuasarBs',
         file: pathResolve('../dist/index.umd.js'),
         format: 'umd'
       }

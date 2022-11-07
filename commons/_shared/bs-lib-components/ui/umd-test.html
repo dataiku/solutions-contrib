@@ -33,6 +33,16 @@
               <li>Use self-closing tags only!</li>
               <li>Example: &lt;my-component&gt;&lt;/my-component&gt;</li>
             </ul>
+            <div class="q-gutter-sm">
+              <bs-button class="bs-btn dku-text" unelevated>Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text" unelevated icon="fullscreen">Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text" unelevated icon-right="fullscreen">Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text bs-btn-disabled" unelevated disable="">Fullscreen</bs-button>
+              <bs-toggle v-model="value"></bs-toggle>
+              <bs-toggle v-model="value" labelLeft="Widgets"></bs-toggle>
+              <bs-select v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test"></bs-select>
+            </div>
+            
           </q-page>
         </q-page-container>
       </q-layout>
@@ -43,16 +53,26 @@
     <script src="dist/index.umd.js"></script>
 
     <script>
+      const { ref } = Vue
       const app = Vue.createApp({
         setup () {
           return {
-            version: global.version
+            version: QuasarBs.version,
+            value: ref(true),
+            model: ref(null),
+            options: ref([
+                "Extra small",
+                "Small",
+                "Medium",
+                "Large",
+                "Extra large",
+                "Custom"
+            ]),
           }
         }
       })
-
       app.use(Quasar)
-      app.use(global)
+      app.use(QuasarBs)
       app.mount('#q-app')
     </script>
   </body>
