@@ -43,7 +43,7 @@ def change_filesystem_dataset_format(project, dataset_name, new_dataset_format):
     :param dataset_name: str: Name of the dataset.
     :param new_dataset_format: str: New dataset files format.
     """
-    ALLOWED_FORMATS = ["csv", "parquet"]
+    ALLOWED_FORMATS = ["csv", "parquet", "avro"]
     if new_dataset_format not in ALLOWED_FORMATS:
         log_message = "File format '{}' is not supported by this function, please "\
         "choose a format in '{}'".format(new_dataset_format, ALLOWED_FORMATS)
