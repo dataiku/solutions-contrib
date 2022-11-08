@@ -1,32 +1,22 @@
 <template>
-    <BsLayoutDefault LeftPanelTitle="Subtitle">
-      <template #leftpanel>
-      </template>
-      <template #header>
-          <div class="fit row justify-between items-center content-start">
-            <div class="dku-text">
-              Number of records
-            </div>
-            <q-btn label="Save"></q-btn>
-          </div>
-      </template>
-      <template #content>
-          <div class="fit row wrap justify-between items-center content-start">
-            <div class="dku-text">
-              Number of records
-            </div>
-            <q-btn label="Save"></q-btn>
-          </div>
-      </template>
-    </BsLayoutDefault>
-</template>
+  <div class="q-pa-md q-gutter-sm">
+    
   
+  </div>
+</template>
+
 <script>
-import { BsLayoutDefault } from "ui"
+import { BsLayoutDefault } from 'ui'
+
 export default {
+  data() {
+   
+    return {
+      layout: false,
+    }
+  },
   components: {
-      BsLayoutDefault
+    BsLayoutDefault
   }
 }
 </script>
-  

@@ -28,81 +28,90 @@
             name:"BsLayoutDefault",
             data: function data() {
                 return {
-                    isHidden : false,
+                    showLeftPanel : true,
                     btnImg : img,
                 }  
             },
             methods: {
                 toggleLeftPanel: function toggleLeftPanel() {
-                    this.isHidden = !this.isHidden;
+                    this.showLeftPanel = !this.showLeftPanel;
+                }
+            },
+            computed: {
+                leftDist: function leftDist() {
+                    return this.showLeftPanel ? 300 : 0;
                 }
             },
             props: {
-                LeftPanelTitle: {
-                    type: String,
+                header: {
+                    type: Boolean,
+                    default: true
                 }
             }
         };
 
-    var _hoisted_1$2 = { class: "row bs-layout" };
-    var _hoisted_2$1 = {
-      key: 0,
-      class: "bs-left-panel"
-    };
-    var _hoisted_3 = {
-      class: "full-width column wrap justify-center items-stretch",
-      style: {"padding":"16px"}
-    };
-    var _hoisted_4 = {
-      class: "dku-medium-title",
-      style: {"margin-bottom":"16px"}
-    };
-    var _hoisted_5 = { class: "col-grow bs-right-panel" };
-    var _hoisted_6 = { class: "full-width column content-stretch" };
-    var _hoisted_7 = { class: "bs-header" };
-    var _hoisted_8 = { class: "row bs-content" };
-    var _hoisted_9 = { class: "col-grow bs-toggle-left" };
-    var _hoisted_10 = { class: "bs-toggle-left-button" };
-    var _hoisted_11 = ["src"];
-    var _hoisted_12 = { class: "col-grow bs-content-main" };
+    var _hoisted_1$2 = /*#__PURE__*/vue.createElementVNode("img", { src: img }, null, -1);
+    var _hoisted_2$1 = [
+      _hoisted_1$2
+    ];
 
     function render$a(_ctx, _cache, $props, $setup, $data, $options) {
-      return (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$2, [
-        (!$data.isHidden)
-          ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2$1, [
-              vue.createElementVNode("div", _hoisted_3, [
-                vue.createElementVNode("div", _hoisted_4, vue.toDisplayString($props.LeftPanelTitle), 1),
-                vue.renderSlot(_ctx.$slots, "leftpanel")
-              ])
-            ]))
-          : vue.createCommentVNode("", true),
-        vue.createElementVNode("div", _hoisted_5, [
-          vue.createElementVNode("div", _hoisted_6, [
-            vue.createElementVNode("div", _hoisted_7, [
-              vue.renderSlot(_ctx.$slots, "header")
-            ]),
-            vue.createElementVNode("div", _hoisted_8, [
-              vue.createElementVNode("div", _hoisted_9, [
-                vue.createElementVNode("div", _hoisted_10, [
-                  vue.createElementVNode("div", {
-                    onClick: _cache[0] || (_cache[0] = function () {
-                      var args = [], len = arguments.length;
-                      while ( len-- ) args[ len ] = arguments[ len ];
+      var _component_q_header = vue.resolveComponent("q-header");
+      var _component_q_drawer = vue.resolveComponent("q-drawer");
+      var _component_q_page_container = vue.resolveComponent("q-page-container");
+      var _component_q_layout = vue.resolveComponent("q-layout");
 
-                      return ($options.toggleLeftPanel && $options.toggleLeftPanel.apply($options, args));
-      })
-                  }, [
-                    vue.createElementVNode("img", { src: $data.btnImg }, null, 8, _hoisted_11)
-                  ])
-                ])
-              ]),
-              vue.createElementVNode("div", _hoisted_12, [
-                vue.renderSlot(_ctx.$slots, "content")
-              ])
-            ])
-          ])
-        ])
-      ]))
+      return (vue.openBlock(), vue.createBlock(_component_q_layout, {
+        view: "lHh lpR lFf",
+        class: "bg-white"
+      }, {
+        default: vue.withCtx(function () { return [
+          vue.createElementVNode("div", {
+            class: "toggle-left-button",
+            style: vue.normalizeStyle({ 'left' : $options.leftDist + 'px'})
+          }, [
+            vue.createElementVNode("div", {
+              onClick: _cache[0] || (_cache[0] = function () {
+                var args = [], len = arguments.length;
+                while ( len-- ) args[ len ] = arguments[ len ];
+
+                return ($options.toggleLeftPanel && $options.toggleLeftPanel.apply($options, args));
+          })
+            }, _hoisted_2$1)
+          ], 4),
+          ($props.header)
+            ? (vue.openBlock(), vue.createBlock(_component_q_header, {
+                key: 0,
+                bordered: "",
+                class: "bg-white"
+              }, {
+                default: vue.withCtx(function () { return [
+                  vue.renderSlot(_ctx.$slots, "header")
+                ]; }),
+                _: 3
+              }))
+            : vue.createCommentVNode("", true),
+          vue.createVNode(_component_q_drawer, {
+            modelValue: $data.showLeftPanel,
+            "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) { return (($data.showLeftPanel) = $event); }),
+            side: "left",
+            bordered: "",
+            behavior: "desktop"
+          }, {
+            default: vue.withCtx(function () { return [
+              vue.renderSlot(_ctx.$slots, "leftpanel")
+            ]; }),
+            _: 3
+          }, 8, ["modelValue"]),
+          vue.createVNode(_component_q_page_container, null, {
+            default: vue.withCtx(function () { return [
+              vue.renderSlot(_ctx.$slots, "content")
+            ]; }),
+            _: 3
+          })
+        ]; }),
+        _: 3
+      }))
     }
 
     script$a.render = render$a;

@@ -196,43 +196,14 @@
   color: #222222;
 }
 
-.bs-layout {
-  min-width: 900px;
-}
-.bs-layout .bs-left-panel {
-  overflow: auto;
-  min-width: 300px;
-  max-width: 300px;
-  height: 100vh;
-}
-.bs-layout .bs-right-panel {
-  height: 100vh;
-  border: 1px solid #CCCCCC;
-}
-.bs-layout .bs-right-panel .bs-header {
-  overflow: auto;
-  border-bottom: 1px solid #CCCCCC;
-  padding: 16px;
-  padding-left: 24px;
-}
-.bs-layout .bs-right-panel .bs-content {
-  overflow: auto;
-}
-.bs-layout .bs-right-panel .bs-content .bs-toggle-left {
-  min-width: 24px;
-  max-width: 24px;
-}
-.bs-layout .bs-right-panel .bs-content .bs-toggle-left .bs-toggle-left-button {
+.toggle-left-button {
   cursor: pointer;
   margin: 0;
-  top: 60%;
+  top: 50%;
   transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   position: absolute;
-}
-.bs-layout .bs-right-panel .bs-content .bs-content-main {
-  padding: 16px;
-  padding-left: 0;
+  z-index: 99;
 }
 
 .bs-btn {

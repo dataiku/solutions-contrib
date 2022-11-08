@@ -1,34 +1,25 @@
 <template>
-    <div class="row bs-layout">
-        <div class="bs-left-panel" v-if="!isHidden">
-            <div class="full-width column wrap justify-center items-stretch" style="padding : 16px">
-                <div class="dku-medium-title" style="margin-bottom: 16px">
-                    {{ LeftPanelTitle }}
-                </div>
-                <slot name="leftpanel"></slot>
+    <q-layout view="lHh lpR lFf" class="bg-white">
+        
+        <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
+            <div @click="toggleLeftPanel">
+                <img src="../../assets/images/BtnImg.svg">
             </div>
         </div>
-        <div class="col-grow bs-right-panel">
-            <div class="full-width column content-stretch">
-                <div class="bs-header">
-                    <slot name="header"></slot>
-                </div>
-                <div class="row bs-content">
-                    <div class="col-grow bs-toggle-left">
-                        <div class="bs-toggle-left-button">
-                                <div @click="toggleLeftPanel">
-                                    <img :src="btnImg">
-                                </div>
-                        </div>
-                    </div>
-                    <div class="col-grow bs-content-main">
-                        <slot name="content"></slot>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
+        
+
+        <q-header bordered class="bg-white" v-if="header">
+            <slot name="header"></slot>
+        </q-header>
+
+        <q-drawer v-model="showLeftPanel" side="left" bordered behavior="desktop">
+            <slot name="leftpanel"></slot>
+        </q-drawer>
+
+        <q-page-container>
+            <slot name="content"></slot>    
+        </q-page-container>
+    </q-layout>
 </template>
 <script>
     import btnImg from "../../assets/images/BtnImg.svg"
@@ -36,18 +27,24 @@
         name:"BsLayoutDefault",
         data() {
             return {
-                isHidden : false,
+                showLeftPanel : true,
                 btnImg : btnImg,
             }  
         },
         methods: {
             toggleLeftPanel() {
-                this.isHidden = !this.isHidden;
+                this.showLeftPanel = !this.showLeftPanel;
+            }
+        },
+        computed: {
+            leftDist() {
+                return this.showLeftPanel ? 300 : 0;
             }
         },
         props: {
-            LeftPanelTitle: {
-                type: String,
+            header: {
+                type: Boolean,
+                default: true
             }
         }
     }
