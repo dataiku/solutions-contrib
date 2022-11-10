@@ -387,8 +387,8 @@ def compute_partial_dependencies(ml_task, trained_model_id, partial_dependencies
     print("Partial depencencies computation time : {} min ...\n".format(partial_dependencies_duration))
     pass
   
-  
-  def get_deployed_model_active_version_id(project, deployed_model_id):
+
+def get_deployed_model_active_version_id(project, deployed_model_id):
     """
     Retrieves the ID of the active model within a deployed model .
     
