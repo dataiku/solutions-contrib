@@ -397,5 +397,5 @@ def get_deployed_model_active_version_id(project, deployed_model_id):
     :returns model_active_version_id: str: ID of the active version within the deployed model.
     """
     deployed_model = project.get_saved_model(deployed_model_id)
-    model_active_version_id = model.get_active_version()["id"]
+    model_active_version_id = deployed_model.get_active_version()["id"]
     return model_active_version_id
