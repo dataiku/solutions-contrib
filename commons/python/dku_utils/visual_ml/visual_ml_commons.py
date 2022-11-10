@@ -386,3 +386,16 @@ def compute_partial_dependencies(ml_task, trained_model_id, partial_dependencies
     partial_dependencies_duration = (partial_dependencies_end_time - partial_dependencies_start_time) / 60.0
     print("Partial depencencies computation time : {} min ...\n".format(partial_dependencies_duration))
     pass
+  
+  
+  def get_deployed_model_active_version_id(project, deployed_model_id):
+    """
+    Retrieves the ID of the active model within a deployed model .
+    
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: deployed_model_id: str: ID of the deployed model.
+    :returns model_active_version_id: str: ID of the active version within the deployed model.
+    """
+    deployed_model = project.get_saved_model(deployed_model_id)
+    model_active_version_id = model.get_active_version()["id"]
+    return model_active_version_id
