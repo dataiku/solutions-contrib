@@ -445,6 +445,10 @@ class programmaticJoinHandler:
         :param post_join_filter_formula_expression: str: Expression of the formula leading to the computed column, following the 
         DSS formula language (https://doc.dataiku.com/dss/latest/formula/index.html).
         """
+        self.recipe_payload["postFilter"]["uiData"]["mode"] = "CUSTOM"
+        post_join_filter_is_disabled = (self.recipe_payload["postFilter"]["enabled"]==False)
+        if post_join_filter_is_disabled:
+            self.recipe_payload["postFilter"]["enabled"] = True
         self.recipe_payload["postFilter"]["expression"] = post_join_filter_formula_expression
         self.update_recipe_definition()
         pass
