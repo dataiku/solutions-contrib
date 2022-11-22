@@ -453,6 +453,9 @@
   opacity: 1 !important;
 }
 
+.bs-select {
+  word-break: break-all;
+}
 .bs-select__popup {
   color: #333E48;
 }

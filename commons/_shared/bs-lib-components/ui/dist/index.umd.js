@@ -312,6 +312,11 @@
 
     var script$8 = {
         name: "BsSelect",
+        data: function data() {
+            return {
+                width: 0,
+            }
+        },
         props: {
             bsLabel: {
                 type: String,
@@ -322,6 +327,23 @@
         },
         components: {
             QSelect: quasar.QSelect,
+        },
+        methods: {
+            popupShow: function popupShow() {
+                this.width = this.$refs.bsSelect.$el.offsetWidth;
+            },
+            popupHide: function popupHide() {
+                this.width = 0;
+            }
+        },
+        computed: {
+            popupStyle: function popupStyle() {
+                return {
+                    width : this.width,
+                    maxWidth : this.width,
+                    wordBreak : 'break-all'
+                }   
+            }
         }
         
     };
@@ -339,10 +361,13 @@
               for: $props.bsLabelId
             }, vue.toDisplayString($props.bsLabel), 9, _hoisted_1))
           : vue.createCommentVNode("", true),
-        vue.createVNode(_component_QSelect, vue.mergeProps(_ctx.$attrs, {
+        vue.createVNode(_component_QSelect, vue.mergeProps({ ref: "bsSelect" }, _ctx.$attrs, {
           "dropdown-icon": "r_expand_more",
           class: "bs-select",
-          "popup-content-class": "bs-select__popup dds-text-400"
+          "popup-content-class": "bs-select__popup dds-text-400",
+          onPopupShow: $options.popupShow,
+          onPopupHide: $options.popupHide,
+          "popup-content-style": $options.popupStyle
         }), vue.createSlots({ _: 2 }, [
           vue.renderList(_ctx.$slots, function (_, slot) {
             return {
@@ -352,7 +377,7 @@
               ]; })
             }
           })
-        ]), 1040)
+        ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style"])
       ]))
     }
 

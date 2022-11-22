@@ -1,4 +1,6 @@
 .bs-select {
+    word-break: break-all;
+
     &__popup {
         color: $bs-dark;
         .q-item {

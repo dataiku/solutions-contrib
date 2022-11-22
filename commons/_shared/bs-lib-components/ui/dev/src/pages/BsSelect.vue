@@ -38,7 +38,7 @@ export default {
             model: ref(null),
             modelSlot: ref(null),
             options: [
-                "Extra small",
+                "Extra small Extra small Extra small Extra small Extra small Extra small",
                 "Small",
                 "Medium",
                 "Large",
