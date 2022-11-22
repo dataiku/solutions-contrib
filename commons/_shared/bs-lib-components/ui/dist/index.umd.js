@@ -68,7 +68,7 @@
       var _component_QLayout = vue.resolveComponent("QLayout");
 
       return (vue.openBlock(), vue.createBlock(_component_QLayout, {
-        view: "lHh lpR lFf",
+        view: "lHh LpR lFf",
         class: "bg-white"
       }, {
         default: vue.withCtx(function () { return [
@@ -89,7 +89,7 @@
             ? (vue.openBlock(), vue.createBlock(_component_QHeader, {
                 key: 0,
                 bordered: "",
-                class: "bg-white"
+                class: "bg-white bs-header"
               }, {
                 default: vue.withCtx(function () { return [
                   vue.renderSlot(_ctx.$slots, "header")

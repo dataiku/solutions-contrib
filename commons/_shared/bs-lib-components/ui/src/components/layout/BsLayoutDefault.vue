@@ -1,5 +1,5 @@
 <template>
-    <QLayout view="lHh lpR lFf" class="bg-white">
+    <QLayout view="lHh LpR lFf" class="bg-white">
         
         <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
             <div @click="toggleLeftPanel">
@@ -8,7 +8,7 @@
         </div>
         
 
-        <QHeader bordered class="bg-white" v-if="header">
+        <QHeader bordered class="bg-white bs-header" v-if="header">
             <slot name="header"></slot>
         </QHeader>
 
