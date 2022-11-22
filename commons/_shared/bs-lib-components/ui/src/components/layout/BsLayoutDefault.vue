@@ -1,5 +1,5 @@
 <template>
-    <q-layout view="lHh lpR lFf" class="bg-white">
+    <QLayout view="lHh lpR lFf" class="bg-white">
         
         <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
             <div @click="toggleLeftPanel">
@@ -8,20 +8,21 @@
         </div>
         
 
-        <q-header bordered class="bg-white" v-if="header">
+        <QHeader bordered class="bg-white" v-if="header">
             <slot name="header"></slot>
-        </q-header>
+        </QHeader>
 
-        <q-drawer v-model="showLeftPanel" side="left" bordered behavior="desktop">
+        <QDrawer v-model="showLeftPanel" side="left" bordered behavior="desktop">
             <slot name="leftpanel"></slot>
-        </q-drawer>
+        </QDrawer>
 
-        <q-page-container>
+        <QPageContainer>
             <slot name="content"></slot>    
-        </q-page-container>
-    </q-layout>
+        </QPageContainer>
+    </QLayout>
 </template>
 <script>
+    import { QLayout, QHeader, QDrawer, QPageContainer } from 'quasar';
     import btnImg from "../../assets/images/BtnImg.svg"
     export default {
         name:"BsLayoutDefault",
@@ -30,6 +31,12 @@
                 showLeftPanel : true,
                 btnImg : btnImg,
             }  
+        },
+        components: {
+            QLayout, 
+            QHeader, 
+            QDrawer, 
+            QPageContainer
         },
         methods: {
             toggleLeftPanel() {
