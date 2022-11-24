@@ -1,4 +1,9 @@
 <template>
+
+  
+
+
+
   <q-page padding class="row justify-center">
     <q-list dense class="list">
       <div class="text-h4 q-mb-md">Business solutions UI components</div>

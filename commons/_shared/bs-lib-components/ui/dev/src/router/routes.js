@@ -1,17 +1,44 @@
 import pages from './pages'
 
-const children = pages.map(page => ({
-  path: page.path,
-  component: () => import('pages/' + page.file + '.vue')
-}))
+const docsPages = [
+  {
+    path: '',
+    component: () => import('../pages/Index.vue')
+  }
+]
+
+
+function parseMenuNode (node, __path, __name) {
+  const prefix = __path + (node.path !== void 0 ? '/' + node.path : '')
+  const name = __name + (node.name !== void 0 ? '/' + node.name : '')
+
+  if (node.children && node.children.length > 0) {
+    docsPages.push({
+      path: prefix,
+      redirect: "/"
+    })
+
+    node.children.forEach(node => parseMenuNode(node, prefix, name))
+  }
+  else {
+    docsPages.push({
+      path: prefix,
+      component: () => import("../pages" + name + ".vue")
+    })
+  }
+}
+
+
+pages.forEach(node => {
+  parseMenuNode(node, '','')
+})
+
 
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MyLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/Index.vue') }
-    ].concat(children)
+    component: () => import('layouts/DocLayout.vue'),
+    children: docsPages,
   },
 
   // Always leave this as last one,
@@ -21,5 +48,8 @@ const routes = [
     component: () => import('pages/Error404.vue')
   }
 ]
+
+console.log('Debug routes')
+console.log(routes)
 
 export default routes

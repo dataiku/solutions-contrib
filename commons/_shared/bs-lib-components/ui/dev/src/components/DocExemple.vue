@@ -15,7 +15,7 @@
         <q-separator class="doc-example__separator"></q-separator>
         <q-slide-transition>
             <div v-show="expanded">
-            <q-tabs class="doc-example__tabs" v-model="currentTab" align="left" no-caps="no-caps" :active-color="dark ? 'amber' : void 0" :indicator-color="dark ? 'amber' : 'brand-primary'" dense="dense" :breakpoint="0">
+            <q-tabs class="doc-example__tabs" v-model="currentTab" align="left" no-caps="no-caps" :active-color="dark ? 'amber' : void 0" :indicator-color="dark ? 'amber' : 'primary'" dense="dense" :breakpoint="0">
                 <q-tab v-for="tab in def.tabs" :key="`tab-${tab}`" :name="tab" :label="tab"></q-tab>
             </q-tabs>
             <q-separator></q-separator>
@@ -124,8 +124,8 @@ export default {
     }
 
     onMounted(() => {
-        import('/public/examples/' + props.file + '.vue').then((moule) => {
-          component.value = markRaw(moule.default);
+        import('/public/examples/' + props.file + '.vue').then((module) => {
+          component.value = markRaw(module.default);
           loadingComponent.value = false;
         });
      
