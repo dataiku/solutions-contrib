@@ -1,21 +1,30 @@
 <template>
-    <q-page padding>
-        <div class="q-gutter-sm" style="max-width: 300px">
-            <BsSlider v-model="standard" :min="0" :max="50" />
-        </div>
-    </q-page>
+    <doc-page-core title="BsSlider" :description="description" :quasarUrl="quasarURL">
+        <Warning :text="warning" class="q-mt-md"></Warning>
+        <DocExemple file="BsSlider/Basic" title="Basic"/>
+    </doc-page-core>
 </template>
 <script>
-    import { BsSlider } from 'ui';
+    import DocExemple from '../../components/DocExemple.vue';
+    import DocPageCore from '../../components/DocPageCore.vue';
+    import Warning from '../../components/Warning.vue';
 
     export default {
-        data() {
-            return {
-                standard: 2,
-            }
-        },
+
         components: {
-            BsSlider,
+            DocExemple, 
+            DocPageCore,
+            Warning
+        },
+        setup() {
+            const description = "The BsSlider is a great way for the user to specify a number value between a minimum and maximum value, with optional steps between valid values. The slider also has a focus indicator (highlighted slider button), which allows for keyboard adjustments of the slider."
+            const quasarURL = "https://quasar.dev/vue-components/slider"
+            const warning = "We will include richer examples on how to use this component in the next release of the library. UX specifications will help identify how to display boundaries and the current value of the slider as well as provide an input to modify the state of the slider"
+            return {
+                description,
+                quasarURL,
+                warning
+            }
         }
     }
 </script>
