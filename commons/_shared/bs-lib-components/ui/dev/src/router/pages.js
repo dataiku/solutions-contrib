@@ -25,7 +25,7 @@ function kebabCase (str) {
     : result
 }
 
-function getName (str) {
+export function getName (str) {
   let result = str.replace("-"," ")
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
@@ -45,20 +45,5 @@ const pages = require.context('../pages', true, /^\.\/.*\.vue$/)
   return r;
 }, []);
 
-console.log("DEBUG")
-console.log(pages)
 
 export default pages;
-
-
-
-// export default require.context('../pages', true, /^\.\/.*\.vue$/)
-//   .keys()
-//   .map(page => page.slice(2).replace('.vue', ''))
-//   .filter(page => page !== 'Index' && page !== 'Error404')
-//   .flatMap((page,level) => [page,level])
-//   .map(page => ({
-//     file: page,
-//     title: page,
-//     path: slugify(kebabCase(page))
-//   }))

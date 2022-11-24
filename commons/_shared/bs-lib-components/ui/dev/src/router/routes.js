@@ -49,7 +49,4 @@ const routes = [
   }
 ]
 
-console.log('Debug routes')
-console.log(routes)
-
 export default routes
