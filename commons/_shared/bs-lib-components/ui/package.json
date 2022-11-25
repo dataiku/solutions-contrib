@@ -1,6 +1,6 @@
 {
   "name": "quasar-ui-bs",
-  "version": "0.0.2",
+  "version": "1.1",
   "author": "anas laaroussi <anas.laaroussi@dataiku.com>",
   "description": "Shared Components library for business solutions webapps based on vue & quasar",
   "license": "MIT",

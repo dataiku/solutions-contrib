@@ -4,7 +4,7 @@ const list = [
 
 export default list.map(layout => ({
     ...layout,
-    screenshot: `/imgs/${layout.path}.png`,
+    screenshot: `/imgs/layouts/${layout.path}.png`,
     demoLink: `/layout/gallery/${layout.path}`,
     
   }))
