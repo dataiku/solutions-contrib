@@ -1,4 +1,5 @@
 import pages from './pages'
+import layoutGallery from '../assets/layout-gallery'
 
 const docsPages = [
   {
@@ -40,6 +41,16 @@ const routes = [
     component: () => import('layouts/DocLayout.vue'),
     children: docsPages,
   },
+  ...layoutGallery.map(layout => ({
+    path: layout.demoLink,
+    component: () => import(`../gallery/layouts/${layout.path}.vue`),
+    children: [
+      {
+        path: '',
+        component: () => import('../components/page-parts/layout/LayoutGalleryPage.vue')
+      }
+    ]
+  })),
 
   // Always leave this as last one,
   // but you can also remove it
