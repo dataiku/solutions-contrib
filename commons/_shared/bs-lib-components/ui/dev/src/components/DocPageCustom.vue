@@ -5,24 +5,23 @@
             <span class="dku-small-title">{{ description }}</span>
         </section>
         
-        <section class="column q-mb-xl" v-if="quasarUrl">
-            <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
-            <span class="dku-small-title quasar-ref-card q-pa-md">The {{ title }} is a components that wraps the quasar {{ title.replace("Bs","Q")}} component. 
-                It can inherit all the props, slots and events available for the corresponding quasar component. Please refer to this <a :href="quasarUrl" target="_blank">page</a>
-                for more details
-            </span>
-        </section>
-
-        <section class="column q-mb-xl" v-else>
-            <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
+        
+        <section class="column q-mb-xl">
+            <span class="text-primary dku-huge-title-sb q-mb-sm">Projects using {{ title }}</span>
             <span class="dku-small-title bs-native-card q-pa-md">
-                The {{ title }} is a native business solutions component. It does not wrap a specific quasar component, the exemples below give more details
-                on how to use it
+                {{ title }} is an illustration of how to use quasar and business solutions core components to create more complex components.
+                <br/>
+                <br/>
+                {{ title }} is currently used in the following projects: 
+                <br/>
+                <ul>
+                    <li v-for="project in references">
+                        {{ project }}
+                    </li>
+                </ul>
             </span>
         </section>
-
         <section>
-            <span class="text-primary dku-huge-title-sb q-mb-sm">Usage</span>
             <slot></slot>
         </section>
     </q-page>
@@ -31,12 +30,12 @@
     
 
     export default {
-        name: "DocPageCore",
+        name: "DocPageCustom",
 
         props: {
             title: String,
             description: String,
-            quasarUrl: String,
+            references: Array,
         }
     }
 </script>
@@ -59,6 +58,4 @@
     background-color: rgba(97, 182, 88, 0.1);
 
 }
-
-
 </style>

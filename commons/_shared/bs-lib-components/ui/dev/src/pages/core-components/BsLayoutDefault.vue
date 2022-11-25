@@ -1,22 +1,24 @@
 <template>
-  <div class="q-pa-md q-gutter-sm">
-    
-  
-  </div>
+  <doc-page-core title="BsLayoutDefault" :description="description">
+      
+  </doc-page-core>
 </template>
-
 <script>
-import { BsLayoutDefault } from 'ui'
+  import DocExemple from '../../components/DocExemple.vue';
+  import DocPageCore from '../../components/DocPageCore.vue';
 
-export default {
-  data() {
-   
-    return {
-      layout: false,
-    }
-  },
-  components: {
-    BsLayoutDefault
+  export default {
+
+      components: {
+          DocExemple, 
+          DocPageCore
+      },
+      setup() {
+          const description = "The BsLayoutDefault "
+          
+          return {
+              description,
+          }
+      }
   }
-}
 </script>
