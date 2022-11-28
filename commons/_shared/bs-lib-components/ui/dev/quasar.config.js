@@ -31,17 +31,20 @@ module.exports = function (ctx) {
     ],
 
     framework: {
+      iconSet: 'svg-mdi-v6',
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
       config: {},
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        "Notify",
+      ]
     },
 
     // animations: 'all', // --- includes all animations
-    animations: [],
+    animations: [ 'fadeIn', 'fadeOut' ],
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
