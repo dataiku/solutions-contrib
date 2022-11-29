@@ -1,5 +1,5 @@
 <template>
-  <BsLayoutDefault docTitle="Solution Name" docIcon="/imgs/doc-logo-example.svg">
+  <BsLayoutDefault docTitle="Solution Name" :docIcon="docLogo">
     <template #header>
       <div class="dku-medium-title-sb q-pa-md">Header</div>
     </template>
@@ -34,3 +34,13 @@
     </template>
   </BsLayoutDefault>
 </template>
+<script>
+  import docLogo from "./assets/images/doc-logo-example.svg"
+  export default {
+    data() {
+      return {
+        docLogo,
+      }
+    }
+  }
+</script>

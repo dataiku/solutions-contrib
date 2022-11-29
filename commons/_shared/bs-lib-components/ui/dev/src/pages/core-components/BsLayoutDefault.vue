@@ -16,8 +16,8 @@
           LayoutGalleryGrid,
       },
       setup() {
-          const description = "The BsLayoutDefault is the default layout for business solutions webapps. It is highly customizable, the layout provides 3 named slots: \
-            header, leftPanel and content that can be populated with custom vue components. See the examples in the usage section for more details"
+          const description = "The BsLayoutDefault is the default layout for business solutions webapps. It is highly customizable, the layout provides 4 named slots: \
+            header, leftPanel, content and documentation that can be populated with custom vue components. See the examples in the usage section for more details."
           
           return {
               description,
