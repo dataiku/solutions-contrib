@@ -37,8 +37,8 @@
   min-width: 359px;
   max-width: 359px;
   min-height: 515px;
-  max-height: 515px;
-  overflow: auto;
+  height: 515px;
+  overflow: scroll;
   top: 60px;
   right: 15px;
   border: 1px solid #CCCCCC;
@@ -50,10 +50,14 @@
 }
 
 .doc-footer {
-  position: absolute;
+  position: -webkit-sticky;
+  position: sticky;
   bottom: 0;
   right: 0;
+  margin-left: auto;
   height: 25px;
+  z-index: 99;
+  
 
   &__icon {
     padding-left: 8px;
@@ -62,17 +66,30 @@
     border-top: 1px solid #F2F2F2;
     border-left: 1px solid #F2F2F2;
     border-radius: 4px 0px 0px 0px;
-    height: 25px;
   }
 
   &__text {
     padding: 5px 12px 5px 9px;
     border-top: 1px solid #F2F2F2;
     border-left:1px solid #F2F2F2;
-    height: 25px;
+    border-right:1px solid #F2F2F2;
   }
 }
 
 .content {
   position: relative;
 }
+
+@supports (backdrop-filter: none) {
+  .doc-footer {
+    background-color: white;
+    backdrop-filter: blur(7px);
+  }  
+}
+
+@supports not (backdrop-filter: none) {
+  .doc-footer {
+    background-color: white;
+  }
+}
+  
