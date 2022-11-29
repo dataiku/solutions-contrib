@@ -13,9 +13,15 @@ export interface BsLayoutDefaultSlots {
     head: () => VNode[];
     content: () => VNode[];
     leftpanel: () => VNode[];
+    documentation: () => VNode[];
 }
 export interface BsLayoutDefaultProps {
-    LeftPanelTitle?: String;
+    leftpanel?: Boolean;
+    header?: Boolean;
+    docTitle?: String;
+    docIcon?: String;
+    doc?: Boolean;
+
 }
 export interface BsLayoutDefault extends ComponentPublicInstance<BsLayoutDefaultProps> {}
 export const BsLayoutDefault: ComponentConstructor<BsLayoutDefault>
