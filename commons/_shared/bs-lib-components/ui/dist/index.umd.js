@@ -37,7 +37,9 @@
                 QLayout: quasar.QLayout, 
                 QHeader: quasar.QHeader, 
                 QDrawer: quasar.QDrawer, 
-                QPageContainer: quasar.QPageContainer
+                QPageContainer: quasar.QPageContainer,
+                QBtn: quasar.QBtn,
+                QCard: quasar.QCard
             },
             methods: {
                 toggleLeftPanel: function toggleLeftPanel() {
@@ -107,8 +109,8 @@
     function render$a(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_QHeader = vue.resolveComponent("QHeader");
       var _component_QDrawer = vue.resolveComponent("QDrawer");
-      var _component_q_btn = vue.resolveComponent("q-btn");
-      var _component_q_card = vue.resolveComponent("q-card");
+      var _component_QBtn = vue.resolveComponent("QBtn");
+      var _component_QCard = vue.resolveComponent("QCard");
       var _component_QPageContainer = vue.resolveComponent("QPageContainer");
       var _component_QLayout = vue.resolveComponent("QLayout");
 
@@ -164,7 +166,7 @@
             default: vue.withCtx(function () { return [
               vue.createElementVNode("div", _hoisted_3, [
                 ($props.doc)
-                  ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
+                  ? (vue.openBlock(), vue.createBlock(_component_QBtn, {
                       key: 0,
                       unelevated: "",
                       outline: "",
@@ -181,7 +183,7 @@
                     }, 8, ["onClick"]))
                   : vue.createCommentVNode("", true),
                 ($props.doc && $data.openDoc)
-                  ? (vue.openBlock(), vue.createBlock(_component_q_card, {
+                  ? (vue.openBlock(), vue.createBlock(_component_QCard, {
                       key: 1,
                       class: "doc-content flex row"
                     }, {
