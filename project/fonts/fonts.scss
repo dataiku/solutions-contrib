@@ -1,0 +1,25 @@
+$font-weight-normal: 400;
+$font-weight-semi-bold: 500;
+$font-weight-bold: 600;
+
+@font-face {
+    font-family : 'SourceSansPro';
+    src : url("./SourceSansPro-Bold.woff") format('woff');
+    font-weight: $font-weight-bold;
+}
+
+@font-face {
+    font-family : 'SourceSansPro';
+    src : url("./SourceSansPro-Semibold.woff") format('woff');
+    font-weight: $font-weight-semi-bold;
+}
+
+@font-face {
+    font-family : 'SourceSansPro';
+    src : url("./SourceSansPro-Regular.woff") format('woff');
+    font-weight: $font-weight-normal;
+}
+
+body {
+    font-family: 'SourceSansPro';
+}
