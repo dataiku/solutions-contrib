@@ -710,6 +710,29 @@
   color: #CCCCCC;
 }
 
+.bs-slider input[type=number] {
+  -moz-appearance: textfield;
+}
+.bs-slider input::-webkit-outer-spin-button,
+.bs-slider input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.bs-slider input {
+  padding: 3px 8px;
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  border-radius: 2px;
+  height: 26px;
+  width: 63px;
+  margin-left: 10px;
+  text-align: right;
+}
+.bs-slider input:focus {
+  outline: 1px solid #1976D2;
+  border: none;
+}
+
 body {
   font-family: "SourceSansPro";
 }
