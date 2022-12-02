@@ -31,10 +31,13 @@ def write_pickle_in_managed_folder(project, managed_folder_name, data, pickle_na
     managed_folder = dataiku.Folder(managed_folder_id)
     pickle_bytes = io.BytesIO()
     pickle.dump(data, pickle_bytes)
-    pickle_name = remove_pickle_extension(pickle_name)
-    with managed_folder.get_writer(f"{pickle_name}.p") as w:
+    pickle_name_raw = remove_pickle_extension(pickle_name)
+    pickle_name = "{}.p".format(pickle_name_raw)
+    print("Generating '{}' ...".format(pickle_name))
+    with managed_folder.get_writer(pickle_name) as w:
         w.write(pickle_bytes.getvalue())
         pass
+    print("'{}' successfully generated!".format(pickle_name))
     pass
 
 
@@ -50,9 +53,12 @@ def read_pickle_from_managed_folder(project, managed_folder_name, pickle_name):
     """
     managed_folder_id = get_managed_folder_id(project, managed_folder_name)
     managed_folder = dataiku.Folder(managed_folder_id)
-    pickle_name = remove_pickle_extension(pickle_name)
-    with managed_folder.get_download_stream(f"{pickle_name}.p") as f:
+    pickle_name_raw = remove_pickle_extension(pickle_name)
+    pickle_name = "{}.p".format(pickle_name_raw)
+    print("Reading '{}' ...".format(pickle_name))
+    with managed_folder.get_download_stream(pickle_name) as f:
         data = f.read()
         pickle_data = pickle.loads(data)
     f.close()
+    print("'{}' successfully read!".format(pickle_name))
     return pickle_data
