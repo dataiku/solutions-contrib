@@ -1,8 +1,7 @@
 <template>
     <doc-page-core title="BsSelect" :description="description" :quasarUrl="quasarURL">
         <DocExemple file="BsSelect/Basic" title="Basic"/>
-        <DocExemple file="BsSelect/Dense" title="Dense"/>
-        <DocExemple file="BsSelect/Borderless" title="Borderless"/>
+        <DocExemple file="BsSelect/PlaceHolder" title="Place Holder" />
         <DocExemple file="BsSelect/Icon" title="With Icon"/>
         <DocExemple file="BsSelect/LineBreak" title="Line Break"/>
         <DocExemple file="BsSelect/NoLabel" title="Without Label"/>

@@ -3,7 +3,6 @@
         <BsSelect 
         v-model="model" 
         :options="options" 
-        outlined 
         clearable 
         multiple 
         use-chips 

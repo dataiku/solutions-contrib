@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-sm" :style="{ 'max-width' : '300px'}">
-        <BsSelect v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test">
+        <BsSelect v-model="model" :options="options" bsLabel="Font Size">
             <template v-slot:prepend>
                 <q-icon name="event" color="#6F7D89"/>
             </template>

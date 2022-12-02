@@ -1,11 +1,11 @@
 <template>
     <div class="q-pa-sm" :style="{ 'max-width' : '300px'}">
         <BsSelect 
-        :model-value="model" 
-        @update:model-value="value => onUpdate(value)" 
-        :options="options" 
-        outlined bsLabel="Font Size" 
-        bsLabelId="test"></BsSelect>
+            :model-value="model" 
+            @update:model-value="value => onUpdate(value)" 
+            :options="options" 
+            bsLabel="Font Size" 
+        ></BsSelect>
     </div>
 </template>
 <script>

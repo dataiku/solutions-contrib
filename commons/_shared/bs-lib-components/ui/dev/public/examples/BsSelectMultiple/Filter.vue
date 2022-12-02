@@ -3,12 +3,10 @@
         <BsSelect 
             v-model="model" 
             :options="options" 
-            outlined 
             clearable 
             multiple 
             use-chips 
             bsLabel="Company"
-            bsLabelId="company"
             clear-icon="clear" 
             @filter="filterFn"
             use-input

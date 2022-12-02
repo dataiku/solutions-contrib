@@ -1,7 +1,6 @@
 <template>
     <doc-page-core title="BsSelectMultiple" :description="description" :quasarUrl="quasarURL">
         <DocExemple file="BsSelectMultiple/Basic" title="Basic"/>
-        <DocExemple file="BsSelectMultiple/Dense" title="Dense"/>
         <DocExemple file="BsSelectMultiple/Filter" title="With Filter"/>
         <DocExemple file="BsSelectMultiple/Hint" title="With Hint"/>
         <DocExemple file="BsSelectMultiple/NoLabel" title="No Label"/>
