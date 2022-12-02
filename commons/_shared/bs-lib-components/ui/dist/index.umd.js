@@ -415,10 +415,10 @@
         props: {
             bsLabel: {
                 type: String,
-            },
-            bsLabelId: {
+            }, 
+            placeHolder: {
                 type: String,
-            },
+            }
         },
         components: {
             QSelect: quasar.QSelect,
@@ -438,31 +438,40 @@
                     maxWidth : this.width,
                     wordBreak : 'break-all'
                 }   
+            },
+            computedLabel: function computedLabel() {
+                if (this.placeHolder && !this.$attrs.modelValue) {
+                    return this.placeHolder;
+                }
+                return undefined;
             }
         }
         
     };
 
-    var _hoisted_1$2 = ["for"];
+    var _hoisted_1$2 = {
+      key: 0,
+      class: "bs-select__label dss-caption-400 q-mb-xs"
+    };
 
     function render$9(_ctx, _cache, $props, $setup, $data, $options) {
       var _component_QSelect = vue.resolveComponent("QSelect");
 
       return (vue.openBlock(), vue.createElementBlock("div", null, [
         ($props.bsLabel)
-          ? (vue.openBlock(), vue.createElementBlock("label", {
-              key: 0,
-              class: "bs-select__label dss-caption-400 q-mb-xs",
-              for: $props.bsLabelId
-            }, vue.toDisplayString($props.bsLabel), 9, _hoisted_1$2))
+          ? (vue.openBlock(), vue.createElementBlock("label", _hoisted_1$2, vue.toDisplayString($props.bsLabel), 1))
           : vue.createCommentVNode("", true),
         vue.createVNode(_component_QSelect, vue.mergeProps({ ref: "bsSelect" }, _ctx.$attrs, {
           "dropdown-icon": "r_expand_more",
           class: "bs-select",
+          outlined: "",
+          dense: "",
           "popup-content-class": "bs-select__popup dds-text-400",
           onPopupShow: $options.popupShow,
           onPopupHide: $options.popupHide,
-          "popup-content-style": $options.popupStyle
+          "popup-content-style": $options.popupStyle,
+          label: $options.computedLabel,
+          "label-color": "#CCCCCC"
         }), vue.createSlots({ _: 2 }, [
           vue.renderList(_ctx.$slots, function (_, slot) {
             return {
@@ -472,7 +481,7 @@
               ]; })
             }
           })
-        ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style"])
+        ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style", "label"])
       ]))
     }
 
