@@ -732,6 +732,16 @@
   border: none;
 }
 
+.bs-date-range__label {
+  display: block;
+  color: #222222;
+  font-family: "SourceSansPro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+}
+
 body {
   font-family: "SourceSansPro";
 }

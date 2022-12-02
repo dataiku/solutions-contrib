@@ -10,6 +10,7 @@ import BsTable from "./components/table/BsTable.vue"
 import BsImg from "./components/img/BsImg.vue"
 import BsIcon from "./components/icon/BsIcon.vue"
 import BsCheckbox from "./components/checkbox/BsCheckbox.vue"
+import BsDateRange from "./components/daterange/BsDateRange.vue"
 
 export {
     BsLayoutDefault,
@@ -24,4 +25,5 @@ export {
     BsImg,
     BsIcon,
     BsCheckbox,
+    BsDateRange
 }

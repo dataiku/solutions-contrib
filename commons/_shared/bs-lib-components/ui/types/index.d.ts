@@ -5,7 +5,7 @@ import { ComponentConstructor, GlobalComponentConstructor,
     QSliderProps, QSliderSlots, QRangeProps, 
     QRangeSlots, QSpinnerProps, QSpinnerSlots, QTableProps, 
     QTableSlots, QImgProps, QImgSlots, QIconProps, QIconSlots,
-    QCheckboxProps, QCheckboxSlots,
+    QCheckboxProps, QCheckboxSlots, QDateProps
     } from "quasar"
 import { App, ComponentPublicInstance, VNode } from "vue";
 
@@ -99,6 +99,16 @@ export interface BsCheckboxProps extends QCheckboxProps {
 export interface BsCheckbox extends ComponentPublicInstance<BsCheckboxProps> {}
 export const BsCheckbox: ComponentConstructor<BsCheckbox>
 
+// Bs Date Range
+export interface BsDateRangeProps extends QDateProps {
+    bsLabel?: String;
+}
+export interface BsDateRange extends ComponentPublicInstance<BsDateRangeProps> {}
+export const BsDateRange: ComponentConstructor<BsDateRange>
+export interface BsDateRangeSlots {
+    default: () => VNode[];
+}
+
 
 
 // RunTime typing for usage as a plugin
@@ -115,7 +125,8 @@ declare module "@vue/runtime-core" {
         BsImg: GlobalComponentConstructor<QImgProps,QImgSlots>;
         BsIcon: GlobalComponentConstructor<QIconProps,QIconSlots>;
         BsToggle: GlobalComponentConstructor<BsToggleProps,BsToggleSlots>;
-        BsCheckbox: GlobalComponentConstructor<BsCheckboxProps,QCheckboxSlots>
+        BsCheckbox: GlobalComponentConstructor<BsCheckboxProps,QCheckboxSlots>;
+        BsDateRange: GlobalComponentConstructor<BsDateRangeProps,BsDateRangeSlots>;
 
     }
 }
@@ -134,6 +145,7 @@ declare module "./plugin" {
         BsIcon?: BsIcon;
         BsToggle?: BsToggle;
         BsCheckbox?: BsCheckbox;
+        BsDateRange?: BsDateRange;
     }
 }
 
