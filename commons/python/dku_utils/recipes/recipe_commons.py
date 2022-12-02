@@ -7,9 +7,9 @@ def get_recipe_settings_and_dictionary(project, recipe_name, bool_get_settings_d
     """
     Retrieves the settings of a project recipe
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
-    :param bool_get_settings_dictionary: bool: Precise if you to rerieve the recipe settings dictionary.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
+    :param: bool_get_settings_dictionary: bool: Precise if you to rerieve the recipe settings dictionary.
 
     :returns: recipe_settings: dataikuapi.dss.recipe.[RecipeType]Settings: Settings for a recipe. 
     :returns: recipe_settings_dict: dict: Dictionary containing recipe settings.
@@ -29,9 +29,9 @@ def switch_recipe_engine(project, recipe_name, new_engine):
     """
     Switches the engine of a project recipe.
     
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
-    :param new_engine: str: Name of the recipe engine.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
+    :param: new_engine: str: Name of the recipe engine.
     """
     recipe = project.get_recipe(recipe_name)
     recipe_settings = recipe.get_settings()
@@ -55,8 +55,8 @@ def update_recipe_ouput_schema(project, recipe_name):
     """
     Updates the recipe's output dataset schema based on its settings and payload.
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
     """
     recipe = project.get_recipe(recipe_name)
     required_updates = recipe.compute_schema_updates()
@@ -70,8 +70,8 @@ def get_recipe_available_engines(project, recipe_name):
     """
     Retrieves the recipe's available engines.
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
 
     :returns: available_engines: list: List of the recipe's available engines.
     """
@@ -88,8 +88,8 @@ def set_engine_to_available_priority(project: DSSProject, recipe_name):
     """
     Set the recipe's engine to the priority one among the available engines
     Defaults to DSS is no match is available
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
     
     """
     engine_priority = get_engine_priority(project)
@@ -108,8 +108,8 @@ def get_recipe_output_datasets(project, recipe_name):
     """
     Retrieves the recipe's outout datasets.
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
 
     :returns: recipe_output_datasets: list: List of the recipe's output datasets.
     """
@@ -123,8 +123,8 @@ def get_recipe_input_datasets(project, recipe_name):
     """
     Retrieves the recipe's input datasets.
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
 
     :returns: recipe_input_datasets: list: List of the recipe's input datasets.
     """
@@ -138,9 +138,9 @@ def override_aggregation_recipe_output_column_names(project, recipe_name, output
     """
     Overrides the output column names from recipes aggregating data.
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
-    :param output_column_name_overrides: dict: Dictionary containing the mapping between the output columns coming
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
+    :param: output_column_name_overrides: dict: Dictionary containing the mapping between the output columns coming
         from the recipe and the names they should have after column names overriding.
         Example: {'column_1_min': 'minimum_value_from_column_1',
                   'column_2_max': 'maximum_value_from_column_2'}
@@ -153,7 +153,7 @@ def override_aggregation_recipe_output_column_names(project, recipe_name, output
     )
     recipe_settings, recipe_settings_dict = get_recipe_settings_and_dictionary(project, recipe_name, True)
     recipe_type = recipe_settings_dict["type"]
-    if not recipe_type in ALLOWED_RECIPE_TYPES:
+    if recipe_type not in ALLOWED_RECIPE_TYPES:
         log_message = (
             "Recipe '{}' is of type '{}', which is not allowed in this funtion. "
             "Allowed recipe types are: '{}'".format(recipe_name, recipe_type, ALLOWED_RECIPE_TYPES)
@@ -171,10 +171,10 @@ def switch_visual_recipe_input(project, recipe_name, current_input_dataset_name,
     """
     Changes the input of a VISUAL recipe (this function has not been tried on plugin recipes).
 
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :param recipe_name: str: Name of the recipe.
-    :param current_input_dataset_name: str: Name of the dataset that is currently the recipe input.
-    :param new_input_dataset_name: str: Name of the dataset that should be the new recipe input.
+    :param: project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: recipe_name: str: Name of the recipe.
+    :param: current_input_dataset_name: str: Name of the dataset that is currently the recipe input.
+    :param: new_input_dataset_name: str: Name of the dataset that should be the new recipe input.
     """
     print(
         "Changing recipe '{}' current input dataset '{}'  with dataset '{}'...".format(
