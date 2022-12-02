@@ -3,13 +3,11 @@
         <BsSelect 
         v-model="model" 
         :options="options" 
-        outlined 
         clearable 
         multiple 
         use-chips 
         clear-icon="clear"
         bsLabel="Company"
-        bsLabelId="company"
         hint="Help message if needed"
         >
             <template v-slot:selected-item="scope">

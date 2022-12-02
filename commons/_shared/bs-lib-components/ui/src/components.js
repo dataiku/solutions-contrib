@@ -9,6 +9,7 @@ import BsSpinner from "./components/spinner/BsSpinner.vue"
 import BsTable from "./components/table/BsTable.vue"
 import BsImg from "./components/img/BsImg.vue"
 import BsIcon from "./components/icon/BsIcon.vue"
+import BsCheckbox from "./components/checkbox/BsCheckbox.vue"
 
 export {
     BsLayoutDefault,
@@ -22,4 +23,5 @@ export {
     BsTable,
     BsImg,
     BsIcon,
+    BsCheckbox,
 }

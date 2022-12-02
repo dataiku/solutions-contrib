@@ -1,13 +1,14 @@
 .bs-select {
+    
     word-break: break-all;
-
+    
     &__popup {
         color: $bs-dark;
         .q-item {
-            
+            @include mx-text(400);
             &.q-item--active {
                 background-color: $grey-background;
-                color: $bs-dark;
+                color: #222222;
             }
             &.q-manual-focusable {
                 transition : color 0.3s, background-color 0.3s;
@@ -23,49 +24,35 @@
     
     &.q-field--outlined {
         .q-field__control {
-            &:before {
-                border: 1px solid $bs-light-grey !important;
+            &:before, &:after {
+                border: 1px solid #CCCCCC;
             }
             &:hover {
-                &:before {
-                    border: 1px solid $bs-light-grey !important;
+                &:before, &:after {
+                    border: 1px solid #999999;
                 }
             }
         }
         &.q-field--highlighted {
             .q-field__control:after {
-                border: 2px solid rgba(59, 153, 252, 0.3);
+                border: 1px solid $digital-blue-lighten-1;
             }
-        }
-    }
-
-    &.q-field--borderless {
-        
-        &.q-field--highlighted {
-            .q-field__control:after {
-                border: 2px solid rgba(59, 153, 252, 0.3);
-                border-radius: $generic-border-radius !important;
-                transform: scale3d(1, 1, 1);
-            }
-        }
-        .q-field__control {
-            padding-left: 12px !important;
-            padding-right: 12px !important;
         }
     }
 
     &__label {
         display: block;
-        color: $bs-dark;
+        color: $grey-base;
+        font-family: 'SourceSansPro';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 20px;
+
     }
     .q-field__native {
-        color: $bs-dark;
-        @include dds-text(600);
-    }
-    &:hover {
-        .q-field__native {
-            color: $grey-lighten-3;
-            
-        }
+        color: #222222;
+        @include mx-text(400);
     }
 }
+

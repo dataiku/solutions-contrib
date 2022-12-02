@@ -3,7 +3,10 @@ import { ComponentConstructor, GlobalComponentConstructor,
     QBtnProps, QBtnSlots,
     QTooltipProps, QTooltipSlots,
     QSliderProps, QSliderSlots, QRangeProps, 
-    QRangeSlots, QSpinnerProps, QSpinnerSlots, QTableProps, QTableSlots, QImgProps, QImgSlots, QIconProps, QIconSlots } from "quasar"
+    QRangeSlots, QSpinnerProps, QSpinnerSlots, QTableProps, 
+    QTableSlots, QImgProps, QImgSlots, QIconProps, QIconSlots,
+    QCheckboxProps, QCheckboxSlots,
+    } from "quasar"
 import { App, ComponentPublicInstance, VNode } from "vue";
 
 
@@ -29,7 +32,7 @@ export const BsLayoutDefault: ComponentConstructor<BsLayoutDefault>
 // BsSelect Typing
 export interface BsSelectProps extends QSelectProps {
     bsLabel?: String;
-    bsLabelId?: String;
+    placeHolder?: String;
 }
 export interface BsSelect extends ComponentPublicInstance<BsSelectProps> {}
 export const BsSelect: ComponentConstructor<BsSelect>
@@ -43,7 +46,10 @@ export interface BsTooltip extends ComponentPublicInstance<QTooltipProps> {}
 export const BsTooltip : ComponentConstructor<BsTooltip>
 
 // BsSlider
-export interface BsSlider extends ComponentPublicInstance<QSliderProps> {}
+export interface BsSliderProps extends QSliderProps {
+    sliderWidth?: Number;
+}
+export interface BsSlider extends ComponentPublicInstance<BsSliderProps> {}
 export const BsSlider : ComponentConstructor<BsSlider>
 
 // BsRange
@@ -86,7 +92,12 @@ export interface BsToggleSlots {
 export interface BsToggle extends ComponentPublicInstance<BsToggleProps> {}
 export const BsToggle: ComponentConstructor<BsToggle>
 
-
+// Bs Checkbox
+export interface BsCheckboxProps extends QCheckboxProps {
+    hint?: String;
+}
+export interface BsCheckbox extends ComponentPublicInstance<BsCheckboxProps> {}
+export const BsCheckbox: ComponentConstructor<BsCheckbox>
 
 
 
@@ -97,13 +108,14 @@ declare module "@vue/runtime-core" {
         BsSelect: GlobalComponentConstructor<BsSelectProps,QSelectSlots>;
         BsButton: GlobalComponentConstructor<QBtnProps,QBtnSlots>;
         BsTooltip: GlobalComponentConstructor<QTooltipProps,QTooltipSlots>;
-        BsSlider: GlobalComponentConstructor<QSliderProps,QSliderSlots>;
+        BsSlider: GlobalComponentConstructor<BsSliderProps,QSliderSlots>;
         BsRange: GlobalComponentConstructor<QRangeProps,QRangeSlots>;
         BsSpinner: GlobalComponentConstructor<QSpinnerProps,QSpinnerSlots>;
         BsTable: GlobalComponentConstructor<QTableProps,QTableSlots>;
         BsImg: GlobalComponentConstructor<QImgProps,QImgSlots>;
         BsIcon: GlobalComponentConstructor<QIconProps,QIconSlots>;
         BsToggle: GlobalComponentConstructor<BsToggleProps,BsToggleSlots>;
+        BsCheckbox: GlobalComponentConstructor<BsCheckboxProps,QCheckboxSlots>
 
     }
 }
@@ -121,6 +133,7 @@ declare module "./plugin" {
         BsImg?: BsImg;
         BsIcon?: BsIcon;
         BsToggle?: BsToggle;
+        BsCheckbox?: BsCheckbox;
     }
 }
 

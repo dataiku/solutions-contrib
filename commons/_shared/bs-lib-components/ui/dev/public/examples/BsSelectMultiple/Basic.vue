@@ -2,14 +2,12 @@
     <div class="q-pa-sm" :style="{ 'max-width' : '300px'}">
         <BsSelect 
         v-model="model" 
-        :options="options" 
-        outlined 
+        :options="options"  
         clearable 
         multiple 
         use-chips 
         clear-icon="clear"
         bsLabel="Company"
-        bsLabelId="company"
         >
             <template v-slot:selected-item="scope">
                 <q-chip

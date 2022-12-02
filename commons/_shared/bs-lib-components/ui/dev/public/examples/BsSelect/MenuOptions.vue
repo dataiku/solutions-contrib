@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-sm" :style="{ 'max-width' : '300px'}">
-        <BsSelect v-model="model" :options="optionsSlot" outlined bsLabel="Company" bsLabelId="company">
+        <BsSelect v-model="model" :options="optionsSlot" bsLabel="Company">
             <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps">
                     <q-item-section avatar>

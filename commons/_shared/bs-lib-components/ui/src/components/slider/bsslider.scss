@@ -1,0 +1,27 @@
+
+.bs-slider {
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input {
+        padding: 3px 8px;
+        background: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        border-radius: 2px;
+        height: 26px;
+        width: 63px;
+        margin-left: 10px;
+        text-align:right;
+
+        &:focus {
+            outline: 1px solid $primary;
+            border: none;
+        }
+    }
+}
+  

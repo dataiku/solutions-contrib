@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-sm" :style="{ 'max-width' : '300px'}">
-        <BsSelect v-model="model" :options="options" outlined></BsSelect>
+        <BsSelect v-model="model" :options="options"></BsSelect>
     </div>
 </template>
 <script>
