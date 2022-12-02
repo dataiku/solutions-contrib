@@ -652,6 +652,64 @@
   outline: 2px solid rgba(59, 153, 252, 0.3);
 }
 
+.q-checkbox:not(.disabled) .q-checkbox__inner:before {
+  background: transparent !important;
+}
+.q-checkbox:not(.disabled) .q-checkbox__inner--truthy:focus, .q-checkbox:not(.disabled) .q-checkbox__inner--truthy:hover, .q-checkbox:not(.disabled) .q-checkbox__inner--indet:focus, .q-checkbox:not(.disabled) .q-checkbox__inner--indet:hover {
+  color: #267CFB;
+}
+.q-checkbox:not(.disabled) .q-checkbox__inner--falsy {
+  color: #666666;
+}
+.q-checkbox:not(.disabled) .q-checkbox__inner--falsy:focus .q-checkbox__bg, .q-checkbox:not(.disabled) .q-checkbox__inner--falsy:hover .q-checkbox__bg {
+  background: white;
+}
+.q-checkbox:not(.disabled) .q-checkbox__inner--falsy:focus path, .q-checkbox:not(.disabled) .q-checkbox__inner--falsy:hover path {
+  color: #CCCCCC;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.18s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+}
+.q-checkbox:not(.disabled) .q-checkbox__bg {
+  border: 1px solid currentColor;
+}
+
+.q-checkbox.disabled .q-checkbox__inner .q-checkbox__bg {
+  border: 1px solid currentColor;
+}
+.q-checkbox.disabled .q-checkbox__inner--falsy {
+  color: #CCCCCC;
+}
+.q-checkbox.disabled .q-checkbox__inner--truthy, .q-checkbox.disabled .q-checkbox__inner--indet {
+  color: #CCCCCC;
+}
+
+.bs-checkbox .q-checkbox__label {
+  font-family: "SourceSansPro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #222222;
+}
+.bs-checkbox.hint .q-checkbox__label {
+  font-family: "SourceSansPro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 15px;
+  color: #666666;
+}
+.bs-checkbox .q-checkbox.disabled .q-checkbox__label {
+  color: #CCCCCC;
+}
+.bs-checkbox .bs-checkbox__hint {
+  padding-left: 30.5px;
+  color: #666666;
+}
+.bs-checkbox.disabled .bs-checkbox__hint {
+  color: #CCCCCC;
+}
+
 body {
   font-family: "SourceSansPro";
 }
