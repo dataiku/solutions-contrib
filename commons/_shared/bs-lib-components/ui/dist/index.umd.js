@@ -1,5 +1,5 @@
 /*!
- * quasar-ui-bs v1.1
+ * quasar-ui-bs v1.3
  * (c) 2022 anas laaroussi <anas.laaroussi@dataiku.com>
  * Released under the MIT License.
  */
@@ -898,7 +898,7 @@
         BsDateRange: script
     });
 
-    var index_umd = Object.assign({}, {version: '1.1',
+    var index_umd = Object.assign({}, {version: '1.3',
       install: function install (app) {
         installApp(app, {
           components: components,

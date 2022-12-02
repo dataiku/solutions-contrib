@@ -1,5 +1,5 @@
 /*!
- * quasar-ui-bs v1.1
+ * quasar-ui-bs v1.3
  * (c) 2022 anas laaroussi <anas.laaroussi@dataiku.com>
  * Released under the MIT License.
  */
