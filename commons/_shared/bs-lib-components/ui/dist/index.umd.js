@@ -72,6 +72,13 @@
                 doc: {
                     type: Boolean,
                     default: true
+                },
+                docImageDimensions: {
+                    type: Object,
+                    default: function () { return ({
+                        width: 36,
+                        height: 40,
+                    }); }
                 }
             }
         };
@@ -92,7 +99,7 @@
       /*#__PURE__*/vue.createElementVNode("span", { class: "btn-solution-text" }, "Dataiku Solutions")
     ], -1);
     var _hoisted_5 = { class: "flex row items-center q-gutter-sm q-mb-lg" };
-    var _hoisted_6 = ["src"];
+    var _hoisted_6 = ["src", "width", "height"];
     var _hoisted_7 = { class: "dku-large-title-sb" };
     var _hoisted_8 = { class: "doc-body" };
     var _hoisted_9 = /*#__PURE__*/vue.createElementVNode("div", { class: "doc-footer flex row items-center" }, [
@@ -192,7 +199,9 @@
                           ($props.docIcon)
                             ? (vue.openBlock(), vue.createElementBlock("img", {
                                 key: 0,
-                                src: $props.docIcon
+                                src: $props.docIcon,
+                                width: $props.docImageDimensions.width,
+                                height: $props.docImageDimensions.height
                               }, null, 8, _hoisted_6))
                             : vue.createCommentVNode("", true),
                           vue.createElementVNode("span", _hoisted_7, vue.toDisplayString($props.docTitle), 1)
@@ -410,6 +419,9 @@
         data: function data() {
             return {
                 width: 0,
+                // TODO : optimize this behaviour of copying options in future releases
+                allOptions: JSON.parse(JSON.stringify(this.$attrs.options)),
+                bsOptions: JSON.parse(JSON.stringify(this.$attrs.options)),
             }
         },
         props: {
@@ -418,6 +430,10 @@
             }, 
             placeHolder: {
                 type: String,
+            },
+            filter: {
+                type: Boolean,
+                default: true,
             }
         },
         components: {
@@ -429,6 +445,28 @@
             },
             popupHide: function popupHide() {
                 this.width = 0;
+            },
+            filterFn: function(val, update, abort) {
+                var this$1$1 = this;
+
+                update(function () {
+                    if (val === '') {
+                        this$1$1.bsOptions = this$1$1.allOptions;
+                    } else {
+                        var needle = val.toLowerCase();
+                        if (this$1$1.allOptions.some(function (element) {
+                            return typeof element === 'object' 
+                                && !Array.isArray(element)
+                                && element !== null
+                        })) {
+                            // Case where it is an object
+                            this$1$1.bsOptions = this$1$1.allOptions.filter(function (v) { return (v.label || "").toLowerCase().indexOf(needle) > -1; });
+                        } else {
+                            // Case primitive types (string)
+                            this$1$1.bsOptions = this$1$1.allOptions.filter(function (v) { return v.toLowerCase().indexOf(needle) > -1; });
+                        }    
+                    } 
+                });
             }
         },
         computed: {
@@ -462,16 +500,20 @@
           ? (vue.openBlock(), vue.createElementBlock("label", _hoisted_1$3, vue.toDisplayString($props.bsLabel), 1))
           : vue.createCommentVNode("", true),
         vue.createVNode(_component_QSelect, vue.mergeProps({ ref: "bsSelect" }, _ctx.$attrs, {
+          options: $data.bsOptions,
           "dropdown-icon": "r_expand_more",
           class: "bs-select",
           outlined: "",
           dense: "",
+          "use-input": $props.filter,
+          "input-debounce": "0",
           "popup-content-class": "bs-select__popup dds-text-400",
           onPopupShow: $options.popupShow,
           onPopupHide: $options.popupHide,
           "popup-content-style": $options.popupStyle,
           label: $options.computedLabel,
-          "label-color": "#CCCCCC"
+          "label-color": "#CCCCCC",
+          onFilter: $options.filterFn
         }), vue.createSlots({ _: 2 }, [
           vue.renderList(_ctx.$slots, function (_, slot) {
             return {
@@ -481,7 +523,7 @@
               ]; })
             }
           })
-        ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style", "label"])
+        ]), 1040, ["options", "use-input", "onPopupShow", "onPopupHide", "popup-content-style", "label", "onFilter"])
       ]))
     }
 
