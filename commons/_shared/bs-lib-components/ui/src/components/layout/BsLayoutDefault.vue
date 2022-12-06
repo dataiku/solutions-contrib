@@ -26,7 +26,7 @@
                 </QBtn>
                 <QCard class="doc-content flex row" v-if="doc && openDoc">
                     <div class="flex row items-center q-gutter-sm q-mb-lg">
-                        <img :src="docIcon" v-if="docIcon">
+                        <img :src="docIcon" :width="docImageDimensions.width" :height="docImageDimensions.height" v-if="docIcon">
                         <span class="dku-large-title-sb">{{ docTitle }}</span>
                     </div>
                     <div class="doc-body">
@@ -94,6 +94,13 @@
             doc: {
                 type: Boolean,
                 default: true
+            },
+            docImageDimensions: {
+                type: Object,
+                default: () => ({
+                    width: 36,
+                    height: 40,
+                })
             }
         }
     }
