@@ -419,9 +419,6 @@
         data: function data() {
             return {
                 width: 0,
-                // TODO : optimize this behaviour of copying options in future releases
-                allOptions: JSON.parse(JSON.stringify(this.$attrs.options)),
-                bsOptions: JSON.parse(JSON.stringify(this.$attrs.options)),
             }
         },
         props: {
@@ -430,10 +427,6 @@
             }, 
             placeHolder: {
                 type: String,
-            },
-            filter: {
-                type: Boolean,
-                default: true,
             }
         },
         components: {
@@ -445,28 +438,6 @@
             },
             popupHide: function popupHide() {
                 this.width = 0;
-            },
-            filterFn: function(val, update, abort) {
-                var this$1$1 = this;
-
-                update(function () {
-                    if (val === '') {
-                        this$1$1.bsOptions = this$1$1.allOptions;
-                    } else {
-                        var needle = val.toLowerCase();
-                        if (this$1$1.allOptions.some(function (element) {
-                            return typeof element === 'object' 
-                                && !Array.isArray(element)
-                                && element !== null
-                        })) {
-                            // Case where it is an object
-                            this$1$1.bsOptions = this$1$1.allOptions.filter(function (v) { return (v.label || "").toLowerCase().indexOf(needle) > -1; });
-                        } else {
-                            // Case primitive types (string)
-                            this$1$1.bsOptions = this$1$1.allOptions.filter(function (v) { return v.toLowerCase().indexOf(needle) > -1; });
-                        }    
-                    } 
-                });
             }
         },
         computed: {
@@ -500,20 +471,16 @@
           ? (vue.openBlock(), vue.createElementBlock("label", _hoisted_1$3, vue.toDisplayString($props.bsLabel), 1))
           : vue.createCommentVNode("", true),
         vue.createVNode(_component_QSelect, vue.mergeProps({ ref: "bsSelect" }, _ctx.$attrs, {
-          options: $data.bsOptions,
           "dropdown-icon": "r_expand_more",
           class: "bs-select",
           outlined: "",
           dense: "",
-          "use-input": $props.filter,
-          "input-debounce": "0",
           "popup-content-class": "bs-select__popup dds-text-400",
           onPopupShow: $options.popupShow,
           onPopupHide: $options.popupHide,
           "popup-content-style": $options.popupStyle,
           label: $options.computedLabel,
-          "label-color": "#CCCCCC",
-          onFilter: $options.filterFn
+          "label-color": "#CCCCCC"
         }), vue.createSlots({ _: 2 }, [
           vue.renderList(_ctx.$slots, function (_, slot) {
             return {
@@ -523,7 +490,7 @@
               ]; })
             }
           })
-        ]), 1040, ["options", "use-input", "onPopupShow", "onPopupHide", "popup-content-style", "label", "onFilter"])
+        ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style", "label"])
       ]))
     }
 

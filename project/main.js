@@ -1,4 +1,4 @@
-import { Quasar } from 'quasar'
+import { Quasar, Notify } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import '@quasar/extras/material-icons-outlined/material-icons-outlined.css'
 import '@quasar/extras/material-icons-round/material-icons-round.css'
@@ -11,7 +11,9 @@ import { myApp } from './src/index'
 
 
 myApp.use(Quasar, {
-    plugins: {},
+    plugins: {
+        Notify,
+    },
 })
 
 myApp.use(QuasarBs)

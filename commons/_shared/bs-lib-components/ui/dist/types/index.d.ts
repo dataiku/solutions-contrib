@@ -34,8 +34,6 @@ export const BsLayoutDefault: ComponentConstructor<BsLayoutDefault>
 export interface BsSelectProps extends QSelectProps {
     bsLabel?: String;
     placeHolder?: String;
-    filter?: Boolean;
-
 }
 export interface BsSelect extends ComponentPublicInstance<BsSelectProps> {}
 export const BsSelect: ComponentConstructor<BsSelect>

@@ -7,7 +7,7 @@
         <DocExemple file="BsSelect/NoLabel" title="Without Label"/>
         <DocExemple file="BsSelect/MenuOptions" title="Custom Menu Options"/>
         <DocExemple file="BsSelect/EventOnChange" title="Call a custom function on update"/>
-        <DocExemple file="BsSelect/NoFilter" title="Deactivate Filtering"/>
+        <!-- <DocExemple file="BsSelect/NoFilter" title="Deactivate Filtering"/> -->
 
     </doc-page-core>
 </template>
