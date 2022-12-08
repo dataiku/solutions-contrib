@@ -255,6 +255,22 @@ def update_dataset_varchar_limit(project, dataset_name, new_varchar_limit):
     pass
 
 
+def get_dataset_managed_state(project, dataset_name):
+    """
+    Retrieves the information of a dataset 'managed state', between 'managed' or 'not_managed'.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :returns: dataset_managed_state: str: String informing about the dataset 'managed state'.
+    """
+    dataset_connection_type = get_dataset_connection_type(project, dataset_name)
+    dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
+    if dataset_settings.settings["managed"]:
+        dataset_managed_state = "managed"
+    else:
+        dataset_managed_state = "not_managed"
+    return dataset_managed_state
+
+
 def change_dataset_managed_state(project, dataset_name, bool_should_be_managed_state):
     """
     Changes the state a project dataset so that it becomes a 'managed' or a 'not managed' one.
