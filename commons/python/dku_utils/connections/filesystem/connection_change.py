@@ -59,7 +59,7 @@ def change_filesystem_dataset_format(project, dataset_name, new_dataset_format):
     )
     dataset_settings.settings["formatType"] = new_dataset_format
     dataset_settings.save()
-    print("Dataset format '{}' switched".formatdataset_name())
+    print("Dataset format '{}' switched".format(dataset_name))
     pass
 
 
@@ -159,6 +159,46 @@ def switch_managed_dataset_connection_to_cloud_storage(project, dataset_name, co
     pass
 
 
+def switch_managed_dataset_connection_to_local_filesytem_storage(project, dataset_name, local_filesystem_connection_name):
+    """
+    Changes the connection of a managed DSS dataset toward a a local filesystem storage.
+    Connection must have a type equals to "Filesystem".
+
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param dataset_name: str: Name of the dataset.
+    :param local_filesystem_connection_name: str: Name of the local filesystem connection.
+    """
+    dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
+    dataset_is_managed = dataset_settings.settings["managed"]
+
+    if not dataset_is_managed:
+        log_message = (
+            "Dataset '{}' is not a DSS managed dataset.\n"
+            "You can't use this function to change its connection".format(dataset_name)
+        )
+        raise Exception(log_message)
+
+    dataset_connection_settings = get_dataset_in_connection_settings(project, local_filesystem_connection_name)
+    connection_type = dataset_connection_settings["type"]
+
+    if connection_type != "Filesystem":
+        log_message = ("Connection '{}' is of type '{}' that is not allowed by this function.\n"
+        "Only allowed connection types is 'Filesystem'".format(local_filesystem_connection_name, connection_type)
+        )
+        raise Exception(log_message)
+
+    connection_path = dataset_connection_settings["params"]["path"]
+    connection_path = re.sub("dataset_for_connection_settings_extraction", "transaction_filtered", connection_path)
+    new_connection_path = "{}{}".format(connection_path, dataset_name)
+    dataset_connection_settings["params"]["path"] = new_connection_path
+    dataset_connection_settings["name"] = dataset_name
+    dataset_connection_settings["schema"]["columns"] = get_dataset_schema(project, dataset_name)
+    dataset_connection_settings["metrics"] = dataset_settings.settings["metrics"]
+    dataset_settings.settings = dataset_connection_settings
+    dataset_settings.save()
+    pass
+
+
 def switch_managed_folder_connection_to_cloud_storage(project, folder_name, connection_name):
     """
     Changes the connection of a managed DSS folder toward a clould storage connection.
@@ -199,19 +239,3 @@ def switch_managed_folder_connection_to_cloud_storage(project, folder_name, conn
 
     folder.set_definition(folder_definition)
     pass
-
-
-def switch_to_filesystem_storage(project, dataset_name, filesystem_connection_name):
-    dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
-    dataset_connection_settings = get_dataset_in_connection_settings(project, filesystem_connection_name)
-
-    dataset_connection_settings["name"] = dataset_name
-    dataset_connection_settings["schema"]["columns"] = get_dataset_schema(project, "transaction_filtered")
-    dataset_connection_settings["metrics"] = dataset_settings.settings["metrics"]
-
-    connection_path = dataset_connection_settings["params"]["path"]
-    connection_path = re.sub("dataset_for_connection_settings_extraction", "transaction_filtered", connection_path)
-    dataset_connection_settings["params"]["path"] = connection_path
-
-    dataset_settings.settings = dataset_connection_settings
-    dataset_settings.save()
