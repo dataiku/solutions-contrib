@@ -188,7 +188,7 @@ def switch_managed_dataset_connection_to_local_filesytem_storage(project, datase
         raise Exception(log_message)
 
     connection_path = dataset_connection_settings["params"]["path"]
-    connection_path = re.sub("dataset_for_connection_settings_extraction", "transaction_filtered", connection_path)
+    connection_path = re.sub("dataset_for_connection_settings_extraction", "", connection_path)
     new_connection_path = "{}{}".format(connection_path, dataset_name)
     dataset_connection_settings["params"]["path"] = new_connection_path
     dataset_connection_settings["name"] = dataset_name
