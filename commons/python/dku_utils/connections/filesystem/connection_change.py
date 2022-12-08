@@ -208,5 +208,10 @@ def switch_to_filesystem_storage(project, dataset_name, filesystem_connection_na
     dataset_connection_settings["name"] = dataset_name
     dataset_connection_settings["schema"]["columns"] = get_dataset_schema(project, "transaction_filtered")
     dataset_connection_settings["metrics"] = dataset_settings.settings["metrics"]
+
+    connection_path = dataset_connection_settings["params"]["path"]
+    connection_path = re.sub("dataset_for_connection_settings_extraction", "transaction_filtered", connection_path)
+    dataset_connection_settings["params"]["path"] = connection_path
+
     dataset_settings.settings = dataset_connection_settings
     dataset_settings.save()
