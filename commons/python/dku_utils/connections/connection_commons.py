@@ -3,7 +3,8 @@ from .filesystem.connection_change import (
     change_filesystem_dataset_format,
     change_filesystem_dataset_path,
     change_folder_path,
-    switch_managed_folder_connection_to_cloud_storage, switch_to_filesystem_storage,
+    switch_managed_folder_connection_to_cloud_storage, 
+    switch_managed_dataset_connection_to_local_filesytem_storage,
 )
 from .sql.connection_change import (
     switch_managed_dataset_connection_to_sql,
@@ -30,17 +31,11 @@ class FlowConnectionsHandler:
     ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES = ["Redshift"]
     # Filesystem storages:
     ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES = ["Azure", "S3"]
-    ALLOWED_FILESYSTEM_STORAGES_FORMAT_TYPE = ["Filesystem", "csv", "parquet"]
-    DEFAULT_FILESYSTEM_STORAGES_FORMAT_TYPE = "csv"
     CLOUD_PROVIDERS_SQL_DATABASES_FILESYSTEM_STORAGES = {"Redshift": "S3", "Synapse": "Azure"}
     # All allowed storages:
     ALL_ALLOWED_SQL_STORAGES = ALLOWED_SQL_STORAGES + ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES
-    ALL_ALLOWED_CONNECTIONS = (
-        ALLOWED_SQL_STORAGES
-        + ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES
-        + ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES
-        + ALLOWED_FILESYSTEM_STORAGES_FORMAT_TYPE
-    )
+    ALL_ALLOWED_FILESYSTEM_STORAGES = ["Filesystem"] + ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES
+    ALL_ALLOWED_CONNECTIONS = ALL_ALLOWED_SQL_STORAGES + ALL_ALLOWED_FILESYSTEM_STORAGES
     CONNECTIONS_VARCHAR_LIMITS = {
         "Azure": 4000,
         "Filesystem": 419000,
@@ -50,6 +45,9 @@ class FlowConnectionsHandler:
         "SQLServer": 419000,
         "S3": 65000,
     }
+    # File formats:
+    ALLOWED_FILESYSTEM_STORAGES_FILE_FORMATS = ["csv", "parquet"]
+    DEFAULT_FILESYSTEM_STORAGES_FILE_FORMAT = "csv"
 
     def __init__(
         self,
@@ -226,7 +224,7 @@ class FlowConnectionsHandler:
         print("Connections compatibility checked !")
         pass
 
-    def switch_flow_datasets_connections(self, managed_datasets_writing_format=None):
+    def switch_flow_datasets_connections(self, managed_datasets_write_file_format=None):
         """
         Changes flow datasets connections, based on the parameters set in:
             - 'main_connection_name'
@@ -234,9 +232,13 @@ class FlowConnectionsHandler:
             - 'input_datasets'
             - 'input_datasets_to_preserve'
             - 'fallback_connection_datasets'
+        
+        :param managed_datasets_write_file_format: str: File format of the managed datasets, with a value in 
+            'ALLOWED_FILESYSTEM_STORAGES_FILE_FORMATS'.
         """
         print("Switching all flow datasets connections ...")
-
+        if managed_datasets_write_file_format is None:
+            managed_datasets_write_file_format = self.DEFAULT_FILESYSTEM_STORAGES_FILE_FORMAT
         for dataset_name in self.dataset_with_connections_to_be_changed:
             # First all datasets are set to 'managed' state:
             change_dataset_managed_state(self.project, dataset_name, True)
@@ -252,32 +254,27 @@ class FlowConnectionsHandler:
             elif self.main_connection_type in self.ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES:
                 if dataset_name not in self.fallback_connection_datasets:
                     adapt_table_namings = True
-                    switch_managed_dataset_connection_to_sql(
-                        self.project, dataset_name, self.main_connection_name, adapt_table_namings
-                    )
+                    switch_managed_dataset_connection_to_sql(self.project, dataset_name, self.main_connection_name, adapt_table_namings)
                     update_dataset_varchar_limit(self.project, dataset_name, self.main_connection_varchar_limit)
                 else:
-                    switch_managed_dataset_connection_to_cloud_storage(
-                        self.project, dataset_name, self.fallback_connection_name
-                    )
+                    switch_managed_dataset_connection_to_cloud_storage(self.project, dataset_name, self.fallback_connection_name)
                     update_dataset_varchar_limit(self.project, dataset_name, self.fallback_connection_varchar_limit)
 
             elif self.main_connection_type in self.ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES:
-                switch_managed_dataset_connection_to_cloud_storage(
-                    self.project, dataset_name, self.main_connection_name
-                )
+                switch_managed_dataset_connection_to_cloud_storage(self.project, dataset_name, self.main_connection_name)
                 update_dataset_varchar_limit(self.project, dataset_name, self.main_connection_varchar_limit)
-                if managed_datasets_writing_format is not None:
-                    if dataset_name in self.datasets_that_should_be_managed:
-                        change_filesystem_dataset_format(self.project, dataset_name, managed_datasets_writing_format)
-            elif self.main_connection_type in self.ALLOWED_FILESYSTEM_STORAGES_FORMAT_TYPE:
                 if dataset_name in self.datasets_that_should_be_managed:
-                    switch_to_filesystem_storage(self.project, dataset_name, self.main_connection_name)
+                    change_filesystem_dataset_format(self.project, dataset_name, managed_datasets_write_file_format)
+            
+            elif self.main_connection_type == "Filesystem":
+                switch_managed_dataset_connection_to_local_filesytem_storage(self.project, dataset_name, self.main_connection_name)
+                update_dataset_varchar_limit(self.project, dataset_name, self.main_connection_varchar_limit)
+                if dataset_name in self.datasets_that_should_be_managed:
+                    change_filesystem_dataset_format(self.project, dataset_name, managed_datasets_write_file_format)
+                    
             else:
-                log_message = (
-                    "Your main connection ('{}') has connection type '{}' that is not compatible with"
-                    " FlowConnectionsHandler.".format(self.main_connection_name, self.main_connection_type)
-                )
+                log_message = ("Your main connection ('{}') has connection type '{}' that is not compatible with"
+                " 'FlowConnectionsHandler'.".format(self.main_connection_name, self.main_connection_type))
                 raise Exception(log_message)
         print("Flow datasets connections switched !")
         pass
@@ -295,19 +292,13 @@ class FlowConnectionsHandler:
                 computed_folders_connection = self.fallback_connection_name
             elif self.main_connection_type in self.ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES:
                 computed_folders_connection = self.main_connection_name
-            if self.main_connection_type in self.ALLOWED_SQL_STORAGES:
+            else:
                 computed_folders_connection = self.folders_connection_name
             print("Switching flow folders connections ...")
             for folder_name in self.folders_with_connections_to_be_changed:
                 if folder_name not in self.input_folders:
-                    print(
-                        "Switching computed folder '{}' connection toward '{}' ...".format(
-                            folder_name, computed_folders_connection
-                        )
-                    )
-                    switch_managed_folder_connection_to_cloud_storage(
-                        self.project, folder_name, computed_folders_connection
-                    )
+                    print("Switching computed folder '{}' connection toward '{}' ...".format(folder_name, computed_folders_connection))
+                    switch_managed_folder_connection_to_cloud_storage(self.project, folder_name, computed_folders_connection)
             print("All flow computed folders connections switched !")
 
         if self.flow_has_input_folders:
@@ -391,7 +382,7 @@ class FlowConnectionsHandler:
             pass
         pass
 
-    def connect_flow_input_datasets(self, datasets_to_tables_or_paths_mapping, input_datasets_reading_format=None):
+    def connect_flow_input_datasets(self, datasets_to_tables_or_paths_mapping, input_datasets_read_file_format=None):
         """
         Connects all flow input datasets to the tables or paths where to find their data.
 
@@ -401,9 +392,12 @@ class FlowConnectionsHandler:
                 - {'input_dataset_1': 'table_1', 'input_dataset_2': 'table_2'}
                 - {'input_dataset_1': 'path/to/input_dataset_1_data', 'input_dataset_2': 'path/to/input_dataset_2_data'}
         
-        :param input_datasets_reading_format: str: Format of the input datasets, we use a 'main_connection' with a type in 
-            'ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES'.
+        :param input_datasets_read_file_format: str: File format of the input datasets, with a value in 
+            'ALLOWED_FILESYSTEM_STORAGES_FILE_FORMATS'.
         """
+
+        if input_datasets_read_file_format is None:
+            input_datasets_read_file_format = self.DEFAULT_FILESYSTEM_STORAGES_FILE_FORMAT
         print("Ingesting flow datasources ...")
         for dataset_name in self.datasets_that_should_be_not_managed:
             if dataset_name in datasets_to_tables_or_paths_mapping.keys():
@@ -422,19 +416,9 @@ class FlowConnectionsHandler:
                             )
                             raise Exception(log_message)
 
-                    elif self.main_connection_type in self.ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES:
-                        change_filesystem_dataset_path(
-                            self.project, dataset_name, table_or_path_associated_with_dataset
-                        )
-                        if input_datasets_reading_format is not None:
-                            if input_datasets_reading_format in self.ALLOWED_FILESYSTEM_STORAGES_FORMAT_TYPE:
-                                change_filesystem_dataset_format(
-                                    self.project, dataset_name, input_datasets_reading_format
-                                )
-                            else:
-                                change_filesystem_dataset_format(
-                                    self.project, dataset_name, self.DEFAULT_FILESYSTEM_STORAGES_FORMAT_TYPE
-                                )
+                    elif self.main_connection_type in self.ALL_ALLOWED_FILESYSTEM_STORAGES:
+                        change_filesystem_dataset_path(self.project, dataset_name, table_or_path_associated_with_dataset)
+                        change_filesystem_dataset_format(self.project, dataset_name, input_datasets_read_file_format)
                         try:
                             infer_and_update_dataset_schema(self.project, dataset_name, self.main_connection_name)
                         except:
@@ -476,5 +460,4 @@ class FlowConnectionsHandler:
 
         print("Flow input folders ingested !")
         pass
-
     pass
