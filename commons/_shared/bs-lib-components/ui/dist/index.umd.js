@@ -72,6 +72,13 @@
                 doc: {
                     type: Boolean,
                     default: true
+                },
+                docImageDimensions: {
+                    type: Object,
+                    default: function () { return ({
+                        width: 36,
+                        height: 40,
+                    }); }
                 }
             }
         };
@@ -92,7 +99,7 @@
       /*#__PURE__*/vue.createElementVNode("span", { class: "btn-solution-text" }, "Dataiku Solutions")
     ], -1);
     var _hoisted_5 = { class: "flex row items-center q-gutter-sm q-mb-lg" };
-    var _hoisted_6 = ["src"];
+    var _hoisted_6 = ["src", "width", "height"];
     var _hoisted_7 = { class: "dku-large-title-sb" };
     var _hoisted_8 = { class: "doc-body" };
     var _hoisted_9 = /*#__PURE__*/vue.createElementVNode("div", { class: "doc-footer flex row items-center" }, [
@@ -192,7 +199,9 @@
                           ($props.docIcon)
                             ? (vue.openBlock(), vue.createElementBlock("img", {
                                 key: 0,
-                                src: $props.docIcon
+                                src: $props.docIcon,
+                                width: $props.docImageDimensions.width,
+                                height: $props.docImageDimensions.height
                               }, null, 8, _hoisted_6))
                             : vue.createCommentVNode("", true),
                           vue.createElementVNode("span", _hoisted_7, vue.toDisplayString($props.docTitle), 1)

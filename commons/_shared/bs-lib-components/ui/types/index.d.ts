@@ -24,6 +24,7 @@ export interface BsLayoutDefaultProps {
     docTitle?: String;
     docIcon?: String;
     doc?: Boolean;
+    docImageDimensions?: { width: Number; height: Number};
 
 }
 export interface BsLayoutDefault extends ComponentPublicInstance<BsLayoutDefaultProps> {}
