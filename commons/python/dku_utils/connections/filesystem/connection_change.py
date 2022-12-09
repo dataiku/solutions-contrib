@@ -199,7 +199,7 @@ def switch_managed_dataset_connection_to_local_filesytem_storage(project, datase
     pass
 
 
-def switch_managed_folder_connection_to_cloud_storage(project, folder_name, connection_name):
+def switch_managed_folder_connection(project, folder_name, connection_name):
     """
     Changes the connection of a managed DSS folder toward a clould storage connection.
     Connection must have a type in ['S3', 'Azure'].
