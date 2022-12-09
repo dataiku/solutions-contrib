@@ -3,7 +3,7 @@ from .filesystem.connection_change import (
     change_filesystem_dataset_format,
     change_filesystem_dataset_path,
     change_folder_path,
-    switch_managed_folder_connection_to_cloud_storage, 
+    switch_managed_folder_connection, 
     switch_managed_dataset_connection_to_local_filesytem_storage,
 )
 from .sql.connection_change import (
@@ -298,7 +298,7 @@ class FlowConnectionsHandler:
             for folder_name in self.folders_with_connections_to_be_changed:
                 if folder_name not in self.input_folders:
                     print("Switching computed folder '{}' connection toward '{}' ...".format(folder_name, computed_folders_connection))
-                    switch_managed_folder_connection_to_cloud_storage(self.project, folder_name, computed_folders_connection)
+                    switch_managed_folder_connection(self.project, folder_name, computed_folders_connection)
             print("All flow computed folders connections switched !")
 
         if self.flow_has_input_folders:
@@ -308,7 +308,7 @@ class FlowConnectionsHandler:
                         folder_name, self.folders_connection_name
                     )
                 )
-                switch_managed_folder_connection_to_cloud_storage(
+                switch_managed_folder_connection(
                     self.project, folder_name, self.folders_connection_name
                 )
             print("All flow input folders connections switched !")
