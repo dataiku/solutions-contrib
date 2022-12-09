@@ -39,7 +39,8 @@
                 QDrawer: quasar.QDrawer, 
                 QPageContainer: quasar.QPageContainer,
                 QBtn: quasar.QBtn,
-                QCard: quasar.QCard
+                QCard: quasar.QCard,
+                QPage: quasar.QPage,
             },
             methods: {
                 toggleLeftPanel: function toggleLeftPanel() {
@@ -118,6 +119,7 @@
       var _component_QDrawer = vue.resolveComponent("QDrawer");
       var _component_QBtn = vue.resolveComponent("QBtn");
       var _component_QCard = vue.resolveComponent("QCard");
+      var _component_QPage = vue.resolveComponent("QPage");
       var _component_QPageContainer = vue.resolveComponent("QPageContainer");
       var _component_QLayout = vue.resolveComponent("QLayout");
 
@@ -171,51 +173,56 @@
             : vue.createCommentVNode("", true),
           vue.createVNode(_component_QPageContainer, null, {
             default: vue.withCtx(function () { return [
-              vue.createElementVNode("div", _hoisted_3, [
-                ($props.doc)
-                  ? (vue.openBlock(), vue.createBlock(_component_QBtn, {
-                      key: 0,
-                      unelevated: "",
-                      outline: "",
-                      "no-caps": "",
-                      "no-wrap": "",
-                      class: "btn-solution absolute",
-                      square: "",
-                      onClick: $options.toggleDoc
-                    }, {
-                      default: vue.withCtx(function () { return [
-                        _hoisted_4
-                      ]; }),
-                      _: 1
-                    }, 8, ["onClick"]))
-                  : vue.createCommentVNode("", true),
-                ($props.doc && $data.openDoc)
-                  ? (vue.openBlock(), vue.createBlock(_component_QCard, {
-                      key: 1,
-                      class: "doc-content flex row"
-                    }, {
-                      default: vue.withCtx(function () { return [
-                        vue.createElementVNode("div", _hoisted_5, [
-                          ($props.docIcon)
-                            ? (vue.openBlock(), vue.createElementBlock("img", {
-                                key: 0,
-                                src: $props.docIcon,
-                                width: $props.docImageDimensions.width,
-                                height: $props.docImageDimensions.height
-                              }, null, 8, _hoisted_6))
-                            : vue.createCommentVNode("", true),
-                          vue.createElementVNode("span", _hoisted_7, vue.toDisplayString($props.docTitle), 1)
-                        ]),
-                        vue.createElementVNode("div", _hoisted_8, [
-                          vue.renderSlot(_ctx.$slots, "documentation")
-                        ]),
-                        _hoisted_9
-                      ]; }),
-                      _: 3
-                    }))
-                  : vue.createCommentVNode("", true),
-                vue.renderSlot(_ctx.$slots, "content")
-              ])
+              vue.createVNode(_component_QPage, null, {
+                default: vue.withCtx(function () { return [
+                  vue.createElementVNode("div", _hoisted_3, [
+                    ($props.doc)
+                      ? (vue.openBlock(), vue.createBlock(_component_QBtn, {
+                          key: 0,
+                          unelevated: "",
+                          outline: "",
+                          "no-caps": "",
+                          "no-wrap": "",
+                          class: "btn-solution absolute",
+                          square: "",
+                          onClick: $options.toggleDoc
+                        }, {
+                          default: vue.withCtx(function () { return [
+                            _hoisted_4
+                          ]; }),
+                          _: 1
+                        }, 8, ["onClick"]))
+                      : vue.createCommentVNode("", true),
+                    ($props.doc && $data.openDoc)
+                      ? (vue.openBlock(), vue.createBlock(_component_QCard, {
+                          key: 1,
+                          class: "doc-content flex row"
+                        }, {
+                          default: vue.withCtx(function () { return [
+                            vue.createElementVNode("div", _hoisted_5, [
+                              ($props.docIcon)
+                                ? (vue.openBlock(), vue.createElementBlock("img", {
+                                    key: 0,
+                                    src: $props.docIcon,
+                                    width: $props.docImageDimensions.width,
+                                    height: $props.docImageDimensions.height
+                                  }, null, 8, _hoisted_6))
+                                : vue.createCommentVNode("", true),
+                              vue.createElementVNode("span", _hoisted_7, vue.toDisplayString($props.docTitle), 1)
+                            ]),
+                            vue.createElementVNode("div", _hoisted_8, [
+                              vue.renderSlot(_ctx.$slots, "documentation")
+                            ]),
+                            _hoisted_9
+                          ]; }),
+                          _: 3
+                        }))
+                      : vue.createCommentVNode("", true),
+                    vue.renderSlot(_ctx.$slots, "content")
+                  ])
+                ]; }),
+                _: 3
+              })
             ]; }),
             _: 3
           })
