@@ -202,14 +202,15 @@ def switch_managed_dataset_connection_to_local_filesytem_storage(project, datase
 def switch_managed_folder_connection(project, folder_name, connection_name):
     """
     Changes the connection of a managed DSS folder toward a clould storage connection.
-    Connection must have a type in ['S3', 'Azure'].
+    Connection must have a type in ['S3', 'Azure', 'Filesystem'].
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param folder_name: str: Name of the folder.
     :param connection_name: str: Name of the cloud storage connection.
     """
     ALLOWED_CLOUD_STORAGES = ["S3", "Azure"]
-
+    ALLOWED_STORAGES = ALLOWED_CLOUD_STORAGES + ["Filesystem"]
+    
     folder_id = get_managed_folder_id(project, folder_name)
     folder = project.get_managed_folder(folder_id)
     folder_definition = folder.get_definition()
@@ -217,10 +218,10 @@ def switch_managed_folder_connection(project, folder_name, connection_name):
     dataset_connection_settings = get_dataset_in_connection_settings(project, connection_name)
     connection_type = dataset_connection_settings["type"]
 
-    if connection_type not in ALLOWED_CLOUD_STORAGES:
+    if connection_type not in ALLOWED_STORAGES:
         log_message = (
             "Connection '{}' is of type '{}' that is not allowed by this function.\n"
-            "Allowed connection types are '{}'".format(connection_name, connection_type, ALLOWED_CLOUD_STORAGES)
+            "Allowed connection types are '{}'".format(connection_name, connection_type, ALLOWED_STORAGES)
         )
         raise Exception(log_message)
 
@@ -230,12 +231,13 @@ def switch_managed_folder_connection(project, folder_name, connection_name):
     new_connection_path = "{}{}".format(connection_path, "${odbId}")
     folder_definition["params"]["path"] = new_connection_path
     folder_definition["params"]["connection"] = connection_name
-
-    metastore_synchronization_enabled = dataset_connection_settings["params"]["metastoreSynchronizationEnabled"]
-    if metastore_synchronization_enabled:
-        folder_definition["params"]["metastoreTableName"] = "${odbId}"
-    else:
-        folder_definition["params"]["metastoreTableName"] = ""
+    
+    if connection_type in ALLOWED_CLOUD_STORAGES:
+        metastore_synchronization_enabled = dataset_connection_settings["params"]["metastoreSynchronizationEnabled"]
+        if metastore_synchronization_enabled:
+            folder_definition["params"]["metastoreTableName"] = "${odbId}"
+        else:
+            folder_definition["params"]["metastoreTableName"] = ""
 
     folder.set_definition(folder_definition)
     pass
