@@ -68,14 +68,14 @@ def switch_not_managed_dataset_connection_to_cloud_storage(
 ):
     """
     Changes the connection of a NOT managed DSS dataset toward a clould storage connection.
-    Connection must have a type in ['S3', 'Azure'].
+    Connection must have a type in ['Azure', 'GCS', 'S3'].
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     :param connection_name: str: Name of the cloud storage connection.
     :param dataset_path_in_connection: str: Dataset path in the cloud storage connection.
     """
-    ALLOWED_CLOUD_STORAGES = ["S3", "Azure"]
+    ALLOWED_CLOUD_STORAGES = ["Azure", "GCS", "S3"]
     dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
     dataset_is_managed = dataset_settings.settings["managed"]
 
@@ -113,13 +113,13 @@ def switch_not_managed_dataset_connection_to_cloud_storage(
 def switch_managed_dataset_connection_to_cloud_storage(project, dataset_name, connection_name):
     """
     Changes the connection of a managed DSS dataset toward a clould storage connection.
-    Connection must have a type in ['S3', 'Azure'].
+    Connection must have a type in ['Azure', 'GCS', 'S3'].
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
     :param connection_name: str: Name of the cloud storage connection.
     """
-    ALLOWED_CLOUD_STORAGES = ["S3", "Azure"]
+    ALLOWED_CLOUD_STORAGES = ["Azure", "GCS", "S3"]
     dataset_settings, __ = get_dataset_settings_and_dictionary(project, dataset_name, False)
     dataset_is_managed = dataset_settings.settings["managed"]
 
