@@ -129,8 +129,8 @@ The t argument is optional, when it is not provided the latest version of common
 
 Once you created a new project or joined an existing project, you can start it locally by running in the project folder:
 
-- `npm install` : This will install you the JS packages needed for the project (Vue, Quasar, axios ...).
-- `npm run dev` : This will run the node server 
+- `pnpm install` : This will install you the JS packages needed for the project (Vue, Quasar, axios ...).
+- `pnpm run dev` : This will run the node server 
 
 You should create a virtual env for the project where you can install the requirements.txt of the project , then you can start the backend of your project
 
