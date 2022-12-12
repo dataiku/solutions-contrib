@@ -62,16 +62,12 @@ class ConfigBs(object):
     @classmethod
     def __get_lib_backend_url(cls,request):
         dir_name = cls.__get_dir_name()
-        lib_url = None
+        lib_url = "/"
         if cls.__get_env_mode() == EnvMode.DSS.value:
-            lib_url = request.url_root + request.args.get(cls.arg_url_name)[1:] + dir_name
-            lib_url = lib_url.replace("http","https")
-
-            ##################################################################### TEMP LINE #######################################################################################
-            if False:
-                lib_url = request.url_root + "solutions-contrib"
+            lib_url += request.args.get(cls.arg_url_name)[1:] + dir_name
+            
         else:
-            lib_url = request.url_root + dir_name
+            lib_url += dir_name
         
         return lib_url
     

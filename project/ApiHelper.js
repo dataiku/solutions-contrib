@@ -5,7 +5,7 @@ const mode = process.env.NODE_ENV
 
 
 const axios = axios_.create({
-    baseURL: mode === "production" ?  parent.getWebAppBackendUrl('') : "http://127.0.0.1:5000",
+    baseURL: mode === "production" ?  parent.getWebAppBackendUrl('') : "/",
 })
 
 axios.interceptors.response.use((response) => {
