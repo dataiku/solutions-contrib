@@ -28,17 +28,19 @@ class FlowConnectionsHandler:
 
     # SQL storages:
     ALLOWED_SQL_STORAGES = ["PostgreSQL", "Snowflake", "SQLServer"]
-    ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES = ["Redshift"]
+    ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES = ["Redshift", "BigQuery"]
     # Filesystem storages:
-    ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES = ["Azure", "S3"]
-    CLOUD_PROVIDERS_SQL_DATABASES_FILESYSTEM_STORAGES = {"Redshift": "S3", "Synapse": "Azure"}
+    ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES = ["Azure", "S3", "GCS"]
+    CLOUD_PROVIDERS_SQL_DATABASES_FILESYSTEM_STORAGES = {"Redshift": "S3", "Synapse": "Azure", "BigQuery": "GCS"}
     # All allowed storages:
     ALL_ALLOWED_SQL_STORAGES = ALLOWED_SQL_STORAGES + ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES
     ALL_ALLOWED_FILESYSTEM_STORAGES = ["Filesystem"] + ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES
     ALL_ALLOWED_CONNECTIONS = ALL_ALLOWED_SQL_STORAGES + ALL_ALLOWED_FILESYSTEM_STORAGES
     CONNECTIONS_VARCHAR_LIMITS = {
         "Azure": 4000,
+        "BigQuery":419000,
         "Filesystem": 419000,
+        "GCS": 419000,
         "PostgreSQL": 419000,
         "Redshift": 65000,
         "Snowflake": 419000,
