@@ -240,7 +240,7 @@ def get_all_flow_scenarios_python_dependencies_dataframe(project):
         containing information about all the imports done in all the scenario python scripts.
     """
     print("Retrieving project '{}' all 'scenarios' python dependencies ...".format(project.project_key))
-    SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "step_index", "imported_from",
+    PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "scenario_step_index", "imported_from",
                                             "imported", "all_import_information"]
     all_flow_scenarios_ids = get_all_flow_scenarios_ids(project)
     all_flow_scenarios_python_dependencies = []
@@ -251,7 +251,7 @@ def get_all_flow_scenarios_python_dependencies_dataframe(project):
     if len(all_flow_scenarios_python_dependencies) > 0:
         all_flow_scenarios_python_dependencies_dataframe = pd.concat(all_flow_scenarios_python_dependencies)
     else:
-        all_flow_scenarios_python_dependencies_dataframe = pd.DataFrame(columns=SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA)
+        all_flow_scenarios_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
     print("All project '{}' 'scenarios' python dependencies successfully retrieved!".format(project.project_key))   
     return all_flow_scenarios_python_dependencies_dataframe
 
@@ -281,24 +281,28 @@ def get_all_flow_python_recipes_python_dependencies_dataframe(project):
     return all_flow_python_recipes_python_dependencies_dataframe
 
 
-def get_all_project_python_dependencies_dataframe(project, features_scope=["SCENARIOS", "PYTHON_RECIPES"]):
+def get_all_project_python_dependencies_dataframe(project, feature_scopes=["SCENARIOS", "PYTHON_RECIPES"]):
     ALLOWED_FEATURE_SCOPES = ["SCENARIOS", "PYTHON_RECIPES"]
-    if len(features_scope) == 0:
+    PYTHON_DEPENDENCIES_SCHEMA = ["feature_scope", "imported_from", "imported", "all_import_information"]
+    if len(feature_scopes) == 0:
         log_message = "Not any feature_scope have been provided: please provide at least one feature scope in '{}'!".format(ALLOWED_FEATURE_SCOPES)
         raise Exception(log_message)
-    for feature_scope in features_scope:
+    for feature_scope in feature_scopes:
         if feature_scope not in ALLOWED_FEATURE_SCOPES:
             log_message = "Feature score '{}' is not part of the allowed feature scopes: please choose feature scopes present in '{}'!".format(feature_scope, ALLOWED_FEATURE_SCOPES)
             raise Exception(log_message)
     project_python_dependencies_dataframes = []
-    if "PYTHON_RECIPES" in features_scope:
+    if "PYTHON_RECIPES" in feature_scopes:
         all_flow_python_recipes_python_dependencies_dataframe = get_all_flow_python_recipes_python_dependencies_dataframe(project)
-        all_flow_python_recipes_python_dependencies_dataframe["scope"] = "PYTHON_RECIPE"
+        all_flow_python_recipes_python_dependencies_dataframe["feature_scope"] = "PYTHON_RECIPE"
         project_python_dependencies_dataframes.append(all_flow_python_recipes_python_dependencies_dataframe)
-    if "SCENARIOS" in features_scope:
+        PYTHON_DEPENDENCIES_SCHEMA.append("recipe_name")
+    if "SCENARIOS" in feature_scopes:
         all_flow_scenarios_python_dependencies_dataframe = get_all_flow_scenarios_python_dependencies_dataframe(project)
-        all_flow_scenarios_python_dependencies_dataframe["scope"] = "SCENARIO"
+        all_flow_scenarios_python_dependencies_dataframe["feature_scope"] = "SCENARIO"
         project_python_dependencies_dataframes.append(all_flow_scenarios_python_dependencies_dataframe)
-    
+        for column in ["scenario_id", "step_index"]:
+            PYTHON_DEPENDENCIES_SCHEMA.append(column)
     all_project_python_dependencies_dataframe = pd.concat(project_python_dependencies_dataframes)
+    all_project_python_dependencies_dataframe = all_project_python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
     return all_project_python_dependencies_dataframe
