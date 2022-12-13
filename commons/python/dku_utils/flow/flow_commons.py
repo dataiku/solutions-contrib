@@ -282,6 +282,15 @@ def get_all_flow_python_recipes_python_dependencies_dataframe(project):
 
 
 def get_all_project_python_dependencies_dataframe(project, feature_scopes=["SCENARIOS", "PYTHON_RECIPES"]):
+    """
+    Retrieves a DataFrame containing all python modules dependencies for scenarios and/or recipes.
+        DISCLAIMER: Does not retrieves import done within functions.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: feature_scopes: list: List of all dataiku features ("SCENARIOS", "PYTHON_RECIPES") where to look python
+        modules dependencies.
+    :returns: all_flow_python_recipes_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing information about all the imports done in all the scenario python scripts.
+    """
     ALLOWED_FEATURE_SCOPES = ["SCENARIOS", "PYTHON_RECIPES"]
     PYTHON_DEPENDENCIES_SCHEMA = ["feature_scope", "imported_from", "imported", "all_import_information"]
     if len(feature_scopes) == 0:
