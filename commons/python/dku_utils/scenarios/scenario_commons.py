@@ -118,7 +118,7 @@ def get_scenario_python_dependencies_dataframe(project, scenario_id):
             step_imports_dataframe = step_imports_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
             steps_python_dependencies_dataframes.append(step_imports_dataframe)
     if len(steps_python_dependencies_dataframes) > 0:
-        scenario_python_dependencies_dataframe = pd.concat(steps_python_dependencies_dataframes)
+        scenario_python_dependencies_dataframe = pd.concat(steps_python_dependencies_dataframes).reset_index()
     else:
         scenario_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
     print("Scenario '{}.{}' python dependencies successfully retrieved!".format(project.project_key, scenario_id))
