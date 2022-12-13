@@ -96,19 +96,6 @@ def set_scenario_steps(project, scenario_id, scenario_steps):
     pass
 
 
-def get_all_project_scenarios_ids(project):
-    """
-    Retrieves all the scenarios IDs defined in a project.
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :returns: all_project_scenarios_ids: list: List of all scenarios IDs defined in the project.
-    """
-    print("Retrieving all project '{}' scenario IDs...".format(project.project_key))
-    project_scenarios_information = project.list_scenarios()
-    all_project_scenarios_ids = [scenario_information["id"] for scenario_information in project_scenarios_information]
-    print("All project '{}' scenario IDs successfully retrieved!".format(project.project_key))
-    return all_project_scenarios_ids
-
-
 def get_scenario_python_dependencies_dataframe(project, scenario_id):
     """
     Retrieves a DataFrame containing all python modules dependencies for a project's scenario.
