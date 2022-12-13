@@ -47,6 +47,7 @@ def set_python_recipe_outputs(project, recipe_name, recipe_outputs):
 def get_python_recipe_python_dependencies_dataframe(project, recipe_name):
     """
     Retrieves a DataFrame containing all python modules dependencies for a project's recipe.
+        DISCLAIMER: Does not retrieves import done within functions.
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param recipe_name: str: Name of the recipe.
     :returns: python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
@@ -59,8 +60,10 @@ def get_python_recipe_python_dependencies_dataframe(project, recipe_name):
     recipe_python_script = recipe_settings.data["payload"]
     python_dependencies_dataframe = load_python_string_imports_dataframe(recipe_python_script)
     python_dependencies_dataframe["recipe_name"] = recipe_name
-   
+
     if len(python_dependencies_dataframe) == 0:
         python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
+    else: 
+        python_dependencies_dataframe = python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
     print("Recipe '{}.{}' python dependencies successfully retrieved!".format(project.project_key, recipe_name))
     return python_dependencies_dataframe
