@@ -98,6 +98,7 @@ def set_scenario_steps(project, scenario_id, scenario_steps):
 def get_scenario_python_dependencies_dataframe(project, scenario_id):
     """
     Retrieves a DataFrame containing all python modules dependencies for a project's scenario.
+        DISCLAIMER: Does not retrieves import done within functions.
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param scenario_id: str: ID of the scenario.
     :returns: scenario_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
