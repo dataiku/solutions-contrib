@@ -249,7 +249,7 @@ def get_all_flow_scenarios_python_dependencies_dataframe(project):
         all_flow_scenarios_python_dependencies.append(scenario_python_dependencies_dataframe)
     
     if len(all_flow_scenarios_python_dependencies) > 0:
-        all_flow_scenarios_python_dependencies_dataframe = pd.concat(all_flow_scenarios_python_dependencies)
+        all_flow_scenarios_python_dependencies_dataframe = pd.concat(all_flow_scenarios_python_dependencies).reset_index()
     else:
         all_flow_scenarios_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
     print("All project '{}' 'scenarios' python dependencies successfully retrieved!".format(project.project_key))   
@@ -274,7 +274,7 @@ def get_all_flow_python_recipes_python_dependencies_dataframe(project):
         all_flow_python_recipe_python_dependencies.append(recipe_python_dependencies_dataframe)
     
     if len(all_flow_python_recipe_python_dependencies) > 0:
-        all_flow_python_recipes_python_dependencies_dataframe = pd.concat(all_flow_python_recipe_python_dependencies)
+        all_flow_python_recipes_python_dependencies_dataframe = pd.concat(all_flow_python_recipe_python_dependencies).reset_index()
     else:
         all_flow_python_recipes_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)    
     print("All project '{}' 'python recipes' python dependencies successfully retrieved!".format(project.project_key))   
@@ -301,8 +301,8 @@ def get_all_project_python_dependencies_dataframe(project, feature_scopes=["SCEN
         all_flow_scenarios_python_dependencies_dataframe = get_all_flow_scenarios_python_dependencies_dataframe(project)
         all_flow_scenarios_python_dependencies_dataframe["feature_scope"] = "SCENARIO"
         project_python_dependencies_dataframes.append(all_flow_scenarios_python_dependencies_dataframe)
-        for column in ["scenario_id", "step_index"]:
+        for column in ["scenario_id", "scenario_step_index"]:
             PYTHON_DEPENDENCIES_SCHEMA.append(column)
     all_project_python_dependencies_dataframe = pd.concat(project_python_dependencies_dataframes)
-    all_project_python_dependencies_dataframe = all_project_python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
+    all_project_python_dependencies_dataframe = all_project_python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA].reset_index()
     return all_project_python_dependencies_dataframe
