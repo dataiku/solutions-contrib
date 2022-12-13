@@ -105,7 +105,7 @@ def get_scenario_python_dependencies_dataframe(project, scenario_id):
         containing information about all the imports done in the scenario python scripts.
     """
     print("Retrieving scenario '{}.{}' python dependencies ...".format(project.project_key, scenario_id))
-    SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "step_index", "imported_from",
+    PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "scenario_step_index", "imported_from",
                                             "imported", "all_import_information"]
     scenario_steps = get_scenario_steps(project, scenario_id)
     steps_python_dependencies_dataframes = []
@@ -114,12 +114,12 @@ def get_scenario_python_dependencies_dataframe(project, scenario_id):
             step_python_script = scenario_step["params"]["script"]
             step_imports_dataframe = load_python_string_imports_dataframe(step_python_script)
             step_imports_dataframe["scenario_id"] = scenario_id
-            step_imports_dataframe["step_index"] = scenario_step_index
-            step_imports_dataframe = step_imports_dataframe[SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA]
+            step_imports_dataframe["scenario_step_index"] = scenario_step_index
+            step_imports_dataframe = step_imports_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
             steps_python_dependencies_dataframes.append(step_imports_dataframe)
     if len(steps_python_dependencies_dataframes) > 0:
         scenario_python_dependencies_dataframe = pd.concat(steps_python_dependencies_dataframes)
     else:
-        scenario_python_dependencies_dataframe = pd.DataFrame(columns=SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA)
+        scenario_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
     print("Scenario '{}.{}' python dependencies successfully retrieved!".format(project.project_key, scenario_id))
     return scenario_python_dependencies_dataframe
