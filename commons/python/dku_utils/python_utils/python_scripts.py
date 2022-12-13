@@ -10,7 +10,7 @@ def load_python_string_imports_dataframe(python_script_string):
     :param python_script_string: str: Any python script.
 
     :returns: python_string_imports_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
-        containing information about all the imports done in the pythin script.
+        containing information about all the imports done in the python script.
     """
     python_string_instructions = dis.get_instructions(python_script_string)
     python_string_import_types = np.array([])
