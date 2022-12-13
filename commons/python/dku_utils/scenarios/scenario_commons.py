@@ -136,27 +136,3 @@ def get_scenario_python_dependencies_dataframe(project, scenario_id):
         scenario_python_dependencies_dataframe = pd.DataFrame(columns=SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA)
     print("Scenario '{}.{}' python dependencies successfully retrieved!".format(project.project_key, scenario_id))
     return scenario_python_dependencies_dataframe
-
-
-def get_project_all_scenarios_python_dependencies_dataframe(project):
-    """
-    Retrieves a DataFrame containing all python modules dependencies for a all project's scenario.
-    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
-    :returns: project_all_scenarios_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
-        containing information about all the imports done in all the scenario python scripts.
-    """
-    print("Retrieving project '{}' all scenarios python dependencies ...".format(project.project_key))
-    SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "step_index", "imported_from",
-                                            "imported", "all_import_information"]
-    all_project_scenarios_ids = get_all_project_scenarios_ids(project)
-    project_all_scenarios_python_dependencies = []
-    for scenario_id in all_project_scenarios_ids:
-        scenario_python_dependencies_dataframe = get_scenario_python_dependencies_dataframe(project, scenario_id)
-        project_all_scenarios_python_dependencies.append(scenario_python_dependencies_dataframe)
-    
-    if len(project_all_scenarios_python_dependencies) > 0:
-        project_all_scenarios_python_dependencies_dataframe = pd.concat(project_all_scenarios_python_dependencies)
-    else:
-        project_all_scenarios_python_dependencies_dataframe = pd.DataFrame(columns=SCENARIOS_PYTHON_DEPENDENCIES_SCHEMA)
-    print("Project '{}' all scenarios python dependencies successfully retrieved!".format(project.project_key))   
-    return project_all_scenarios_python_dependencies_dataframe
