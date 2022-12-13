@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+from ..python_utils.python_scripts import load_python_string_imports_dataframe
 
 
 def get_scenario_settings(project, scenario_id):
