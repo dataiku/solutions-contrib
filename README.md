@@ -18,7 +18,7 @@ Then add the newly generated key to your github account following the instructio
 
 [Link to download](https://code.visualstudio.com/download)
 
-**3. Install NodeJS & npm**
+**3. Install NodeJS & npm & pnpm**
 
 You can install Node using *Homebrew (Homebrew is package management system that simplifies the installation of software on macos)* 
 
@@ -33,6 +33,10 @@ Make sure that Node was installed successfully by running
 `node -v`
 
 npm (Node Package Manager) will be installed by default, run `npm -v` to make sure you have npm installed.
+
+You need to install pnpm after node & npm, you can run this command to do so: 
+
+`npm install -g pnpm`
 
 **4. Configuration of the .dataiku directory** \
 
@@ -137,6 +141,108 @@ You should create a virtual env for the project where you can install the requir
 - `python3 backend.py` : This will run the flask server, use a virtual environement to start your backend and install the python dependencies. (run this in another window of your terminal)
 
 Once you run these three commands the project will be served in the url : http://127.0.0.1:5000/fetch/bs_init
+
+### <span style="background-color:white;color:black">Build and deploy webapps to Dataiku</span>
+
+## 1. Build the webapp
+
+Once you want to deploy the webapp to dss, you will start by building the app locally and pushing the build to the remote github repository.
+
+To build the webapp, run ` pnpm run build` in the project folder.
+
+This will create a **dist** folder that contains a **manifest.json** file mapping the main.js and main.css bundeled files and the assets (fonts, icons...) to their build names and locations, and the **assets** folder that contains all the build files.
+
+Once the webapp is built, you can commit and push the dist folder to the remote git. 
+
+## 2. First deployment to DSS
+
+After building the webapp, you can deploy it to dss in three steps:
+
+### 2.1. Pull the project directory 
+
+You will need to pull the project folder from the git repository of your webapp to the library directory of the DSS project. 
+
+All the folders added to the library directory will be added in the **lib/python** folder. 
+
+To pull the project folder, click on import from Git in the library editor and give it the git repo of your webapp
+
+![Pull project folder](/commons/images/documentation/pull_project_directory.png)
+
+### 2.2. Pull the corresponding commons folder
+
+Next you will need to pull the **commons/python/fetch** folder from the solution-contrib directory. To do so you need to check the tag version of commons in your **project/deps.json** file and pull the **commons/python/fetch** folder from this tag.
+
+![Pull commons folder](/commons/images/documentation/pull_commons.png)
+
+In this example I am pulling the v1.3.5 tag since it is the version on my deps.json.
+
+### 2.3. Add the JS & python backend to instantiate the webapp
+
+Create a standard webapp in the project, start by adding this code to the JS part of the webapp
+
+```js
+const backendURL = getWebAppBackendUrl('fetch/bs_init?URL='+getWebAppBackendUrl(''));
+
+window.onload = function() {
+    
+    var ifrm = document.createElement("iframe");
+    ifrm.setAttribute("src", backendURL);
+    ifrm.setAttribute("style", "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
+    document.body.appendChild(ifrm);
+}
+```
+
+Then add this code the the python part of the webapp
+
+```py
+from flask import Flask
+import sys
+import os
+from commons.python.fetch.fetch_project import fetch_route
+from project.src.fetch_api import fetch_api
+
+
+app.register_blueprint(fetch_route)
+app.register_blueprint(fetch_api)
+```
+
+NB : The webapps work on container mode and local mode. you can set a special code env for backend execution if you use packages that are not included in the default dss env.
+
+## 3. Updates to a deployed webapp
+
+When you add new features the webapp locally and need to push them to dss, you will need to build the webapp and push it to the updates to the main branch. 
+
+There are two cases when updating a webapp:
+
+### 3.1 deps.json didn't change
+
+In that case you can go to Library of the project and pull the changes from the git repo 
+
+![reset remote head](/commons/images/documentation/reset_from_remote_head.png)
+
+You will need to restart the backend to have the updates
+
+### 3.2 The version of commons changed in deps.json
+
+You start by doing what in (3.1 deps.json didn't change) and then update the folder **python/commons/python/fetch** in the library of the project to the current version of deps.json
+
+![Edit the git reference](/commons/images/documentation/edit_git_ref.png)
+
+![Change tag](/commons/images/documentation/change_tag.png)
+
+
+## 4. Stable releases
+
+When you need to release the solution or deliver a stable version, it is a best practice to follow the following steps for the webapp deployment:
+
+### 4.1 Push the stable source code and build to the branch stable
+
+You can create a branch named stable in the repo of your webapp if it is not already done and open a pull request from the main branch to the stable branch. Then merge the pull request after a peer review if you prefer to double check the code before the release.
+
+### 4.2 Edit git references in DSS project
+
+You will need to edit the git reference of the **python/project** folder in the library editor to point to the stable branch and edit the git reference of the **python/commons/python/fetch** to point it the the corresponding tag in **deps.json** 
+
 
 
 
