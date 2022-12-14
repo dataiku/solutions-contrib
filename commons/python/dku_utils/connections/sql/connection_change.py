@@ -34,11 +34,10 @@ def get_sql_dataset_table(project, dataset_name):
 def switch_managed_dataset_connection_to_sql(project, dataset_name, connection_name, bool_use_project_key_for_table_naming):
     """
     Changes the connection of a managed DSS dataset toward a SQL connection.
-    Connection must have a type in ['S3', 'Azure'].
 
     :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
     :param dataset_name: str: Name of the dataset.
-    :param connection_name: str: Name of the cloud storage connection.
+    :param connection_name: str: Name of the SQL connection.
     :param bool_use_project_key_for_table_naming: bool: Precises if we want to use the current project key for naming the
         table associated with the dataset.
     """
@@ -69,6 +68,7 @@ def compute_sql_table_name(project, connection_type, dataset_name):
     """    
     CONNECTIONS_TABLE_NAMES_LIMIT = {
         "Redshift": 127,
+        "BigQuery": 1024,
         "PostgreSQL": 63,
         "SQLServer": 128,
         "Snowflake": 255

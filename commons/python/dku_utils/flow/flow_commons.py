@@ -1,3 +1,8 @@
+import pandas as pd
+from ..scenarios.scenario_commons import get_scenario_python_dependencies_dataframe
+from ..recipes.python_recipe import get_python_recipe_python_dependencies_dataframe
+
+
 def get_all_flow_dataset_names(project):
     """
     Retrieves all project dataset names. 
@@ -211,3 +216,102 @@ def get_flow_zone_id(project, flow_zone_name):
             "flow_zones_data = '{}'".format(flow_zone_name, flow_zones_data)
         raise Exception(log_message)
     return flow_zone_id
+
+
+def get_all_flow_scenarios_ids(project):
+    """
+    Retrieves all the scenarios IDs defined in a project.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :returns: all_project_scenarios_ids: list: List of all scenarios IDs defined in the project.
+    """
+    print("Retrieving all project '{}' scenario IDs...".format(project.project_key))
+    project_scenarios_information = project.list_scenarios()
+    all_project_scenarios_ids = [scenario_information["id"] for scenario_information in project_scenarios_information]
+    print("All project '{}' scenario IDs successfully retrieved!".format(project.project_key))
+    return all_project_scenarios_ids
+
+
+def get_all_flow_scenarios_python_dependencies_dataframe(project):
+    """
+    Retrieves a DataFrame containing all python modules dependencies for a all project's scenarios.
+        DISCLAIMER: Does not retrieves import done within functions.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :returns: all_flow_scenarios_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing information about all the imports done in all the scenario python scripts.
+    """
+    print("Retrieving project '{}' all 'scenarios' python dependencies ...".format(project.project_key))
+    PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "scenario_step_index", "imported_from",
+                                            "imported", "all_import_information"]
+    all_flow_scenarios_ids = get_all_flow_scenarios_ids(project)
+    all_flow_scenarios_python_dependencies = []
+    for scenario_id in all_flow_scenarios_ids:
+        scenario_python_dependencies_dataframe = get_scenario_python_dependencies_dataframe(project, scenario_id)
+        all_flow_scenarios_python_dependencies.append(scenario_python_dependencies_dataframe)
+    
+    if len(all_flow_scenarios_python_dependencies) > 0:
+        all_flow_scenarios_python_dependencies_dataframe = pd.concat(all_flow_scenarios_python_dependencies).reset_index()
+    else:
+        all_flow_scenarios_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
+    print("All project '{}' 'scenarios' python dependencies successfully retrieved!".format(project.project_key))   
+    return all_flow_scenarios_python_dependencies_dataframe
+
+
+def get_all_flow_python_recipes_python_dependencies_dataframe(project):
+    """
+    Retrieves a DataFrame containing all python modules dependencies for a all project recipes.
+        DISCLAIMER: Does not retrieves import done within functions.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :returns: all_flow_python_recipes_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing information about all the imports done in all the scenario python scripts.
+    """
+    print("Retrieving project '{}' all 'python recipes' python dependencies ...".format(project.project_key))
+    PYTHON_DEPENDENCIES_SCHEMA = ["recipe_name", "imported_from",
+                                  "imported", "all_import_information"]
+    all_flow_python_recipe_names = [recipe["name"] for recipe in project.list_recipes() if recipe["type"] == "python"]
+    all_flow_python_recipe_python_dependencies = []
+    for recipe_name in all_flow_python_recipe_names:
+        recipe_python_dependencies_dataframe = get_python_recipe_python_dependencies_dataframe(project, recipe_name)
+        all_flow_python_recipe_python_dependencies.append(recipe_python_dependencies_dataframe)
+    
+    if len(all_flow_python_recipe_python_dependencies) > 0:
+        all_flow_python_recipes_python_dependencies_dataframe = pd.concat(all_flow_python_recipe_python_dependencies).reset_index()
+    else:
+        all_flow_python_recipes_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)    
+    print("All project '{}' 'python recipes' python dependencies successfully retrieved!".format(project.project_key))   
+    return all_flow_python_recipes_python_dependencies_dataframe
+
+
+def get_all_project_python_dependencies_dataframe(project, feature_scopes=["SCENARIOS", "PYTHON_RECIPES"]):
+    """
+    Retrieves a DataFrame containing all python modules dependencies for scenarios and/or recipes.
+        DISCLAIMER: Does not retrieves import done within functions.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param: feature_scopes: list: List of all dataiku features ("SCENARIOS", "PYTHON_RECIPES") where to look python
+        modules dependencies.
+    :returns: all_flow_python_recipes_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing information about all the imports done in all the scenario python scripts.
+    """
+    ALLOWED_FEATURE_SCOPES = ["SCENARIOS", "PYTHON_RECIPES"]
+    PYTHON_DEPENDENCIES_SCHEMA = ["feature_scope", "imported_from", "imported", "all_import_information"]
+    if len(feature_scopes) == 0:
+        log_message = "Not any feature_scope have been provided: please provide at least one feature scope in '{}'!".format(ALLOWED_FEATURE_SCOPES)
+        raise Exception(log_message)
+    for feature_scope in feature_scopes:
+        if feature_scope not in ALLOWED_FEATURE_SCOPES:
+            log_message = "Feature score '{}' is not part of the allowed feature scopes: please choose feature scopes present in '{}'!".format(feature_scope, ALLOWED_FEATURE_SCOPES)
+            raise Exception(log_message)
+    project_python_dependencies_dataframes = []
+    if "PYTHON_RECIPES" in feature_scopes:
+        all_flow_python_recipes_python_dependencies_dataframe = get_all_flow_python_recipes_python_dependencies_dataframe(project)
+        all_flow_python_recipes_python_dependencies_dataframe["feature_scope"] = "PYTHON_RECIPE"
+        project_python_dependencies_dataframes.append(all_flow_python_recipes_python_dependencies_dataframe)
+        PYTHON_DEPENDENCIES_SCHEMA.append("recipe_name")
+    if "SCENARIOS" in feature_scopes:
+        all_flow_scenarios_python_dependencies_dataframe = get_all_flow_scenarios_python_dependencies_dataframe(project)
+        all_flow_scenarios_python_dependencies_dataframe["feature_scope"] = "SCENARIO"
+        project_python_dependencies_dataframes.append(all_flow_scenarios_python_dependencies_dataframe)
+        for column in ["scenario_id", "scenario_step_index"]:
+            PYTHON_DEPENDENCIES_SCHEMA.append(column)
+    all_project_python_dependencies_dataframe = pd.concat(project_python_dependencies_dataframes)
+    all_project_python_dependencies_dataframe = all_project_python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA].reset_index()
+    return all_project_python_dependencies_dataframe

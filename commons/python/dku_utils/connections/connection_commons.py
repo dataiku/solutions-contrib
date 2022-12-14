@@ -3,7 +3,7 @@ from .filesystem.connection_change import (
     change_filesystem_dataset_format,
     change_filesystem_dataset_path,
     change_folder_path,
-    switch_managed_folder_connection_to_cloud_storage, 
+    switch_managed_folder_connection, 
     switch_managed_dataset_connection_to_local_filesytem_storage,
 )
 from .sql.connection_change import (
@@ -28,17 +28,19 @@ class FlowConnectionsHandler:
 
     # SQL storages:
     ALLOWED_SQL_STORAGES = ["PostgreSQL", "Snowflake", "SQLServer"]
-    ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES = ["Redshift"]
+    ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES = ["Redshift", "BigQuery"]
     # Filesystem storages:
-    ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES = ["Azure", "S3"]
-    CLOUD_PROVIDERS_SQL_DATABASES_FILESYSTEM_STORAGES = {"Redshift": "S3", "Synapse": "Azure"}
+    ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES = ["Azure", "S3", "GCS"]
+    CLOUD_PROVIDERS_SQL_DATABASES_FILESYSTEM_STORAGES = {"Redshift": "S3", "Synapse": "Azure", "BigQuery": "GCS"}
     # All allowed storages:
     ALL_ALLOWED_SQL_STORAGES = ALLOWED_SQL_STORAGES + ALLOWED_CLOUD_PROVIDERS_SQL_STORAGES
     ALL_ALLOWED_FILESYSTEM_STORAGES = ["Filesystem"] + ALLOWED_CLOUD_PROVIDERS_FILESYSTEM_STORAGES
     ALL_ALLOWED_CONNECTIONS = ALL_ALLOWED_SQL_STORAGES + ALL_ALLOWED_FILESYSTEM_STORAGES
     CONNECTIONS_VARCHAR_LIMITS = {
         "Azure": 4000,
+        "BigQuery":419000,
         "Filesystem": 419000,
+        "GCS": 419000,
         "PostgreSQL": 419000,
         "Redshift": 65000,
         "Snowflake": 419000,
@@ -298,7 +300,7 @@ class FlowConnectionsHandler:
             for folder_name in self.folders_with_connections_to_be_changed:
                 if folder_name not in self.input_folders:
                     print("Switching computed folder '{}' connection toward '{}' ...".format(folder_name, computed_folders_connection))
-                    switch_managed_folder_connection_to_cloud_storage(self.project, folder_name, computed_folders_connection)
+                    switch_managed_folder_connection(self.project, folder_name, computed_folders_connection)
             print("All flow computed folders connections switched !")
 
         if self.flow_has_input_folders:
@@ -308,7 +310,7 @@ class FlowConnectionsHandler:
                         folder_name, self.folders_connection_name
                     )
                 )
-                switch_managed_folder_connection_to_cloud_storage(
+                switch_managed_folder_connection(
                     self.project, folder_name, self.folders_connection_name
                 )
             print("All flow input folders connections switched !")

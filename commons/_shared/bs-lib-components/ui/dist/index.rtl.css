@@ -268,6 +268,7 @@
 
 .content {
   position: relative;
+  min-height: inherit !important;
 }
 
 @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {

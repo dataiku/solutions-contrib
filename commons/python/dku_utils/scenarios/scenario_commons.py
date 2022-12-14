@@ -1,3 +1,7 @@
+import pandas as pd
+from ..python_utils.python_scripts import load_python_string_imports_dataframe
+
+
 def get_scenario_settings(project, scenario_id):
     """
     Retrieves the settings of a project scenario.
@@ -61,3 +65,61 @@ def switch_scenario_triggers_state(project, scenario_id, list_bool_trigger_activ
     scenario_settings.save()
     print("Scenario triggers states successfully switched to : {}".format(triggers_states))
     pass
+
+
+def get_scenario_steps(project, scenario_id):
+    """
+    Retrieves the steps of a project scenario.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param scenario_id: str: ID of the scenario.
+    :returns: scenario_steps: list: Steps of a scenario.
+    """
+    print("Retrieving scenario '{}' steps ...".format(scenario_id))
+    scenario_settings = get_scenario_settings(project, scenario_id)
+    scenario_steps = scenario_settings.get_raw()["params"]["steps"]
+    return scenario_steps
+
+
+def set_scenario_steps(project, scenario_id, scenario_steps):
+    """
+    Set the steps of a project scenario.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param scenario_id: str: ID of the scenario.
+    :param scenario_steps: list: Steps of the scenario.
+    """
+    print("Setting scenario '{}' steps ...".format(scenario_id))
+    scenario_settings = get_scenario_settings(project, scenario_id)
+    scenario_settings.get_raw()["params"]["steps"] = scenario_steps
+    scenario_settings.save()
+    print("Scenario '{}' steps successfully set!".format(scenario_id))
+    pass
+
+
+def get_scenario_python_dependencies_dataframe(project, scenario_id):
+    """
+    Retrieves a DataFrame containing all python modules dependencies for a project's scenario.
+        DISCLAIMER: Does not retrieves import done within functions.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    :param scenario_id: str: ID of the scenario.
+    :returns: scenario_python_dependencies_dataframe: pandas.core.frame.DataFrame: Pandas DataFrame
+        containing information about all the imports done in the scenario python scripts.
+    """
+    print("Retrieving scenario '{}.{}' python dependencies ...".format(project.project_key, scenario_id))
+    PYTHON_DEPENDENCIES_SCHEMA = ["scenario_id", "scenario_step_index", "imported_from",
+                                            "imported", "all_import_information"]
+    scenario_steps = get_scenario_steps(project, scenario_id)
+    steps_python_dependencies_dataframes = []
+    for scenario_step_index, scenario_step in enumerate(scenario_steps):
+        if scenario_step.get("type") == "custom_python":
+            step_python_script = scenario_step["params"]["script"]
+            step_imports_dataframe = load_python_string_imports_dataframe(step_python_script)
+            step_imports_dataframe["scenario_id"] = scenario_id
+            step_imports_dataframe["scenario_step_index"] = scenario_step_index
+            step_imports_dataframe = step_imports_dataframe[PYTHON_DEPENDENCIES_SCHEMA]
+            steps_python_dependencies_dataframes.append(step_imports_dataframe)
+    if len(steps_python_dependencies_dataframes) > 0:
+        scenario_python_dependencies_dataframe = pd.concat(steps_python_dependencies_dataframes).reset_index()
+    else:
+        scenario_python_dependencies_dataframe = pd.DataFrame(columns=PYTHON_DEPENDENCIES_SCHEMA)
+    print("Scenario '{}.{}' python dependencies successfully retrieved!".format(project.project_key, scenario_id))
+    return scenario_python_dependencies_dataframe
