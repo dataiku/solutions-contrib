@@ -196,6 +196,7 @@ def get_homothetic_rescale_params(np_array_picture, picture_max_shape):
         picture_should_be_rescaled = False
         final_height = initial_height
         final_width = initial_width
+        homothetic_factor = 1.0
     homothetic_rescale_params = {
         "picture_should_be_rescaled": picture_should_be_rescaled,
         "initial_width": initial_width,
