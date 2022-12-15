@@ -9,6 +9,7 @@ from enum import Enum
 class EnvMode(Enum):
     LOCAL = "local"
     DSS = "dss"
+    CODESTUDIO = "studio"
 
 class ConfigBs(object):
 
@@ -20,7 +21,12 @@ class ConfigBs(object):
     @staticmethod
     def __get_env_mode():
         is_local = exists(join(expanduser("~"),".dataiku/bs-config.json"))
-        return EnvMode.LOCAL.value if is_local else EnvMode.DSS.value
+        code_studio_path = os.environ.get("DKU_CODE_STUDIO_BROWSER_PATH","")
+        is_code_studio = code_studio_path != ""
+        if is_local and is_code_studio:
+            return EnvMode.CODESTUDIO.value
+        else:
+            return EnvMode.LOCAL.value if is_local else EnvMode.DSS.value
     
     @classmethod
     def __get_lib_python_path(cls):

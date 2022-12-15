@@ -2,11 +2,21 @@ from textwrap import dedent
 from flask import Response
 from .config_bs import ConfigBs, EnvMode
 from os.path import join, exists
+import os
 import json
 
 
 def make_vite_header_tag(lib_url):
     mode = ConfigBs.mode()
+    if mode == EnvMode.CODESTUDIO.value:
+        code_studio_path = f'{os.environ.get("DKU_CODE_STUDIO_BROWSER_PATH_5173","")}/'
+        return dedent(
+            f"""
+            <!-- FLASK_VITE_HEADER -->
+            <script type="module" src="{code_studio_path}@vite/client"></script>
+            <script type="module" src="{code_studio_path}main.js"></script>
+            """
+        )
     if mode == EnvMode.LOCAL.value:
         return dedent(
             """
