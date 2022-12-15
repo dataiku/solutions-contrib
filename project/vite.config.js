@@ -7,6 +7,32 @@ import image from "@rollup/plugin-image"
 
 let basePath = process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 ? process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 + "/" : "";
 
+let serverConfig = {
+  port: 5173,
+    host: "127.0.0.1",
+    fs: {
+      strict: false,
+      allow: [
+        "..",
+      ]
+    },
+    // origin: "http://127.0.0.1:5173",
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:5000",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+  },
+}
+
+if (basePath === "") {
+  serverConfig = {...serverConfig, origin: "http://127.0.0.1:5173"}
+}
+
+
+
 export default defineConfig({
   plugins: [
     {
@@ -28,25 +54,7 @@ export default defineConfig({
     }
   },
   base: basePath,
-  server: {
-    port: 5173,
-    host: "127.0.0.1",
-    fs: {
-      strict: false,
-      allow: [
-        "..",
-      ]
-    },
-    origin: "http://127.0.0.1:5173",
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:5000",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
+  server: serverConfig,
   resolve: {
     alias: {
       '@' : resolve("..","./")
