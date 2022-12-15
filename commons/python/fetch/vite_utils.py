@@ -17,7 +17,7 @@ def make_vite_header_tag(lib_url):
             <script type="module" src="{code_studio_path}main.js"></script>
             """
         )
-    if mode == EnvMode.LOCAL.value:
+    elif mode == EnvMode.LOCAL.value:
         return dedent(
             """
                 <!-- FLASK_VITE_HEADER -->
