@@ -5,6 +5,8 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 import image from "@rollup/plugin-image"
 
 
+let basePath = process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 ? process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 + "/" : "";
+
 export default defineConfig({
   plugins: [
     {
@@ -25,6 +27,7 @@ export default defineConfig({
       
     }
   },
+  base: basePath,
   server: {
     port: 5173,
     host: "127.0.0.1",
