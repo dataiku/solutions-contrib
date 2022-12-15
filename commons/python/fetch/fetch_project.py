@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 fetch_route =  Blueprint("fetch_route", __name__,template_folder=ConfigBs.template_folder(),static_folder=ConfigBs.static_folder())
 
 @fetch_route.route('/fetch/bs_init')
+@fetch_route.route('/')
 def init_project():
     lib_url = ConfigBs.lib_backend_url(request)
     html_file_path = ConfigBs.html_file()
