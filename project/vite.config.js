@@ -27,13 +27,12 @@ let serverConfig = {
   },
 }
 
+
 if (basePath === "") {
   serverConfig = {...serverConfig, origin: "http://127.0.0.1:5173"}
 }
 
-
-
-export default defineConfig({
+let defaultConfig = {
   plugins: [
     {
       ...image(),
@@ -60,4 +59,23 @@ export default defineConfig({
       '@' : resolve("..","./")
     }
   }
-})
+}
+
+if (basePath !== "") {
+  defaultConfig = {
+    ...defaultConfig,
+    experimental: {
+      renderBuiltUrl(filename, { hostType }) {
+        if (hostType === 'css') {
+          return "/" + filename;
+        } else {
+          return { relative: true }
+        }
+      }
+    }
+  }
+}
+
+
+
+export default defineConfig(defaultConfig);
