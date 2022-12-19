@@ -315,3 +315,14 @@ def get_all_project_python_dependencies_dataframe(project, feature_scopes=["SCEN
     all_project_python_dependencies_dataframe = pd.concat(project_python_dependencies_dataframes)
     all_project_python_dependencies_dataframe = all_project_python_dependencies_dataframe[PYTHON_DEPENDENCIES_SCHEMA].reset_index()
     return all_project_python_dependencies_dataframe
+
+
+def get_flow_engines_priority(project):
+    """Retrieves the engines priority set in a project settings.
+    :param project: dataikuapi.dss.project.DSSProject: A handle to interact with a project on the DSS instance.
+    
+    :returns: flow_engines_priority: str: The prokect's engines priority.
+    """
+    flow_engines_priority = project.get_settings().settings["settings"]["recipeEnginesPreferences"]["enginesPreferenceOrder"]
+    return flow_engines_priority 
+
