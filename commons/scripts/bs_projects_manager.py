@@ -8,6 +8,7 @@ import requests
 import zipfile
 import io
 import json
+import subprocess
 
 class InstallationType(Enum):
     UPDATE="u"
@@ -17,6 +18,22 @@ class InstallationType(Enum):
 
 # TODO : Split part of these files in src folder to make them general for the template
 DYNAMIC_TEMPLATE_FILES_FOLDERS = ["package.json","requirements.txt","src","index.html"]
+
+class EnvMode(Enum):
+    LOCAL = "local"
+    STUDIO = "studio"
+
+def get_mode():
+    code_studio_path = os.environ.get("DKU_CODE_STUDIO_BROWSER_PATH","")
+    is_code_studio = code_studio_path != ""
+    return EnvMode.STUDIO.value if is_code_studio else EnvMode.LOCAL.value
+
+def move_all_files(src,dest):
+    allfiles = os.listdir(src)
+    for f in allfiles:
+        src_path = os.path.join(src, f)
+        dst_path = os.path.join(dest, f)
+        shutil.move(src_path, dst_path)
 
 
 def is_git_repo(path,remote_url=None):
@@ -126,6 +143,7 @@ class ProjectInstance(object):
         self.commons_tag = commons_tag
         self.project_path = project_path
         self.installation_type = self.get_installation_type()
+        self.mode = get_mode()
 
         if self.installation_type == InstallationType.NEW.value:
             self.create_new_project()
@@ -195,7 +213,11 @@ class ProjectInstance(object):
             ["git","-C",path_to_project_folder,"push","-u","origin","main"]
         )
 
-    
+        if self.mode == EnvMode.STUDIO.value:
+            move_all_files(path_to_project_folder,os.path.join(os.getcwd(),"project-lib-versioned","python"))
+            shutil.rmtree(path_to_project_folder)
+            
+
     def update_commons(self):
 
 
@@ -286,6 +308,12 @@ class ProjectInstance(object):
     
         
         z.extractall(path_to_workspace,get_members(z,filters=["commons"]))
+
+        if self.mode == EnvMode.STUDIO.value:
+            move_all_files(path_to_workspace,os.path.join(os.getcwd(),"project-lib-versioned","python"))
+            shutil.rmtree(path_to_project_folder)
+            
+
 
 
 
