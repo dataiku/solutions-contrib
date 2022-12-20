@@ -8,7 +8,6 @@ import requests
 import zipfile
 import io
 import json
-import subprocess
 
 class InstallationType(Enum):
     UPDATE="u"
@@ -220,7 +219,6 @@ class ProjectInstance(object):
 
     def update_commons(self):
 
-
         path_to_repo = os.path.join(os.getcwd(),self.project_path)
         is_repo_present = is_git_repo(path_to_repo)
         assert is_repo_present, "No projects git repo is present"
@@ -241,7 +239,7 @@ class ProjectInstance(object):
         r = requests.get(tag_url,stream=True)
         z = zipfile.ZipFile(io.BytesIO(r.content))
         z_ = zipfile.ZipFile(io.BytesIO(r.content))
-        relative_path, = zipfile.Path(z).iterdir()
+        relative_path = z.namelist()[0].split("/")[0]
 
 
         if os.path.isdir(os.path.join(path_to_repo,"commons")):
@@ -255,8 +253,7 @@ class ProjectInstance(object):
         
 
         # Extract and merge package.json file
-
-        with z.open(relative_path.name + "/project/" + "package.json") as f:
+        with z.open(relative_path + "/project/" + "package.json") as f:
             new_template_package = json.load(f)
         
         path_to_npm_package = os.path.join(path_to_repo,"project","package.json")
@@ -318,11 +315,15 @@ class ProjectInstance(object):
 
 
 if __name__ == "__main__":
+    MODE = get_mode()
     ORG_NAME = "dataiku"
     PROJECT_COMMONS = "solutions-contrib"
     COMMONS_GIT_REPO_SSH = "git@github.com:dataiku/solutions-contrib.git"
+    COMMONS_GIT_REPO_HTTPS = "https://github.com/dataiku/solutions-contrib.git"
     BASE_GIT_URL = "https://github.com/"
     BASE_ZIP_URL = get_base_zip_tag_url(BASE_GIT_URL,ORG_NAME,PROJECT_COMMONS)
+
+    COMMONS_GIT_REPO = COMMONS_GIT_REPO_SSH if MODE == EnvMode.LOCAL.value else COMMONS_GIT_REPO_HTTPS
 
     parser = argparse.ArgumentParser(description="Initialize or update a business solution web app project")
 
@@ -354,7 +355,7 @@ if __name__ == "__main__":
 
     ##### TEST SCRIPT #######
 
-    ProjectInstance(is_update,project_remote_url,COMMONS_GIT_REPO_SSH,BASE_ZIP_URL,
+    ProjectInstance(is_update,project_remote_url,COMMONS_GIT_REPO,BASE_ZIP_URL,
                         commons_tag,project_path)
 
     
