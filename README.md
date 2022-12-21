@@ -268,7 +268,7 @@ The code studio template enables you to benefit from:
 - Installing NodeJS, npm, yarn, and pnpm by default
 - Installing the latest version of git
 
-Once your code studio is created you will have three windows: VS Code, dev and frontend, we will only be using two: VS Code for coding and launching scripts & dev to see the webapp.
+Once your code studio is created you will have two windows: VS Code and dev.
 
 ![Code Studio View](/commons/images/documentation/code_studio_view.png)
 
@@ -386,9 +386,75 @@ app.register_blueprint(fetch_api)
 If you sync chenges on a webapp that is running, restart the backend to see them on DSS.
 
 
+### <span style="background-color:white;color:black">Code studio template explanation</span>
 
+This section explains the building blocks of the code studio template for business solutions webapps development. 
 
+The template is composed of 8 building blocks:
 
+![Code studio template blocks](/commons/images/documentation/code_studio_template_building_blocks.png)
+
+## 1. File synchronization
+
+The Code Studios run separately from DSS, in the Kubernetes cluster. Some files are synchronized between DSS and the Code Studio, you can find more about file synchronization on [File synchronization](https://doc.dataiku.com/dss/latest/code-studios/concepts.html#synchronized-files)
+
+## 2. Kubernetes Parameters
+
+We use the default configuration for the Kubernetes parameters, you can find more about this building block on [Kubernetes parameters](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#kubernetes-parameters)
+
+## 3. Visual Studio Code
+
+This block adds the VS Code IDE in the Code Studio. Each code env added by an “Add code environment” block is added to VS Code as a debug configuration and is available from the list of interpreters.
+
+It is not usually needed to change any setting of this block.
+
+## 4. Append to Dockerfile
+
+This block allows you to add arbitrary Dockerfile statements to the image. Each instance of this block appends to the Dockerfile of the image that is built. We use this block to: 
+
+- **Install npm, yarn, pnpm and wget**: 
+
+    `RUN yum install -y nodejs npm wget && \
+    mkdir -p /usr/local/lib/node_modules && \
+    chown dataiku:dataiku -R /usr/local/lib/node_modules && \
+    npm install npm@latest -g && \
+    npm install pnpm -g && \
+    npm install yarn -g`
+
+- **Install the latest version of git**: 
+
+    `RUN yum -y remove git && \ 
+    yum -y remove git-* && \
+    yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm && \
+    yum -y install git`
+
+- **Install typescript to the vscode extensions to enable some itellisense features**:
+
+    `RUN cd /opt/dataiku/code-server/lib/vscode/extensions && \
+    npm init -y && \
+    npm i typescript`
+
+- **Get the bs_projects_manager.py script**: 
+
+    `RUN wget -O /home/dataiku/workspace/bs_projects_manager.py https://raw.githubusercontent.com/dataiku/solutions-contrib/feature/code-studios/commons/scripts/bs_projects_manager.py`
+
+- **Add the .dataiku/bs-config.json file**:
+
+    `USER dataiku`
+
+    `RUN cd ~ && mkdir .dataiku && cd .dataiku && touch bs-config.json`
+
+## 5. Add code environment
+
+The two blocks for adding code environments make 2 python evironments available on the directory **/opt/dataiku/python-code-envs**: One for running the bs_projects_manager.py script and one for running the webapps backend
+
+## 6. Add an Entrypoint: Expose port
+
+We use this block to expose the port on which the webapp is running (**5000**) to DSS, we expose the HTML service so this entrypoint can be consulted through the dev window in the code studio
+
+## 7. Add an Entrypoint: Expose front port
+
+We use this block to expose the node / vite server to serve js code and assets to the webapp without exposing an HTML service.
 
 
 
