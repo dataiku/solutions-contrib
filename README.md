@@ -244,6 +244,89 @@ You can create a branch named stable in the repo of your webapp if it is not alr
 You will need to edit the git reference of the **python/project** folder in the library editor to point to the stable branch and edit the git reference of the **python/commons/python/fetch** to point it the the corresponding tag in **deps.json** 
 
 
+### <span style="background-color:white;color:black">Code studios</span>
+
+You can develop and deploy webapps directly using DSS code studios. The code studios will enable you to edit webapps on a VsCode IDE and Hot reload you webapp page. 
+
+To use code studios for business solutions webapps development you need to follow these steps:
+
+## 1. Code studio setup
+
+### 1.1 Code studio template
+
+The design instance provides a template (**bs-infra**) for creating pre-configured code studios, you can use this template to start a new code studio on your project:
+
+
+![Code Studio Creation](/commons/images/documentation/code_studio_creation.png)
+
+The code studio template enables you to benefit from: 
+
+- Port forwarding you webapp port to DSS to see the changes you make in real time
+- Two python environments : **bs_projects_manager** To run the bs_projects_manager.py script for updating commons or creating / pulling a webapp project and **webapps_code_studio** env that comes with flask to run the webapp backend
+- Pulling the bs_script_manager.py to your code studio workspace
+- Adding typescript to Vscode for intellisense
+- Installing NodeJS, npm, yarn, git and pnpm by default
+
+Once your code studio is created you will have three windows: VS Code, dev and frontend, we will only be using two: VS Code for coding and launching scripts & dev to see the webapp.
+
+![Code Studio View](/commons/images/documentation/code_studio_view.png)
+
+### 1.2 Important files and folders
+
+- **The project library**: The equivalent of the project library in your code studio environment is the folder **python-lib-versioned**, this folder can be synched directly with your project library in DSS
+
+- **bs_projects_manager.py**: The script to update and create / pull webapps templates
+
+### 1.3 Code studio configuration
+
+You will have python extensions by default in your code studio for a better python development experience.
+
+For vue files you will need to install **Vetur** (a vue extension for linting and Intellisense)
+
+![Code Studio Vetur](/commons/images/documentation/code_studio_vetur.png)
+
+- **NB**: The support for Volar as an extension is not yet available.
+
+- **Suggestion :** For a better development experience you can change the default vscode color theme to **Dark + (default dark)** or any color theme you prefer to use in VsCode
+
+![Code studio color theme](/commons/images/documentation/code_studio_color_theme.png)
+
+
+### 1.4 Python Code envs
+
+The two python code envs **(bs_projects_manager && webapps_code_studio)** are available in the path ` /opt/dataiku/python-code-envs/` To activate bs_projects_manager for example when using the script to update commons you can run in the integrated terminal of vscode:
+
+`source /opt/dataiku/python-code-envs/bs_projects_manager/bin/activate`
+
+To deactivate a code env run:
+
+`deactivate`
+
+You can activate the webapps_code_studio env in the same way to run the backend of your webapp, you also install additional packages to the webapps_code_studio if needed.
+
+### 1.4 Using the bs_projects_manager.py
+
+The **bs_projects_manager.py** works the same way as in your local env, wih only two differences: 
+
+a. You can't use SSH git repo url to create or pull projects, we will be using **HTTPS**, so to create a new webapp or pull an existing one, as in your local environment, start by activating the bs_projects_manager env and run:
+
+`python3 bs_project_manager.py -r "YOUR REPO HTTPS URL"`
+
+- The script will pull the project and the commmons library and put them in the folder `python-lib-versioned/python` of your code studio
+- The first time you use the script or use git, a prompt will show up to ask you to authenticate with your github account
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
