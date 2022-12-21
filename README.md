@@ -110,7 +110,7 @@ Each webapp project has its own git repository, when starting a new project you 
 
 Usage : 
 
-`python3 bs_project_manager.py -r "YOUR REPO SSH URL"`
+`python3 bs_projects_manager.py -r "YOUR REPO SSH URL"`
 
 - **Pull an existing project**
 
@@ -119,13 +119,13 @@ You can then navigate the project as you like (checkout to another branch, creat
 
 Usage : 
 
-`python3 bs_project_manager.py -r "YOUR REPO SSH URL"`
+`python3 bs_projects_manager.py -r "YOUR REPO SSH URL"`
 
 - **Update the commons lib**
 
 If you need to update the commons lib version in your project, you can run 
 
-`python3 bs_project_manager.py -p "PATH TO THE PROJECT FOLDER" -u -t "TAG OF THE COMMONS LIB"`
+`python3 bs_projects_manager.py -p "PATH TO THE PROJECT FOLDER" -u -t "TAG OF THE COMMONS LIB"`
 
 The t argument is optional, when it is not provided the latest version of commons will be pulled.
 
@@ -265,7 +265,8 @@ The code studio template enables you to benefit from:
 - Two python environments : **bs_projects_manager** To run the bs_projects_manager.py script for updating commons or creating / pulling a webapp project and **webapps_code_studio** env that comes with flask to run the webapp backend
 - Pulling the bs_script_manager.py to your code studio workspace
 - Adding typescript to Vscode for intellisense
-- Installing NodeJS, npm, yarn, git and pnpm by default
+- Installing NodeJS, npm, yarn, and pnpm by default
+- Installing the latest version of git
 
 Once your code studio is created you will have three windows: VS Code, dev and frontend, we will only be using two: VS Code for coding and launching scripts & dev to see the webapp.
 
@@ -273,7 +274,7 @@ Once your code studio is created you will have three windows: VS Code, dev and f
 
 ### 1.2 Important files and folders
 
-- **The project library**: The equivalent of the project library in your code studio environment is the folder **python-lib-versioned**, this folder can be synched directly with your project library in DSS
+- **The project library**: The equivalent of the project library in your code studio environment is the folder **project-lib-versioned**, this folder can be synched directly with your project library in DSS
 
 - **bs_projects_manager.py**: The script to update and create / pull webapps templates
 
@@ -291,6 +292,11 @@ For vue files you will need to install **Vetur** (a vue extension for linting an
 
 ![Code studio color theme](/commons/images/documentation/code_studio_color_theme.png)
 
+- **Important**: You will need to setup your github username and email in the code studio to be able to commit and with you github identity:
+
+        `git config --global user.email "you@example.com"`
+
+        `git config --global user.name "Your Name"`
 
 ### 1.4 Python Code envs
 
@@ -304,16 +310,84 @@ To deactivate a code env run:
 
 You can activate the webapps_code_studio env in the same way to run the backend of your webapp, you also install additional packages to the webapps_code_studio if needed.
 
+
 ### 1.4 Using the bs_projects_manager.py
+
 
 The **bs_projects_manager.py** works the same way as in your local env, wih only two differences: 
 
 a. You can't use SSH git repo url to create or pull projects, we will be using **HTTPS**, so to create a new webapp or pull an existing one, as in your local environment, start by activating the bs_projects_manager env and run:
 
-`python3 bs_project_manager.py -r "YOUR REPO HTTPS URL"`
+`python3 bs_projects_manager.py -r "YOUR REPO HTTPS URL"`
 
-- The script will pull the project and the commmons library and put them in the folder `python-lib-versioned/python` of your code studio
+- The script will pull the project and the commmons library and put them in the folder `project-lib-versioned/python` of your code studio
 - The first time you use the script or use git, a prompt will show up to ask you to authenticate with your github account
+
+
+![Code studio color theme](/commons/images/documentation/code_studio_git_signin.png)
+
+Follow the instructions to sign-in your github account
+
+b. The update command should be done on the **project-lib-versioned/python** folder:
+
+`python3 bs_projects_manager.py -p project-lib-versioned/python -u -t "TAG OF THE COMMONS LIB"`
+
+### 1.5 Running the webapp
+
+Once you pulled your project to  **project-lib-versioned/python** folder, you can open two integrated terminals in vscode on for running the frontend server and one for the backend, you can run the webapp as you do locally:
+
+Navigate to **project-lib-versioned/python/project** and :
+- `pnpm install` : This will install you the JS packages needed for the project (Vue, Quasar, axios ...).
+- `pnpm run dev` : This will run the node server 
+
+
+- `python3 backend.py` : This will run the flask server, use the webapps_code_studio environment for running the backend
+
+Once you launched the frontend and backend, you can go the the window dev to see your webapp --> Reload the window if needed 
+
+![Webapp view](/commons/images/documentation/code_studio_webapp_window.png)
+
+### 1.6 Webbapps deployment
+
+Once you finished you webapp or you want to deploy it to you DSS project, you can run `pnpm run build` in the project folder to build the webapp and then sync the changes to DSS:
+
+![Sync files](/commons/images/documentation/sync_files.png)
+
+Once the file are synced add the JS and python codes to your webapp if it is not done: 
+
+Create a standard webapp in the project, start by adding this code to the JS part of the webapp
+
+```js
+const backendURL = getWebAppBackendUrl('fetch/bs_init?URL='+getWebAppBackendUrl(''));
+
+window.onload = function() {
+    
+    var ifrm = document.createElement("iframe");
+    ifrm.setAttribute("src", backendURL);
+    ifrm.setAttribute("style", "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
+    document.body.appendChild(ifrm);
+}
+```
+
+Then add this code the the python part of the webapp
+
+```py
+from flask import Flask
+import sys
+import os
+from commons.python.fetch.fetch_project import fetch_route
+from project.src.fetch_api import fetch_api
+
+
+app.register_blueprint(fetch_route)
+app.register_blueprint(fetch_api)
+```
+
+If you sync chenges on a webapp that is running, restart the backend to see them on DSS.
+
+
+
+
 
 
 
