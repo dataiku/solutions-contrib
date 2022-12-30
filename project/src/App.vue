@@ -35,11 +35,21 @@
 </template>
 <script>
   import docLogo from "./assets/images/doc-logo-example.svg"
+  import { API } from "./Api";
   export default {
     data() {
       return {
         docLogo,
+        hello: ""
       }
+    },
+    mounted: function() {
+      API.getHello().then(response => {
+        this.hello = response;
+        console.log(response)
+      }).catch((err) => {
+        console.log(err);
+      })
     }
   }
 </script>

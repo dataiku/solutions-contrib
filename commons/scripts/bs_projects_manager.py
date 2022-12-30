@@ -18,6 +18,22 @@ class InstallationType(Enum):
 # TODO : Split part of these files in src folder to make them general for the template
 DYNAMIC_TEMPLATE_FILES_FOLDERS = ["package.json","requirements.txt","src","index.html"]
 
+class EnvMode(Enum):
+    LOCAL = "local"
+    STUDIO = "studio"
+
+def get_mode():
+    code_studio_path = os.environ.get("DKU_CODE_STUDIO_BROWSER_PATH","")
+    is_code_studio = code_studio_path != ""
+    return EnvMode.STUDIO.value if is_code_studio else EnvMode.LOCAL.value
+
+def move_all_files(src,dest):
+    allfiles = os.listdir(src)
+    for f in allfiles:
+        src_path = os.path.join(src, f)
+        dst_path = os.path.join(dest, f)
+        shutil.move(src_path, dst_path)
+
 
 def is_git_repo(path,remote_url=None):
     try:
@@ -126,6 +142,7 @@ class ProjectInstance(object):
         self.commons_tag = commons_tag
         self.project_path = project_path
         self.installation_type = self.get_installation_type()
+        self.mode = get_mode()
 
         if self.installation_type == InstallationType.NEW.value:
             self.create_new_project()
@@ -195,9 +212,12 @@ class ProjectInstance(object):
             ["git","-C",path_to_project_folder,"push","-u","origin","main"]
         )
 
-    
-    def update_commons(self):
+        if self.mode == EnvMode.STUDIO.value:
+            move_all_files(path_to_project_folder,os.path.join(os.getcwd(),"project-lib-versioned","python"))
+            shutil.rmtree(path_to_project_folder)
+            
 
+    def update_commons(self):
 
         path_to_repo = os.path.join(os.getcwd(),self.project_path)
         is_repo_present = is_git_repo(path_to_repo)
@@ -219,7 +239,7 @@ class ProjectInstance(object):
         r = requests.get(tag_url,stream=True)
         z = zipfile.ZipFile(io.BytesIO(r.content))
         z_ = zipfile.ZipFile(io.BytesIO(r.content))
-        relative_path, = zipfile.Path(z).iterdir()
+        relative_path = z.namelist()[0].split("/")[0]
 
 
         if os.path.isdir(os.path.join(path_to_repo,"commons")):
@@ -233,8 +253,7 @@ class ProjectInstance(object):
         
 
         # Extract and merge package.json file
-
-        with z.open(relative_path.name + "/project/" + "package.json") as f:
+        with z.open(relative_path + "/project/" + "package.json") as f:
             new_template_package = json.load(f)
         
         path_to_npm_package = os.path.join(path_to_repo,"project","package.json")
@@ -287,14 +306,24 @@ class ProjectInstance(object):
         
         z.extractall(path_to_workspace,get_members(z,filters=["commons"]))
 
+        if self.mode == EnvMode.STUDIO.value:
+            move_all_files(path_to_workspace,os.path.join(os.getcwd(),"project-lib-versioned","python"))
+            shutil.rmtree(path_to_project_folder)
+            
+
+
 
 
 if __name__ == "__main__":
+    MODE = get_mode()
     ORG_NAME = "dataiku"
     PROJECT_COMMONS = "solutions-contrib"
     COMMONS_GIT_REPO_SSH = "git@github.com:dataiku/solutions-contrib.git"
+    COMMONS_GIT_REPO_HTTPS = "https://github.com/dataiku/solutions-contrib.git"
     BASE_GIT_URL = "https://github.com/"
     BASE_ZIP_URL = get_base_zip_tag_url(BASE_GIT_URL,ORG_NAME,PROJECT_COMMONS)
+
+    COMMONS_GIT_REPO = COMMONS_GIT_REPO_SSH if MODE == EnvMode.LOCAL.value else COMMONS_GIT_REPO_HTTPS
 
     parser = argparse.ArgumentParser(description="Initialize or update a business solution web app project")
 
@@ -326,7 +355,7 @@ if __name__ == "__main__":
 
     ##### TEST SCRIPT #######
 
-    ProjectInstance(is_update,project_remote_url,COMMONS_GIT_REPO_SSH,BASE_ZIP_URL,
+    ProjectInstance(is_update,project_remote_url,COMMONS_GIT_REPO,BASE_ZIP_URL,
                         commons_tag,project_path)
 
     
