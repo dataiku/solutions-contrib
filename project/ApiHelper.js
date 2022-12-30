@@ -9,7 +9,7 @@ baseURLVite = baseURLVite.replace("5173","5000");
 
 
 const axios = axios_.create({
-    baseURL: mode === "production" ?  parent.getWebAppBackendUrl('') : baseURLVite,
+    baseURL: mode === "production" ?  getWebAppBackendUrl('') : baseURLVite,
 })
 
 axios.interceptors.response.use((response) => {

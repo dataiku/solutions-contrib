@@ -1,9 +1,9 @@
-from flask import Blueprint, Response, make_response, render_template, request, send_from_directory, url_for, current_app
+from flask import Blueprint, Response, make_response, render_template, request, jsonify
 import os
 import datetime
 import logging
 from .config_bs import ConfigBs
-from .vite_utils import make_vite_header_tag
+from .vite_utils import make_vite_header_tag, get_prod_resources
 
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,14 @@ def init_project():
         response.cache_control.max_age = cache_days * 86400
         response.headers["Expires"] = expiry_time.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return response
+
+@fetch_route.route('/fetch/prod')
+def prod():
+    lib_url = ConfigBs.lib_backend_url(request)
+    resources = get_prod_resources(lib_url)
+    return jsonify(resources)
+
+
 
 
 

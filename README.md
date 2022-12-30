@@ -176,19 +176,52 @@ Next you will need to pull the **commons/python/fetch** folder from the solution
 
 In this example I am pulling the v1.3.5 tag since it is the version on my deps.json.
 
-### 2.3. Add the JS & python backend to instantiate the webapp
+### 2.3. Add the HTML, JS & python backend to instantiate the webapp
 
-Create a standard webapp in the project, start by adding this code to the JS part of the webapp
+Create a standard webapp in the project, start by adding this code to the HTML part of the webapp
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+</html>
+```
+
+Then add this code the the js part of the webapp
 
 ```js
-const backendURL = getWebAppBackendUrl('fetch/bs_init?URL='+getWebAppBackendUrl(''));
+const backendURL = getWebAppBackendUrl('fetch/prod?URL='+getWebAppBackendUrl(''));
+
+
+function createScript(data) {
+    const script = document.createElement('script');
+    script.src = data.path_js;
+    script.async = true;
+    return script;
+}
+
+function createStyle(data) {
+    const style = document.createElement( "style" );
+    style.innerHTML = data.css;
+    return style;
+}
+
 
 window.onload = function() {
-    
-    var ifrm = document.createElement("iframe");
-    ifrm.setAttribute("src", backendURL);
-    ifrm.setAttribute("style", "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-    document.body.appendChild(ifrm);
+        
+    $.get(backendURL, function(data, status){
+        
+        const script = createScript(data);
+        const style = createStyle(data);
+
+        document.getElementsByTagName( "head" )[0].appendChild( style );
+        
+        document.getElementsByTagName( "head" )[0].appendChild(script);
+    });
 }
 ```
 
@@ -353,19 +386,52 @@ Once you finished you webapp or you want to deploy it to you DSS project, you ca
 
 ![Sync files](/commons/images/documentation/sync_files.png)
 
-Once the file are synced add the JS and python codes to your webapp if it is not done: 
+Once the file are synced add the HTML, JS and python codes to your webapp if it is not done: 
 
-Create a standard webapp in the project, start by adding this code to the JS part of the webapp
+Start by adding this code to the HTML part of the webapp
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
+</html>
+```
+
+Then add this code the the js part of the webapp
 
 ```js
-const backendURL = getWebAppBackendUrl('fetch/bs_init?URL='+getWebAppBackendUrl(''));
+const backendURL = getWebAppBackendUrl('fetch/prod?URL='+getWebAppBackendUrl(''));
+
+
+function createScript(data) {
+    const script = document.createElement('script');
+    script.src = data.path_js;
+    script.async = true;
+    return script;
+}
+
+function createStyle(data) {
+    const style = document.createElement( "style" );
+    style.innerHTML = data.css;
+    return style;
+}
+
 
 window.onload = function() {
-    
-    var ifrm = document.createElement("iframe");
-    ifrm.setAttribute("src", backendURL);
-    ifrm.setAttribute("style", "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;");
-    document.body.appendChild(ifrm);
+        
+    $.get(backendURL, function(data, status){
+        
+        const script = createScript(data);
+        const style = createStyle(data);
+
+        document.getElementsByTagName( "head" )[0].appendChild( style );
+        
+        document.getElementsByTagName( "head" )[0].appendChild(script);
+    });
 }
 ```
 
@@ -383,7 +449,7 @@ app.register_blueprint(fetch_route)
 app.register_blueprint(fetch_api)
 ```
 
-If you sync chenges on a webapp that is running, restart the backend to see them on DSS.
+If you sync changes on a webapp that is running, restart the backend to see them on DSS.
 
 
 ### <span style="background-color:white;color:black">Code studio template explanation</span>
