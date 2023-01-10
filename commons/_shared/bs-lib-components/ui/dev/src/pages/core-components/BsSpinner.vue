@@ -1,18 +1,18 @@
 <template>
   <doc-page-core title="BsSpinner" :description="description" :quasarUrl="quasarURL">
       <Warning :text="warning" class="q-mt-md"></Warning>
-      <DocExemple file="BsSpinner/Thickness" title="Thickness"/>
+      <DocExample file="BsSpinner/Thickness" title="Thickness"/>
   </doc-page-core>
 </template>
 <script>
-  import DocExemple from '../../components/DocExemple.vue';
+  import DocExample from '../../components/DocExample.vue';
   import DocPageCore from '../../components/DocPageCore.vue';
   import Warning from '../../components/Warning.vue';
 
   export default {
 
       components: {
-          DocExemple, 
+          DocExample, 
           DocPageCore,
           Warning
       },

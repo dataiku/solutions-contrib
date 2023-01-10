@@ -1,18 +1,18 @@
 <template>
     <doc-page-core title="BsDateRange" :description="description">
-        <DocExemple file="BsDateRange/Basic" title="Basic"></DocExemple>
-        <DocExemple file="BsDateRange/Label" title="With Label"></DocExemple>
-        <DocExemple file="BsDateRange/Mask" title="With Custom Date Mask"></DocExemple>
+        <DocExample file="BsDateRange/Basic" title="Basic"></DocExample>
+        <DocExample file="BsDateRange/Label" title="With Label"></DocExample>
+        <DocExample file="BsDateRange/Mask" title="With Custom Date Mask"></DocExample>
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore,
         },
         setup() {

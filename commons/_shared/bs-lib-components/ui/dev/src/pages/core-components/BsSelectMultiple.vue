@@ -1,20 +1,20 @@
 <template>
     <doc-page-core title="BsSelectMultiple" :description="description" :quasarUrl="quasarURL">
-        <DocExemple file="BsSelectMultiple/Basic" title="Basic"/>
-        <DocExemple file="BsSelectMultiple/Filter" title="With Filter"/>
-        <DocExemple file="BsSelectMultiple/Hint" title="With Hint"/>
-        <DocExemple file="BsSelectMultiple/NoLabel" title="No Label"/>
+        <DocExample file="BsSelectMultiple/Basic" title="Basic"/>
+        <DocExample file="BsSelectMultiple/Filter" title="With Filter"/>
+        <DocExample file="BsSelectMultiple/Hint" title="With Hint"/>
+        <DocExample file="BsSelectMultiple/NoLabel" title="No Label"/>
     
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore
         },
         setup() {
