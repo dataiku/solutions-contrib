@@ -19,7 +19,7 @@
                 <q-tab v-for="tab in def.tabs" :key="`tab-${tab}`" :name="tab" :label="tab"></q-tab>
             </q-tabs>
             <q-separator></q-separator>
-            <q-tab-panels class="text-grey-3 text-weight-regular" v-model="currentTab" animated="animated">
+            <q-tab-panels class="text-grey-3 bg-grey-2 text-weight-regular" v-model="currentTab" animated="animated">
                 <q-tab-panel class="q-pa-none" v-for="tab in def.tabs" :key="`pane-${tab}`" :name="tab">
                 <doc-code lang="markup" :code="def.parts[tab]" max-height="70vh"></doc-code>
                 </q-tab-panel>
