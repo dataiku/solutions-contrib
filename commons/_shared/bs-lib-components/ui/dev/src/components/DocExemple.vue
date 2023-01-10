@@ -124,12 +124,12 @@ export default {
     }
 
     onMounted(() => {
-        import('/public/examples/' + props.file + '.vue').then((module) => {
+        import(`/public/examples/${props.file}.vue`).then((module) => {
           component.value = markRaw(module.default);
           loadingComponent.value = false;
         });
      
-      fetch(`/examples/${ props.file }.vue`)
+      fetch(`/examples/${props.file}.vue`)
         .then(response => response.text())
         .then(content => {
           parseComponent(content)
@@ -153,7 +153,8 @@ export default {
       slugifiedTitle,
 
       openGitHub () {
-        openURL(`https://www.google.com/`)
+        const githubSolutionsBaseURL = `https://github.com/dataiku/solutions-contrib/blob/main/commons/_shared//bs-lib-components/ui/dev/public/examples`;
+        openURL(`${githubSolutionsBaseURL}/${props.file}.vue`)
       },
 
     }
