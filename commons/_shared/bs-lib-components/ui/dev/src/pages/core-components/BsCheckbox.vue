@@ -1,20 +1,20 @@
 <template>
     <doc-page-core title="BsCheckbox" :description="description" :quasarUrl="quasarURL">
-        <DocExemple file="BsCheckbox/Basic" title="Basic"/>
-        <DocExemple file="BsCheckbox/Disable" title="Disabled"/>
-        <DocExemple file="BsCheckbox/Label" title="With Label"/>
-        <DocExemple file="BsCheckbox/Description" title="With hint or label"/>
-        <DocExemple file="BsCheckbox/Indeterminate" title="Indeterminate State"/>
+        <DocExample file="BsCheckbox/Basic" title="Basic"/>
+        <DocExample file="BsCheckbox/Disable" title="Disabled"/>
+        <DocExample file="BsCheckbox/Label" title="With Label"/>
+        <DocExample file="BsCheckbox/Description" title="With hint or label"/>
+        <DocExample file="BsCheckbox/Indeterminate" title="Indeterminate State"/>
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore,
         },
         setup() {

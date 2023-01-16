@@ -1,18 +1,18 @@
 <template>
     <doc-page-core title="BsSlider" :description="description" :quasarUrl="quasarURL">
-        <DocExemple file="BsSlider/Basic" title="Basic"/>
-        <DocExemple file="BsSlider/Step" title="Custom Step"/>
-        <DocExemple file="BsSlider/Width" title="Custom Width"/>
+        <DocExample file="BsSlider/Basic" title="Basic"/>
+        <DocExample file="BsSlider/Step" title="Custom Step"/>
+        <DocExample file="BsSlider/Width" title="Custom Width"/>
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore,
         },
         setup() {

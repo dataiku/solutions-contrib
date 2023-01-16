@@ -3,8 +3,8 @@
         <div class="text-primary dku-huge-title-sb q-mb-sm">Source code</div>
         <CodeSourceDisplay file="CreditScoringCard"></CodeSourceDisplay>
         <div class="text-primary dku-huge-title-sb q-mb-sm">Usage</div>
-        <DocExemple file="CreditScoringCard/Basic" title="Basic"></DocExemple>
-        <DocExemple file="CreditScoringCard/Grid" title="Grid"></DocExemple>
+        <DocExample file="CreditScoringCard/Basic" title="Basic"></DocExample>
+        <DocExample file="CreditScoringCard/Grid" title="Grid"></DocExample>
     </DocPageCustom>
 
 
@@ -12,13 +12,13 @@
 <script>
     import DocPageCustom from "../../components/DocPageCustom.vue";
     import CodeSourceDisplay from "../../components/CodeSourceDisplay.vue";
-    import DocExemple from "../../components/DocExemple.vue";
+    import DocExample from "../../components/DocExample.vue";
 
     export default {
         components: {
             DocPageCustom,
             CodeSourceDisplay,
-            DocExemple
+            DocExample
         },
         setup() {
             const description = "The CreditScoringCard is an example of a custom component created for the project Credit Scoring to highlight credit scores per feature \

@@ -19,7 +19,7 @@
                 <q-tab v-for="tab in def.tabs" :key="`tab-${tab}`" :name="tab" :label="tab"></q-tab>
             </q-tabs>
             <q-separator></q-separator>
-            <q-tab-panels class="text-grey-3 text-weight-regular" v-model="currentTab" animated="animated">
+            <q-tab-panels class="text-grey-3 bg-grey-2 text-weight-regular" v-model="currentTab" animated="animated">
                 <q-tab-panel class="q-pa-none" v-for="tab in def.tabs" :key="`pane-${tab}`" :name="tab">
                 <doc-code lang="markup" :code="def.parts[tab]" max-height="70vh"></doc-code>
                 </q-tab-panel>
@@ -124,12 +124,12 @@ export default {
     }
 
     onMounted(() => {
-        import('/public/examples/' + props.file + '.vue').then((module) => {
+        import(`/public/examples/${props.file}.vue`).then((module) => {
           component.value = markRaw(module.default);
           loadingComponent.value = false;
         });
      
-      fetch(`/examples/${ props.file }.vue`)
+      fetch(`/examples/${props.file}.vue`)
         .then(response => response.text())
         .then(content => {
           parseComponent(content)
@@ -153,7 +153,8 @@ export default {
       slugifiedTitle,
 
       openGitHub () {
-        openURL(`https://www.google.com/`)
+        const githubSolutionsBaseURL = `https://github.com/dataiku/solutions-contrib/blob/main/commons/_shared//bs-lib-components/ui/dev/public/examples`;
+        openURL(`${githubSolutionsBaseURL}/${props.file}.vue`)
       },
 
     }

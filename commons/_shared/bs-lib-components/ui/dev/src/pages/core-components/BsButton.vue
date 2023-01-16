@@ -1,26 +1,26 @@
 <template>
     <doc-page-core title="BsButton" :description="description" :quasarUrl="quasarURL">
-        <DocExemple file="BsButton/Primary" title="Primary"/>
-        <DocExemple file="BsButton/Secondary" title="Secondary"/>
-        <DocExemple file="BsButton/Link" title="Link"/>
-        <DocExemple file="BsButton/ContainedDanger" title="Contained Danger"/>
-        <DocExemple file="BsButton/OutlineDanger" title="Outlined Danger"/>
-        <DocExemple file="BsButton/FlatDanger" title="Flat Danger"/>
-        <DocExemple file="BsButton/ContainedSuccess" title="Contained Success"/>
-        <DocExemple file="BsButton/OutlineSuccess" title="Outlined Success"/>
-        <DocExemple file="BsButton/FlatSuccess" title="Flat Success"/>
-        <DocExemple file="BsButton/AtClick" title="@click"/>
+        <DocExample file="BsButton/Primary" title="Primary"/>
+        <DocExample file="BsButton/Secondary" title="Secondary"/>
+        <DocExample file="BsButton/Link" title="Link"/>
+        <DocExample file="BsButton/ContainedDanger" title="Contained Danger"/>
+        <DocExample file="BsButton/OutlineDanger" title="Outlined Danger"/>
+        <DocExample file="BsButton/FlatDanger" title="Flat Danger"/>
+        <DocExample file="BsButton/ContainedSuccess" title="Contained Success"/>
+        <DocExample file="BsButton/OutlineSuccess" title="Outlined Success"/>
+        <DocExample file="BsButton/FlatSuccess" title="Flat Success"/>
+        <DocExample file="BsButton/AtClick" title="@click"/>
 
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore
         },
         setup() {

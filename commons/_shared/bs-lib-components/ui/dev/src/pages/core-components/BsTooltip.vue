@@ -1,16 +1,16 @@
 <template>
     <doc-page-core title="BsTooltip" :description="description" :quasarUrl="quasarURL">
-        <DocExemple file="BsTooltip/Tooltip" title="Position"/>
+        <DocExample file="BsTooltip/Tooltip" title="Position"/>
     </doc-page-core>
 </template>
 <script>
-    import DocExemple from '../../components/DocExemple.vue';
+    import DocExample from '../../components/DocExample.vue';
     import DocPageCore from '../../components/DocPageCore.vue';
 
     export default {
 
         components: {
-            DocExemple, 
+            DocExample, 
             DocPageCore
         },
         setup() {

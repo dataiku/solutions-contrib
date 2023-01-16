@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import HeaderMenu from './HeaderMenu.vue';
 import { version } from 'ui';
 import menu from "../assets/menu";

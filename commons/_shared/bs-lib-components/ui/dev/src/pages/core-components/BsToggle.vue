@@ -1,21 +1,21 @@
 <template>
   <doc-page-core title="BsToggle" :description="description">
-      <DocExemple file="BsToggle/Sizes" title="Sizes"/>
-      <DocExemple file="BsToggle/LeftLabel" title="Left Label"/>
-      <DocExemple file="BsToggle/RightLabel" title="Right Label"/>
-      <DocExemple file="BsToggle/RightAndLeftLabel" title="Right & Left Label"/>
-      <DocExemple file="BsToggle/DynamicLabel" title="Dynamic Label"/>
-      <DocExemple file="BsToggle/ArrayModel" title="Array Model"/>
+      <DocExample file="BsToggle/Sizes" title="Sizes"/>
+      <DocExample file="BsToggle/LeftLabel" title="Left Label"/>
+      <DocExample file="BsToggle/RightLabel" title="Right Label"/>
+      <DocExample file="BsToggle/RightAndLeftLabel" title="Right & Left Label"/>
+      <DocExample file="BsToggle/DynamicLabel" title="Dynamic Label"/>
+      <DocExample file="BsToggle/ArrayModel" title="Array Model"/>
   </doc-page-core>
 </template>
 <script>
-  import DocExemple from '../../components/DocExemple.vue';
+  import DocExample from '../../components/DocExample.vue';
   import DocPageCore from '../../components/DocPageCore.vue';
 
   export default {
 
       components: {
-          DocExemple, 
+          DocExample, 
           DocPageCore
       },
       setup() {
