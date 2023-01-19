@@ -32,5 +32,18 @@
       <template #content>
         <router-view />
       </template>
+      <BsTab icon="movie" name="a-first-tab"></BsTab>
+      <BsTab icon="help" name="a-second-tab"></BsTab>
     </BsLayoutDefault>
 </template>
+
+<script>
+import BsTab from "../../../../src/components/layout/BsTab.vue"
+
+export default {
+  name: "EmptyLayout",
+  components: {
+    BsTab
+  }
+}
+</script>
