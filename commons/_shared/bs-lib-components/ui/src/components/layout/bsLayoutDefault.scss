@@ -93,4 +93,20 @@
     background-color: white;
   }
 }
-  
+
+.tabs-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-right: 1px solid #ddd;
+
+  background: #fff;
+}
+
+.tab-name-tooltip {
+  font-size: .8rem;
+}

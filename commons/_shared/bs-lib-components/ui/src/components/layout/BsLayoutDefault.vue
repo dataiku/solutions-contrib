@@ -1,109 +1,131 @@
 <template>
+    <!-- 
+        <BsLayout>
+            <QBsTab>
+                template icon (optional)
+
+                template settings
+                template content
+            </QBsTab>
+        </BsLayout>
+    -->
     <QLayout view="lHh LpR lFf" class="bg-white">
-        
-        <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}" v-if="leftpanel">
-            <div @click="toggleLeftPanel">
-                <img src="../../assets/images/BtnImg.svg">
-            </div>
-        </div>
-
-        <QHeader bordered class="bg-white bs-header" v-if="header">
-            <slot name="header"></slot>
-        </QHeader>
-
-        <QDrawer v-model="showLeftPanel" side="left" bordered behavior="desktop" v-if="leftpanel">
-            <slot name="leftpanel"></slot>
-        </QDrawer>
-
-        <QPageContainer>
-            <QPage>
-                <div class="content">
-                    <QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc" v-if="doc">
-                        <div class="row items-center q-gutter-sm no-wrap">
-                            <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
-                            <span class="btn-solution-text">Dataiku Solutions</span>
-                        </div>
-                    </QBtn>
-                    <QCard class="doc-content flex row" v-if="doc && openDoc">
-                        <div class="flex row items-center q-gutter-sm q-mb-lg">
-                            <img :src="docIcon" :width="docImageDimensions.width" :height="docImageDimensions.height" v-if="docIcon">
-                            <span class="dku-large-title-sb">{{ docTitle }}</span>
-                        </div>
-                        <div class="doc-body">
-                            <slot name="documentation"></slot>
-                        </div>
-                        <div class="doc-footer flex row items-center">
-                            <span class="doc-footer__icon"><img src="../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
-                            <span class="doc-footer__text dku-tiny-text-sb">Dataiku Solutions</span>
-                        </div>
-                    </QCard>
-                    <slot name="content"></slot>    
-                </div>
-            </QPage>
-            
-        </QPageContainer>
+        <BsMenuTabs
+            v-if="isTabsMultiple"
+            v-model="selectedTab"
+        >
+            <BsMenuTab 
+                v-for="{name, icon} in tabsData"
+                :key="name"
+                :name="name"
+                :icon="icon"
+            ></BsMenuTab>
+        </BsMenuTabs>
+        <slot></slot>
     </QLayout>
 </template>
-<script>
-    import { QLayout, QHeader, QDrawer, QPageContainer, QBtn, QCard, QPage } from 'quasar';
-    import btnImg from "../../assets/images/BtnImg.svg"
-    export default {
-        name:"BsLayoutDefault",
-        data() {
-            return {
-                showLeftPanel : true,
-                btnImg : btnImg,
-                openDoc: false
-            }  
+
+<script lang="ts">
+import { QLayout, QHeader, QDrawer, QPageContainer, QBtn, QCard, QPage } from 'quasar';
+import { defineComponent, VNode, Component } from 'vue';
+const btnImg = require("../../assets/images/BtnImg.svg");
+import BsMenuTabs from './BsMenuTabs.vue';
+import BsMenuTab from './BsMenuTab.vue';
+import BsTab from './BsTab.vue';
+
+type RenameByT<T, U> = {
+    [K in keyof U as K extends keyof T
+        ? T[K] extends string
+            ? T[K]
+            : never
+    : K]: K extends keyof U ? U[K] : never;
+};
+
+type InternalInstanceType<T> = RenameByT<{$props: "props"}, T>
+type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
+
+export default defineComponent({
+    name:"BsLayoutDefault",
+    data() {
+        return {
+            btnImg : btnImg,
+            openDoc: false,
+            tabsProvider: {
+                selectedIndex: 0,
+                tabs: [] as VNode[],
+                count: 0,
+            },
+            selectedTab: "a-first-tab",
+        }  
+    },
+    components: {
+        BsTab,
+        BsMenuTab,
+        BsMenuTabs,
+        QLayout, 
+        QHeader, 
+        QDrawer, 
+        QPageContainer,
+        QBtn,
+        QCard,
+        QPage,
+    },
+    created() {
+        if (!this.$slots.default) return;
+        this.tabsProvider.tabs = this.$slots.default().filter((child) => child.type === "BsTab");
+    },
+    methods: {
+        toggleDoc() {
+            this.openDoc = !this.openDoc;
         },
-        components: {
-            QLayout, 
-            QHeader, 
-            QDrawer, 
-            QPageContainer,
-            QBtn,
-            QCard,
-            QPage,
+    },
+    computed: {
+        defaultSlot() {
+            const slotFactory = this.$slots.default;
+            return slotFactory ? slotFactory() : [];
         },
-        methods: {
-            toggleLeftPanel() {
-                this.showLeftPanel = !this.showLeftPanel;
-            },
-            toggleDoc() {
-                this.openDoc = !this.openDoc;
-            },
+        tabs(): BsTabInternalInstance[] {
+            return this.defaultSlot.filter((child) => {
+                const slotType = child.type as Component;
+                return slotType?.name && (slotType.name === BsTab.name);
+            }) as any;
         },
-        computed: {
-            leftDist() {
-                return this.showLeftPanel ? 300 : 0;
-            }
+        tabsData() {
+            return this.tabs.map(({ props }, index) => {
+                const {name, icon} = {name: `tab-${index}`, icon: "camera", ...props};
+                return {name, icon};
+            });
         },
-        props: {
-            header: {
-                type: Boolean,
-                default: true
-            },
-            leftpanel: {
-                type: Boolean,
-                default: true
-            },
-            docTitle: {
-                type: String,
-            },
-            docIcon: {
-                type: String,
-            },
-            doc: {
-                type: Boolean,
-                default: true
-            },
-            docImageDimensions: {
-                type: Object,
-                default: () => ({
-                    width: 36,
-                    height: 40,
-                })
-            }
+        isTabsMultiple(): boolean {
+            return this.tabs.length > 1;
+        }
+    },
+    props: {
+        header: {
+            type: Boolean,
+            default: true
+        },
+        leftpanel: {
+            type: Boolean,
+            default: true
+        },
+        docTitle: {
+            type: String,
+        },
+        docIcon: {
+            type: String,
+        },
+        doc: {
+            type: Boolean,
+            default: true
+        },
+        docImageDimensions: {
+            type: Object,
+            default: () => ({
+                width: 36,
+                height: 40,
+            })
         }
     }
+});
 </script>
