@@ -2,27 +2,9 @@
     <QHeader v-show="isTabSelected" bordered class="bg-white bs-header" v-if="$slots.header">
         <slot name="header"></slot>
     </QHeader>
-    <div
-        v-show="isTabSelected"
-        v-if="$slots.leftpanel"
-        :style="{ 'left' : leftDist}"
-        @click="toggleLeftPanel"
-        class="toggle-left-button"
-    >
-        <img src="../../assets/images/BtnImg.svg">
-    </div>
-    <QDrawer
-        v-show="isTabSelected"
-        :mini="leftPanelHidden"
-        :mini-width="miniWidth"
-        :width="expandedWidth"
-        side="left"
-        behavior="desktop"
-        model-value
-        bordered
-    >
+    <BsDrawer v-show="isTabSelected" :expandable="$slots.leftpanel">
         <slot name="leftpanel"></slot>
-    </QDrawer>
+    </BsDrawer>
     <QPageContainer v-show="isTabSelected">
         <QPage>
             <div class="content">
@@ -57,7 +39,6 @@
 import { QDrawer, QPageContainer, QPage, QCard, QBtn, QHeader } from "quasar"
 import { defineComponent, PropType, ComputedRef } from "vue";
 import BsDrawer from './BsDrawer.vue';
-const btnImg = require("../../assets/images/BtnImg.svg");
 
 import { SluggerSingleton } from './Slugger';
 const slugger = new SluggerSingleton("tabs");
@@ -77,12 +58,8 @@ export default defineComponent({
         return {
             index: 0,
             isActive: false,
-            leftPanelDisplayed: false,
             openDoc: false,
-            btnImg: btnImg,
             tabId: slugger.slug(this.name),
-            miniWidth: 50,
-            panelWidth: 300,
         };
     },
     expose: ["name", "icon"],
@@ -115,16 +92,6 @@ export default defineComponent({
         }
     },
     computed: {
-        expandedWidth() {
-            return this.miniWidth + this.panelWidth;
-        },
-        leftDist() {
-            const dist = this.leftPanelDisplayed ? this.expandedWidth : this.miniWidth;
-            return `${dist}px`;
-        },
-        leftPanelHidden() {
-            return !this.leftPanelDisplayed;
-        },
         isTabSelected() {
             return this.selectedTab === this.tabId;
         },
@@ -141,9 +108,6 @@ export default defineComponent({
         }
     },
     methods: {
-        toggleLeftPanel() {
-            this.leftPanelDisplayed = !this.leftPanelDisplayed;
-        },
         toggleDoc() {
             this.openDoc = !this.openDoc;
         },
@@ -158,15 +122,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.toggle-left-button {
-    cursor: pointer;
-    margin: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    position: fixed;
-    z-index: 99;
-}
 
 .bs-header {
     color: black;
