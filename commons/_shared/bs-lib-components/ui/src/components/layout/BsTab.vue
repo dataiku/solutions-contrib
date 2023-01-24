@@ -2,7 +2,7 @@
     <QHeader v-show="isTabSelected" bordered class="bg-white bs-header" v-if="$slots.header">
         <slot name="header"></slot>
     </QHeader>
-    <BsDrawer v-show="isTabSelected" :expandable="$slots.leftpanel">
+    <BsDrawer v-show="isTabSelected" :expand-btn="$slots.leftpanel">
         <slot name="leftpanel"></slot>
     </BsDrawer>
     <QPageContainer v-show="isTabSelected">

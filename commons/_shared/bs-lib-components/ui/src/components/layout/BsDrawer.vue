@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="expandable"
+        v-if="expandBtn"
         :style="{ 'left' : leftDist}"
         @click="toggleLeftPanel"
         class="toggle-left-button"
@@ -33,7 +33,7 @@ export default defineComponent({
         };
     },
     props: {
-        expandable: {
+        expandBtn: {
             type: [Boolean, Object],
             default: false
         },
