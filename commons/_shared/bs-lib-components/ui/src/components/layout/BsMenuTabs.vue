@@ -1,23 +1,14 @@
 <template>
-    <QDrawer 
-        v-model="leftPanelFull"
-        :mini-width="tabsWidth"
-        side="left"
-        behavior="desktop"
-        mini
-        bordered
-    >
-        <div class="tabs-container">
-            <q-tabs
-                :model-value="modelValue"
-                @update:model-value="(val) => $emit('update:model-value', val)"
-                vertical
-                class="text-teal"
-            >
-                <slot></slot>
-            </q-tabs>
-        </div>
-    </QDrawer>
+    <div class="tabs-container">
+        <q-tabs
+            :model-value="modelValue"
+            @update:model-value="(val) => $emit('update:model-value', val)"
+            vertical
+            class="text-teal"
+        >
+            <slot></slot>
+        </q-tabs>
+    </div>
 </template>
 <script lang="ts">
 import { QDrawer, QTabs } from 'quasar';
@@ -35,7 +26,6 @@ export default defineComponent({
     data() {
         return {
             leftPanelFull: true,
-            tabsWidth: 50, // DSS webapp icon's width
         };
     },
     methods: {
@@ -46,3 +36,8 @@ export default defineComponent({
 });
 </script>
 
+<style scoped lang="scss">
+::v-deep .q-tabs--vertical .q-tab {
+    padding: 0 5px;
+}
+</style>

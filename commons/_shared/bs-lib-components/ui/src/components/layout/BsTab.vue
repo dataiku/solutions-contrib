@@ -2,16 +2,20 @@
     <QHeader v-show="isTabSelected" bordered class="bg-white bs-header" v-if="$slots.header">
         <slot name="header"></slot>
     </QHeader>
-    <template v-show="isTabSelected" v-if="$slots.leftpanel">
-        <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
-            <div @click="toggleLeftPanel">
-                <img src="../../assets/images/BtnImg.svg">
-            </div>
-        </div>
-        <QDrawer v-model="showLeftPanel" side="left" bordered behavior="desktop">
-            <slot name="leftpanel"></slot>
-        </QDrawer>
-    </template>
+    <div @click="toggleLeftPanel" class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
+        <img src="../../assets/images/BtnImg.svg">
+    </div>
+    <QDrawer
+        :mini="leftPanelHidden"
+        :mini-width="miniWidth"
+        :width="expandedWidth"
+        side="left"
+        behavior="desktop"
+        model-value
+        bordered
+    >
+        <slot name="leftpanel"></slot>
+    </QDrawer>
     <QPageContainer v-show="isTabSelected">
         <QPage>
             <div class="content">
@@ -66,10 +70,12 @@ export default defineComponent({
         return {
             index: 0,
             isActive: false,
-            showLeftPanel: true,
+            leftPanelDisplayed: false,
             openDoc: false,
             btnImg: btnImg,
             tabId: slugger.slug(this.name),
+            miniWidth: 50,
+            panelWidth: 300,
         };
     },
     expose: ["name", "icon"],
@@ -102,8 +108,14 @@ export default defineComponent({
         }
     },
     computed: {
+        expandedWidth() {
+            return this.miniWidth + this.panelWidth;
+        },
         leftDist() {
-            return this.showLeftPanel ? 300 : 0;
+            return this.leftPanelDisplayed ? this.expandedWidth : this.miniWidth;
+        },
+        leftPanelHidden() {
+            return !this.leftPanelDisplayed;
         },
         isTabSelected() {
             return this.selectedTab === this.tabId;
@@ -122,7 +134,7 @@ export default defineComponent({
     },
     methods: {
         toggleLeftPanel() {
-            this.showLeftPanel = !this.showLeftPanel;
+            this.leftPanelDisplayed = !this.leftPanelDisplayed;
         },
         toggleDoc() {
             this.openDoc = !this.openDoc;
@@ -136,3 +148,98 @@ export default defineComponent({
     }
 });
 </script>
+
+<style lang="scss">
+.toggle-left-button {
+    cursor: pointer;
+    margin: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    position: fixed;
+    z-index: 99;
+}
+
+.bs-header {
+    color: black;
+}
+
+.btn-solution-text {
+    color: #000000;
+    font-family: 'SourceSansPro';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 12px;
+}
+
+
+.btn-solution {
+    color: #C8C8C8;
+    top: 16px;
+    right: 16px;
+    z-index: 99;
+    border-radius: 4px;
+}
+
+.doc-content {
+    position: absolute;
+    min-width: 359px;
+    max-width: 359px;
+    min-height: 515px;
+    height: 515px;
+    overflow: scroll;
+    top: 60px;
+    right: 15px;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    padding: 26px 23px 0px 22px;
+    z-index: 99;
+    border-radius: 0px;
+}
+
+.doc-footer {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    right: 0;
+    margin-left: auto;
+    height: 25px;
+    z-index: 99;
+
+    &__icon {
+        padding-left: 8px;
+        padding-right: 4.5px;
+        padding-top: 2px;
+        border-top: 1px solid #F2F2F2;
+        border-left: 1px solid #F2F2F2;
+        border-radius: 4px 0px 0px 0px;
+    }
+
+    &__text {
+        padding: 5px 12px 5px 9px;
+        border-top: 1px solid #F2F2F2;
+        border-left:1px solid #F2F2F2;
+        border-right:1px solid #F2F2F2;
+    }
+}
+
+.content {
+    position: relative;
+    min-height: inherit !important;
+}
+
+@supports (backdrop-filter: none) {
+    .doc-footer {
+        background-color: white;
+        backdrop-filter: blur(7px);
+    }  
+}
+
+@supports not (backdrop-filter: none) {
+    .doc-footer {
+        background-color: white;
+    }
+}
+
+</style>
