@@ -2,10 +2,17 @@
     <QHeader v-show="isTabSelected" bordered class="bg-white bs-header" v-if="$slots.header">
         <slot name="header"></slot>
     </QHeader>
-    <div @click="toggleLeftPanel" class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}">
+    <div
+        v-show="isTabSelected"
+        v-if="$slots.leftpanel"
+        :style="{ 'left' : leftDist}"
+        @click="toggleLeftPanel"
+        class="toggle-left-button"
+    >
         <img src="../../assets/images/BtnImg.svg">
     </div>
     <QDrawer
+        v-show="isTabSelected"
         :mini="leftPanelHidden"
         :mini-width="miniWidth"
         :width="expandedWidth"
@@ -112,7 +119,8 @@ export default defineComponent({
             return this.miniWidth + this.panelWidth;
         },
         leftDist() {
-            return this.leftPanelDisplayed ? this.expandedWidth : this.miniWidth;
+            const dist = this.leftPanelDisplayed ? this.expandedWidth : this.miniWidth;
+            return `${dist}px`;
         },
         leftPanelHidden() {
             return !this.leftPanelDisplayed;
