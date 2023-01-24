@@ -31,7 +31,6 @@ export default defineComponent({
     },
     props: {
         modelValue: [Number, String],
-        tabsData: Object,
     },
     data() {
         return {
@@ -40,16 +39,10 @@ export default defineComponent({
         };
     },
     methods: {
-        // initLeftPanelFull() {
-        //     this.leftPanelFull = true;
-        // },
         emitUpdatedValue(val: any) {
             this.$emit('update:model-value', val);
         }
     },
-    // mounted() {
-    //     this.initLeftPanelFull();
-    // },
 });
 </script>
 

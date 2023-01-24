@@ -12,26 +12,29 @@
     <QLayout view="lHh LpR lFf" class="bg-white">
         <BsMenuTabs
             v-if="isTabsMultiple"
-            v-model="selectedTab"
+            v-model="tabIndex"
         >
             <BsMenuTab 
-                v-for="{name, icon} in tabsData"
-                :key="name"
+                v-for="({name, icon}, index) in tabsData"
+                :key="index"
                 :name="name"
+                :tab-index="index"
                 :icon="icon"
             ></BsMenuTab>
+            <QBtn @click="tabIndex = 1"></QBtn>
         </BsMenuTabs>
         <slot></slot>
     </QLayout>
 </template>
 
 <script lang="ts">
-import { QLayout, QHeader, QDrawer, QPageContainer, QBtn, QCard, QPage } from 'quasar';
-import { defineComponent, VNode, Component } from 'vue';
-const btnImg = require("../../assets/images/BtnImg.svg");
+import { defineComponent, Component, computed } from 'vue';
+
+import { QLayout, QBtn } from 'quasar';
 import BsMenuTabs from './BsMenuTabs.vue';
 import BsMenuTab from './BsMenuTab.vue';
 import BsTab from './BsTab.vue';
+
 
 type RenameByT<T, U> = {
     [K in keyof U as K extends keyof T
@@ -40,64 +43,65 @@ type RenameByT<T, U> = {
             : never
     : K]: K extends keyof U ? U[K] : never;
 };
-
 type InternalInstanceType<T> = RenameByT<{$props: "props"}, T>
 type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
-
+    
 export default defineComponent({
     name:"BsLayoutDefault",
     data() {
         return {
-            btnImg : btnImg,
             openDoc: false,
-            tabsProvider: {
-                selectedIndex: 0,
-                tabs: [] as VNode[],
-                count: 0,
-            },
-            selectedTab: "a-first-tab",
+            tabIndex: 0,
+            tabs: [] as string[],
         }  
     },
     components: {
         BsTab,
         BsMenuTab,
         BsMenuTabs,
-        QLayout, 
-        QHeader, 
-        QDrawer, 
-        QPageContainer,
+        QLayout,
         QBtn,
-        QCard,
-        QPage,
     },
-    created() {
-        if (!this.$slots.default) return;
-        this.tabsProvider.tabs = this.$slots.default().filter((child) => child.type === "BsTab");
+    provide() {
+        return {
+            $tabs: this.tabs,
+            $selectedTab: computed(() => this.selectedTab)
+        };
     },
     methods: {
-        toggleDoc() {
-            this.openDoc = !this.openDoc;
-        },
+        getTabIndex(selectedTab: string) {
+            return this.tabs.indexOf(selectedTab);
+        }
     },
     computed: {
+        selectedTab() {
+            return this.tabs[this.tabIndex];
+        },
         defaultSlot() {
             const slotFactory = this.$slots.default;
             return slotFactory ? slotFactory() : [];
         },
-        tabs(): BsTabInternalInstance[] {
+        tabComponents(): BsTabInternalInstance[] {
             return this.defaultSlot.filter((child) => {
                 const slotType = child.type as Component;
                 return slotType?.name && (slotType.name === BsTab.name);
             }) as any;
         },
         tabsData() {
-            return this.tabs.map(({ props }, index) => {
-                const {name, icon} = {name: `tab-${index}`, icon: "camera", ...props};
+            return this.tabComponents.map(({ props }) => {
+                const {name, icon} = {...props};
                 return {name, icon};
             });
         },
         isTabsMultiple(): boolean {
-            return this.tabs.length > 1;
+            return this.tabComponents.length > 1;
+        }
+    },
+    mounted() {
+    },
+    watch: {
+        selectedTab(newVal: string) {
+            console.log(newVal);
         }
     },
     props: {

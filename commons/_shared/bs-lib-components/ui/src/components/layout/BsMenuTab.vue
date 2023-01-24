@@ -1,6 +1,6 @@
 <template>
     <q-tab 
-        :name="name"
+        :name="tabIndex"
         :icon="icon"
     >
         <q-tooltip 
@@ -25,11 +25,12 @@ export default defineComponent({
     props: {
         name: {
             type: String,
-            default: "tab-name-not-set"
         },
         icon: {
             type: String,
-            default: "help"
+        },
+        tabIndex: {
+            type: Number,
         },
     }
 });
