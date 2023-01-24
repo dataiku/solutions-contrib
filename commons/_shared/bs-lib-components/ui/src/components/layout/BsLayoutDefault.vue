@@ -1,14 +1,4 @@
 <template>
-    <!-- 
-        <BsLayout>
-            <QBsTab>
-                template icon (optional)
-
-                template settings
-                template content
-            </QBsTab>
-        </BsLayout>
-    -->
     <QLayout view="lHh LpR lFf" class="bg-white">
         <BsMenuTabs
             v-if="isTabsMultiple"
