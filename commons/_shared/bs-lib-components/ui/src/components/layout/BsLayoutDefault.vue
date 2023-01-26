@@ -1,66 +1,107 @@
 <template>
-    <QLayout view="lHh LpR lFf" class="bg-white">
-        <BsMenuTabs
-            v-if="isTabsMultiple"
-            v-model="tabIndex"
-        >
-            <BsMenuTab 
-                v-for="({name, icon}, index) in tabsData"
-                :key="index"
-                :name="name"
-                :tab-index="index"
-                :icon="icon"
-            ></BsMenuTab>
-            <QBtn @click="tabIndex = 1"></QBtn>
-        </BsMenuTabs>
-        <slot></slot>
-    </QLayout>
+<QLayout view="lHh LpR lFf" class="bg-white">
+    <!-- 
+        =========================
+        -----LAYOUT-ELEMENTS-----
+        =========================
+        
+        Slots from the <BSTab> component will move here
+    -->
+    <BsLayoutDrawer
+        @vnode-mounted="drawerMounted = true"
+        :expandable="selectedTab?.drawer"
+        :expand="selectedTab?.drawerExpanded"
+    ></BsLayoutDrawer>
+    <BsLayoutHeader
+        @vnode-mounted="headerMounted = true"
+    ></BsLayoutHeader>
+    <!-- 
+        ===================
+        -----MENU-TABS-----
+        ===================
+        
+        Sidebar menu with tabs selection
+    -->
+    <BsMenuTabs
+        v-if="isTabsMultiple"
+        v-model="tabIndex"
+    >
+        <BsMenuTab 
+            v-for="({name, icon}, index) in tabsProps"
+            :name="name"
+            :icon="icon"
+            :tab-index="index"
+        ></BsMenuTab>
+    </BsMenuTabs>
+    <!-- 
+        ===================
+        ----DEFAULT-TAB----
+        ===================
+
+        If a user decides not to use a tab, the content will move here
+    -->
+    <BsTab 
+        v-bind="tabProps"
+        v-if="noTabsUsed"
+    >
+        <template v-if="$slots.header" #header><slot name="header"></slot></template>
+        <template v-if="$slots.leftpanel" #leftpanel><slot name="leftpanel"></slot></template>
+        <template v-if="$slots.documentation" #documentation><slot name="documentation"></slot></template>
+        <template v-if="$slots.content" #content><slot name="content"></slot></template>
+    </BsTab>
+    <slot></slot>
+</QLayout>
 </template>
 
 <script lang="ts">
-import { defineComponent, Component, computed } from 'vue';
-
+import { defineComponent, computed } from 'vue';
 import { QLayout, QBtn } from 'quasar';
+
+import { InternalInstanceType, Tab } from './bsLayoutTypes'
+type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
+
 import BsMenuTabs from './BsMenuTabs.vue';
 import BsMenuTab from './BsMenuTab.vue';
+import BsLayoutDrawer from './BsLayoutDrawer.vue';
+import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
 
+import CheckSlotComponentsExtension from './CheckSlotComponentsExtension.vue';
 
-type RenameByT<T, U> = {
-    [K in keyof U as K extends keyof T
-        ? T[K] extends string
-            ? T[K]
-            : never
-    : K]: K extends keyof U ? U[K] : never;
-};
-type InternalInstanceType<T> = RenameByT<{$props: "props"}, T>
-type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
+
     
 export default defineComponent({
     name:"BsLayoutDefault",
-    data() {
-        return {
-            openDoc: false,
-            tabIndex: 0,
-            tabs: [] as string[],
-        }  
-    },
+    extends: CheckSlotComponentsExtension,
     components: {
         BsTab,
         BsMenuTab,
         BsMenuTabs,
+        BsLayoutDrawer,
+        BsLayoutHeader,
         QLayout,
         QBtn,
+    },
+    data() {
+        return {
+            tabIndex: 0,
+            tabs: [] as Tab[],
+
+            headerMounted: false,
+            drawerMounted: false,
+        }  
     },
     provide() {
         return {
             $tabs: this.tabs,
-            $selectedTab: computed(() => this.selectedTab)
-        };
+            $selectedTab: computed(() => this.selectedTab),
+            $headerMounted: computed(() => this.headerMounted),
+            $drawerMounted: computed(() => this.drawerMounted),
+        }; 
     },
     methods: {
-        getTabIndex(selectedTab: string) {
-            return this.tabs.indexOf(selectedTab);
+        getTabIndex(selectedTabId: string) {
+            return this.tabs.findIndex(({tabId}) => selectedTabId === tabId);
         }
     },
     computed: {
@@ -72,12 +113,10 @@ export default defineComponent({
             return slotFactory ? slotFactory() : [];
         },
         tabComponents(): BsTabInternalInstance[] {
-            return this.defaultSlot.filter((child) => {
-                const slotType = child.type as Component;
-                return slotType?.name && (slotType.name === BsTab.name);
-            }) as any;
+            const tabComponentName = BsTab.name;
+            return this.getSlotComponents(tabComponentName) as any;
         },
-        tabsData() {
+        tabsProps() {
             return this.tabComponents.map(({ props }) => {
                 const {name, icon} = {...props};
                 return {name, icon};
@@ -85,33 +124,21 @@ export default defineComponent({
         },
         isTabsMultiple(): boolean {
             return this.tabComponents.length > 1;
-        }
-    },
-    mounted() {
-    },
-    watch: {
-        selectedTab(newVal: string) {
-            console.log(newVal);
-        }
+        },
+        noTabsUsed(): boolean {
+            return !this.tabComponents.length;
+        },
+        tabProps(): Record<string, any> {
+            const {docTitle, docIcon, docImageDimensions} = this;
+            return {docTitle, docIcon, docImageDimensions};
+        },
     },
     props: {
-        header: {
-            type: Boolean,
-            default: true
-        },
-        leftpanel: {
-            type: Boolean,
-            default: true
-        },
         docTitle: {
             type: String,
         },
         docIcon: {
             type: String,
-        },
-        doc: {
-            type: Boolean,
-            default: true
         },
         docImageDimensions: {
             type: Object,
@@ -120,6 +147,6 @@ export default defineComponent({
                 height: 40,
             })
         }
-    }
+    },
 });
 </script>

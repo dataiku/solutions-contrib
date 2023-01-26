@@ -1,10 +1,6 @@
 <template>
-    <QHeader v-show="isTabSelected" bordered class="bg-white bs-header" v-if="$slots.header">
-        <slot name="header"></slot>
-    </QHeader>
-    <BsDrawer v-show="isTabSelected" :expand-btn="$slots.leftpanel">
-        <slot name="leftpanel"></slot>
-    </BsDrawer>
+    <BsHeader v-if="usingSlotHeader"><slot name="header"></slot></BsHeader>
+    <BsDrawer v-if="usingSlotLeftPanel"><slot name="leftpanel"></slot></BsDrawer>
     <QPageContainer v-show="isTabSelected">
         <QPage>
             <div class="content">
@@ -17,7 +13,7 @@
                     </QBtn>
                     <QCard class="doc-content flex row" v-if="openDoc">
                         <div class="flex row items-center q-gutter-sm q-mb-lg">
-                            <img :src="docIcon" :width="docImageDimensions.width" :height="docImageDimensions.height"   v-if="docIcon">
+                            <img v-if="docIcon" :src="docIcon" :width="docImageDimensions.width" :height="docImageDimensions.height">
                             <span class="dku-large-title-sb">{{ docTitle }}</span>
                         </div>
                         <div class="doc-body">
@@ -37,16 +33,24 @@
 
 <script lang="ts">
 import { QDrawer, QPageContainer, QPage, QCard, QBtn, QHeader } from "quasar"
-import { defineComponent, PropType, ComputedRef } from "vue";
+import { defineComponent, PropType, computed } from "vue";
+
 import BsDrawer from './BsDrawer.vue';
+import BsHeader from './BsHeader.vue';
+
+import CheckSlotComponentsExtension from './CheckSlotComponentsExtension.vue';
 
 import { SluggerSingleton } from './Slugger';
 const slugger = new SluggerSingleton("tabs");
 
+import { Tab } from "./bsLayoutTypes";
+
 export default defineComponent({
     name: "BsTab",
+    extends: CheckSlotComponentsExtension,
     components: {
         BsDrawer,
+        BsHeader,
         QDrawer,
         QPageContainer,
         QPage,
@@ -57,13 +61,19 @@ export default defineComponent({
     data() {
         return {
             index: 0,
+            tabId: slugger.slug(this.name),
             isActive: false,
             openDoc: false,
-            tabId: slugger.slug(this.name),
+            drawerExpanded: false,
         };
     },
     expose: ["name", "icon"],
     inject: ["$tabs", "$selectedTab"],
+    provide() {
+        return {
+            $isTabSelected: computed(() => this.isTabSelected),
+        }
+    },
     props: {
         name: {
             type: String,
@@ -93,27 +103,46 @@ export default defineComponent({
     },
     computed: {
         isTabSelected() {
-            return this.selectedTab === this.tabId;
+            return this.selectedTab?.tabId === this.tabId;
         },
         selectedTab() {
-            return (this as any as {$selectedTab: ComputedRef<string>}).$selectedTab.value;
+            return (this as any as {$selectedTab: Tab}).$selectedTab;
         },
         tabs() {
-            return (this as any as {$tabs: string[]}).$tabs;
-        }
-    },
-    watch: {
-        isTabSelected(newVal: boolean) {
-            console.log(`${this.tabId}: ${newVal}`);
-        }
+            return (this as any as {$tabs: Tab[]}).$tabs;
+        },
+        tab() {
+            const { tabId, drawer, header } = this;
+            return {
+                tabId, drawer, header, drawerExpanded: computed(() => this.drawerExpanded)
+            } as Tab;
+        },
+        header() {
+            return this.usingComponentHeader || this.usingSlotHeader;
+        },
+        drawer() {
+            return this.usingComponentLeftPanel || this.usingSlotLeftPanel;
+        },
+        usingComponentHeader() {
+            return !!this.getSlotComponents(BsHeader.name).length;
+        },
+        usingComponentLeftPanel() {
+            return !!this.getSlotComponents(BsDrawer.name).length;
+        },
+        usingSlotHeader() {
+            return (!this.usingComponentHeader) && (!!this.$slots.header);
+        },
+        usingSlotLeftPanel() {
+            return (!this.usingComponentLeftPanel) && (!!this.$slots.leftpanel);
+        },
     },
     methods: {
         toggleDoc() {
             this.openDoc = !this.openDoc;
         },
         registerTab() {
-            this.tabs.push(this.tabId);
-        }
+            this.tabs.push(this.tab);
+        },
     },
     mounted() {
         this.registerTab();
@@ -121,12 +150,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
-
-.bs-header {
-    color: black;
-}
-
+<style lang="scss" scoped>
 .btn-solution-text {
     color: #000000;
     font-family: 'SourceSansPro';

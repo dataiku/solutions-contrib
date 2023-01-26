@@ -1,35 +1,25 @@
 <template>
-    <div
-        v-if="expandBtn"
-        :style="{ 'left' : leftDist}"
-        @click="toggleLeftPanel"
-        class="toggle-left-button"
-    >
-        <img src="../../assets/images/BtnImg.svg">
-    </div>
-    <QDrawer
-        :mini="leftPanelHidden"
-        :mini-width="miniWidth"
-        :width="expandedWidth"
-        side="left"
-        behavior="desktop"
-        :model-value="true"
-        bordered
-    >
-        <slot></slot>
-    </QDrawer>
+    <Teleport v-if="drawerMounted" to=".q-drawer">
+        <div v-show="showComponent" class="bs-drawer-container">
+            <slot></slot>
+        </div>
+    </Teleport>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { QDrawer } from "quasar";
+
+import BsTabChild from './BsTabChild.vue';
+
 export default defineComponent({
+    extends: BsTabChild,
     name: "BsDrawer",
     components: {
-        QDrawer
+        QDrawer,
     },
     data() {
         return {
-            leftPanelDisplayed: false,
+            leftPanelExpanded: false,
         };
     },
     props: {
@@ -46,34 +36,26 @@ export default defineComponent({
             default: 300
         }
     },
+    inject: ["$drawerMounted"],
     computed: {
-        expandedWidth() {
-            return this.miniWidth + this.panelWidth;
-        },
-        leftDist() {
-            const dist = this.leftPanelDisplayed ? this.expandedWidth : this.miniWidth;
-            return `${dist}px`;
-        },
-        leftPanelHidden() {
-            return !this.leftPanelDisplayed;
+        drawerMounted() {
+            return (this as any as {$drawerMounted: boolean}).$drawerMounted;
         },
     },
     methods: {
         toggleLeftPanel() {
-            this.leftPanelDisplayed = !this.leftPanelDisplayed;
+            this.leftPanelExpanded = !this.leftPanelExpanded;
         },
     },
 });
 </script>
 
 <style scoped lang="scss">
-.toggle-left-button {
-    cursor: pointer;
-    margin: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    position: fixed;
-    z-index: 99;
+
+.bs-drawer-container {
+    position: absolute;
+    inset: 0;
+    left: unset;
+    width: 300px;
 }
 </style>
