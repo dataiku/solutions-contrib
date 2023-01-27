@@ -1,6 +1,6 @@
 <template>
     <Teleport v-if="qLayoutMounted" to=".q-drawer">
-        <div v-show="showComponent" class="bs-drawer-container">
+        <div v-show="showComponent" class="bs-drawer-container" :style="drawerStyles">
             <slot></slot>
         </div>
     </Teleport>
@@ -22,25 +22,17 @@ export default defineComponent({
             leftPanelExpanded: false,
         };
     },
-    inject: ['leftPanelWidth'],
+    inject: ["$leftPanelWidth"],
     props: {
         expandBtn: {
             type: [Boolean, Object],
             default: false
         },
-        collapsedWidth: {
-            type: Number,
-            default: 50
-        },
-        panelWidth: {
-            type: Number,
-            default: 300
-        },
     },
     computed: {
         drawerStyles() {
             return {
-                '--bs-panel-width': this.panelWidth
+                '--bs-panel-width': `${this.leftPanelWidth}px`,
             };
         },
         leftPanelWidth() {
@@ -61,6 +53,6 @@ export default defineComponent({
     position: absolute;
     inset: 0;
     left: unset;
-    width: 300px;
+    width: var(--bs-panel-width);
 }
 </style>
