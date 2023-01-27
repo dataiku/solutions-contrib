@@ -95,7 +95,6 @@ export default defineComponent({
         const provideStatic = this.provideStatic([
             "tabs",
             // menu props
-            "tabMenuWidth",
             "leftPanelWidth",
         ])
         const provideComputed = this.provideComputed([

@@ -1,9 +1,8 @@
 <template>
-<Teleport v-if="qLayoutMounted" to=".q-layout">
+<Teleport v-if="qLayoutMounted" to=".q-drawer">
     <div
         v-show="showComponent"
         @click="toggleLeftPanel"
-        :style="{ 'left' : leftDist}"
         class="toggle-left-button"
     >
         <img src="../../assets/images/BtnImg.svg">
@@ -29,34 +28,18 @@ export default defineComponent({
             this.$emit("update:modelValue", !this.modelValue);
         },
     },
-    inject: ["$tabMenuWidth", "$leftPanelWidth"],
-    computed: {
-        expandedWidth() {
-            return this.tabMenuWidth + this.leftPanelWidth;
-        },
-        leftDist() {
-            const dist = this.modelValue ? this.expandedWidth : this.tabMenuWidth;
-            return `${dist}px`;
-        },
-        tabMenuWidth() {
-            return (this as any as {$tabMenuWidth: number}).$tabMenuWidth;
-        },
-        leftPanelWidth() {
-            return (this as any as {$leftPanelWidth: number}).$leftPanelWidth;
-        },
-    }
 });
 </script>
 
 <style scoped lang="scss">
 .toggle-left-button {
     cursor: pointer;
-    position: fixed;
+    position: absolute;
     margin: 0;
     top: 50%;
-    transform: translateY(-50%);
+    right: 0;
+    transform: translate(100%, -50%);
     -ms-transform: translateY(-50%);
-    position: fixed;
     z-index: 99;
 }
 </style>
