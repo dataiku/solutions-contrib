@@ -117,8 +117,8 @@ export default defineComponent({
             return this.selectedTab?.drawer && this.selectedTab?.drawerExpanded;
         },
         defaultSlot() {
-            const slotFactory = this.$slots.default;
-            return slotFactory ? slotFactory() : [];
+            const getSlotContents = this.$slots.default;
+            return getSlotContents ? getSlotContents() : [];
         },
         tabComponents(): BsTabInternalInstance[] {
             const tabComponentName = BsTab.name;
