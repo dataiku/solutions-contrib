@@ -9,8 +9,9 @@
     -->
     <BsLayoutDrawer
         @vnode-mounted="drawerMounted = true"
-        :expandable="selectedTab?.drawer"
-        :expand="selectedTab?.drawerExpanded"
+        :expand="expandCurrentTab"
+        :collapsed-width="tabMenuWidth"
+        :panel-width="leftPanelWidth"
     ></BsLayoutDrawer>
     <BsLayoutHeader
         @vnode-mounted="headerMounted = true"
@@ -54,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import { QLayout, QBtn } from 'quasar';
 
 import { InternalInstanceType, Tab } from './bsLayoutTypes'
@@ -66,13 +67,12 @@ import BsLayoutDrawer from './BsLayoutDrawer.vue';
 import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
 
-import CheckSlotComponentsExtension from './CheckSlotComponentsExtension.vue';
-
-
+import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
+import ProvideMixin from './ProvideMixin.vue';
     
 export default defineComponent({
     name:"BsLayoutDefault",
-    extends: CheckSlotComponentsExtension,
+    mixins: [CheckSlotComponentsMixin, ProvideMixin],
     components: {
         BsTab,
         BsMenuTab,
@@ -92,21 +92,29 @@ export default defineComponent({
         }  
     },
     provide() {
-        return {
-            $tabs: this.tabs,
-            $selectedTab: computed(() => this.selectedTab),
-            $headerMounted: computed(() => this.headerMounted),
-            $drawerMounted: computed(() => this.drawerMounted),
-        }; 
+        const provideStatic = this.provideStatic([
+            "tabs",
+            "tabMenuWidth",
+            "leftPanelWidth",
+        ])
+        const provideComputed = this.provideComputed([
+            "selectedTab",
+            "qLayoutMounted",
+        ])
+        const provide = {...provideComputed, ...provideStatic};
+        return provide;
     },
     methods: {
         getTabIndex(selectedTabId: string) {
             return this.tabs.findIndex(({tabId}) => selectedTabId === tabId);
-        }
+        },
     },
     computed: {
-        selectedTab() {
-            return this.tabs[this.tabIndex];
+        selectedTab(): Tab | undefined {
+            return this.tabs[this.tabIndex] as any;
+        },
+        expandCurrentTab() {
+            return this.selectedTab?.drawer && this.selectedTab?.drawerExpanded;
         },
         defaultSlot() {
             const slotFactory = this.$slots.default;
@@ -132,6 +140,9 @@ export default defineComponent({
             const {docTitle, docIcon, docImageDimensions} = this;
             return {docTitle, docIcon, docImageDimensions};
         },
+        qLayoutMounted() {
+            return this.drawerMounted && this.headerMounted;
+        }
     },
     props: {
         docTitle: {
@@ -146,7 +157,15 @@ export default defineComponent({
                 width: 36,
                 height: 40,
             })
-        }
+        },
+        tabMenuWidth: {
+            type: Number,
+            default: 50,
+        },
+        leftPanelWidth: {
+            type: Number,
+            default: 300,
+        },
     },
 });
 </script>

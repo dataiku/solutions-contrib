@@ -1,6 +1,10 @@
 <template>
     <BsHeader v-if="usingSlotHeader"><slot name="header"></slot></BsHeader>
     <BsDrawer v-if="usingSlotLeftPanel"><slot name="leftpanel"></slot></BsDrawer>
+    <BsDrawerBtn
+        v-if="drawer"
+        v-model="drawerExpanded"
+    ></BsDrawerBtn>
     <QPageContainer v-show="isTabSelected">
         <QPage>
             <div class="content">
@@ -36,9 +40,11 @@ import { QDrawer, QPageContainer, QPage, QCard, QBtn, QHeader } from "quasar"
 import { defineComponent, PropType, computed } from "vue";
 
 import BsDrawer from './BsDrawer.vue';
+import BsDrawerBtn from './BsDrawerBtn.vue';
 import BsHeader from './BsHeader.vue';
 
-import CheckSlotComponentsExtension from './CheckSlotComponentsExtension.vue';
+import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
+import ProvideMixin from './ProvideMixin.vue';
 
 import { SluggerSingleton } from './Slugger';
 const slugger = new SluggerSingleton("tabs");
@@ -47,9 +53,10 @@ import { Tab } from "./bsLayoutTypes";
 
 export default defineComponent({
     name: "BsTab",
-    extends: CheckSlotComponentsExtension,
+    mixins: [CheckSlotComponentsMixin, ProvideMixin],
     components: {
         BsDrawer,
+        BsDrawerBtn,
         BsHeader,
         QDrawer,
         QPageContainer,
@@ -70,9 +77,7 @@ export default defineComponent({
     expose: ["name", "icon"],
     inject: ["$tabs", "$selectedTab"],
     provide() {
-        return {
-            $isTabSelected: computed(() => this.isTabSelected),
-        }
+        return this.provideComputed(['isTabSelected']);
     },
     props: {
         name: {
@@ -99,7 +104,7 @@ export default defineComponent({
                 width: 36,
                 height: 40,
             })
-        }
+        },
     },
     computed: {
         isTabSelected() {
@@ -114,7 +119,7 @@ export default defineComponent({
         tab() {
             const { tabId, drawer, header } = this;
             return {
-                tabId, drawer, header, drawerExpanded: computed(() => this.drawerExpanded)
+                tabId, drawer, header, drawerExpanded: computed(() => this.drawerExpanded) as any
             } as Tab;
         },
         header() {

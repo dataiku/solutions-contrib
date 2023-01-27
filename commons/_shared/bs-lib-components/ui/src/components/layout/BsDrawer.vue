@@ -1,5 +1,5 @@
 <template>
-    <Teleport v-if="drawerMounted" to=".q-drawer">
+    <Teleport v-if="qLayoutMounted" to=".q-drawer">
         <div v-show="showComponent" class="bs-drawer-container">
             <slot></slot>
         </div>
@@ -12,8 +12,8 @@ import { QDrawer } from "quasar";
 import BsTabChild from './BsTabChild.vue';
 
 export default defineComponent({
-    extends: BsTabChild,
     name: "BsDrawer",
+    extends: BsTabChild,
     components: {
         QDrawer,
     },
@@ -22,28 +22,34 @@ export default defineComponent({
             leftPanelExpanded: false,
         };
     },
+    inject: ['leftPanelWidth'],
     props: {
         expandBtn: {
             type: [Boolean, Object],
             default: false
         },
-        miniWidth: {
+        collapsedWidth: {
             type: Number,
             default: 50
         },
         panelWidth: {
             type: Number,
             default: 300
-        }
+        },
     },
-    inject: ["$drawerMounted"],
     computed: {
-        drawerMounted() {
-            return (this as any as {$drawerMounted: boolean}).$drawerMounted;
+        drawerStyles() {
+            return {
+                '--bs-panel-width': this.panelWidth
+            };
+        },
+        leftPanelWidth() {
+            return (this as any as {$leftPanelWidth: number}).$leftPanelWidth;
         },
     },
     methods: {
         toggleLeftPanel() {
+            this.$emit("model")
             this.leftPanelExpanded = !this.leftPanelExpanded;
         },
     },
@@ -51,7 +57,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
 .bs-drawer-container {
     position: absolute;
     inset: 0;
