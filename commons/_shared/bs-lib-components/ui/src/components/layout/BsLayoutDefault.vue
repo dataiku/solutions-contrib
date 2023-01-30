@@ -12,6 +12,7 @@
         :expand="expandCurrentTab"
         :collapsed-width="tabMenuWidth"
         :panel-width="leftPanelWidth"
+        :mini="isTabsMultiple"
     ></BsLayoutDrawer>
     <BsLayoutHeader
         @vnode-mounted="headerMounted = true"

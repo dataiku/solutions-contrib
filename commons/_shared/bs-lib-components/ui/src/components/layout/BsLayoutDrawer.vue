@@ -1,13 +1,12 @@
 <template>
 <QDrawer
-    :mini="collapsed"
+    v-bind="drawerProps"
     :mini-width="collapsedWidth"
     :width="expandedWidth"
     side="left"
     behavior="desktop"
-    :model-value="true"
     bordered
->
+    >
 </QDrawer>
 </template>
 
@@ -32,15 +31,33 @@ export default defineComponent({
         expand: {
             type: Boolean,
             default: false,
-        }
+        },
+        mini: {
+            type: Boolean,
+            default: false,
+        },
     },
     computed: {
         collapsed() {
             return !this.expand;
         },
         expandedWidth() {
-            return this.collapsedWidth + this.panelWidth;
+            return (+this.mini * this.collapsedWidth) + this.panelWidth;
         },
+        miniDrawerProps() {
+            return {
+                mini: this.collapsed,
+                modelValue: true
+            } as Record<string, any>;
+        },
+        defaultDrawerProps() {
+            return {
+                modelValue: this.collapsed,
+            } as Record<string, any>;
+        },
+        drawerProps() {
+            return this.mini ? this.miniDrawerProps : this.defaultDrawerProps;
+        }
     },
 });
 </script>
@@ -48,5 +65,14 @@ export default defineComponent({
 <style scoped lang="scss">
 ::v-deep .q-drawer {
     box-sizing: content-box;
+    z-index: 3000;
+
+    &.q-drawer--left.q-drawer--bordered {
+        transition: border-right .25s;
+        border-right: .5px solid #ccc;
+        &.q-drawer--mini {
+            border-right: .5px solid #00000000;
+        }
+    }
 }
 </style>

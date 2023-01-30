@@ -35,6 +35,7 @@ export default defineComponent({
 .toggle-left-button {
     cursor: pointer;
     position: absolute;
+    visibility: visible;
     margin: 0;
     top: 50%;
     right: 0;
