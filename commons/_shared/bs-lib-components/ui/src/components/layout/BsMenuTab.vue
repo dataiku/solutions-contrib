@@ -2,6 +2,7 @@
     <q-tab 
         :name="tabIndex"
         :icon="icon"
+        :ripple="false"
     >
         <q-tooltip 
             :offset="[9, 10]"
