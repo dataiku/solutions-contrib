@@ -45,10 +45,9 @@
         v-bind="tabProps"
         v-if="noTabsUsed"
     >
-        <template v-if="$slots.header" #header><slot name="header"></slot></template>
-        <template v-if="$slots.leftpanel" #leftpanel><slot name="leftpanel"></slot></template>
-        <template v-if="$slots.documentation" #documentation><slot name="documentation"></slot></template>
-        <template v-if="$slots.content" #content><slot name="content"></slot></template>
+        <template v-for="name in activeTabSlots" v-slot:[name]>
+            <slot :name="name"></slot>
+        </template>
     </BsTab>
     <slot></slot>
 </QLayout>
@@ -89,6 +88,12 @@ export default defineComponent({
 
             headerMounted: false,
             drawerMounted: false,
+            tabSlotNames: [
+                'header',
+                'leftpanel',
+                'documentation',
+                'content',
+            ]
         }  
     },
     provide() {
@@ -110,6 +115,9 @@ export default defineComponent({
         },
     },
     computed: {
+        activeTabSlots() {
+            return Object.keys(this.$slots).filter(slot => this.tabSlotNames.includes(slot));
+        },
         selectedTab(): Tab | undefined {
             return this.tabs[this.tabIndex] as any;
         },
