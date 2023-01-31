@@ -5,15 +5,15 @@
         v-if="drawer"
         v-model="drawerExpanded"
     ></BsDrawerBtn>
+    <BsDocumentation
+        v-if="usingSlotDocumentation"
+        v-model="openDoc"
+    >
+        <slot name="documentation"></slot>
+    </BsDocumentation>
     <QPageContainer v-show="isTabSelected">
-        <QPage>
-            <div class="content">
-                <BsDocumentation
-                    v-if="usingSlotDocumentation"
-                    v-model="openDoc"
-                >
-                    <slot name="documentation"></slot>
-                </BsDocumentation>
+        <QPage @vnode-mounted="onQPageMounted">
+            <div class="content" :id="tabContentId">
                 <BsContent v-if="usingSlotContent">
                     <slot name="content"></slot>                
                 </BsContent>
@@ -64,15 +64,17 @@ export default defineComponent({
             isActive: false,
             openDoc: false,
             drawerExpanded: false,
+            qPageMounted: false,
         };
     },
-    expose: ["name", "icon"],
     inject: ["$tabs", "$selectedTab"],
     provide() {
         return this.provideComputed([
             'isTabSelected',
             // documention
             'tabDocsProps',
+            'tabContentId',
+            'qPageMounted',
         ]);
     },
     props: {
@@ -82,7 +84,7 @@ export default defineComponent({
         },
         icon: {
             type: String,
-            default: "help"
+            default: "tab"
         },
         docTitle: {
             type: String,
@@ -95,6 +97,9 @@ export default defineComponent({
         },
     },
     computed: {
+        tabContentId() {
+            return this.getTabContentId(this.tabId);
+        },
         tabDocsProps(): Partial<DocsProps> {
             return {
                 docImageDimensions: this.docImageDimensions,
@@ -112,9 +117,9 @@ export default defineComponent({
             return (this as any as {$tabs: Tab[]}).$tabs;
         },
         tab() {
-            const { tabId, drawer, header } = this;
+            const { tabId, drawer, header, name, icon } = this;
             return {
-                tabId, drawer, header, drawerExpanded: computed(() => this.drawerExpanded) as any
+                tabId, drawer, header, name, icon, drawerExpanded: computed(() => this.drawerExpanded) as any
             } as Tab;
         },
         header() {
@@ -152,7 +157,15 @@ export default defineComponent({
         registerTab() {
             this.tabs.push(this.tab);
         },
+        getTabContentId(tabId: string) {
+            return `tab-content-id-${tabId}`;
+        },
+        onQPageMounted() {
+            this.qPageMounted = true;
+            this.$emit('mounted:q-page');
+        }
     },
+    emits: ['mounted:q-page'],
     mounted() {
         this.registerTab();
     }

@@ -25,11 +25,11 @@
         Sidebar menu with tabs selection
     -->
     <BsMenuTabs
-        v-if="isTabsMultiple"
+        v-if="mounted && isTabsMultiple"
         v-model="tabIndex"
     >
         <BsMenuTab 
-            v-for="({name, icon}, index) in tabsProps"
+            v-for="({name, icon}, index) in tabs"
             :name="name"
             :icon="icon"
             :tab-index="index"
@@ -42,9 +42,10 @@
 
         If a user decides not to use a tab, the content will move here
     -->
-    <BsTab 
-        v-bind="layoutDocsProps"
-        v-if="noTabsUsed"
+    <BsTab
+        v-if="mounted && defaultTabUsed"
+        @mounted:q-page="qPageMounted = true"
+        :name="defaultLayoutTabName"
     >
         <template v-for="name in activeTabSlots" v-slot:[name]>
             <slot :name="name"></slot>
@@ -58,8 +59,7 @@
 import { defineComponent, PropType } from 'vue';
 import { QLayout } from 'quasar';
 
-import { DocsProps, ImageDimensions, InternalInstanceType, Tab } from './bsLayoutTypes'
-type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
+import { DocsProps, ImageDimensions, Tab } from './bsLayoutTypes'
 
 import BsMenuTabs from './BsMenuTabs.vue';
 import BsMenuTab from './BsMenuTab.vue';
@@ -67,12 +67,14 @@ import BsLayoutDrawer from './BsLayoutDrawer.vue';
 import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
 
-import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
-    
+
+import { Slugger } from './Slugger';
+const slugger = new Slugger();
+
 export default defineComponent({
     name:"BsLayoutDefault",
-    mixins: [CheckSlotComponentsMixin, ProvideMixin],
+    mixins: [ProvideMixin],
     components: {
         BsTab,
         BsMenuTab,
@@ -85,15 +87,17 @@ export default defineComponent({
         return {
             tabIndex: 0,
             tabs: [] as Tab[],
-
+            mounted: false,
             headerMounted: false,
             drawerMounted: false,
+            qPageMounted: false,
             tabSlotNames: [
                 'header',
                 'leftpanel',
                 'documentation',
                 'content',
-            ]
+            ],
+            defaultLayoutTabName: "Layout Default"
         }  
     },
     provide() {
@@ -101,12 +105,19 @@ export default defineComponent({
             "tabs",
             // menu props
             "leftPanelWidth",
-        ])
-        const provideComputed = this.provideComputed([
+        ]);
+        let provideComputed = this.provideComputed([
             "selectedTab",
             "qLayoutMounted",
             "layoutDocsProps",
-        ])
+        ]);
+        if (this.defaultTabUsed) {
+            const provideVirtualTab = this.provideComputed([
+                'tabContentId',
+                'qPageMounted',
+            ]);
+            provideComputed = {...provideComputed, ...provideVirtualTab};
+        }
         const provide = {...provideComputed, ...provideStatic};
         return provide;
     },
@@ -116,6 +127,10 @@ export default defineComponent({
         },
     },
     computed: {
+        tabContentId() {
+            const sluggedDefaultTabName = slugger.slug(this.defaultLayoutTabName);
+            return `tab-content-id-${sluggedDefaultTabName}`;
+        },
         activeTabSlots() {
             return Object.keys(this.$slots).filter(slot => this.tabSlotNames.includes(slot));
         },
@@ -125,25 +140,11 @@ export default defineComponent({
         expandCurrentTab() {
             return this.selectedTab?.drawer && this.selectedTab?.drawerExpanded;
         },
-        defaultSlot() {
-            const getSlotContents = this.$slots.default;
-            return getSlotContents ? getSlotContents() : [];
-        },
-        tabComponents(): BsTabInternalInstance[] {
-            const tabComponentName = BsTab.name;
-            return this.getSlotComponents(tabComponentName) as any;
-        },
-        tabsProps() {
-            return this.tabComponents.map(({ props }) => {
-                const {name, icon} = {...props};
-                return {name, icon};
-            });
-        },
         isTabsMultiple(): boolean {
-            return this.tabComponents.length > 1;
+            return this.tabs.length > 1;
         },
-        noTabsUsed(): boolean {
-            return !this.tabComponents.length;
+        defaultTabUsed(): boolean {
+            return this.tabs.length < 2;
         },
         layoutDocsProps(): Partial<DocsProps> {
             const {docTitle, docIcon, docImageDimensions} = this;
@@ -172,5 +173,8 @@ export default defineComponent({
             default: 300,
         },
     },
+    mounted() {
+        this.mounted = true;
+    }
 });
 </script>

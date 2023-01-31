@@ -4,6 +4,8 @@ type Rename<T, K extends keyof T, N extends string> = Pick<T, Exclude<keyof T, K
 export type InternalInstanceType<T extends ComponentPublicInstance> = Rename<T, "$props", "props">;
 
 export interface Tab {
+    name: string;
+    icon: string;
     tabId: string;
     drawer: boolean;
     header: boolean;

@@ -1,7 +1,7 @@
 <template>
-    <q-page padding class="flex flex-center">
+    <div padding class="flex flex-center">
         <CodeSourceDisplay :file="file"></CodeSourceDisplay>
-    </q-page>
+    </div>
 </template>
 <script>
     import { useRoute } from 'vue-router';

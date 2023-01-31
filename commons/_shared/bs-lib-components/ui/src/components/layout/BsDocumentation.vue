@@ -1,50 +1,53 @@
 <template>
-<QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc()">
-    <div class="row items-center q-gutter-sm no-wrap">
-        <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
-        <span class="btn-solution-text">Dataiku Solutions</span>
-    </div>
-</QBtn>
-<QCard
-    :style="docContentStyleVariables"
-    :class="[
-        'doc-content',
-        'flex',
-        'row',
-        docHidden && 'doc-hidden',
-        docDisabled && 'doc-disabled'
-    ]"
->
-    <div
-        class="flex row items-center q-gutter-sm q-mb-lg"
+<BsTabPageChildWrapper>
+    <QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc()">
+        <div class="row items-center q-gutter-sm no-wrap">
+            <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
+            <span class="btn-solution-text">Dataiku Solutions</span>
+        </div>
+    </QBtn>
+    <QCard
+        :style="docContentStyleVariables"
+        :class="[
+            'doc-content',
+            'flex',
+            'row',
+            docHidden && 'doc-hidden',
+            docDisabled && 'doc-disabled'
+        ]"
     >
-        <img v-if="mDocsProps.docIcon" :src="mDocsProps.docIcon" :width="mDocsProps.docImageDimensions.width" :height="mDocsProps.docImageDimensions.height">
-        <span class="dku-large-title-sb">
-            <slot v-if="$slots.title" name="title"></slot>
-            {{$slots.title ? "" : mDocsProps.docTitle}}
-        </span>
-    </div>
-    <div class="doc-body">
-        <slot></slot>
-    </div>
-    <div class="doc-footer flex row items-center">
-        <span class="doc-footer__icon"><img src="../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
-        <span class="doc-footer__text dku-tiny-text-sb">Dataiku Solutions</span>
-    </div>
-</QCard>
+        <div
+            class="flex row items-center q-gutter-sm q-mb-lg"
+        >
+            <img v-if="mDocsProps.docIcon" :src="mDocsProps.docIcon" :width="mDocsProps.docImageDimensions.width" :height="mDocsProps.docImageDimensions.height">
+            <span class="dku-large-title-sb">
+                <slot v-if="$slots.title" name="title"></slot>
+                {{$slots.title ? "" : mDocsProps.docTitle}}
+            </span>
+        </div>
+        <div class="doc-body">
+            <slot></slot>
+        </div>
+        <div class="doc-footer flex row items-center">
+            <span class="doc-footer__icon"><img src="../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
+            <span class="doc-footer__text dku-tiny-text-sb">Dataiku Solutions</span>
+        </div>
+    </QCard>
+</BsTabPageChildWrapper>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { QCard, QBtn } from 'quasar';
+import BsTabPageChildWrapper from './BsTabPageChildWrapper.vue'
 
 import { ImageDimensions, DocsProps } from "./bsLayoutTypes";
-
 export default defineComponent({
     name: "BsDocumentation",
     components: {
         QCard,
         QBtn,
+        BsTabPageChildWrapper,
     },
     data() {
         return {
@@ -76,7 +79,8 @@ export default defineComponent({
             type: Object as PropType<ImageDimensions>
         },
     },
-    inject: [
+    inject: [    
+        // docs props
             '$tabDocsProps',
             '$layoutDocsProps',
     ],
@@ -100,11 +104,11 @@ export default defineComponent({
             });
         },
         tabDocsProps() {
-            const props = (this as any as {$tabDocsProps: Partial<DocsProps>})?.$tabDocsProps;
+            const props = (this as any as {$tabDocsProps: Partial<DocsProps>})?.$tabDocsProps || {};
             return this.clearObjectFromUndefined(props);
         },
         layoutDocsProps() {
-            const props = (this as any as {$layoutDocsProps: Partial<DocsProps>})?.$layoutDocsProps;
+            const props = (this as any as {$layoutDocsProps: Partial<DocsProps>})?.$layoutDocsProps || {};
             return this.clearObjectFromUndefined(props);
         },
         docContentStyleVariables() {
@@ -144,16 +148,10 @@ export default defineComponent({
             setTimeout(() => {
                 this.docHidden = this.closed;
             }, cssReactionDelay * +this.open);
-        }
+        },
     },
     mounted() {
         this.open = this.modelValue;
-        console.log({
-            layout: this.layoutDocsProps,
-            tab: this.tabDocsProps,
-            docs: this.docsProps,
-            default: this.defaultDocsPropValues,
-        })
     }
 });
 </script>
