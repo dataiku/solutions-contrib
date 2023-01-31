@@ -6,9 +6,9 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-
-  background: #F5F5F5;
+  background: #fff;
   z-index: 10000;
+  border-right: 1px solid #CAC5C5;
 }
 
 .tab-name-tooltip {

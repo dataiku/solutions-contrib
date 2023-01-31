@@ -4,6 +4,7 @@
             :model-value="modelValue"
             @update:model-value="(val) => $emit('update:model-value', val)"
             vertical
+            class="text-primary"
         >
             <slot></slot>
         </q-tabs>
@@ -37,13 +38,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 ::v-deep .q-tabs--vertical .q-tab {
-    --bs-menu-tab-highlighted-color: #FFF;
     padding: 0 5px;
     scale: -1 1;
+    transition: background-color .345s;
+    
     &.q-tab--active {
-        background: var(--bs-menu-tab-highlighted-color);
+        background-color: #3B99FC19
     }
-
     .q-icon {
         --tab-icon-size: 20px;
         

@@ -68,11 +68,7 @@ export default defineComponent({
     z-index: 3000;
 
     &.q-drawer--left.q-drawer--bordered {
-        transition: border-right .25s;
         border-right: .5px solid #ccc;
-        &.q-drawer--mini {
-            border-right: .5px solid #00000000;
-        }
     }
 }
 </style>
