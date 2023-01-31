@@ -1,5 +1,5 @@
 <template>
-<QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc">
+<QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc()">
     <div class="row items-center q-gutter-sm no-wrap">
         <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
         <span class="btn-solution-text">Dataiku Solutions</span>
@@ -15,7 +15,9 @@
         docDisabled && 'doc-disabled'
     ]"
 >
-    <div class="flex row items-center q-gutter-sm q-mb-lg">
+    <div
+        class="flex row items-center q-gutter-sm q-mb-lg"
+    >
         <img v-if="icon" :src="icon" :width="imageDimensions.width" :height="imageDimensions.height">
         <span class="dku-large-title-sb">
             <slot v-if="$slots.title$" name="title"></slot>
@@ -109,9 +111,10 @@ export default defineComponent({
         },
     },
     methods: {
-        toggleDoc() {
-            this.open = !this.open;
-            this.$emit("update:model-value", this.open);
+        toggleDoc(active?: boolean) {
+            if (active === undefined) active = !this.open;
+            this.open = active;
+            this.$emit("update:model-value", active);
         },
     },
     watch: {
