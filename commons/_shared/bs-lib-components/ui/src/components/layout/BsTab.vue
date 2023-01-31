@@ -11,13 +11,12 @@
                 <BsDocumentation
                     v-if="usingSlotDocumentation"
                     v-model="openDoc"
-                    :doc-icon="docIcon"
-                    :doc-title="docTitle"
-                    :doc-image-dimensions="docImageDimensions"
                 >
                     <slot name="documentation"></slot>
                 </BsDocumentation>
-                <slot name="content"></slot>
+                <BsContent v-if="usingSlotContent">
+                    <slot name="content"></slot>                
+                </BsContent>
                 <slot></slot>
             </div>
         </QPage>
@@ -32,6 +31,7 @@ import BsDrawer from './BsDrawer.vue';
 import BsDrawerBtn from './BsDrawerBtn.vue';
 import BsHeader from './BsHeader.vue';
 import BsDocumentation from "./BsDocumentation.vue";
+import BsContent from "./BsContent.vue";
 
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
@@ -48,8 +48,9 @@ export default defineComponent({
         BsDrawer,
         BsDrawerBtn,
         BsHeader,
-        QDrawer,
         BsDocumentation,
+        BsContent,
+        QDrawer,
         QPageContainer,
         QPage,
         QCard,
@@ -134,6 +135,9 @@ export default defineComponent({
         usingComponentDocumantation() {
             return !!this.getSlotComponents(BsDocumentation.name).length;
         },
+        usingComponentContent() {
+            return !!this.getSlotComponents(BsContent.name).length;
+        },
         usingSlotHeader() {
             return (!this.usingComponentHeader) && (!!this.$slots.header);
         },
@@ -142,6 +146,9 @@ export default defineComponent({
         },
         usingSlotDocumentation() {
             return (!this.usingComponentDocumantation) && (!!this.$slots.documentation);
+        },
+        usingSlotContent() {
+            return (!this.usingComponentContent) && (!!this.$slots.content);
         },
     },
     methods: {
