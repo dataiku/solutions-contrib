@@ -39,7 +39,7 @@ import ProvideMixin from './ProvideMixin.vue';
 import { SluggerSingleton } from './Slugger';
 const slugger = new SluggerSingleton("tabs");
 
-import { Tab } from "./bsLayoutTypes";
+import { Tab, ImageDimensions, DocsProps } from "./bsLayoutTypes";
 
 export default defineComponent({
     name: "BsTab",
@@ -72,9 +72,7 @@ export default defineComponent({
         return this.provideComputed([
             'isTabSelected',
             // documention
-            'docIcon',
-            'docTitle',
-            'docImageDimensions',
+            'tabDocsProps',
         ]);
     },
     props: {
@@ -88,23 +86,22 @@ export default defineComponent({
         },
         docTitle: {
             type: String,
-            default: "Documantation"
         },
         docIcon: {
             type: String,
         },
         docImageDimensions: {
-            type: Object as PropType<{
-                width: number,
-                height: number,
-            }>,
-            default: () => ({
-                width: 36,
-                height: 40,
-            })
+            type: Object as PropType<ImageDimensions>
         },
     },
     computed: {
+        tabDocsProps(): Partial<DocsProps> {
+            return {
+                docImageDimensions: this.docImageDimensions,
+                docTitle: this.docTitle,
+                docIcon: this.docIcon,
+            }
+        },
         isTabSelected() {
             return this.selectedTab?.tabId === this.tabId;
         },

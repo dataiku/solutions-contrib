@@ -18,10 +18,10 @@
     <div
         class="flex row items-center q-gutter-sm q-mb-lg"
     >
-        <img v-if="icon" :src="icon" :width="imageDimensions.width" :height="imageDimensions.height">
+        <img v-if="mDocsProps.docIcon" :src="mDocsProps.docIcon" :width="mDocsProps.docImageDimensions.width" :height="mDocsProps.docImageDimensions.height">
         <span class="dku-large-title-sb">
-            <slot v-if="$slots.title$" name="title"></slot>
-            {{$slots.title ? "" : title}}
+            <slot v-if="$slots.title" name="title"></slot>
+            {{$slots.title ? "" : mDocsProps.docTitle}}
         </span>
     </div>
     <div class="doc-body">
@@ -38,6 +38,8 @@
 import { defineComponent, PropType } from 'vue';
 import { QCard, QBtn } from 'quasar';
 
+import { ImageDimensions, DocsProps } from "./bsLayoutTypes";
+
 export default defineComponent({
     name: "BsDocumentation",
     components: {
@@ -49,6 +51,14 @@ export default defineComponent({
             open: false,
             docDisabled: true,
             docHidden: true,
+            defaultDocsPropValues: {
+                docIcon: "help",
+                docTitle: "Documentation",
+                docImageDimensions: {
+                    width: 36,
+                    height: 40,
+                }
+            },
         };
     },
     props: {
@@ -63,46 +73,39 @@ export default defineComponent({
             type: String,
         },
         docImageDimensions: {
-            type: Object as PropType<{
-                width: number,
-                height: number,
-            }>
+            type: Object as PropType<ImageDimensions>
         },
     },
     inject: [
-            '$docIcon',
-            '$docTitle',
-            '$docImageDimensions',
+            '$tabDocsProps',
+            '$layoutDocsProps',
     ],
     computed: {
         closed() {
             return !this.open;
         },
-        icon() {
-            return this.docIcon || this.docIconProvided;
-        },
-        title() {
-            return this.docTitle || this.docTitleProvided;
-        },
-        imageDimensions() {
-            return this.docImageDimensions || this.docImageDimensionsProvided || {
-                width: 36,
-                height: 40,
+        mDocsProps(): DocsProps {
+            return {
+                ...this.defaultDocsPropValues,
+                ...this.layoutDocsProps,
+                ...this.tabDocsProps,
+                ...this.docsProps,
             };
         },
-        docIconProvided() {
-            return (this as any as {$docIcon: string})?.$docIcon;
+        docsProps(): Partial<DocsProps> {
+            return this.clearObjectFromUndefined({
+                docImageDimensions: this.docImageDimensions,
+                docTitle: this.docTitle,
+                docIcon: this.docIcon,
+            });
         },
-        docTitleProvided() {
-            return (this as any as {$docTitle: string})?.$docTitle;
+        tabDocsProps() {
+            const props = (this as any as {$tabDocsProps: Partial<DocsProps>})?.$tabDocsProps;
+            return this.clearObjectFromUndefined(props);
         },
-        docImageDimensionsProvided() {
-            return (this as any as {
-                $docImageDimensions: {
-                    width: number,
-                    height: number,
-                }
-            })?.$docImageDimensions;
+        layoutDocsProps() {
+            const props = (this as any as {$layoutDocsProps: Partial<DocsProps>})?.$layoutDocsProps;
+            return this.clearObjectFromUndefined(props);
         },
         docContentStyleVariables() {
             return {
@@ -115,6 +118,16 @@ export default defineComponent({
             if (active === undefined) active = !this.open;
             this.open = active;
             this.$emit("update:model-value", active);
+        },
+        clearObjectFromUndefined<T extends Object>(obj: T) {
+            const entries = Object.entries(obj);
+            return entries.reduce((clear: Record<string, any>, [key, value]) => {
+                if (value !== undefined) {
+                    clear[key] = value;
+                };
+                return clear;
+            }, {}) as Partial<T>;
+
         },
     },
     watch: {
@@ -135,6 +148,12 @@ export default defineComponent({
     },
     mounted() {
         this.open = this.modelValue;
+        console.log({
+            layout: this.layoutDocsProps,
+            tab: this.tabDocsProps,
+            docs: this.docsProps,
+            default: this.defaultDocsPropValues,
+        })
     }
 });
 </script>

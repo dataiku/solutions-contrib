@@ -43,7 +43,7 @@
         If a user decides not to use a tab, the content will move here
     -->
     <BsTab 
-        v-bind="tabProps"
+        v-bind="layoutDocsProps"
         v-if="noTabsUsed"
     >
         <template v-for="name in activeTabSlots" v-slot:[name]>
@@ -55,10 +55,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { QLayout, QBtn } from 'quasar';
+import { defineComponent, PropType } from 'vue';
+import { QLayout } from 'quasar';
 
-import { InternalInstanceType, Tab } from './bsLayoutTypes'
+import { DocsProps, ImageDimensions, InternalInstanceType, Tab } from './bsLayoutTypes'
 type BsTabInternalInstance = InternalInstanceType<InstanceType<typeof BsTab>>;
 
 import BsMenuTabs from './BsMenuTabs.vue';
@@ -80,7 +80,6 @@ export default defineComponent({
         BsLayoutDrawer,
         BsLayoutHeader,
         QLayout,
-        QBtn,
     },
     data() {
         return {
@@ -106,6 +105,7 @@ export default defineComponent({
         const provideComputed = this.provideComputed([
             "selectedTab",
             "qLayoutMounted",
+            "layoutDocsProps",
         ])
         const provide = {...provideComputed, ...provideStatic};
         return provide;
@@ -145,7 +145,7 @@ export default defineComponent({
         noTabsUsed(): boolean {
             return !this.tabComponents.length;
         },
-        tabProps(): Record<string, any> {
+        layoutDocsProps(): Partial<DocsProps> {
             const {docTitle, docIcon, docImageDimensions} = this;
             return {docTitle, docIcon, docImageDimensions};
         },
@@ -161,11 +161,7 @@ export default defineComponent({
             type: String,
         },
         docImageDimensions: {
-            type: Object,
-            default: () => ({
-                width: 36,
-                height: 40,
-            })
+            type: Object as PropType<ImageDimensions>,
         },
         tabMenuWidth: {
             type: Number,
