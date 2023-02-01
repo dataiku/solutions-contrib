@@ -1,21 +1,19 @@
 <template>
-    <BsHeader v-if="usingSlotHeader"><slot name="header"></slot></BsHeader>
-    <BsDrawer v-if="usingSlotLeftPanel"><slot name="leftpanel"></slot></BsDrawer>
-    <BsDrawerBtn
-        v-if="drawer"
-        v-model="drawerExpanded"
-    ></BsDrawerBtn>
-    <BsDocumentation
-        v-if="usingSlotDocumentation"
-        v-model="openDoc"
-    >
+    <BsHeader v-if="usingSlotHeader">
+        <slot name="header"></slot>
+    </BsHeader>
+    <BsDrawer v-if="usingSlotLeftPanel">
+        <slot name="leftpanel"></slot>
+    </BsDrawer>
+    <BsDrawerBtn v-if="drawer" v-model="drawerExpanded"></BsDrawerBtn>
+    <BsDocumentation v-if="usingSlotDocumentation" v-model="openDoc">
         <slot name="documentation"></slot>
     </BsDocumentation>
     <QPageContainer v-show="isTabSelected">
         <QPage @vnode-mounted="onQPageMounted">
             <div class="content" :id="tabContentId">
                 <BsContent v-if="usingSlotContent">
-                    <slot name="content"></slot>                
+                    <slot name="content"></slot>
                 </BsContent>
                 <slot></slot>
             </div>
@@ -25,7 +23,7 @@
 
 <script lang="ts">
 import { QDrawer, QPageContainer, QPage, QCard, QBtn, QHeader } from "quasar"
-import { defineComponent, PropType, computed } from "vue";
+import { defineComponent, PropType } from "vue";
 
 import BsDrawer from './BsDrawer.vue';
 import BsDrawerBtn from './BsDrawerBtn.vue';
@@ -111,18 +109,18 @@ export default defineComponent({
             return this.selectedTab?.tabId === this.tabId;
         },
         selectedTab() {
-            return (this as any as {$selectedTab: Tab}).$selectedTab;
+            return (this as any as { $selectedTab: Tab }).$selectedTab;
         },
         defaultDrawer() {
-            return (this as any as {$defaultDrawer: Tab}).$defaultDrawer;
+            return (this as any as { $defaultDrawer: Tab }).$defaultDrawer;
         },
         tabs() {
-            return (this as any as {$tabs: Tab[]}).$tabs;
+            return (this as any as { $tabs: Tab[] }).$tabs;
         },
         tab() {
             const { tabId, drawer, header, name, icon } = this;
             return {
-                tabId, drawer, header, name, icon, drawerExpanded: computed(() => this.drawerExpanded) as any
+                tabId, drawer, header, name, icon, drawerExpanded: this.createComputedFromKey("drawerExpanded") as any
             } as Tab;
         },
         header() {

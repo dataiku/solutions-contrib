@@ -9,8 +9,8 @@ export default defineComponent({
                 prefix?: string,
                 getter?: Function,
             }
-            ) {
-            const {prefix, getter} = {
+        ) {
+            const { prefix, getter } = {
                 prefix: '$',
                 getter: (key: string) => this[key as (keyof typeof this)],
                 ...options
@@ -30,10 +30,10 @@ export default defineComponent({
                 prefix?: string,
             }
         ) {
-                const optionsProvidePrefixed = {
-                    ...options,
-                    getter: (key: string) => computed(() => this[key as (keyof typeof this)]),
-                };
+            const optionsProvidePrefixed = {
+                ...options,
+                getter: ((key: string) => this.createComputedFromKey(key)),
+            };
             return this.providePrefixed(keys, optionsProvidePrefixed)
         },
         provideStatic(
