@@ -9,7 +9,7 @@
             </div>
             <q-separator></q-separator>
             <div class="overflow-hidden"><a :href="layout.demoLink" target="_blank">
-                <q-img alt="Layout Screenshot" :src="layout.screenshot" :ratio="1.95"></q-img></a></div>
+                <q-img alt="Layout Screenshot" :src="layout.screenshot" fit="contain" :ratio="1.95"></q-img></a></div>
         </q-card>
         </div>
     </div>
