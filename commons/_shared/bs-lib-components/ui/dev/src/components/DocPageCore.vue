@@ -60,7 +60,6 @@
     border-right: 6px solid #61B658;
     border-radius: 4px;
     background-color: rgba(97, 182, 88, 0.1);
-
 }
 
 
