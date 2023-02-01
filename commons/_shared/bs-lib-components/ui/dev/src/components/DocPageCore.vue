@@ -3,7 +3,7 @@
         <section class="column q-mb-xl">
             <span class="text-primary dku-huge-title-sb q-mb-sm">{{ title }}</span>
             <span class="dku-small-title">
-                {{$slots.description ? description : ""}}
+                {{$slots.description ? "" : description}}
                 <slot name="description"></slot>
             </span>
         </section>
