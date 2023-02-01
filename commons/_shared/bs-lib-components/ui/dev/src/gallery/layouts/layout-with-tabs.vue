@@ -1,13 +1,13 @@
 <template>
 <BsLayoutDefault>
     <BsTab icon="movie" name="a-first-tab" docTitle="First Tab" docIcon="/imgs/doc-logo-example.svg">
-        <template #header>
+        <BsHeader>
             <div class="dku-medium-title-sb q-pa-md">Header First tab</div>
-        </template>
-        <template #leftpanel>
+        </BsHeader>
+        <BsDrawer>
             <div class="dku-medium-title-sb q-pa-md">Left Panel First tab</div>
-        </template>
-        <template #documentation>
+        </BsDrawer>
+        <BsDocumentation>
             <p class="dku-small-title">Documentation First tab</p>
             <p class="dku-text">Use filters to discover your process through the data. 
             Remove noisy activities through the bottom filters. 
@@ -28,19 +28,19 @@
             Remove noisy activities through the bottom filters. 
             Processes displayed in the main screen can be saved as reference and 
             compared through conformance checks and individual traces.</p>
-        </template>
-        <template #content>
+        </BsDocumentation>
+        <BsContent>
             <router-view />
-        </template>
+        </BsContent>
     </BsTab>
     <BsTab icon="help" name="a-second-tab" docTitle="Second Tab" docIcon="/imgs/doc-logo-example.svg">
-        <template #header>
+        <BsHeader>
             <div class="dku-medium-title-sb q-pa-md">Header Second tab</div>
-        </template>
-        <template #leftpanel>
+        </BsHeader>
+        <BsDrawer>
             <div class="dku-medium-title-sb q-pa-md">Left Panel Second tab</div>
-        </template>
-        <template #documentation>
+        </BsDrawer>
+        <BsDocumentation>
             <p class="dku-small-title">Documentation Second tab</p>
             <p class="dku-text">Use filters to discover your process through the data. 
             Remove noisy activities through the bottom filters. 
@@ -61,21 +61,29 @@
             Remove noisy activities through the bottom filters. 
             Processes displayed in the main screen can be saved as reference and 
             compared through conformance checks and individual traces.</p>
-        </template>
-        <template #content>
+        </BsDocumentation>
+        <BsContent>
             <router-view />
-        </template>
+        </BsContent>
     </BsTab>
 </BsLayoutDefault>
 </template>
 
 <script lang="ts">
+import BsContent from "app/../src/components/layout/BsContent.vue";
+import BsDocumentation from "app/../src/components/layout/BsDocumentation.vue";
+import BsDrawer from "app/../src/components/layout/BsDrawer.vue";
+import BsHeader from "app/../src/components/layout/BsHeader.vue";
 import BsTab from "../../../../src/components/layout/BsTab.vue"
 
 export default {
     name: "LayoutWithTabs",
     components: {
-        BsTab,
-    },
+    BsTab,
+    BsDocumentation,
+    BsContent,
+    BsDrawer,
+    BsHeader
+},
 };
 </script>
