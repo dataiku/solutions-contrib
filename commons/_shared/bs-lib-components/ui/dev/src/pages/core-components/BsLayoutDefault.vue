@@ -55,7 +55,7 @@ import { Component, defineComponent } from 'vue';
         },
         BsLayoutComponentListed() {
           const [lastName, ...namesWithoutLast] = this.BsLayoutComponentNames;
-          return `${namesWithoutLast.join(', ')} and ${lastName}`
+          return `${namesWithoutLast.join(', ')} and ${lastName}`;
         },
         componentTemplateAccordancy(): string {
           const ctaccordancy = Object.entries(this.componentToTemplateMapping).reduce((sum, [component, template]) => {
