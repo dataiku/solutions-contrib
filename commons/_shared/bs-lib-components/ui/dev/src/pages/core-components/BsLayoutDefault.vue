@@ -3,7 +3,7 @@
     <template #description>
       The BsLayoutDefault is the default layout for business solutions webapps.<br><br>
       It is highly customizable, the layout provides 4 child components:<br>
-      <b>BsHeader, BsDrawer, BsContent and BsDocumentation</b> that can be populated with custom vue components.<br>
+      <b>{{ BsLayoutComponentListed }}</b> that can be populated with custom vue components.<br>
       Instead of these components you can use template sections:<br>
       <code-prism lang="html" :code="componentTemplateAccordancy"></code-prism>
 
@@ -50,9 +50,16 @@ import { Component, defineComponent } from 'vue';
 
           return mapping;
         },
+        BsLayoutComponentNames() {
+          return Object.keys(this.componentToTemplateMapping);
+        },
+        BsLayoutComponentListed() {
+          const [lastName, ...namesWithoutLast] = this.BsLayoutComponentNames;
+          return `${namesWithoutLast.join(', ')} and ${lastName}`
+        },
         componentTemplateAccordancy(): string {
           const ctaccordancy = Object.entries(this.componentToTemplateMapping).reduce((sum, [component, template]) => {
-            return sum + `    <${component}></${component}> == <template #${template}></template>\n`;
+            return sum + `\t<${component}></${component}> == <template #${template}></template>\n`;
           }, "\n");
           return `<${BsLayoutDefault.name}>${ctaccordancy}</${BsLayoutDefault.name}>`;
         }
