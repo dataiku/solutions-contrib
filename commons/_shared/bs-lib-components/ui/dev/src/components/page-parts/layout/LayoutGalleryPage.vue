@@ -1,5 +1,5 @@
 <template>
-    <div padding class="flex flex-center">
+    <div class="flex flex-center">
         <CodeSourceDisplay :file="file"></CodeSourceDisplay>
     </div>
 </template>
