@@ -66,7 +66,8 @@ import BsMenuTab from './BsMenuTab.vue';
 import BsLayoutDrawer from './BsLayoutDrawer.vue';
 import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
-
+import BsDrawer from './BsDrawer.vue'
+import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
 
 import { Slugger } from './Slugger';
@@ -74,7 +75,7 @@ const slugger = new Slugger();
 
 export default defineComponent({
     name:"BsLayoutDefault",
-    mixins: [ProvideMixin],
+    mixins: [ProvideMixin, CheckSlotComponentsMixin],
     components: {
         BsTab,
         BsMenuTab,
@@ -115,6 +116,7 @@ export default defineComponent({
             const provideVirtualTab = this.provideComputed([
                 'tabContentId',
                 'qPageMounted',
+                'defaultDrawer',
             ]);
             provideComputed = {...provideComputed, ...provideVirtualTab};
         }
@@ -152,6 +154,9 @@ export default defineComponent({
         },
         qLayoutMounted() {
             return this.drawerMounted && this.headerMounted;
+        },
+        defaultDrawer() {
+            return !!this.getSlotComponents(BsDrawer.name).length;
         }
     },
     props: {

@@ -67,7 +67,7 @@ export default defineComponent({
             qPageMounted: false,
         };
     },
-    inject: ["$tabs", "$selectedTab"],
+    inject: ["$tabs", "$selectedTab", "$defaultDrawer"],
     provide() {
         return this.provideComputed([
             'isTabSelected',
@@ -113,6 +113,9 @@ export default defineComponent({
         selectedTab() {
             return (this as any as {$selectedTab: Tab}).$selectedTab;
         },
+        defaultDrawer() {
+            return (this as any as {$defaultDrawer: Tab}).$defaultDrawer;
+        },
         tabs() {
             return (this as any as {$tabs: Tab[]}).$tabs;
         },
@@ -126,7 +129,7 @@ export default defineComponent({
             return this.usingComponentHeader || this.usingSlotHeader;
         },
         drawer() {
-            return this.usingComponentLeftPanel || this.usingSlotLeftPanel;
+            return this.usingComponentLeftPanel || this.usingSlotLeftPanel || this.defaultDrawer;
         },
         usingComponentHeader() {
             return !!this.getSlotComponents(BsHeader.name).length;
