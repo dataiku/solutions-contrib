@@ -135,7 +135,7 @@ export default defineComponent({
         usingComponentLeftPanel() {
             return !!this.getSlotComponents(BsDrawer.name).length;
         },
-        usingComponentDocumantation() {
+        usingComponentDocumentation() {
             return !!this.getSlotComponents(BsDocumentation.name).length;
         },
         usingComponentContent() {
@@ -148,7 +148,7 @@ export default defineComponent({
             return (!this.usingComponentLeftPanel) && (!!this.$slots.leftpanel);
         },
         usingSlotDocumentation() {
-            return (!this.usingComponentDocumantation) && (!!this.$slots.documentation);
+            return (!this.usingComponentDocumentation) && (!!this.$slots.documentation);
         },
         usingSlotContent() {
             return (!this.usingComponentContent) && (!!this.$slots.content);
