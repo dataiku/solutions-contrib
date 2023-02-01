@@ -2,7 +2,10 @@
     <q-page padding class="column">
         <section class="column q-mb-xl">
             <span class="text-primary dku-huge-title-sb q-mb-sm">{{ title }}</span>
-            <span class="dku-small-title">{{ description }}</span>
+            <span class="dku-small-title">
+                {{$slots.description ? description : ""}}
+                <slot name="description"></slot>
+            </span>
         </section>
         
         <section class="column q-mb-xl" v-if="quasarUrl">
@@ -16,7 +19,7 @@
         <section class="column q-mb-xl" v-else>
             <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
             <span class="dku-small-title bs-native-card q-pa-md">
-                The {{ title }} is a native business solutions component. It does not wrap a specific quasar component, the exemples below give more details
+                The {{ title }} is a native business solutions component. It does not wrap a specific quasar component, the examples below give more details
                 on how to use it
             </span>
         </section>
