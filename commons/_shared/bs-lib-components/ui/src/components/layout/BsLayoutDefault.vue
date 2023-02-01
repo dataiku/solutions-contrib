@@ -84,6 +84,25 @@ export default defineComponent({
         BsLayoutHeader,
         QLayout,
     },
+    props: {
+        docTitle: {
+            type: String,
+        },
+        docIcon: {
+            type: String,
+        },
+        docImageDimensions: {
+            type: Object as PropType<ImageDimensions>,
+        },
+        tabMenuWidth: {
+            type: Number,
+            default: 50,
+        },
+        leftPanelWidth: {
+            type: Number,
+            default: 300,
+        },
+    },
     data() {
         return {
             tabIndex: 0,
@@ -158,25 +177,6 @@ export default defineComponent({
         defaultDrawer() {
             return !!this.getSlotComponents(BsDrawer.name).length;
         }
-    },
-    props: {
-        docTitle: {
-            type: String,
-        },
-        docIcon: {
-            type: String,
-        },
-        docImageDimensions: {
-            type: Object as PropType<ImageDimensions>,
-        },
-        tabMenuWidth: {
-            type: Number,
-            default: 50,
-        },
-        leftPanelWidth: {
-            type: Number,
-            default: 300,
-        },
     },
     mounted() {
         this.mounted = true;
