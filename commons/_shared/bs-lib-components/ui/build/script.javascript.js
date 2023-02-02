@@ -27,7 +27,6 @@ const rollupPlugins = [
 	typescript({
 		tsconfig: false,
 		experimentalDecorators: true,
-		module: 'es2015',
 	}),
 	VuePlugin(),
 	nodeResolve({
