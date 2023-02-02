@@ -41,7 +41,7 @@ import { defineComponent, PropType } from 'vue';
 import { QCard, QBtn } from 'quasar';
 import BsTabPageChildWrapper from '../BsTabPageChildWrapper.vue'
 import { ImageDimensions, DocsProps } from "../bsLayoutTypes";
-
+import { setTimeoutMultiple } from "../bsLayoutHelper";
 export default defineComponent({
     name: "BsDocumentation",
     components: {
@@ -141,13 +141,14 @@ export default defineComponent({
         open() {
             const disableDelay = 500;
             const cssReactionDelay = 50;
-            setTimeout(() => {
-                this.docDisabled = this.closed;
-            }, disableDelay * +this.closed);
+            
+            const toggleDocDisabled = () => this.docDisabled = this.closed;
+            const toggleDocHidden = () => this.docHidden = this.closed;
 
-            setTimeout(() => {
-                this.docHidden = this.closed;
-            }, cssReactionDelay * +this.open);
+            setTimeoutMultiple(
+                [toggleDocDisabled, disableDelay * +this.closed],
+                [toggleDocHidden, cssReactionDelay * +this.open],
+            );
         },
     },
     mounted() {
