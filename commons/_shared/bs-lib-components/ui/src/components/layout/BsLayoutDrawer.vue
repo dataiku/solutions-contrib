@@ -6,7 +6,11 @@
     side="left"
     behavior="desktop"
     bordered
-    >
+>
+    <BsDrawerBtn
+        v-model="expand"
+        :show="expandable"
+    ></BsDrawerBtn>
 </QDrawer>
 </template>
 
@@ -14,10 +18,13 @@
 import { defineComponent } from 'vue';
 import { QDrawer } from "quasar";
 
+import BsDrawerBtn from './BsDrawerBtn.vue';
+
 export default defineComponent({
     name: "BsLayoutDrawer",
     components: {
         QDrawer,
+        BsDrawerBtn,
     },
     props: {
         collapsedWidth: {
@@ -28,18 +35,26 @@ export default defineComponent({
             type: Number,
             default: 300,
         },
-        expand: {
-            type: Boolean,
-            default: false,
-        },
         mini: {
             type: Boolean,
             default: false,
         },
+        expandable: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    data() {
+        return {
+            expand: true,
+        };
     },
     computed: {
         collapsed() {
-            return !this.expand;
+            return !this.displayExpanded;
+        },
+        displayExpanded() {
+            return this.expand && this.expandable;
         },
         expandedWidth() {
             return (+this.mini * this.collapsedWidth) + this.panelWidth;
@@ -52,7 +67,7 @@ export default defineComponent({
         },
         defaultDrawerProps() {
             return {
-                modelValue: this.collapsed,
+                modelValue: this.displayExpanded,
             } as Record<string, any>;
         },
         drawerProps() {

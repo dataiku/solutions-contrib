@@ -9,7 +9,7 @@
     -->
     <BsLayoutDrawer
         @vnode-mounted="drawerMounted = true"
-        :expand="expandCurrentTab"
+        :expandable="selectedTabDrawer"
         :collapsed-width="tabMenuWidth"
         :panel-width="leftPanelWidth"
         :mini="isTabsMultiple"
@@ -158,8 +158,8 @@ export default defineComponent({
         selectedTab(): Tab | undefined {
             return this.tabs[this.tabIndex] as any;
         },
-        expandCurrentTab() {
-            return this.selectedTab?.drawer && this.selectedTab?.drawerExpanded;
+        selectedTabDrawer() {
+            return this.selectedTab?.drawer;
         },
         isTabsMultiple(): boolean {
             return this.tabs.length > 1;

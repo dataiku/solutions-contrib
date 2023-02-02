@@ -9,7 +9,6 @@ export interface Tab {
     tabId: string;
     drawer: boolean;
     header: boolean;
-    drawerExpanded: boolean;
 }
 
 export interface ImageDimensions {

@@ -5,7 +5,6 @@
     <BsDrawer v-if="usingSlotLeftPanel">
         <slot name="leftpanel"></slot>
     </BsDrawer>
-    <BsDrawerBtn v-if="drawer" v-model="drawerExpanded"></BsDrawerBtn>
     <BsDocumentation v-if="usingSlotDocumentation" v-model="openDoc">
         <slot name="documentation"></slot>
     </BsDocumentation>
@@ -29,7 +28,6 @@ import BsHeader from './base-subcomponents/BsHeader.vue';
 import BsDocumentation from "./base-subcomponents/BsDocumentation.vue";
 import BsContent from "./base-subcomponents/BsContent.vue";
 import BsDrawer from './base-subcomponents/BsDrawer.vue';
-import BsDrawerBtn from './BsDrawerBtn.vue';
 
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
@@ -44,7 +42,6 @@ export default defineComponent({
     mixins: [CheckSlotComponentsMixin, ProvideMixin],
     components: {
         BsDrawer,
-        BsDrawerBtn,
         BsHeader,
         BsDocumentation,
         BsContent,
@@ -57,7 +54,6 @@ export default defineComponent({
             tabId: slugger.slug(this.name),
             isActive: false,
             openDoc: false,
-            drawerExpanded: false,
             qPageMounted: false,
         };
     },
@@ -115,9 +111,7 @@ export default defineComponent({
         },
         tab() {
             const { tabId, drawer, header, name, icon } = this;
-            return {
-                tabId, drawer, header, name, icon, drawerExpanded: this.createComputedFromKey("drawerExpanded") as any
-            } as Tab;
+            return {tabId, drawer, header, name, icon} as Tab;
         },
         header() {
             return this.usingComponentHeader || this.usingSlotHeader;

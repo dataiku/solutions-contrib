@@ -12,8 +12,8 @@
             'doc-content',
             'flex',
             'row',
-            docHidden && 'doc-hidden',
-            docDisabled && 'doc-disabled'
+            docHide && 'doc-hide',
+            docHidden && 'doc-hidden'
         ]"
     >
         <div
@@ -41,7 +41,7 @@ import { defineComponent, PropType } from 'vue';
 import { QCard, QBtn } from 'quasar';
 import BsTabPageChildWrapper from '../BsTabPageChildWrapper.vue'
 import { ImageDimensions, DocsProps } from "../bsLayoutTypes";
-import { setTimeoutMultiple } from "../bsLayoutHelper";
+import { transitionHideToHiddenClasses } from "../bsLayoutHelper";
 export default defineComponent({
     name: "BsDocumentation",
     components: {
@@ -52,8 +52,8 @@ export default defineComponent({
     data() {
         return {
             open: false,
-            docDisabled: true,
             docHidden: true,
+            docHide: true,
             defaultDocsPropValues: {
                 docIcon: "help",
                 docTitle: "Documentation",
@@ -140,14 +140,15 @@ export default defineComponent({
         },
         open() {
             const disableDelay = 500;
-            const cssReactionDelay = 50;
             
-            const toggleDocDisabled = () => this.docDisabled = this.closed;
-            const toggleDocHidden = () => this.docHidden = this.closed;
+            const toggleHide = () => this.docHide = this.closed;
+            const toggleHidden = () => this.docHidden = this.closed;
 
-            setTimeoutMultiple(
-                [toggleDocDisabled, disableDelay * +this.closed],
-                [toggleDocHidden, cssReactionDelay * +this.open],
+            transitionHideToHiddenClasses(
+                toggleHide,
+                toggleHidden,
+                this.closed,
+                disableDelay
             );
         },
     },
@@ -234,12 +235,12 @@ export default defineComponent({
 .doc-content {
     transition: transform var(--doc-content-hide-transition-duration),
     opacity var(--doc-content-hide-transition-duration);
-    &.doc-hidden {
+    &.doc-hide {
         transform: translateY(10px);
         opacity: 0;
     }
 
-    &.doc-disabled {
+    &.doc-hidden {
         display: none;
     }
 }
