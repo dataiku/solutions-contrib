@@ -36,3 +36,8 @@ export default defineComponent({
     }
 });
 </script>
+<style lang="scss" scoped>
+.tab-name-tooltip {
+    font-size: .8rem;
+}
+</style>

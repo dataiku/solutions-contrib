@@ -51,7 +51,19 @@ export default defineComponent({
         width: var(--tab-icon-size);
         height: var(--tab-icon-size);
         font-size: var(--tab-icon-size);
-}
+    }
 }
 
+.tabs-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: #fff;
+    z-index: 10000;
+    border-right: 1px solid #CAC5C5;
+}
 </style>
