@@ -7,16 +7,12 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { QDrawer } from "quasar";
 
 import BsTabChild from './BsTabChild.vue';
 
 export default defineComponent({
     name: "BsDrawer",
     extends: BsTabChild,
-    components: {
-        QDrawer,
-    },
     data() {
         return {
             leftPanelExpanded: false,

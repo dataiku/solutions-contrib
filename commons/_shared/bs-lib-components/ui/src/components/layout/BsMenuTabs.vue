@@ -11,13 +11,12 @@
     </div>
 </template>
 <script lang="ts">
-import { QDrawer, QTabs } from 'quasar';
+import { QTabs } from 'quasar';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: "BsMenuTabs",
     components: {
-        QDrawer,
         QTabs,
     },
     props: {

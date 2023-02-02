@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { QDrawer, QPageContainer, QPage, QCard, QBtn, QHeader } from "quasar"
+import { QPageContainer, QPage } from "quasar"
 import { defineComponent, PropType } from "vue";
 
 import BsDrawer from './BsDrawer.vue';
@@ -48,12 +48,8 @@ export default defineComponent({
         BsHeader,
         BsDocumentation,
         BsContent,
-        QDrawer,
         QPageContainer,
         QPage,
-        QCard,
-        QBtn,
-        QHeader
     },
     data() {
         return {

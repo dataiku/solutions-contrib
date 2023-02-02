@@ -6,7 +6,6 @@
       <b>{{ BsLayoutComponentListed }}</b> that can be populated with custom vue components.<br>
       Instead of these components you can use template sections:<br>
       <code-prism lang="html" :code="componentTemplateAccordancy"></code-prism>
-
       See the examples in the usage section for more details.
     </template>
     <LayoutGalleryGrid class="q-mt-sm"/>
