@@ -18,11 +18,11 @@ import LayoutGalleryGrid from "../../components/LayoutGalleryGrid.vue";
 
 import CodePrism from 'src/components/CodePrism';
 
-import BsHeader from 'app/../src/components/layout/base-components/BsHeader.vue';
+import BsHeader from 'app/../src/components/layout/base-subcomponents/BsHeader.vue';
 import BsLayoutDefault from 'app/../src/components/layout/BsLayoutDefault.vue';
-import BsDocumentation from 'app/../src/components/layout/base-components/BsDocumentation.vue';
-import BsDrawer from 'app/../src/components/layout/base-components/BsDrawer.vue';
-import BsContent from 'app/../src/components/layout/base-components/BsContent.vue';
+import BsDocumentation from 'app/../src/components/layout/base-subcomponents/BsDocumentation.vue';
+import BsDrawer from 'app/../src/components/layout/base-subcomponents/BsDrawer.vue';
+import BsContent from 'app/../src/components/layout/base-subcomponents/BsContent.vue';
 
 import { Component, defineComponent } from 'vue';
 

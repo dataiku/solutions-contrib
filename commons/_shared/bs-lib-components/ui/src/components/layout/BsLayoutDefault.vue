@@ -66,7 +66,7 @@ import BsMenuTab from './BsMenuTab.vue';
 import BsLayoutDrawer from './BsLayoutDrawer.vue';
 import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
-import BsDrawer from './base-components/BsDrawer.vue'
+import BsDrawer from './base-subcomponents/BsDrawer.vue'
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
 
