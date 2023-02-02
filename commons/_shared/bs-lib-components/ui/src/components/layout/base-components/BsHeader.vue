@@ -8,7 +8,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import BsTabChild from './BsTabChild.vue';
+import BsTabChild from '../BsTabChild.vue';
 
 export default defineComponent({
     name: "BsHeader",

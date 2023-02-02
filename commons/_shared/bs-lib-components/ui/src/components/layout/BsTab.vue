@@ -25,11 +25,11 @@
 import { QPageContainer, QPage } from "quasar"
 import { defineComponent, PropType } from "vue";
 
-import BsDrawer from './BsDrawer.vue';
+import BsHeader from './base-components/BsHeader.vue';
+import BsDocumentation from "./base-components/BsDocumentation.vue";
+import BsContent from "./base-components/BsContent.vue";
+import BsDrawer from './base-components/BsDrawer.vue';
 import BsDrawerBtn from './BsDrawerBtn.vue';
-import BsHeader from './BsHeader.vue';
-import BsDocumentation from "./BsDocumentation.vue";
-import BsContent from "./BsContent.vue";
 
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';

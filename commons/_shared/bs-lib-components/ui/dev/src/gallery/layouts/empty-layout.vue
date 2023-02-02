@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import BsContent from "app/../src/components/layout/BsContent.vue";
-import BsDocumentation from "app/../src/components/layout/BsDocumentation.vue";
-import BsDrawer from "app/../src/components/layout/BsDrawer.vue";
-import BsHeader from "app/../src/components/layout/BsHeader.vue";
+import BsContent from "app/../src/components/layout/base-components/BsContent.vue";
+import BsDocumentation from "app/../src/components/layout/base-components/BsDocumentation.vue";
+import BsDrawer from "app/../src/components/layout/base-components/BsDrawer.vue";
+import BsHeader from "app/../src/components/layout/base-components/BsHeader.vue";
 import BsTab from "../../../../src/components/layout/BsTab.vue"
 
 export default {

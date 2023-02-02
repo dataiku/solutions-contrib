@@ -2,7 +2,7 @@
 <BsTabPageChildWrapper>
     <QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc()">
         <div class="row items-center q-gutter-sm no-wrap">
-            <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
+            <img src="../../../assets/images/solutions-icon.svg" width="15" height="16">
             <span class="btn-solution-text">Dataiku Solutions</span>
         </div>
     </QBtn>
@@ -29,7 +29,7 @@
             <slot></slot>
         </div>
         <div class="doc-footer flex row items-center">
-            <span class="doc-footer__icon"><img src="../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
+            <span class="doc-footer__icon"><img src="../../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
             <span class="doc-footer__text dku-tiny-text-sb">Dataiku Solutions</span>
         </div>
     </QCard>
@@ -39,9 +39,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { QCard, QBtn } from 'quasar';
-import BsTabPageChildWrapper from './BsTabPageChildWrapper.vue'
+import BsTabPageChildWrapper from '../BsTabPageChildWrapper.vue'
+import { ImageDimensions, DocsProps } from "../bsLayoutTypes";
 
-import { ImageDimensions, DocsProps } from "./bsLayoutTypes";
 export default defineComponent({
     name: "BsDocumentation",
     components: {
@@ -61,7 +61,7 @@ export default defineComponent({
                     width: 36,
                     height: 40,
                 }
-            },
+            }
         };
     },
     props: {
