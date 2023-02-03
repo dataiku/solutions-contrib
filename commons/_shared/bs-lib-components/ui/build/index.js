@@ -16,7 +16,7 @@ console.log(` 📦 Building ${green('v' + require('../package.json').version)}..
 createFolder('dist')
 createFolder('dist/types')
 
-
+runJob(join(__dirname, './update-precompile-files.js'));
 runJob(join(__dirname, './script.javascript.js'))
 runJob(join(__dirname, './script.css.js'))
 

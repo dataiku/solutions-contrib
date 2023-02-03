@@ -17,6 +17,7 @@
     "dev:ios": "cd dev && yarn 'dev:ios' && cd ..",
     "dev:android": "cd dev && yarn 'dev:android' && cd ..",
     "dev:electron": "cd dev && yarn 'dev:electron' && cd ..",
+    "update:precompiled": "node build/update-precompile-files.js",
     "build": "node build/index.js",
     "build:js": "node build/script.javascript.js",
     "build:css": "node build/script.css.js"

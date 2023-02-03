@@ -7,12 +7,24 @@ function getSize (code) {
   return (code.length / 1024).toFixed(2) + 'kb'
 }
 
+const resolve = function (_path) {
+	return path.resolve(__dirname, '..', _path);
+};
+
+module.exports.resolve = resolve;
+
+
 module.exports.createFolder = function (folder) {
-  const dir = path.join(__dirname, '..', folder)
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
-}
+	const dir = path.join(__dirname, '..', folder);
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+};
+
+module.exports.readFolder = function (folder) {
+	const dir = resolve(folder);
+	return fs.existsSync(dir) ? fs.readdirSync(dir) : []; 
+};
 
 module.exports.writeFile = function (dest, code, zip) {
   
