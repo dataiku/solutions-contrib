@@ -2,8 +2,9 @@
     <BsHeader v-if="usingSlotHeader">
         <slot name="header"></slot>
     </BsHeader>
-    <BsDrawer v-if="usingSlotLeftPanel">
-        <slot name="leftpanel"></slot>
+    <BsDrawer v-if="usingSlotDrawer">
+        <slot v-if="!$slots.drawer" name="leftpanel"></slot>
+        <slot name="drawer"></slot>
     </BsDrawer>
     <BsDocumentation v-if="usingSlotDocumentation" v-model="openDoc">
         <slot name="documentation"></slot>
@@ -117,12 +118,12 @@ export default defineComponent({
             return this.usingComponentHeader || this.usingSlotHeader;
         },
         drawer() {
-            return this.usingComponentLeftPanel || this.usingSlotLeftPanel || this.defaultDrawer;
+            return this.usingComponentDrawer || this.usingSlotDrawer || this.defaultDrawer;
         },
         usingComponentHeader() {
             return !!this.getSlotComponents(BsHeader.name).length;
         },
-        usingComponentLeftPanel() {
+        usingComponentDrawer() {
             return !!this.getSlotComponents(BsDrawer.name).length;
         },
         usingComponentDocumentation() {
@@ -132,16 +133,16 @@ export default defineComponent({
             return !!this.getSlotComponents(BsContent.name).length;
         },
         usingSlotHeader() {
-            return (!this.usingComponentHeader) && (!!this.$slots.header);
+            return !this.usingComponentHeader && (!!this.$slots.header);
         },
-        usingSlotLeftPanel() {
-            return (!this.usingComponentLeftPanel) && (!!this.$slots.leftpanel);
+        usingSlotDrawer() {
+            return !this.usingComponentDrawer && !!(this.$slots.leftpanel || this.$slots.drawer);
         },
         usingSlotDocumentation() {
-            return (!this.usingComponentDocumentation) && (!!this.$slots.documentation);
+            return !this.usingComponentDocumentation && !!this.$slots.documentation;
         },
         usingSlotContent() {
-            return (!this.usingComponentContent) && (!!this.$slots.content);
+            return !this.usingComponentContent && !!this.$slots.content;
         },
     },
     methods: {
