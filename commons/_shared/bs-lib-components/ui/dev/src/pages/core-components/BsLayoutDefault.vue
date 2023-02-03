@@ -24,7 +24,7 @@ import BsDocumentation from 'app/../src/components/layout/base-subcomponents/BsD
 import BsDrawer from 'app/../src/components/layout/base-subcomponents/BsDrawer.vue';
 import BsContent from 'app/../src/components/layout/base-subcomponents/BsContent.vue';
 
-import { Component, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 
   export default defineComponent({
@@ -35,32 +35,34 @@ import { Component, defineComponent } from 'vue';
           CodePrism,
       },
       computed: {
+        BsLayoutComponentNames() {
+          return [
+            BsHeader,
+            BsDocumentation,
+            BsDrawer,
+            BsContent,
+          ].map(({ name }) => name);
+        },
         componentToTemplateMapping(): Record<string, any>{
           const mapping = {} as Record<string, any>;
-
-          function addEntry({ name }: Component, templateName: string) {
-            if (name) mapping[name] = templateName;
+          function addBsComponentEntry(name: string) {
+            if (!name) return;
+            const templateName = name.slice(2).toLowerCase(); //Bs[TemplateName]
+            mapping[name] = templateName;
           }
 
-          addEntry(BsHeader, "header");
-          addEntry(BsDocumentation, "documentation");
-          addEntry(BsDrawer, "leftpanel");
-          addEntry(BsContent, "content");
-
+          this.BsLayoutComponentNames.forEach(name => addBsComponentEntry(name));
           return mapping;
-        },
-        BsLayoutComponentNames() {
-          return Object.keys(this.componentToTemplateMapping);
         },
         BsLayoutComponentListed() {
           const [lastName, ...namesWithoutLast] = this.BsLayoutComponentNames;
           return `${namesWithoutLast.join(', ')} and ${lastName}`;
         },
         componentTemplateAccordancy(): string {
-          const ctaccordancy = Object.entries(this.componentToTemplateMapping).reduce((sum, [component, template]) => {
+          const CTAccordancy = Object.entries(this.componentToTemplateMapping).reduce((sum, [component, template]) => {
             return sum + `\t<${component}></${component}> == <template #${template}></template>\n`;
           }, "\n");
-          return `<${BsLayoutDefault.name}>${ctaccordancy}</${BsLayoutDefault.name}>`;
+          return `<${BsLayoutDefault.name}>${CTAccordancy}</${BsLayoutDefault.name}>`;
         }
       },
   });
