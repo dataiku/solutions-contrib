@@ -50,8 +50,9 @@
         <template v-for="name in activeTabSlots" v-slot:[name]>
             <slot :name="name"></slot>
         </template>
+        <slot></slot>
     </BsTab>
-    <slot></slot>
+    <slot v-else></slot>
 </QLayout>
 </template>
 
@@ -114,6 +115,7 @@ export default defineComponent({
             tabSlotNames: [
                 'header',
                 'leftpanel',
+                'drawer',
                 'documentation',
                 'content',
             ],
