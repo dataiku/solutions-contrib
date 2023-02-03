@@ -5,7 +5,7 @@
       It is highly customizable, the layout provides 4 child components:<br>
       <b>{{ BsLayoutComponentListed }}</b> that can be populated with custom vue components.<br>
       Instead of these components you can use template sections:<br>
-      <code-prism lang="html" :code="componentTemplateAccordancy"></code-prism>
+      <code-prism lang="html" :code="componentTemplateAccordancy"></code-prism><br>
       See the examples in the usage section for more details.
     </template>
     <LayoutGalleryGrid class="q-mt-sm"/>
@@ -17,13 +17,8 @@ import DocPageCore from '../../components/DocPageCore.vue';
 import LayoutGalleryGrid from "../../components/LayoutGalleryGrid.vue";
 
 import CodePrism from 'src/components/CodePrism';
-
-import BsHeader from 'app/../src/components/layout/base-subcomponents/BsHeader.vue';
 import BsLayoutDefault from 'app/../src/components/layout/BsLayoutDefault.vue';
-import BsDocumentation from 'app/../src/components/layout/base-subcomponents/BsDocumentation.vue';
-import BsDrawer from 'app/../src/components/layout/base-subcomponents/BsDrawer.vue';
-import BsContent from 'app/../src/components/layout/base-subcomponents/BsContent.vue';
-
+import { baseComponents } from "src/precompiled/precompiledData"
 import { defineComponent } from 'vue';
 
 
@@ -35,14 +30,7 @@ import { defineComponent } from 'vue';
           CodePrism,
       },
       computed: {
-        BsLayoutComponentNames(): string[] {
-          return [
-            BsHeader,
-            BsDocumentation,
-            BsDrawer,
-            BsContent,
-          ].map(({ name }) => name);
-        },
+
         componentToTemplateMapping(): Record<string, any>{
           const mapping = {} as Record<string, any>;
           function addBsComponentEntry(name: string) {
@@ -51,11 +39,13 @@ import { defineComponent } from 'vue';
             mapping[name] = templateName;
           }
 
-          this.BsLayoutComponentNames.forEach(name => addBsComponentEntry(name));
+          baseComponents.forEach(name => addBsComponentEntry(name));
           return mapping;
         },
         BsLayoutComponentListed(): string {
-          const [lastName, ...namesWithoutLast] = this.BsLayoutComponentNames;
+          const namesWithoutLast = baseComponents.slice(0, -1);
+          const lastName = baseComponents[baseComponents.length - 1];
+
           return `${namesWithoutLast.join(', ')} and ${lastName}`;
         },
         componentTemplateAccordancy(): string {
