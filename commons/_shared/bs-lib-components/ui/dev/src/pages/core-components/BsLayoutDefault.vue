@@ -35,7 +35,7 @@ import { defineComponent } from 'vue';
           CodePrism,
       },
       computed: {
-        BsLayoutComponentNames() {
+        BsLayoutComponentNames(): string[] {
           return [
             BsHeader,
             BsDocumentation,
@@ -54,7 +54,7 @@ import { defineComponent } from 'vue';
           this.BsLayoutComponentNames.forEach(name => addBsComponentEntry(name));
           return mapping;
         },
-        BsLayoutComponentListed() {
+        BsLayoutComponentListed(): string {
           const [lastName, ...namesWithoutLast] = this.BsLayoutComponentNames;
           return `${namesWithoutLast.join(', ')} and ${lastName}`;
         },
