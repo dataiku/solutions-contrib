@@ -1,6 +1,7 @@
 <template>
     <Teleport v-if="qLayoutMounted" to=".q-drawer">
         <div v-show="showComponent" class="bs-drawer-container">
+            <BsTabTitle></BsTabTitle>
             <slot></slot>
         </div>
     </Teleport>
@@ -9,10 +10,14 @@
 import { defineComponent } from 'vue';
 
 import BsTabChild from '../BsTabChild.vue';
+import BsTabTitle from '../BsTabTitle.vue';
 
 export default defineComponent({
     name: "BsDrawer",
     extends: BsTabChild,
+    components: {
+        BsTabTitle,
+    },
     data() {
         return {
             leftPanelExpanded: false,

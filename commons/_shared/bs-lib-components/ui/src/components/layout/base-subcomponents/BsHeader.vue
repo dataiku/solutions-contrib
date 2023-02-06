@@ -10,29 +10,28 @@
                 showComponent && drawerOpen && headerTabTitleWidthExists && 'bs-header-wrapper--hide-tab-name',
             ]"
         >
-            <div
+            <BsTabTitle
                 ref="headerTabTitle"
                 v-show="appendTabTitleToHeader"
-                class="text-primary header-tab-title dku-medium-title-sb q-pa-md"
             >
-                {{ tabName }}
-            </div>
+            </BsTabTitle>
             <slot></slot>
         </div>
     </Teleport>
 </template>
 <script lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineComponent, Teleport, ComponentPublicInstance } from 'vue';
 import BsTabChild from '../BsTabChild.vue';
+import BsTabTitle from '../BsTabTitle.vue';
 
 export default defineComponent({
     name: "BsHeader",
     extends: BsTabChild,
-    inject: ['$defaultTabUsed', '$tabName', '$drawerOpen'],
+    inject: ["$defaultTabUsed", "$drawerOpen"],
     data() {
         return {
-            headerTabTitleWidth: '0px',
+            headerTabTitleWidth: "0px",
             wrapperTransitions: false,
         };
     },
@@ -41,13 +40,14 @@ export default defineComponent({
             return !this.defaultTabUsed;
         },
         defaultTabUsed(): boolean {
-            return (this as any as { $defaultTabUsed: boolean }).$defaultTabUsed;
-        },
-        tabName(): string {
-            return (this as any as { $tabName: string }).$tabName;
+            return (this as any as {
+                $defaultTabUsed: boolean;
+            }).$defaultTabUsed;
         },
         drawerOpen(): boolean {
-            return (this as any as { $drawerOpen: boolean }).$drawerOpen;
+            return (this as any as {
+                $drawerOpen: boolean;
+            }).$drawerOpen;
         },
         tabHeaderStyles(): Record<string, any> {
             return {
@@ -60,13 +60,14 @@ export default defineComponent({
     },
     methods: {
         widthNonExistant(width: string) {
-            return ["0px", "auto"].includes(width)
+            return ["0px", "auto"].includes(width);
         },
         calculateHeaderTabTitleWidth() {
-            const titleHeader = this.$refs?.headerTabTitle as HTMLDivElement | undefined;
+            const titleHeader: HTMLDivElement = (this.$refs?.headerTabTitle as ComponentPublicInstance).$el;
             if (!titleHeader) return;
             const { width } = getComputedStyle(titleHeader);
-            if (this.widthNonExistant(width)) return;
+            if (this.widthNonExistant(width))
+                return;
             this.headerTabTitleWidth = width;
             this.toggleTransitions();
         },
@@ -78,10 +79,12 @@ export default defineComponent({
     },
     watch: {
         showComponent() {
-            if (!this.showComponent || this.headerTabTitleWidthExists) return;
+            if (!this.showComponent || this.headerTabTitleWidthExists)
+                return;
             this.$nextTick(() => this.calculateHeaderTabTitleWidth());
         }
-    }
+    },
+    components: { BsTabTitle }
 });
 </script>
 
@@ -100,10 +103,5 @@ export default defineComponent({
 }
 .bs-header-wrapper--transition {
     transition: left var(--bs-hide-header-tab-title-duration) ease, width var(--bs-hide-header-tab-title-duration) ease;
-}
-.header-tab-title {
-    max-width: var(--bs-drawer-width);
-    flex-shrink: 0;
-    word-break: break-word;
 }
 </style>
