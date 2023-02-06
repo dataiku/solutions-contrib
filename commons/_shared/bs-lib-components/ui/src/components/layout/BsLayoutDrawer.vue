@@ -8,7 +8,8 @@
     bordered
 >
     <BsDrawerBtn
-        v-model="expand"
+        :model-value="expand"
+        @update:model-value="toggleDrawer"
         :show="expandable"
     ></BsDrawerBtn>
 </QDrawer>
@@ -43,6 +44,7 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
+        modelValue: Boolean,
     },
     data() {
         return {
@@ -73,6 +75,20 @@ export default defineComponent({
         drawerProps() {
             return this.mini ? this.miniDrawerProps : this.defaultDrawerProps;
         }
+    },
+    watch: {
+        modelValue() {
+            this.expand = this.modelValue;
+        },
+    },
+    methods: {
+        toggleDrawer(expand: boolean) {
+            this.expand = expand;
+            this.$emit("update:model-value", expand);
+        },
+    },
+    mounted() {
+        if (this.modelValue !== undefined) this.expand = true;
     },
 });
 </script>

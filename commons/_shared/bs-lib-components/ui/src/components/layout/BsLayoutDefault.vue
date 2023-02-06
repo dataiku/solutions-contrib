@@ -1,5 +1,5 @@
 <template>
-<QLayout view="lHh LpR lFf" class="bg-white">
+<QLayout view="lHh LpR lFf" class="bg-white" :style="layoutStyles">
     <!-- 
         =========================
         -----LAYOUT-ELEMENTS-----
@@ -8,6 +8,7 @@
         Slots from the <BSTab> component will move here
     -->
     <BsLayoutDrawer
+        v-model="drawerOpen"
         @vnode-mounted="drawerMounted = true"
         :expandable="selectedTabDrawer"
         :collapsed-width="tabMenuWidth"
@@ -68,6 +69,7 @@ import BsLayoutDrawer from './BsLayoutDrawer.vue';
 import BsLayoutHeader from './BsLayoutHeader.vue';
 import BsTab from './BsTab.vue';
 import BsDrawer from './base-subcomponents/BsDrawer.vue'
+import BsHeader from './base-subcomponents/BsHeader.vue';
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
 
@@ -112,6 +114,7 @@ export default defineComponent({
             headerMounted: false,
             drawerMounted: false,
             qPageMounted: false,
+            drawerOpen: true,
             tabSlotNames: [
                 'header',
                 'leftpanel',
@@ -125,19 +128,20 @@ export default defineComponent({
     provide() {
         const provideStatic = this.provideStatic([
             "tabs",
-            // menu props
-            "leftPanelWidth",
         ]);
         let provideComputed = this.provideComputed([
             "selectedTab",
             "qLayoutMounted",
             "layoutDocsProps",
+            "defaultTabUsed",
+            "drawerOpen",
         ]);
         if (this.defaultTabUsed) {
             const provideVirtualTab = this.provideComputed([
                 'tabContentId',
                 'qPageMounted',
                 'defaultDrawer',
+                'defaultHeader',
             ]);
             provideComputed = {...provideComputed, ...provideVirtualTab};
         }
@@ -178,7 +182,15 @@ export default defineComponent({
         },
         defaultDrawer() {
             return !!this.getSlotComponents(BsDrawer.name).length;
-        }
+        },
+        defaultHeader() {
+            return !!this.getSlotComponents(BsHeader.name).length;
+        },
+        layoutStyles() {
+            return {
+                '--bs-drawer-width': `${this.leftPanelWidth}px`,
+            };
+        },
     },
     mounted() {
         this.mounted = true;

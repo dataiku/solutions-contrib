@@ -1,5 +1,5 @@
 <template>
-    <BsHeader v-if="usingSlotHeader">
+    <BsHeader v-if="usingSlotHeader || !(header || defaultTabUsed)">
         <slot name="header"></slot>
     </BsHeader>
     <BsDrawer v-if="usingSlotDrawer">
@@ -58,10 +58,11 @@ export default defineComponent({
             qPageMounted: false,
         };
     },
-    inject: ["$tabs", "$selectedTab", "$defaultDrawer"],
+    inject: ["$tabs", "$selectedTab", "$defaultTabUsed", "$defaultDrawer"],
     provide() {
         return this.provideComputed([
             'isTabSelected',
+            'tabName',
             // documention
             'tabDocsProps',
             'tabContentId',
@@ -91,6 +92,9 @@ export default defineComponent({
         tabContentId() {
             return this.getTabContentId(this.tabId);
         },
+        tabName() {
+            return this.name;
+        },
         tabDocsProps(): Partial<DocsProps> {
             return {
                 docImageDimensions: this.docImageDimensions,
@@ -105,7 +109,13 @@ export default defineComponent({
             return (this as any as { $selectedTab: Tab }).$selectedTab;
         },
         defaultDrawer() {
-            return (this as any as { $defaultDrawer: Tab }).$defaultDrawer;
+            return (this as any as { $defaultDrawer: boolean }).$defaultDrawer;
+        },
+        defaultHeader() {
+            return (this as any as { $defaultHeader: boolean }).$defaultHeader;
+        },
+        defaultTabUsed() {
+            return (this as any as { $defaultTabUsed: boolean }).$defaultTabUsed;
         },
         tabs() {
             return (this as any as { $tabs: Tab[] }).$tabs;
@@ -115,7 +125,7 @@ export default defineComponent({
             return {tabId, drawer, header, name, icon} as Tab;
         },
         header() {
-            return this.usingComponentHeader || this.usingSlotHeader;
+            return this.usingComponentHeader || this.usingSlotHeader || this.defaultHeader;
         },
         drawer() {
             return this.usingComponentDrawer || this.usingSlotDrawer || this.defaultDrawer;
@@ -143,6 +153,9 @@ export default defineComponent({
         },
         usingSlotContent() {
             return !this.usingComponentContent && !!this.$slots.content;
+        },
+        appendTabTitleToHeader() {
+            return !this.defaultTabUsed;
         },
     },
     methods: {
