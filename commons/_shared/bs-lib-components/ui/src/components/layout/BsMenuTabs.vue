@@ -41,11 +41,12 @@ export default defineComponent({
 ::v-deep .q-tabs--vertical .q-tab {
     padding: 0 5px;
     scale: -1 1;
-
+    .q-tab__content {
+        scale: -1 1;
+    }
     .q-icon {
         --tab-icon-size: 20px;
-        
-        scale: -1 1;
+
         width: var(--tab-icon-size);
         height: var(--tab-icon-size);
         font-size: var(--tab-icon-size);

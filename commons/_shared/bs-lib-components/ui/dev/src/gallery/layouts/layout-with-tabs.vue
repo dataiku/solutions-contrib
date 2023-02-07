@@ -1,6 +1,6 @@
 <template>
 <BsLayoutDefault>
-    <BsTab icon="movie" name="First Tab" docTitle="First Tab" docIcon="/imgs/doc-logo-example.svg">
+    <BsTab name="First Tab" icon="tab" docTitle="First Tab" docIcon="/imgs/doc-logo-example.svg">
         <BsHeader>
             <div class="dku-medium-title-sb q-px-md">Header First tab</div>
         </BsHeader>
@@ -32,6 +32,8 @@
         <BsContent>
             <router-view />
         </BsContent>
+        <BsTabIcon>
+        </BsTabIcon>
     </BsTab>
     <BsTab icon="help" name="Second Tab" docTitle="Second Tab" docIcon="/imgs/doc-logo-example.svg">
         <BsHeader>
@@ -74,8 +76,9 @@ import BsContent from "app/../src/components/layout/base-subcomponents/BsContent
 import BsDocumentation from "app/../src/components/layout/base-subcomponents/BsDocumentation.vue";
 import BsDrawer from "app/../src/components/layout/base-subcomponents/BsDrawer.vue";
 import BsHeader from "app/../src/components/layout/base-subcomponents/BsHeader.vue";
-import BsTab from "../../../../src/components/layout/BsTab.vue"
-
+import BsTabIcon from "app/../src/components/layout/base-subcomponents/BsTabIcon.vue";
+import BsTab from "app/../src/components/layout/BsTab.vue";
+import { QIcon } from "quasar";
 export default {
     name: "LayoutWithTabs",
     components: {
@@ -83,7 +86,9 @@ export default {
     BsDocumentation,
     BsContent,
     BsDrawer,
-    BsHeader
+    BsHeader,
+    BsTabIcon,
+    QIcon,
 },
 };
 </script>

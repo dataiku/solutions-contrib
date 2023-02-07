@@ -9,8 +9,8 @@
     <BsDocumentation v-if="usingSlotDocumentation" v-model="openDoc">
         <slot name="documentation"></slot>
     </BsDocumentation>
-    <BsTabIcon v-if="usingSlotDocumentation">
-        <slot name="documentation"></slot>
+    <BsTabIcon v-if="!defaultTabUsed && usingSlotTabIcon">
+        <slot name="tabicon"></slot>
     </BsTabIcon>
     <QPageContainer v-show="isTabSelected">
         <QPage @vnode-mounted="onQPageMounted">
@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { QPageContainer, QPage } from "quasar"
-import { defineComponent, PropType, Component } from "vue";
+import { defineComponent, PropType, Component, computed } from "vue";
 
 import BsHeader from './base-subcomponents/BsHeader.vue';
 import BsDocumentation from "./base-subcomponents/BsDocumentation.vue";
@@ -81,7 +81,6 @@ export default defineComponent({
         },
         icon: {
             type: String,
-            default: "tab"
         },
         docTitle: {
             type: String,
@@ -116,14 +115,20 @@ export default defineComponent({
         defaultTabUsed() { return (this as any as { $defaultTabUsed: boolean }).$defaultTabUsed },
         tabs() { return (this as any as { $tabs: Tab[] }).$tabs },
         tab() {
-            const { tabId, drawer, header, name, icon } = this;
-            return {tabId, drawer, header, name, icon} as Tab;
+            const { tabId, drawer, header, name } = this;
+            return {
+                tabId, drawer, header, name,
+                icon: computed(() => this.tabIcon) as any as string
+            } as Tab;
         },
         header() {
             return this.usingComponent(BsHeader) || this.usingSlotHeader || this.defaultHeader;
         },
         drawer() {
             return this.usingComponent(BsDrawer) || this.usingSlotDrawer || this.defaultDrawer;
+        },
+        tabIcon() {
+            return (this.usingComponent(BsTabIcon) || this.usingSlotTabIcon) ? undefined : this.icon;
         },
         usingSlotHeader() {
             return this.usingSlot(BsHeader, "header");
@@ -136,6 +141,9 @@ export default defineComponent({
         },
         usingSlotContent() {
             return this.usingSlot(BsContent, "content");
+        },
+        usingSlotTabIcon() {
+            return this.usingSlot(BsTabIcon, "tabicon");
         },
         appendTabTitleToHeader() {
             return !this.defaultTabUsed;
