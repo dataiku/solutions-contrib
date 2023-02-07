@@ -1,6 +1,6 @@
 <template>
 <BsLayoutDefault>
-    <BsTab name="First Tab" icon="tab" docTitle="First Tab" docIcon="/imgs/doc-logo-example.svg">
+    <BsTab name="First Tab" icon="movie" docTitle="First Tab" docIcon="/imgs/doc-logo-example.svg">
         <BsHeader>
             <div class="dku-medium-title-sb q-px-md">Header First tab</div>
         </BsHeader>
@@ -32,8 +32,6 @@
         <BsContent>
             <router-view />
         </BsContent>
-        <BsTabIcon>
-        </BsTabIcon>
     </BsTab>
     <BsTab icon="help" name="Second Tab" docTitle="Second Tab" docIcon="/imgs/doc-logo-example.svg">
         <BsHeader>
