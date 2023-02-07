@@ -9,6 +9,9 @@
     <BsDocumentation v-if="usingSlotDocumentation" v-model="openDoc">
         <slot name="documentation"></slot>
     </BsDocumentation>
+    <BsTabIcon v-if="usingSlotDocumentation">
+        <slot name="documentation"></slot>
+    </BsTabIcon>
     <QPageContainer v-show="isTabSelected">
         <QPage @vnode-mounted="onQPageMounted">
             <div class="content" :id="tabContentId">
@@ -23,12 +26,13 @@
 
 <script lang="ts">
 import { QPageContainer, QPage } from "quasar"
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, Component } from "vue";
 
 import BsHeader from './base-subcomponents/BsHeader.vue';
 import BsDocumentation from "./base-subcomponents/BsDocumentation.vue";
 import BsContent from "./base-subcomponents/BsContent.vue";
 import BsDrawer from './base-subcomponents/BsDrawer.vue';
+import BsTabIcon from "./base-subcomponents/BsTabIcon.vue";
 
 import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
 import ProvideMixin from './ProvideMixin.vue';
@@ -42,13 +46,14 @@ export default defineComponent({
     name: "BsTab",
     mixins: [CheckSlotComponentsMixin, ProvideMixin],
     components: {
-        BsDrawer,
-        BsHeader,
-        BsDocumentation,
-        BsContent,
-        QPageContainer,
-        QPage,
-    },
+    BsDrawer,
+    BsHeader,
+    BsDocumentation,
+    BsContent,
+    QPageContainer,
+    QPage,
+    BsTabIcon
+},
     data() {
         return {
             index: 0,
@@ -125,34 +130,22 @@ export default defineComponent({
             return {tabId, drawer, header, name, icon} as Tab;
         },
         header() {
-            return this.usingComponentHeader || this.usingSlotHeader || this.defaultHeader;
+            return this.usingComponent(BsHeader) || this.usingSlotHeader || this.defaultHeader;
         },
         drawer() {
-            return this.usingComponentDrawer || this.usingSlotDrawer || this.defaultDrawer;
-        },
-        usingComponentHeader() {
-            return !!this.getSlotComponents(BsHeader.name).length;
-        },
-        usingComponentDrawer() {
-            return !!this.getSlotComponents(BsDrawer.name).length;
-        },
-        usingComponentDocumentation() {
-            return !!this.getSlotComponents(BsDocumentation.name).length;
-        },
-        usingComponentContent() {
-            return !!this.getSlotComponents(BsContent.name).length;
+            return this.usingComponent(BsDrawer) || this.usingSlotDrawer || this.defaultDrawer;
         },
         usingSlotHeader() {
-            return !this.usingComponentHeader && (!!this.$slots.header);
+            return !this.usingComponent(BsHeader) && (!!this.$slots.header);
         },
         usingSlotDrawer() {
-            return !this.usingComponentDrawer && !!(this.$slots.leftpanel || this.$slots.drawer);
+            return !this.usingComponent(BsDrawer) && !!(this.$slots.leftpanel || this.$slots.drawer);
         },
         usingSlotDocumentation() {
-            return !this.usingComponentDocumentation && !!this.$slots.documentation;
+            return !this.usingComponent(BsDocumentation) && !!this.$slots.documentation;
         },
         usingSlotContent() {
-            return !this.usingComponentContent && !!this.$slots.content;
+            return !this.usingComponent(BsContent) && !!this.$slots.content;
         },
         appendTabTitleToHeader() {
             return !this.defaultTabUsed;
@@ -165,6 +158,9 @@ export default defineComponent({
         onQPageMounted() {
             this.qPageMounted = true;
             this.$emit('mounted:q-page');
+        },
+        usingComponent(component: Component) {
+            return !!this.getSlotComponents(component.name || "").length;
         }
     },
     emits: ['mounted:q-page'],
