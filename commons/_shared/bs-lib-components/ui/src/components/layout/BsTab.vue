@@ -110,21 +110,11 @@ export default defineComponent({
         isTabSelected() {
             return this.selectedTab?.tabId === this.tabId;
         },
-        selectedTab() {
-            return (this as any as { $selectedTab: Tab }).$selectedTab;
-        },
-        defaultDrawer() {
-            return (this as any as { $defaultDrawer: boolean }).$defaultDrawer;
-        },
-        defaultHeader() {
-            return (this as any as { $defaultHeader: boolean }).$defaultHeader;
-        },
-        defaultTabUsed() {
-            return (this as any as { $defaultTabUsed: boolean }).$defaultTabUsed;
-        },
-        tabs() {
-            return (this as any as { $tabs: Tab[] }).$tabs;
-        },
+        selectedTab() { return (this as any as { $selectedTab: Tab }).$selectedTab },
+        defaultDrawer() { return (this as any as { $defaultDrawer: boolean }).$defaultDrawer },
+        defaultHeader() { return (this as any as { $defaultHeader: boolean }).$defaultHeader },
+        defaultTabUsed() { return (this as any as { $defaultTabUsed: boolean }).$defaultTabUsed },
+        tabs() { return (this as any as { $tabs: Tab[] }).$tabs },
         tab() {
             const { tabId, drawer, header, name, icon } = this;
             return {tabId, drawer, header, name, icon} as Tab;
