@@ -50,9 +50,9 @@ export default defineComponent({
     BsHeader,
     BsDocumentation,
     BsContent,
+    BsTabIcon,
     QPageContainer,
     QPage,
-    BsTabIcon
 },
     data() {
         return {
