@@ -1,7 +1,7 @@
 <template>
     <Teleport v-if="qLayoutMounted" to=".bs-header">
         <div
-            @vnode-mounted="calculateHeaderTabTitleWidth"
+            @vnode-mounted="calculateHeaderTabTitleWidth = true"
             v-show="showComponent"
             :style="tabHeaderStyles"
             :class="[
@@ -13,6 +13,8 @@
             <BsTabTitle
                 ref="headerTabTitle"
                 v-show="appendTabTitleToHeader"
+                :calculate-width="calculateHeaderTabTitleWidth"
+                @calculated="updateHeaderTabTitleWidth"
             >
             </BsTabTitle>
             <slot></slot>
@@ -21,18 +23,22 @@
 </template>
 <script lang="ts">
 
-import { defineComponent, Teleport, ComponentPublicInstance } from 'vue';
+import { defineComponent, Teleport } from 'vue';
 import BsTabChild from '../BsTabChild.vue';
 import BsTabTitle from '../BsTabTitle.vue';
 
 export default defineComponent({
     name: "BsHeader",
+    components: {
+        BsTabTitle
+    },
     extends: BsTabChild,
     inject: ["$defaultTabUsed", "$drawerOpen"],
     data() {
         return {
             headerTabTitleWidth: "0px",
             wrapperTransitions: false,
+            calculateHeaderTabTitleWidth: false,
         };
     },
     computed: {
@@ -59,16 +65,7 @@ export default defineComponent({
         },
     },
     methods: {
-        widthNonExistant(width: string) {
-            return ["0px", "auto"].includes(width);
-        },
-        calculateHeaderTabTitleWidth() {
-            const titleHeader: HTMLDivElement = (this.$refs?.headerTabTitle as ComponentPublicInstance).$el;
-            if (!titleHeader) return;
-            const { width } = getComputedStyle(titleHeader);
-            if (this.widthNonExistant(width))
-                return;
-            this.headerTabTitleWidth = width;
+        widthUpdated() {
             this.toggleTransitions();
         },
         toggleTransitions() {
@@ -76,15 +73,14 @@ export default defineComponent({
                 this.wrapperTransitions = true;
             }, 0);
         },
+        widthNonExistant(width: string) {
+            return ["0px", "auto"].includes(width);
+        },
+        updateHeaderTabTitleWidth(width: any) {
+            this.headerTabTitleWidth = width;
+            this.widthUpdated();
+        },
     },
-    watch: {
-        showComponent() {
-            if (!this.showComponent || this.headerTabTitleWidthExists)
-                return;
-            this.$nextTick(() => this.calculateHeaderTabTitleWidth());
-        }
-    },
-    components: { BsTabTitle }
 });
 </script>
 
