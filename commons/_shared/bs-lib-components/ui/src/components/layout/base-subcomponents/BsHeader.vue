@@ -90,6 +90,7 @@ export default defineComponent({
 
     position: relative;
     display: flex;
+    align-items: baseline;
     left: 0;
     width: 100%;
     &.bs-header-wrapper--hide-tab-name {

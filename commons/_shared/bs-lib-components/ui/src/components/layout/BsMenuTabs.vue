@@ -4,7 +4,9 @@
             :model-value="modelValue"
             @update:model-value="(val) => $emit('update:model-value', val)"
             vertical
-            class="text-primary"
+            active-color="primary"
+            indicator-color="primary"
+            active-bg-color="white"
         >
             <slot></slot>
         </q-tabs>
@@ -39,11 +41,7 @@ export default defineComponent({
 ::v-deep .q-tabs--vertical .q-tab {
     padding: 0 5px;
     scale: -1 1;
-    transition: background-color .345s;
-    
-    &.q-tab--active {
-        background-color: #3B99FC19
-    }
+
     .q-icon {
         --tab-icon-size: 20px;
         
@@ -62,8 +60,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    background: #fff;
+    background: #f5f5f5;
     z-index: 10000;
-    border-right: 1px solid #CAC5C5;
 }
 </style>

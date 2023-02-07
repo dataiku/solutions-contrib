@@ -99,7 +99,13 @@ export default defineComponent({
     z-index: 3000;
 
     &.q-drawer--left.q-drawer--bordered {
-        border-right: .5px solid #ccc;
+
+        &.q-drawer--standard {
+            border-right: 1px solid #ccc;
+        }
+        &.q-drawer--mini {
+            border-right: 2px solid #EFEFEF;
+        }
     }
 }
 </style>

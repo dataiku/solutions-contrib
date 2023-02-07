@@ -2,7 +2,7 @@
 <div
     v-if="!defaultTabUsed"
     v-bind="$attrs"
-    class="text-primary bs-tab-title dku-medium-title-sb q-pa-md"
+    class="text-primary bs-tab-title dku-medium-title-sb q-px-md"
 >
     {{tabName}}
 </div>
@@ -72,6 +72,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .bs-tab-title {
+    padding-top: 12.5px;
+    padding-bottom: 12.5px;
     max-width: var(--bs-drawer-width);
     word-break: break-word;
 }

@@ -2,10 +2,10 @@
 <BsLayoutDefault>
     <BsTab icon="movie" name="First Tab" docTitle="First Tab" :docIcon="docLogo">
         <BsHeader>
-            <div class="dku-medium-title-sb q-pa-md">Header First tab</div>
+            <div class="dku-medium-title-sb q-px-md">Header First tab</div>
         </BsHeader>
         <BsDrawer>
-            <div class="dku-medium-title-sb q-pa-md">Left Panel First tab</div>
+            <div class="dku-medium-title-sb q-px-md">Left Panel First tab</div>
         </BsDrawer>
         <BsDocumentation>
             <p class="dku-small-title">Documentation First tab</p>
@@ -35,10 +35,10 @@
     </BsTab>
     <BsTab icon="help" name="Second Tab" docTitle="Second Tab" :docIcon="docLogo">
         <BsHeader>
-            <div class="dku-medium-title-sb q-pa-md">Header Second tab</div>
+            <div class="dku-medium-title-sb q-px-md">Header Second tab</div>
         </BsHeader>
         <BsDrawer>
-            <div class="dku-medium-title-sb q-pa-md">Left Panel Second tab</div>
+            <div class="dku-medium-title-sb q-px-md">Left Panel Second tab</div>
         </BsDrawer>
         <BsDocumentation>
             <p class="dku-small-title">Documentation Second tab</p>
