@@ -104,7 +104,7 @@ export default defineComponent({
             border-right: 1px solid #ccc;
         }
         &.q-drawer--mini {
-            border-right: 2px solid #EFEFEF;
+            border-right: none;
         }
     }
 }
