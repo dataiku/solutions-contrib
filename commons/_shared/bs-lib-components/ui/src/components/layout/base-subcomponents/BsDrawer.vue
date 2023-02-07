@@ -18,23 +18,6 @@ export default defineComponent({
     components: {
         BsTabTitle,
     },
-    data() {
-        return {
-            leftPanelExpanded: false,
-        };
-    },
-    props: {
-        expandBtn: {
-            type: [Boolean, Object],
-            default: false
-        },
-    },
-    methods: {
-        toggleLeftPanel() {
-            this.$emit("model")
-            this.leftPanelExpanded = !this.leftPanelExpanded;
-        },
-    },
 });
 </script>
 
