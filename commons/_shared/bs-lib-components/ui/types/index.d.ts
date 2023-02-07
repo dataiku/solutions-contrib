@@ -27,11 +27,7 @@ export interface BsContent extends DefaultComponent {}
 export const BsContent: ComponentConstructor<BsContent>;
 
 //BsDrawer
-interface BsDrawerProps {
-    name?: string;
-}
-
-export interface BsDrawer extends ComponentPublicInstance<BsDrawerProps> {}
+export interface BsDrawer extends DefaultComponent {}
 export const BsDrawer: ComponentConstructor<BsDrawer>;
 
 //BsTabIcon
@@ -177,7 +173,7 @@ declare module "@vue/runtime-core" {
 			BsTab: GlobalComponentConstructor<BsTabProps, BsTabSlots>;
 			BsHeader: DefaultGlobalComponent;
 			BsContent: DefaultGlobalComponent;
-			BsDrawer: GlobalComponentConstructor<BsDrawerProps, DefaultSlots>;
+			BsDrawer: DefaultGlobalComponent;
 			BsDocumentation: GlobalComponentConstructor<BsDocumentationProps, DefaultSlots>;
 			BsTabIcon: GlobalComponentConstructor<BsTabIconProps, DefaultSlots>;
             // other
