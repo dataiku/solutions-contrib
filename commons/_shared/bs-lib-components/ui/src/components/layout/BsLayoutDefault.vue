@@ -120,6 +120,7 @@ export default defineComponent({
             drawerOpen: true,
             tabSlotNames: [
                 'header',
+                'head',
                 'leftpanel',
                 'drawer',
                 'documentation',

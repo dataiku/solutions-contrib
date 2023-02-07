@@ -1,5 +1,6 @@
 <template>
     <BsHeader v-if="usingSlotHeader || !(header || defaultTabUsed)">
+        <slot v-if="!$slots.header" name="head"></slot>
         <slot name="header"></slot>
     </BsHeader>
     <BsDrawer v-if="usingSlotDrawer">
@@ -18,10 +19,10 @@
                 <BsContent v-if="usingSlotContent">
                     <slot name="content"></slot>
                 </BsContent>
-                <slot></slot>
             </div>
         </QPage>
     </QPageContainer>
+    <slot></slot>
 </template>
 
 <script lang="ts">
@@ -131,7 +132,7 @@ export default defineComponent({
             return (this.usingComponent(BsTabIcon) || this.usingSlotTabIcon) ? undefined : this.icon;
         },
         usingSlotHeader() {
-            return this.usingSlot(BsHeader, "header");
+            return this.usingSlot(BsHeader, "header", "head");
         },
         usingSlotDrawer() {
             return this.usingSlot(BsDrawer, "leftpanel", "drawer");
