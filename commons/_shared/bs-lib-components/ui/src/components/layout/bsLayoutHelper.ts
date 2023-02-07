@@ -18,3 +18,6 @@ export function transitionHideToHiddenClasses(
 		[hiddenClassToggle, transitionDuration * +hide]
 	);
 }
+
+export const getBsMenuTabId = (tabId: string) => `bs-menu-tab-${tabId}`;
+export const getBsContentId = (tabId: string) => `tab-content-id-${tabId}`;

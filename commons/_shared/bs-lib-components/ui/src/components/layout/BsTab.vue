@@ -37,7 +37,7 @@ import { SluggerSingleton } from './Slugger';
 const slugger = new SluggerSingleton("tabs");
 
 import { Tab, ImageDimensions, DocsProps } from "./bsLayoutTypes";
-
+import { getBsContentId } from "./bsLayoutHelper"
 export default defineComponent({
     name: "BsTab",
     mixins: [CheckSlotComponentsMixin, ProvideMixin],
@@ -65,7 +65,7 @@ export default defineComponent({
             'tabName',
             // documention
             'tabDocsProps',
-            'tabContentId',
+            'tabId',
             'qPageMounted',
         ]);
     },
@@ -90,7 +90,7 @@ export default defineComponent({
     },
     computed: {
         tabContentId() {
-            return this.getTabContentId(this.tabId);
+            return getBsContentId(this.tabId);
         },
         tabName() {
             return this.name;
@@ -161,9 +161,6 @@ export default defineComponent({
     methods: {
         registerTab() {
             this.tabs.push(this.tab);
-        },
-        getTabContentId(tabId: string) {
-            return `tab-content-id-${tabId}`;
         },
         onQPageMounted() {
             this.qPageMounted = true;

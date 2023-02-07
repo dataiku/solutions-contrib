@@ -6,19 +6,23 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { getBsContentId } from "./bsLayoutHelper"
 
 export default defineComponent({
     name: "BsTabPageChildWrapper",
-    inject: ['$qPageMounted', '$tabContentId'],
+    inject: ['$qPageMounted', '$tabId'],
     computed: {
         contentCSSSelector(): string {
             return `#${this.tabContentId}`;
         },
-        tabContentId() {
-            return (this as any as {$tabContentId: string})?.$tabContentId;
+        tabContentId(): string {
+            return getBsContentId(this.tabId);
         },
-        qPageMounted() {
-            return (this as any as {$qPageMounted: string})?.$qPageMounted;
+        tabId(): string {
+            return (this as any as {$tabId: string})?.$tabId;
+        },
+        qPageMounted(): boolean {
+            return (this as any as { $qPageMounted: boolean })?.$qPageMounted;
         },
     },
 });

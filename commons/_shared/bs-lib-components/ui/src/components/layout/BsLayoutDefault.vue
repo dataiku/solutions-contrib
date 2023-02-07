@@ -28,10 +28,12 @@
     <BsMenuTabs
         v-if="mounted && isTabsMultiple"
         v-model="tabIndex"
+        @vnode-mounted="menuTabsMounted = true"
     >
         <BsMenuTab 
-            v-for="({name, icon}, index) in tabs"
+            v-for="({name, icon, tabId}, index) in tabs"
             :name="name"
+            :tab-id="tabId"
             :icon="icon"
             :tab-index="index"
         ></BsMenuTab>
@@ -114,6 +116,7 @@ export default defineComponent({
             headerMounted: false,
             drawerMounted: false,
             qPageMounted: false,
+            menuTabsMounted: false,
             drawerOpen: true,
             tabSlotNames: [
                 'header',
@@ -132,6 +135,7 @@ export default defineComponent({
         let provideComputed = this.provideComputed([
             "selectedTab",
             "qLayoutMounted",
+            "menuTabsMounted",
             "layoutDocsProps",
             "defaultTabUsed",
             "drawerOpen",

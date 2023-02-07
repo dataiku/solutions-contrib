@@ -15,12 +15,14 @@
                 {{ name }}
             </span>
         </q-tooltip>
+        <span v-if="tabId" :id="getBsMenuTabId(tabId)">
+        </span> 
     </q-tab>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+import { getBsMenuTabId } from './bsLayoutHelper'
 export default defineComponent({
     name: "BsMenuTab",
     props: {
@@ -32,6 +34,15 @@ export default defineComponent({
         },
         tabIndex: {
             type: Number,
+        },
+        tabId: {
+            type: String,
+        }
+    },
+    methods: {
+        getBsMenuTabId(tabId?: string) {
+            tabId = tabId || `${this.tabIndex}` || "";
+            return getBsMenuTabId(tabId);
         },
     }
 });
