@@ -9,26 +9,83 @@ import { ComponentConstructor, GlobalComponentConstructor,
     } from "quasar"
 import { App, ComponentPublicInstance, VNode } from "vue";
 
-
-// BsLayoutDefault Typing
-export interface BsLayoutDefaultSlots {
-    default: () => VNode[];
-    head: () => VNode[];
-    content: () => VNode[];
-    leftpanel: () => VNode[];
-    documentation: () => VNode[];
+interface DefaultSlots {
+	default: () => VNode[];
 }
-export interface BsLayoutDefaultProps {
-    leftpanel?: Boolean;
-    header?: Boolean;
-    docTitle?: String;
-    docIcon?: String;
-    doc?: Boolean;
-    docImageDimensions?: { width: Number; height: Number};
+interface DefaultProps {}
+interface DefaultComponent extends ComponentPublicInstance<DefaultProps> {}
+interface DefaultGlobalComponent extends GlobalComponentConstructor<DefaultProps,DefaultSlots> {}
 
+// BsLayoutDefault/BsTab and children Typing
+
+//BsHeader
+export interface BsHeader extends DefaultComponent {}
+export const BsHeader: ComponentConstructor<BsHeader>;
+
+//BsContent
+export interface BsContent extends DefaultComponent {}
+export const BsContent: ComponentConstructor<BsContent>;
+
+//BsDrawer
+interface BsDrawerProps {
+    name?: string;
 }
+
+export interface BsDrawer extends ComponentPublicInstance<BsDrawerProps> {}
+export const BsDrawer: ComponentConstructor<BsDrawer>;
+
+//BsTabIcon
+interface BsTabIconProps {
+    name?: string,
+}
+
+export interface BsTabIcon extends ComponentPublicInstance<BsTabIconProps> {}
+export const BsTabIcon: ComponentConstructor<BsTabIcon>;
+
+
+//BsDocumentation
+interface BsDocumentationProps {
+	docTitle?: String;
+	docIcon?: String;
+	docImageDimensions?: { width: Number; height: Number };
+}
+
+export interface BsDocumentation extends ComponentPublicInstance<BsDocumentationProps> {}
+export const BsDocumentation: ComponentConstructor<BsDocumentation>;
+
+//BSLayoutDefault and BsTab
+
+interface BsLayoutGenericSlots extends DefaultProps {
+	header: () => VNode[];
+	head: () => VNode[];
+	content: () => VNode[];
+	leftpanel: () => VNode[];
+	drawer: () => VNode[];
+	documentation: () => VNode[];
+}
+
+interface BsLeyoutGenericProps extends BsDocumentationProps {}
+
+// BsLayoutDefault
+interface BsLayoutDefaultSlots extends BsLayoutGenericSlots {}
+interface BsLayoutDefaultProps extends BsLeyoutGenericProps {
+    leftPanelWidth?: Number;
+}
+
 export interface BsLayoutDefault extends ComponentPublicInstance<BsLayoutDefaultProps> {}
-export const BsLayoutDefault: ComponentConstructor<BsLayoutDefault>
+export const BsLayoutDefault: ComponentConstructor<BsLayoutDefault>;
+
+// BsTab
+interface BsTabSlots extends BsLayoutGenericSlots {
+	tabicon: () => VNode[];
+}
+interface BsTabProps extends BsLeyoutGenericProps {
+	name?: string;
+	icon?: string;
+}
+
+export interface BsTab extends ComponentPublicInstance<BsTabProps> {}
+export const BsTab: ComponentConstructor<BsTab>;
 
 // BsSelect Typing
 export interface BsSelectProps extends QSelectProps {
@@ -115,39 +172,54 @@ export interface BsDateRangeSlots {
 // RunTime typing for usage as a plugin
 declare module "@vue/runtime-core" {
     interface GlobalComponents {
-        BsLayoutDefault: GlobalComponentConstructor<BsLayoutDefaultProps,BsLayoutDefaultSlots>;
-        BsSelect: GlobalComponentConstructor<BsSelectProps,QSelectSlots>;
-        BsButton: GlobalComponentConstructor<QBtnProps,QBtnSlots>;
-        BsTooltip: GlobalComponentConstructor<QTooltipProps,QTooltipSlots>;
-        BsSlider: GlobalComponentConstructor<BsSliderProps,QSliderSlots>;
-        BsRange: GlobalComponentConstructor<QRangeProps,QRangeSlots>;
-        BsSpinner: GlobalComponentConstructor<QSpinnerProps,QSpinnerSlots>;
-        BsTable: GlobalComponentConstructor<QTableProps,QTableSlots>;
-        BsImg: GlobalComponentConstructor<QImgProps,QImgSlots>;
-        BsIcon: GlobalComponentConstructor<QIconProps,QIconSlots>;
-        BsToggle: GlobalComponentConstructor<BsToggleProps,BsToggleSlots>;
-        BsCheckbox: GlobalComponentConstructor<BsCheckboxProps,QCheckboxSlots>;
-        BsDateRange: GlobalComponentConstructor<BsDateRangeProps,BsDateRangeSlots>;
-
-    }
+            //Bs Layout and children
+			BsLayoutDefault: GlobalComponentConstructor<BsLayoutDefaultProps, BsLayoutDefaultSlots>;
+			BsTab: GlobalComponentConstructor<BsTabProps, BsTabSlots>;
+			BsHeader: DefaultGlobalComponent;
+			BsContent: DefaultGlobalComponent;
+			BsDrawer: GlobalComponentConstructor<BsDrawerProps, DefaultSlots>;
+			BsDocumentation: GlobalComponentConstructor<BsDocumentationProps, DefaultSlots>;
+			BsTabIcon: GlobalComponentConstructor<BsTabIconProps, DefaultSlots>;
+            // other
+			BsSelect: GlobalComponentConstructor<BsSelectProps, QSelectSlots>;
+			BsButton: GlobalComponentConstructor<QBtnProps, QBtnSlots>;
+			BsTooltip: GlobalComponentConstructor<QTooltipProps, QTooltipSlots>;
+			BsSlider: GlobalComponentConstructor<BsSliderProps, QSliderSlots>;
+			BsRange: GlobalComponentConstructor<QRangeProps, QRangeSlots>;
+			BsSpinner: GlobalComponentConstructor<QSpinnerProps, QSpinnerSlots>;
+			BsTable: GlobalComponentConstructor<QTableProps, QTableSlots>;
+			BsImg: GlobalComponentConstructor<QImgProps, QImgSlots>;
+			BsIcon: GlobalComponentConstructor<QIconProps, QIconSlots>;
+			BsToggle: GlobalComponentConstructor<BsToggleProps, BsToggleSlots>;
+			BsCheckbox: GlobalComponentConstructor<BsCheckboxProps, QCheckboxSlots>;
+			BsDateRange: GlobalComponentConstructor<BsDateRangeProps, BsDateRangeSlots>;
+		}
 }
 
 declare module "./plugin" {
     interface BsComponents {
-        BsLayoutDefault?: BsLayoutDefault;
-        BsSelect?: BsSelect;
-        BsButton?: BsButton;
-        BsTooltip?: BsTooltip;
-        BsSlider? : BsSlider;
-        BsRange?: BsRange;
-        BsSpinner?: BsSpinner;
-        BsTable?: BsTable;
-        BsImg?: BsImg;
-        BsIcon?: BsIcon;
-        BsToggle?: BsToggle;
-        BsCheckbox?: BsCheckbox;
-        BsDateRange?: BsDateRange;
-    }
+			//Bs Layout and children
+			BsLayoutDefault?: BsLayoutDefault;
+			BsTab?: BsTab;
+			BsHeader?: BsHeader;
+			BsContent?: BsContent;
+			BsDrawer?: BsDrawer;
+			BsDocumentation?: BsDocumentation;
+			BsTabIcon?: BsTabIcon;
+			// other
+			BsSelect?: BsSelect;
+			BsButton?: BsButton;
+			BsTooltip?: BsTooltip;
+			BsSlider?: BsSlider;
+			BsRange?: BsRange;
+			BsSpinner?: BsSpinner;
+			BsTable?: BsTable;
+			BsImg?: BsImg;
+			BsIcon?: BsIcon;
+			BsToggle?: BsToggle;
+			BsCheckbox?: BsCheckbox;
+			BsDateRange?: BsDateRange;
+		}
 }
 
 import { BsPluginOptions } from "./plugin"
