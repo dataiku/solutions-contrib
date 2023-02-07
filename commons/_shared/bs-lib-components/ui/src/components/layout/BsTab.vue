@@ -136,20 +136,23 @@ export default defineComponent({
             return this.usingComponent(BsDrawer) || this.usingSlotDrawer || this.defaultDrawer;
         },
         usingSlotHeader() {
-            return !this.usingComponent(BsHeader) && (!!this.$slots.header);
+            return this.usingSlot(BsHeader, "header");
         },
         usingSlotDrawer() {
-            return !this.usingComponent(BsDrawer) && !!(this.$slots.leftpanel || this.$slots.drawer);
+            return this.usingSlot(BsDrawer, "leftpanel", "drawer");
         },
         usingSlotDocumentation() {
-            return !this.usingComponent(BsDocumentation) && !!this.$slots.documentation;
+            return this.usingSlot(BsDocumentation, "documentation");
         },
         usingSlotContent() {
-            return !this.usingComponent(BsContent) && !!this.$slots.content;
+            return this.usingSlot(BsContent, "content");
         },
         appendTabTitleToHeader() {
             return !this.defaultTabUsed;
         },
+        slotsKeys() {
+            return Object.keys(this.$slots);
+        }
     },
     methods: {
         registerTab() {
@@ -161,7 +164,14 @@ export default defineComponent({
         },
         usingComponent(component: Component) {
             return !!this.getSlotComponents(component.name || "").length;
-        }
+        },
+        usingSlot(component: Component, ...slots: string[]) {
+            if (this.usingComponent(component)) return false;
+            const usingSlot = slots.reduce((useSlot: boolean, slot: string) => {
+                return useSlot && this.slotsKeys.includes(slot);
+            }, true);
+            return usingSlot;
+        },
     },
     emits: ['mounted:q-page'],
     mounted() {
