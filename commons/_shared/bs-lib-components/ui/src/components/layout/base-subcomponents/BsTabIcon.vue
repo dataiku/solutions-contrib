@@ -11,7 +11,7 @@ import { defineComponent } from 'vue';
 import { getBsMenuTabId } from '../bsLayoutHelper'
 import { QIcon } from 'quasar';
 export default defineComponent({
-    name: "default",
+    name: "BsTabIcon",
     inject: ["$menuTabsMounted", "$tabId"],
     components: {
         QIcon,
