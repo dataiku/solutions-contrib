@@ -1,6 +1,6 @@
 <template>
     <div class="row items-center q-col-gutter-md">
-        <div class="col-xs-12 col-md-6" v-for="layout in list" :key="layout.name">
+        <div class="col-xs-12 col-md-6" v-for="layout in layoutGallery" :key="layout.name">
         <q-card flat="flat" bordered="bordered">
             <div class="row items-center no-wrap q-px-md q-py-sm">
             <div>{{ layout.name }}</div>
@@ -9,7 +9,7 @@
             </div>
             <q-separator></q-separator>
             <div class="overflow-hidden"><a :href="layout.demoLink" target="_blank">
-                <q-img alt="Layout Screenshot" :src="layout.screenshot" :ratio="1.95"></q-img></a></div>
+                <q-img alt="Layout Screenshot" :src="layout.screenshot" fit="contain" :ratio="1.95"></q-img></a></div>
         </q-card>
         </div>
     </div>
@@ -17,14 +17,14 @@
 <script>
 import { mdiCodeTags, mdiOpenInNew } from '@quasar/extras/mdi-v6'
 
-import list from '../assets/layout-gallery'
+import { layoutGallery } from '../router/routes'
 
 export default {
   name: 'LayoutGalleryGrid',
 
   setup () {
     return {
-      list,
+      layoutGallery,
       mdiCodeTags,
       mdiOpenInNew
     }
