@@ -1,22 +1,20 @@
-import json
-from werkzeug.exceptions import NotFound
-from typing import Dict, Any, Optional
-from flask import current_app, jsonify
+from typing import Optional, Dict
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
-from dataikuapi.dss.dataset import DSSDataset
+from project.src.paginated_dataframe import PaginatedDataframe
+
+
 
 logger = logging.getLogger(__name__)
 NO_TRACKING_CONFIG = {"udr_mode": "NO"}
-
 
 class DataikuApi:
     def __init__(self):
         self._instanse_info = None
         self._default_project = None
+        self._paginated_dataframes: Dict[str, PaginatedDataframe] = {}
         try:
             import dataiku
         except:
@@ -26,14 +24,10 @@ class DataikuApi:
 
     def setup(
         self,
-        webapp_config: Dict,
-        plugin_config: Dict,
         default_project_key: Optional[str] = None,
     ):
 
-        self._webapp_config = webapp_config
         self._default_project_key = default_project_key
-        self._plugin_config = plugin_config
 
     @property
     def default_project(self):
@@ -48,66 +42,29 @@ class DataikuApi:
     @property
     def client(self):
         if self._client is None:
-            raise Exception("Please set the client before using it.")
+            raise Exception("Please set the client through the function setup() before using it.")
         else:
             return self._client
 
-    @client.setter
-    def client(self, c: Any):
-        raise Exception("If working outside of Dataiku, Client can only be set through the function setup()")
-
-    def get_project(self, project_id=None):
-        if project_id is None:
+    def get_project(self, project_key:Optional[str]=None):
+        if project_key is None:
             return self.default_project
         else:
-            return self.client.get_project(project_id)
+            return self.client.get_project(project_key)
 
-    def is_dataset_sql_supported(self, dataset_type):
-        return dataset_type in [
-            "PostgreSQL",
-            "Snowflake",
-            "SQLServer",
-            "BigQuery",
-            "Synapse",
-            "Redshift",
-        ]
+    def create_paginated_dataframe(self, dataset_name: str, chunksize=10000, project_key:Optional[str]=None, **kwargs):
+        project = self.get_project(project_key=project_key)
+        return PaginatedDataframe(project=project, dataset_name=dataset_name, chunksize=chunksize, **kwargs)
 
-    def list_datasets(self, project_id=None, connection=None):
-        project = self.get_project(project_id)
-        datasets = project.list_datasets()
-        if connection:
-            datasets = [d for d in datasets if d["params"].get("connection") == connection]
-        return datasets
+    def get_paginated_dataframe(self, dataset_name: str, chunksize=10000, project_key:Optional[str]=None):
+        dataset_chunksize = PaginatedDataframe.create_dataset_chunksize_binding(dataset_name, chunksize);
+        if not (dataset_chunksize in self._paginated_dataframes):
+            paginated_dataframe = self.create_paginated_dataframe(dataset_name=dataset_name, chunksize=chunksize, project_key=project_key)
+            self._paginated_dataframes[dataset_chunksize] = paginated_dataframe;
+        return self._paginated_dataframes[dataset_chunksize]
 
-    def list_sql_datasets(self, project_id=None):
-        datasets = self.list_datasets(project_id=project_id)
-        sql_datasets = [d for d in datasets if self.is_dataset_sql_supported(d.get("type"))]
-        return sql_datasets
-
-    def list_datasets_summary(self, project_id=None, connection=None):
-        datasets = self.list_datasets(project_id, connection)
-        return [{"name": ds["name"]} for ds in datasets]
-
-    def list_sql_datasets_summary(self, project_id=None):
-        sql_datasets = self.list_sql_datasets(project_id)
-        return [{"name": ds["name"], "type": ds["type"]} for ds in sql_datasets]
-
-    def list_columns(self, dataset_name, project_id=None):
-        project = self.get_project(project_id)
-        dataset = project.get_dataset(dataset_name)
-        schema = self.get_dataset_schema(dataset=dataset)
-        return schema["columns"]
-    
-    def get_dataset_schema(self, dataset: DSSDataset):
-        try:
-            return dataset.get_schema()
-        except Exception as err:
-            raise NotFound("Dataset not found.")
-    
-    def get_dss_dataset_dataframe(self, dataset_name, project_id=None):
-        project = self.get_project(project_id)
-        dataset = project.get_dataset(dataset_name)
-        return dataset.get_as_core_dataset().get_dataframe()
-
+    def get_dataset_chunk(self, dataset_name: str, chunk_index: int, chunksize=10000,  project_key:Optional[str]=None):
+        paginated_dataframe = self.get_paginated_dataframe(dataset_name=dataset_name, chunksize=chunksize, project_key=project_key)
+        return paginated_dataframe.get_chunk(chunk_index)
 
 dataiku_api = DataikuApi()
