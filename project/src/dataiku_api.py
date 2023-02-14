@@ -67,4 +67,12 @@ class DataikuApi:
         paginated_dataframe = self.get_paginated_dataframe(dataset_name=dataset_name, chunksize=chunksize, project_key=project_key)
         return paginated_dataframe.get_chunk(chunk_index)
 
+    def get_dataset(self, dataset_name: str, project_key:Optional[str]=None):
+        project = self.get_project(project_key=project_key)
+        return project.get_dataset(dataset_name=dataset_name)
+    
+    def get_dataset_schema(self, dataset_name: str, project_key:Optional[str]=None):
+        dataset = self.get_dataset(dataset_name=dataset_name, project_key=project_key)
+        return dataset.get_schema()
+
 dataiku_api = DataikuApi()

@@ -1,13 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
-
-export class ServerApi {
-    private static _host: string | undefined;
+import { DSSDatasetData, DSSDatasetSchema } from "./backend_model"
+export default class ServerApi {
+    private static _restApiEndpoint: string | undefined;
     public static client: AxiosInstance;
     public static errors: any[] = [];
     private static initialized = false;
 
-    static set host(value: string | undefined) {
-        this._host = value;
+    static set restApiEndpoint(value: string | undefined) {
+        this._restApiEndpoint = value;
         this.client = axios.create({ baseURL: value });
         this.client.interceptors.response.use(
             (response) => response,
@@ -28,13 +28,9 @@ export class ServerApi {
     }
 
 
-    public static init(options?: { host?: string}) {
+    public static init({ restApiEndpoint }: { restApiEndpoint?: string}) {
         if (this.initialized) return;
-
-        if (options) {
-            const { host } = options;
-            this.host = host;
-        }
+        if (restApiEndpoint) this.restApiEndpoint = restApiEndpoint;
 
         this.doDelete = this.requestWrapper(this.doDelete);
         this.doPost = this.requestWrapper(this.doPost);
@@ -44,20 +40,30 @@ export class ServerApi {
         this.initialized = true;
     }
 
-    public static async doPost(url: string, data: any) {
+    private static async doPost(url: string, data: any) {
         return (await this.client.post(url, data))?.data;
     }
 
-    public static async doPut(url: string, data: any) {
+    private static async doPut(url: string, data: any) {
         return (await this.client.put(url, data))?.data;
     }
 
-    public static async doGet(url: string) {
+    private static async doGet(url: string) {
         return (await this.client.get(url))?.data;
     }
 
-    public static async doDelete(url: string) {
+    private static async doDelete(url: string) {
         const msg = await this.client.delete(url);
         return !!msg;
     }
+
+    public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
+        return this.doGet(`dataset/get/dataset_name=${datasetName}/chunksize=${chunksize}/chunk_index=${chunkIndex}`);
+    }
+
+    public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
+        return this.doGet(`dataset/get_params/dataset_name=${datasetName}`);
+    }
 }
+
+ServerApi.init({restApiEndpoint: "http://127.0.0.1:15000/api/"});
