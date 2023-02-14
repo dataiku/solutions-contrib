@@ -1,5 +1,12 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { DSSDatasetData, DSSDatasetSchema } from "./backend_model"
+
+function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
+    return new Promise((resolve, reject) => {
+        request.then((res) => resolve(res?.data)).catch(reason => reject(reason));
+    });
+}
+
 export default class ServerApi {
     private static _restApiEndpoint: string | undefined;
     public static client: AxiosInstance;
@@ -40,21 +47,24 @@ export default class ServerApi {
         this.initialized = true;
     }
 
-    private static async doPost(url: string, data: any) {
-        return (await this.client.post(url, data))?.data;
+    private static doPost(url: string, data: any): Promise<any> {
+        return responseDataPromise(this.client.post(url, data));
     }
 
-    private static async doPut(url: string, data: any) {
-        return (await this.client.put(url, data))?.data;
+    private static doPut(url: string, data: any): Promise<any> {
+        return responseDataPromise(this.client.put(url, data));
     }
 
-    private static async doGet(url: string) {
-        return (await this.client.get(url))?.data;
+    private static doGet(url: string): Promise<any> {
+        return responseDataPromise(this.client.get(url));
     }
 
     private static async doDelete(url: string) {
-        const msg = await this.client.delete(url);
-        return !!msg;
+        return new Promise((resolve, reject) => {
+            this.client.delete(url)
+                .then(msg => resolve(!!msg))
+                .catch(reason => reject(reason))
+        });
     }
 
     public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
