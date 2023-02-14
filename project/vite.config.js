@@ -1,4 +1,4 @@
-import { defineConfig, searchForWorkspaceRoot } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from "path"
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
@@ -32,7 +32,7 @@ if (basePath === "") {
   serverConfig = {...serverConfig, origin: "http://127.0.0.1:5173"}
 }
 
-let defaultConfig = {
+let defaultConfig = defineConfig({
   plugins: [
     {
       ...image(),
@@ -59,7 +59,7 @@ let defaultConfig = {
       '@' : resolve("..","./")
     }
   }
-}
+})
 
 if (basePath !== "") {
   defaultConfig = {
@@ -76,6 +76,4 @@ if (basePath !== "") {
   }
 }
 
-
-
-export default defineConfig(defaultConfig);
+export default defaultConfig
