@@ -7,10 +7,8 @@ dataset_api = Blueprint("dataset_api",__name__, url_prefix="/dataset")
 
 ########## First api call example ############
 
-def cors_json_response(payload: Any):
-    res = Response(payload, mimetype='application/json')
-    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:31100')
-    return res
+def json_response(payload: Any):
+    return Response(payload, mimetype='application/json')
 
 @dataset_api.route("/get/dataset_name=<dataset_name>/chunksize=<chunksize>/chunk_index=<chunk_index>", methods=["GET"])
 def fetch_dataiku_dataset(dataset_name: str, chunksize: str, chunk_index: str):
@@ -26,11 +24,11 @@ def fetch_dataiku_dataset(dataset_name: str, chunksize: str, chunk_index: str):
         chunksize=parsed_chunksize,
     )
     payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"
-    response = cors_json_response(payload)
+    response = json_response(payload)
     return response
 
 @dataset_api.route("/get_schema/dataset_name=<dataset_name>", methods=["GET"])
 def fetch_dataiku_dataset_schema(dataset_name: str):
     params = dataiku_api.get_dataset_schema(dataset_name=dataset_name)
-    response = cors_json_response(json.dumps(params))
+    response = json_response(json.dumps(params))
     return response

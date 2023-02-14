@@ -1,5 +1,7 @@
 
 from flask import Flask
+from flask_cors import CORS
+
 import sys
 import os
 from dotenv import load_dotenv, dotenv_values
@@ -17,6 +19,7 @@ LOCAL_DSS_PROJECT = dotenv_vals["LOCAL_DSS_PROJECT"]
 os.environ["DKU_CURRENT_PROJECT_KEY"] = str(LOCAL_DSS_PROJECT)
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:31100"}})
 
 app.register_blueprint(fetch_route)
 app.register_blueprint(fetch_api)

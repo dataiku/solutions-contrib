@@ -62,7 +62,7 @@ export default class ServerApi {
     }
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
-        return this.doGet(`dataset/get_params/dataset_name=${datasetName}`);
+        return this.doGet(`dataset/get_schema/dataset_name=${datasetName}`);
     }
 }
 
