@@ -34,6 +34,9 @@ pages.forEach(node => {
   parseMenuNode(node, '','')
 })
 
+const testRoutes = process.env.DEV ? require("./testRoutes").default : [];
+
+console.log(testRoutes);
 
 const routes = [
   {
@@ -51,7 +54,7 @@ const routes = [
       }
     ]
   })),
-
+  ...testRoutes,
   // Always leave this as last one,
   // but you can also remove it
   {
