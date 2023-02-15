@@ -2,6 +2,7 @@
     <QTable
         :rows="rows"
         :columns="columns"
+        :loading="fetchingData"
     >
     <!-- v-bind="$attrs" -->
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -34,18 +35,23 @@ export default defineComponent({
     },
     data() {
         return {
-            dssColumns: undefined as unknown as DSSColumnSchema[],
-            dssData: undefined as unknown as DSSDatasetData,
+            DSSColumns: undefined as unknown as DSSColumnSchema[],
+            DSSData: undefined as unknown as DSSDatasetData,
+            fetchingChunk: false,
+            fetchingSchema: false,
         };
     },
     computed: {
+        fetchingData(): boolean {
+            return this.fetchingChunk || this.fetchingSchema;
+        },
         columns(): QTableColumn[] | undefined {
-            if (!this.dssColumns) return;
-            return this.dssColumns.map(col => this.createQTableColFromDSSCol(col))
+            if (!this.DSSColumns) return;
+            return this.DSSColumns.map(col => this.createQTableColFromDSSCol(col))
         },
         rows(): Record<string, any>[] | undefined {
-            if (!this.dssData) return;
-            const entries = Object.entries(this.dssData)
+            if (!this.DSSData) return;
+            const entries = Object.entries(this.DSSData)
             if (!entries?.length) return;
 
             const rowsAmount = Object.entries(entries[0][1]).length;
@@ -65,12 +71,20 @@ export default defineComponent({
         },
     },
     methods: {
-        getDatasetChunk(...args: Parameters<typeof ServerApi.getDatasetChunk>) {
-            return ServerApi.getDatasetChunk(...args);
+        updateDSSData(...args: Parameters<typeof ServerApi.getDatasetChunk>) {
+            this.fetchingChunk = true;
+            ServerApi.getDatasetChunk(...args).then((val) => {
+                this.DSSData = val;
+                this.fetchingChunk = false;
+            });
         },
 
-        getDatasetSchema(...args: Parameters<typeof ServerApi.getDatasetSchema>) {
-            return ServerApi.getDatasetSchema(...args)
+        getDSSDatasetSchema(...args: Parameters<typeof ServerApi.getDatasetSchema>) {
+            this.fetchingSchema = true;
+            ServerApi.getDatasetSchema(...args).then((schema) => {
+                this.DSSColumns = schema.columns;
+                this.fetchingSchema = false;
+            });
         },
 
         parseDSSColumn(columnName: string) {
@@ -90,8 +104,8 @@ export default defineComponent({
     async mounted() {
         if (true) {
             const tableName = "movies_data_top_1000";
-            this.getDatasetSchema(tableName).then(schema => this.dssColumns = schema.columns);
-            this.getDatasetChunk(tableName, this.batchSize).then(val => this.dssData = val);
+            this.getDSSDatasetSchema(tableName)
+            this.updateDSSData(tableName, this.batchSize)
         }
     }
 });
