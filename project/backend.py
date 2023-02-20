@@ -1,16 +1,6 @@
-from flask import Flask
-import sys
-import os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from commons.python.fetch.fetch_project import fetch_route
-from project.src.fetch_api import fetch_api
+from project.src.launch_utils import create_app
 
-app = Flask(__name__)
-
-app.register_blueprint(fetch_route)
-app.register_blueprint(fetch_api)
-
+app = create_app(__name__)
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
-
