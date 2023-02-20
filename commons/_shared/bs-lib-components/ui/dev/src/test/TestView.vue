@@ -1,5 +1,7 @@
 <template>
-    <BsTable>
+    <BsTable
+        dss-table-name="movies_data_top_1000"
+    >
     </BsTable>
 </template>
 
