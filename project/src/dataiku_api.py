@@ -1,11 +1,9 @@
-from typing import Optional, Dict
+from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
-from project.src.paginated_dataframe import PaginatedDataframe
-
-
+from project.src.dataset_iterator import DatasetIterator
 
 logger = logging.getLogger(__name__)
 NO_TRACKING_CONFIG = {"udr_mode": "NO"}
@@ -14,7 +12,6 @@ class DataikuApi:
     def __init__(self):
         self._instanse_info = None
         self._default_project = None
-        self._paginated_dataframes: Dict[str, PaginatedDataframe] = {}
         try:
             import dataiku
         except:
@@ -52,21 +49,6 @@ class DataikuApi:
         else:
             return self.client.get_project(project_key)
 
-    def create_paginated_dataframe(self, dataset_name: str, chunksize=10000, project_key:Optional[str]=None, **kwargs):
-        project = self.get_project(project_key=project_key)
-        return PaginatedDataframe(project=project, dataset_name=dataset_name, chunksize=chunksize, **kwargs)
-
-    def get_paginated_dataframe(self, dataset_name: str, chunksize=10000, project_key:Optional[str]=None):
-        dataset_chunksize = PaginatedDataframe.create_dataset_chunksize_binding(dataset_name, chunksize);
-        if not (dataset_chunksize in self._paginated_dataframes):
-            paginated_dataframe = self.create_paginated_dataframe(dataset_name=dataset_name, chunksize=chunksize, project_key=project_key)
-            self._paginated_dataframes[dataset_chunksize] = paginated_dataframe;
-        return self._paginated_dataframes[dataset_chunksize]
-
-    def get_dataset_chunk(self, dataset_name: str, chunk_index: int, chunksize=10000,  project_key:Optional[str]=None):
-        paginated_dataframe = self.get_paginated_dataframe(dataset_name=dataset_name, chunksize=chunksize, project_key=project_key)
-        return paginated_dataframe.get_chunk(chunk_index)
-
     def get_dataset(self, dataset_name: str, project_key:Optional[str]=None):
         project = self.get_project(project_key=project_key)
         return project.get_dataset(dataset_name=dataset_name)
@@ -74,5 +56,15 @@ class DataikuApi:
     def get_dataset_schema(self, dataset_name: str, project_key:Optional[str]=None):
         dataset = self.get_dataset(dataset_name=dataset_name, project_key=project_key)
         return dataset.get_schema()
+    
+    def get_dataset_chunk(self, dataset_name: str, chunk_index: int, chunksize=10000,  project_key:Optional[str]=None):
+        project = self.get_project(project_key=project_key)
+        dataset_iterator = DatasetIterator(project=project, dataset_name=dataset_name, chunksize=chunksize);
+        return dataset_iterator.get_chunk(index=chunk_index);
+
+    def get_dataset_last_build_start_time(self, dataset_name: str, project_key:Optional[str]=None):
+        dataset = self.get_dataset(dataset_name=dataset_name, project_key=project_key)
+        return dataset.get_info().last_build_start_time;
+
 
 dataiku_api = DataikuApi()
