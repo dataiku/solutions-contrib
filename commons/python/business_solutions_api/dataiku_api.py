@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from project.src.dataset_iterator import DatasetIterator
+from commons.python.business_solutions_api.dataset_iterator import DatasetIterator
 
 logger = logging.getLogger(__name__)
 NO_TRACKING_CONFIG = {"udr_mode": "NO"}

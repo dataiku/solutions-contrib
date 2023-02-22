@@ -1,4 +1,3 @@
-from flask import Flask
 from flask_caching import Cache
 import os
 

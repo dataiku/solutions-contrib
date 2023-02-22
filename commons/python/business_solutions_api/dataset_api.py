@@ -1,10 +1,11 @@
 from typing import Any
 from flask import Blueprint, Response
-from project.src.dataiku_api import dataiku_api
+from commons.python.business_solutions_api.dataiku_api import dataiku_api
+from commons.python.caching import cache
 from pandas import DataFrame
 import json
+
 dataset_api = Blueprint("dataset_api",__name__, url_prefix="/dataset")
-from project.src.caching import cache
 
 def json_response(payload: Any):
     return Response(payload, mimetype='application/json')

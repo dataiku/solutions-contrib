@@ -76,4 +76,4 @@ export default class ServerApi {
     }
 }
 
-ServerApi.init({restApiEndpoint: "http://127.0.0.1:15000/api/"});
+ServerApi.init({restApiEndpoint: "http://127.0.0.1:15000/bs_api/"});

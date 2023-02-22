@@ -1,21 +1,16 @@
-from typing import Callable, Optional
 from flask import Flask
 import sys
 import os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from commons.python.fetch.fetch_project import fetch_route
-from project.src.fetch_api import fetch_api
-from project.src.caching import cache
+from commons.python.business_solutions_api import business_solutions_api
+from commons.python.caching import cache
 
-
-def create_app(app_name: str, after_created: Optional[Callable[[Flask], None]]=None):
+def create_app(app_name: str):
     app = Flask(app_name)
-    if after_created != None:
-        after_created(app);
-    
+
     cache.init_app(app=app)
 
     app.register_blueprint(fetch_route)
-    app.register_blueprint(fetch_api)
-
+    app.register_blueprint(business_solutions_api)
     return app
