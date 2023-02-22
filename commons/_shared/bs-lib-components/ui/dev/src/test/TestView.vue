@@ -1,6 +1,7 @@
 <template>
     <BsTable
         dss-table-name="movies_data_top_1000"
+        :batchSize="1000"
     >
     </BsTable>
 </template>

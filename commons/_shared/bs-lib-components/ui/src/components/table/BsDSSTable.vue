@@ -2,7 +2,7 @@
     <QTable
         :rows="filteredRows"
         :columns="columns"
-        :loading="fetchingData"
+        :loading="loading"
         v-bind="$attrs"
     >
         <template #top-right>
@@ -10,6 +10,7 @@
                 :columns="colNames"
                 :rows="rows"
                 v-model="filteredRows"
+                @update:loading="(loading) => searching = loading"
             ></BsSearchTable>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -24,8 +25,9 @@ import { QTableColumn, QTable } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
 import BsSearchTable from "./BsSearchTable.vue"
+
 export default defineComponent({
-    name: "BsTable",
+    name: "BsDSSTable",
     props: {
         dssTableName: String,
         batchSize: {
@@ -49,10 +51,14 @@ export default defineComponent({
             fetchingSchema: false,
             searchedCol: undefined as string | undefined,
             searchText: null as string | null,
+            searching: false,
             filteredRows: undefined as Record<string, any>[] | undefined,
         };
     },
     computed: {
+        loading(): boolean {
+            return this.fetchingData || this.searching;
+        },
         fetchingData(): boolean {
             return this.fetchingChunk || this.fetchingSchema;
         },
@@ -90,7 +96,6 @@ export default defineComponent({
             return columnName === "id" ? "in_dss_id" : columnName;
         },
         
-        // Col slot
         createQTableCol(name: string): QTableColumn {
             return {
                 name,
