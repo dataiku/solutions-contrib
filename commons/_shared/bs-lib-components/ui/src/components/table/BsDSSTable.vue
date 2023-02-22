@@ -1,10 +1,17 @@
 <template>
     <QTable
-        :rows="rows"
+        :rows="filteredRows"
         :columns="columns"
         :loading="fetchingData"
         v-bind="$attrs"
     >
+        <template #top-right>
+            <BsSearchTable
+                :columns="colNames"
+                :rows="rows"
+                v-model="filteredRows"
+            ></BsSearchTable>
+        </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope || {}" />
         </template>
@@ -13,10 +20,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { QTable, QTableColumn } from 'quasar';
+import { QTableColumn, QTable } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
-
+import BsSearchTable from "./BsSearchTable.vue"
 export default defineComponent({
     name: "BsTable",
     props: {
@@ -31,7 +38,8 @@ export default defineComponent({
         },
     },
     components: {
-        QTable  
+        QTable,
+        BsSearchTable
     },
     data() {
         return {
@@ -39,15 +47,22 @@ export default defineComponent({
             DSSData: undefined as unknown as DSSDatasetData,
             fetchingChunk: false,
             fetchingSchema: false,
+            searchedCol: undefined as string | undefined,
+            searchText: null as string | null,
+            filteredRows: undefined as Record<string, any>[] | undefined,
         };
     },
     computed: {
         fetchingData(): boolean {
             return this.fetchingChunk || this.fetchingSchema;
         },
-        columns(): QTableColumn[] | undefined {
+        colNames(): string[] | undefined{
             if (!this.DSSColumns) return;
-            return this.DSSColumns.map(col => this.createQTableColFromDSSCol(col))
+            return this.createColNamesList(this.DSSColumns)
+        },
+        columns(): QTableColumn[] | undefined {
+            if (!this.colNames) return;
+            return this.colNames.map(colName => this.createQTableCol(colName))
         },
         rows(): Record<string, any>[] | undefined {
             if (!this.DSSData) return;
@@ -76,7 +91,7 @@ export default defineComponent({
         },
         
         // Col slot
-        createQTableColFromDSSCol({name}: DSSColumnSchema): QTableColumn {
+        createQTableCol(name: string): QTableColumn {
             return {
                 name,
                 label: name,
@@ -85,6 +100,11 @@ export default defineComponent({
                 align: "left",
             }
         },
+
+        createColNamesList(schemas: DSSColumnSchema[]): string[] {
+            return schemas.map(schema => schema.name);
+        },
+
         transformDSSDataToQTableRow(DSSData: DSSDatasetData) {
             const entries = Object.entries(DSSData)
             if (!entries?.length) return;
