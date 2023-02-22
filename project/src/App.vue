@@ -1,55 +1,104 @@
 <template>
-  <BsLayoutDefault docTitle="Solution Name" :docIcon="docLogo">
-    <template #header>
-      <div class="dku-medium-title-sb q-pa-md">Header</div>
-    </template>
-    <template #leftpanel>
-      <div class="dku-medium-title-sb q-pa-md">Left Panel</div>
-    </template>
-    <template #documentation>
-      <p class="dku-small-title">Description 1</p>
-      <p class="dku-text">Use filters to discover your process through the data. 
-              Remove noisy activities through the bottom filters. 
-              Processes displayed in the main screen can be saved as reference and 
-              compared through conformance checks and individual traces.</p>
-      <p class="dku-small-title">Description 2</p>
-      <p class="dku-text">Use filters to discover your process through the data. 
-              Remove noisy activities through the bottom filters. 
-              Processes displayed in the main screen can be saved as reference and 
-              compared through conformance checks and individual traces.</p>
-      <p class="dku-small-title">Description 3</p>
-      <p class="dku-text">Use filters to discover your process through the data. 
-              Remove noisy activities through the bottom filters. 
-              Processes displayed in the main screen can be saved as reference and 
-              compared through conformance checks and individual traces.</p>
-      <p class="dku-small-title">Description 4</p>
-      <p class="dku-text">Use filters to discover your process through the data. 
-              Remove noisy activities through the bottom filters. 
-              Processes displayed in the main screen can be saved as reference and 
-              compared through conformance checks and individual traces.</p>
-      
-    </template>
-    <template #content>
-    </template>
+  <BsLayoutDefault>
+    <BsTab
+      icon="movie"
+      name="First Tab"
+      docTitle="First Tab"
+      :docIcon="docLogo"
+    >
+      <BsHeader>
+        <div class="dku-medium-title-sb q-px-md">TEST HEADER FIRST</div>
+      </BsHeader>
+      <BsDrawer>
+        <div class="dku-medium-title-sb q-px-md">Left Panel First</div>
+      </BsDrawer>
+      <BsDocumentation>
+        <p class="dku-small-title">Documentation First tab</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 2</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 3</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 4</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+      </BsDocumentation>
+      <BsContent> TEST FIRST TAB</BsContent>
+    </BsTab>
+    <BsTab
+      icon="help"
+      name="Second Tab"
+      docTitle="Second Tab"
+      :docIcon="docLogo"
+    >
+      <BsHeader>
+        <div class="dku-medium-title-sb q-px-md">Header Second tab</div>
+      </BsHeader>
+      <BsDrawer>
+        <div class="dku-medium-title-sb q-px-md">Left Panel Second tab</div>
+        <BsButton class="bs-btn dku-text" unelevated>Fullscreen</BsButton>
+      </BsDrawer>
+      <BsDocumentation>
+        <p class="dku-small-title">Documentation Second tab</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 2</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 3</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+        <p class="dku-small-title">Description 4</p>
+        <p class="dku-text">
+          Use filters to discover your process through the data. Remove noisy
+          activities through the bottom filters. Processes displayed in the main
+          screen can be saved as reference and compared through conformance
+          checks and individual traces.
+        </p>
+      </BsDocumentation>
+      <BsContent> TEST SECOND TAB</BsContent>
+    </BsTab>
   </BsLayoutDefault>
 </template>
+
 <script>
-  import docLogo from "./assets/images/doc-logo-example.svg"
-  import { API } from "./Api";
-  export default {
-    data() {
-      return {
-        docLogo,
-        hello: ""
-      }
-    },
-    mounted: function() {
-      API.getHello().then(response => {
-        this.hello = response;
-        console.log(response)
-      }).catch((err) => {
-        console.log(err);
-      })
-    }
-  }
+import docLogo from "./assets/images/doc-logo-example.svg";
+export default {
+  data() {
+    return {
+      docLogo,
+    };
+  },
+};
 </script>

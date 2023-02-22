@@ -4,23 +4,14 @@
   "author": "anas laaroussi <anas.laaroussi@dataiku.com>",
   "description": "Shared Components library for business solutions webapps based on vue & quasar",
   "license": "MIT",
-  "module": "dist/index.esm.js",
-  "main": "dist/index.common.js",
+  "module": "dist/quasar-ui-bs.es.js",
   "files": [
     "dist/*"
   ],
-  "types": "dist/types/index.d.ts",
   "scripts": {
     "dev": "cd dev && yarn dev && cd ..",
     "dev:umd": "yarn build && node build/script.open-umd.js",
-    "dev:ssr": "cd dev && yarn 'dev:ssr' && cd ..",
-    "dev:ios": "cd dev && yarn 'dev:ios' && cd ..",
-    "dev:android": "cd dev && yarn 'dev:android' && cd ..",
-    "dev:electron": "cd dev && yarn 'dev:electron' && cd ..",
-    "update:precompiled": "node build/update-precompile-files.js",
-    "build": "node build/index.js",
-    "build:js": "node build/script.javascript.js",
-    "build:css": "node build/script.css.js"
+    "build": "cd build && vite build && cd .."
   },
   "repository": {
     "type": "git",
@@ -38,12 +29,14 @@
     "@rollup/plugin-replace": "^2.4.2",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/node": "18.8.0",
+    "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.0.2",
     "core-js": "^3.0.0",
     "cssnano": "^4.1.10",
     "fs-extra": "^8.1.0",
     "open": "^7.3.0",
     "postcss": "^8.1.9",
+    "prismjs": "^1.29.0",
     "quasar": "^2.0.0",
     "rimraf": "^3.0.0",
     "rollup": "^2.45.0",
@@ -53,6 +46,7 @@
     "tslib": "^2.5.0",
     "typescript": "^4.9.5",
     "uglify-js": "^3.13.3",
+    "vite": "^4.1.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
     "vue-template-compiler": "^2.7.13",
@@ -71,8 +65,5 @@
     "last 4 ChromeAndroid versions",
     "last 4 FirefoxAndroid versions",
     "last 4 iOS versions"
-  ],
-  "dependencies": {
-    "prismjs": "^1.29.0"
-  }
+  ]
 }
