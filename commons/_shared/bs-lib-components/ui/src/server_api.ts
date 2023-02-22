@@ -1,5 +1,27 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios_, { AxiosInstance, AxiosResponse } from 'axios';
 import { DSSDatasetData, DSSDatasetSchema } from "./backend_model"
+
+// import axios_ from "axios";
+
+
+const mode = process.env.NODE_ENV;
+const isProd = mode === "production";
+
+const baseURLVite = "http://127.0.0.1:15000";
+
+// const axios = axios_.create({
+//     baseURL: mode === "production" ?  getWebAppBackendUrl('') : baseURLVite,
+// })
+
+// axios.interceptors.response.use((response) => {
+//     return response.data
+// }, (error) => {
+//     APIErrors.push(error.response);
+//     return Promise.reject(error);
+// })
+
+// export let APIErrors = [];
+
 
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
     return new Promise((resolve, reject) => {
@@ -8,14 +30,17 @@ function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
 }
 
 export default class ServerApi {
-    private static _restApiEndpoint: string | undefined;
     public static client: AxiosInstance;
     public static errors: any[] = [];
+
+    private static _restApiEndpoint: string | undefined;
     private static initialized = false;
 
-    static set restApiEndpoint(value: string | undefined) {
-        this._restApiEndpoint = value;
-        this.client = axios.create({ baseURL: value });
+    private static initClient() {
+        const serverUrl = isProd ? (window as any).getWebAppBackendUrl('') : baseURLVite;
+        this._restApiEndpoint = `${serverUrl}/bs_api/`
+        this.client = axios_.create({ baseURL: this._restApiEndpoint });
+        
         this.client.interceptors.response.use(
             (response) => response,
             (error) => {
@@ -35,9 +60,9 @@ export default class ServerApi {
     }
 
 
-    public static init({ restApiEndpoint }: { restApiEndpoint?: string}) {
+    public static init() {
         if (this.initialized) return;
-        if (restApiEndpoint) this.restApiEndpoint = restApiEndpoint;
+        this.initClient();
 
         this.doDelete = this.requestWrapper(this.doDelete);
         this.doPost = this.requestWrapper(this.doPost);
@@ -76,4 +101,4 @@ export default class ServerApi {
     }
 }
 
-ServerApi.init({restApiEndpoint: "http://127.0.0.1:15000/bs_api/"});
+ServerApi.init();
