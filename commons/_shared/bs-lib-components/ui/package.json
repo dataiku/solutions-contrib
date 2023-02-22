@@ -5,13 +5,14 @@
   "description": "Shared Components library for business solutions webapps based on vue & quasar",
   "license": "MIT",
   "module": "dist/quasar-ui-bs.es.js",
+  "main": "dist/quasar-ui-bs.cjs.js",
   "files": [
     "dist/*"
   ],
   "scripts": {
     "dev": "cd dev && yarn dev && cd ..",
-    "dev:umd": "yarn build && node build/script.open-umd.js",
-    "build": "cd build && vite build && cd .."
+    "dev:umd": "node build/script.open-umd.js",
+    "build": "cd build && sh build.sh && cd .."
   },
   "repository": {
     "type": "git",

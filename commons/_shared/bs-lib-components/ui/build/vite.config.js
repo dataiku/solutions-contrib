@@ -3,20 +3,40 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { version } from "../package.json";
 
+let format = process.env.format;
+
+let indexPath =
+  format === "es"
+    ? "../src/index.esm.js"
+    : format === "cjs"
+    ? "../src/index.common.js"
+    : "../src/index.umd.js";
+
+let rollupOutput = {
+  globals: { vue: "Vue", quasar: "Quasar" },
+};
+
+if (format === "umd") {
+  Object.assign(rollupOutput, {
+    name: "QuasarBs",
+  });
+}
+
 export default defineConfig({
   build: {
     target: "es2015",
+    emptyOutDir: false,
+    outDir: "../dist",
     lib: {
-      entry: resolve("../src/index.esm.js"),
+      entry: resolve(indexPath),
       name: "quasar-ui-bs",
       fileName: (format) => `quasar-ui-bs.${format}.js`,
+      formats: [format],
     },
     rollupOptions: {
-      input: resolve("../src/index.esm.js"),
+      input: resolve(indexPath),
       external: ["vue", "quasar"],
-      output: {
-        globals: { vue: "Vue", quasar: "Quasar" },
-      },
+      output: rollupOutput,
     },
   },
   plugins: [vue()],
