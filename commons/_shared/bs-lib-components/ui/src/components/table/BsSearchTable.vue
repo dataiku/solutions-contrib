@@ -1,13 +1,15 @@
 <template>
 <BsSelectSearch
-    v-model="searchedCol"
-    @update:model-value="searchText = ''"
+    :model-value="searchedCol"
+    @update:model-value="updateSearchedCol"
     :options="colNames"
     label="Searched column"
-    :input-debounce="searchDebounce"
+    clearable
+    :input-debounce="colSearchDebounce"
 ></BsSelectSearch>
 <QInput
-    v-model="searchText"
+    :model-value="_searchedValue"
+    @update:model-value="updateSearchedValueDebounce"
     clearable
     :loading="inputDebouncing"
 ></QInput>
@@ -23,13 +25,19 @@ export default defineComponent({
     name: "BsSearchTable",
     props: {
         columns: Array as PropType<QTableColumn[] | string[]>,
-        rows: Array as PropType<Record<string, any>[]>,
-        modelValue: Array as PropType<Record<string, any>[]>,
-        inputDebounce: {
+        searchedCol: {
+            type: [String, Number] as PropType<string | number | null>,
+            default: null,
+        },
+        searchedValue: {
+            type: [String, Number] as PropType<string | number | null>,
+            default: null,
+        },
+        valueSearchDebounce: {
             type: [Number, String],
             default: 500
         },
-        searchDebounce: {
+        colSearchDebounce: {
             type: [Number, String],
             default: 0
         }
@@ -38,16 +46,15 @@ export default defineComponent({
         QInput,
         BsSelectSearch
     },
-    emits: ["update:model-value", "update:loading"],
+    emits: ["update:searched-col", "update:searched-value", "update:loading"],
     data() {
         return {
-            searchedCol: undefined as string | undefined,
-            searchText: null as string | null,
             inputDebouncing: false,
+            _searchedValue: null as string | number | null,
         };
     },
     computed: {
-        colNames(): string[] | undefined{
+        colNames(): string[] | undefined {
             if (!this.columns || !this.columns.length) return;
             if (typeof this.columns[0] == "string") {
                 return this.columns as string[];
@@ -55,45 +62,41 @@ export default defineComponent({
             return (this.columns as QTableColumn[]).map(col => col.name);
         },
     },
+    watch: {
+        searchedValue() {
+            this.syncSearchedValue();
+        }
+    },
     methods: {
-        filterRows(searchText?: string | null) {
-            if (searchText === undefined) searchText = this.searchText;
-            if ((typeof searchText !== "string") || (typeof this.searchedCol !== "string")) {
-                return this.rows;
-            }
-            const searchTextFormatted = searchText.toLowerCase();
-            return this.rows?.filter(row => {
-                return `${row[this.searchedCol!]}`.toLowerCase().includes(searchTextFormatted);
-            });
-        },
-        updateRows(searchText?: string | null) {
-            const rows = this.filterRows(searchText);
-            this.$emit("update:model-value", rows);
-            return rows;
-        },
         setLoading(loading: boolean) {
             this.inputDebouncing = loading;
             this.$emit('update:loading', loading);
-        }
-    },
-    watch: {
-        searchText() {
+        },
+        updateSearchedValue(val: string | number | null) {
+            this.$emit("update:searched-value", val);
+        },
+        updateSearchedValueDebounce(val: string | number | null) {
+            this._searchedValue = val;
             this.setLoading(true);
             timeoutExecuteOnce(
                 () => {
-                    this.updateRows();
+                    this.updateSearchedValue(val);
                     this.setLoading(false);
                 },
-                +this.inputDebounce,
+                +this.valueSearchDebounce,
                 "bs-search-table-search-text"
             );
         },
-        rows() {
-            this.updateRows();
+        updateSearchedCol(col: string | number | null) {
+            this.updateSearchedValue(null);
+            this.$emit("update:searched-col", col);
         },
-        columns() {
-            this.updateRows();
-        },
+        syncSearchedValue() {
+            this._searchedValue = this.searchedValue;
+        }
+    },
+    mounted() {
+        this.syncSearchedValue();
     }
 });
 </script>
