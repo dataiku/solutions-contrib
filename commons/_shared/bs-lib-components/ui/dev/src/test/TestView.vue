@@ -1,9 +1,12 @@
 <template>
-    <BsTable
-        dss-table-name="movies_data_top_1000"
-        :batchSize="1000"
-    >
-    </BsTable>
+    <div class="test-container">
+        <BsTable
+            dss-table-name="movies_data_top_1000"
+            :batchSize="100"
+            
+        >
+        </BsTable>
+    </div>
 </template>
 
 <script lang="ts">
@@ -27,5 +30,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
+.test-container {
+    position: fixed;
+    inset: 20vh 20vw;
+}
 </style>
