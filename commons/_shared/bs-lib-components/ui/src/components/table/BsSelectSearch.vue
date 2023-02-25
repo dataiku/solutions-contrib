@@ -1,14 +1,14 @@
 <template>
 <q-select
-    input-debounce="0"
-    outlined
     v-bind="$attrs"
     :model-value="modelValue"
     @update:model-value="$emit('update:model-value', $event)"
     :options="optionsFiltered"
     @filter="search"
-    use-input
     behavior="menu"
+    input-debounce="0"
+    outlined
+    use-input
 >
     <template v-slot:no-option>
     <q-item>
@@ -58,7 +58,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped lang="scss">
-
-</style>

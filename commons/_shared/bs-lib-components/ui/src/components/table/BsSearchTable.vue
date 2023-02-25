@@ -1,18 +1,16 @@
 <template>
-<BsSelectSearch
-    :model-value="searchedCol"
-    @update:model-value="updateSearchedCol"
-    :options="colNames"
-    label="Searched column"
-    clearable
-    :input-debounce="colSearchDebounce"
-></BsSelectSearch>
-<QInput
-    :model-value="_searchedValue"
-    @update:model-value="updateSearchedValueDebounce"
-    clearable
-    :loading="inputDebouncing"
-></QInput>
+    <div class="bs-search-table-container">
+        <QInput
+            width="190"
+            :model-value="_searchedValue"
+            label="searched text"
+            @update:model-value="updateSearchedValueDebounce"
+            clearable
+            dense
+            filled
+            :loading="inputDebouncing"
+        ></QInput>
+    </div>
 </template>
 
 <script lang="ts">
@@ -29,7 +27,7 @@ export default defineComponent({
             type: [String, Number] as PropType<string | number | null>,
             default: null,
         },
-        searchedValue: {
+        modelValue: {
             type: [String, Number] as PropType<string | number | null>,
             default: null,
         },
@@ -46,24 +44,15 @@ export default defineComponent({
         QInput,
         BsSelectSearch
     },
-    emits: ["update:searched-col", "update:searched-value", "update:loading"],
+    emits: ["update:model-value", "update:loading"],
     data() {
         return {
             inputDebouncing: false,
             _searchedValue: null as string | number | null,
         };
     },
-    computed: {
-        colNames(): string[] | undefined {
-            if (!this.columns || !this.columns.length) return;
-            if (typeof this.columns[0] == "string") {
-                return this.columns as string[];
-            }
-            return (this.columns as QTableColumn[]).map(col => col.name);
-        },
-    },
     watch: {
-        searchedValue() {
+        modelValue() {
             this.syncSearchedValue();
         }
     },
@@ -73,7 +62,7 @@ export default defineComponent({
             this.$emit('update:loading', loading);
         },
         updateSearchedValue(val: string | number | null) {
-            this.$emit("update:searched-value", val);
+            this.$emit("update:model-value", val);
         },
         updateSearchedValueDebounce(val: string | number | null) {
             this._searchedValue = val;
@@ -87,12 +76,8 @@ export default defineComponent({
                 "bs-search-table-search-text"
             );
         },
-        updateSearchedCol(col: string | number | null) {
-            this.updateSearchedValue(null);
-            this.$emit("update:searched-col", col);
-        },
         syncSearchedValue() {
-            this._searchedValue = this.searchedValue;
+            this._searchedValue = this.modelValue;
         }
     },
     mounted() {
@@ -100,3 +85,16 @@ export default defineComponent({
     }
 });
 </script>
+
+<style lang="scss" scoped>
+.bs-search-table-container {
+    --bs-search-table-container-item-gap: 10px;
+    display: flex;
+    gap: var(--bs-search-table-container-item-gap);
+    width: 427px;
+
+}
+.bs-search-table-container > * {
+    flex: 0 0 50%;
+}
+</style>
