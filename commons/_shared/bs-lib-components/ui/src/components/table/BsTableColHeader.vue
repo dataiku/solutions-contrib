@@ -42,10 +42,6 @@ export default defineComponent({
         searchColumn() {
 
         }
-    },
-    beforeMount() {
-        console.log(this.col);
-        console.log(this.sort);
     }
 });
 </script>
@@ -55,8 +51,8 @@ export default defineComponent({
 .bs-table-col-header-container {
 
     display: flex;
-    justify-content: space-between;
     gap: 1rem;
+    align-items: center;
     .bs-table-col-header-actions {
         flex: 0 0 none;
         display: flex;

@@ -3,13 +3,18 @@
         <QInput
             width="190"
             :model-value="_searchedValue"
-            label="searched text"
+            label="Table Search"
             @update:model-value="updateSearchedValueDebounce"
             clearable
             dense
             filled
             :loading="inputDebouncing"
-        ></QInput>
+        >
+            <template #append>
+                <q-icon :name="mdiTableSearch">
+                </q-icon>
+        </template>
+    </QInput>
     </div>
 </template>
 
@@ -18,6 +23,7 @@ import { defineComponent, PropType } from 'vue';
 import { QInput, QTableColumn } from 'quasar';
 import BsSelectSearch from "./BsSelectSearch.vue"
 import { timeoutExecuteOnce } from '../../utils/utils';
+import { mdiTableSearch } from '@quasar/extras/mdi-v6';
 
 export default defineComponent({
     name: "BsSearchTable",
@@ -49,6 +55,7 @@ export default defineComponent({
         return {
             inputDebouncing: false,
             _searchedValue: null as string | number | null,
+            mdiTableSearch,
         };
     },
     watch: {
@@ -91,10 +98,10 @@ export default defineComponent({
     --bs-search-table-container-item-gap: 10px;
     display: flex;
     gap: var(--bs-search-table-container-item-gap);
-    width: 427px;
+    width: 327px;
 
 }
 .bs-search-table-container > * {
-    flex: 0 0 50%;
+    flex: 0 0 100%;
 }
 </style>
