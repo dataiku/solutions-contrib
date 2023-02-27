@@ -32,16 +32,9 @@
             </div>
         </template>
         <template v-slot:header="props">
-            <q-tr :props="props">
-                <q-th
-                    v-for="col in props.cols"
-                    :key="col.name"
-                    :props="props"
-                    class="text-italic text-purple"
-                >
-                    {{ col.label }}
-                </q-th>
-            </q-tr>
+            <BSTableHeader
+                :props="props"
+            ></BSTableHeader>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope || {}" />
@@ -51,17 +44,20 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { QTableColumn, QTable } from 'quasar';
+import { QTableColumn, QTable, QTr } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue"
 import BsSearchTable from "./BsSearchTable.vue"
+import BSTableHeader from "./BSTableHeader.vue"
 import { filterTable } from './filterTable';
 
 export default defineComponent({
     name: "BsTable",
     components: {
         QTable,
+        QTr,
         BsDSSTableFunctional,
         BsSearchTable,
+        BSTableHeader,
     },
     emits: ["update:rows", "update:columns"],
     inheritAttrs: false,

@@ -79,7 +79,7 @@ export default defineComponent({
                 name,
                 label: name,
                 field: name,
-                sortable: true,
+                sortable: false,
                 align: "left",
             }
         },
