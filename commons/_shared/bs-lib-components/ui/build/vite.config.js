@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { version } from "../package.json";
+import dts from "vite-plugin-dts";
 
 let format = process.env.format;
 
@@ -16,6 +17,12 @@ let rollupOutput = {
   globals: { vue: "Vue", quasar: "Quasar" },
 };
 
+const plugins = [vue()];
+
+if (format === "es") {
+  plugins.push(dts({ root: "../src", outputDir: "../dist/types" }));
+}
+
 if (format === "umd") {
   Object.assign(rollupOutput, {
     name: "QuasarBs",
@@ -24,7 +31,7 @@ if (format === "umd") {
 
 export default defineConfig({
   build: {
-    target: "es2015",
+    target: "es6",
     emptyOutDir: false,
     outDir: "../dist",
     lib: {
@@ -39,7 +46,7 @@ export default defineConfig({
       output: rollupOutput,
     },
   },
-  plugins: [vue()],
+  plugins: plugins,
   define: {
     __UI_VERSION__: version,
   },

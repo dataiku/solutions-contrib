@@ -94,11 +94,15 @@
 
 <script>
 import docLogo from "./assets/images/doc-logo-example.svg";
+import { BsDocumentation } from "quasar-ui-bs";
 export default {
   data() {
     return {
       docLogo,
     };
+  },
+  components: {
+    BsDocumentation,
   },
 };
 </script>
