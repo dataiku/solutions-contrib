@@ -18,10 +18,6 @@ glob(componentsFolder, {}, function (er, files) {
   generateComponentsType(globalComponents);
 });
 
-function exist(path) {
-  return fs.existsSync(path);
-}
-
 async function generateComponentsType(globalComponents) {
   const components = {};
   globalComponents.forEach((key) => {
