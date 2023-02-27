@@ -32,14 +32,17 @@ export default defineComponent({
 
 <style scoped lang="scss">
 ::v-deep th {
-
-    &:hover .sort-icon {
-        opacity: 0.5;
-        scale: 1;
+    &:hover .bs-table-col-header-actions {
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        > * {
+            opacity: 0.5;
+            scale: 1;
+        }
     }
+    
     &.sorted .sort-icon {
-        opacity: 1;
-        scale: 1;
+        opacity: 1 !important;
+        scale: 1 !important;
     }
 
     &.sort-desc .sort-icon {
