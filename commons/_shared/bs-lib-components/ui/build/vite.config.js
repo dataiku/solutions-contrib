@@ -20,7 +20,12 @@ let rollupOutput = {
 const plugins = [vue()];
 
 if (format === "es") {
-  plugins.push(dts({ root: "../src", outputDir: "../dist/types" }));
+  plugins.push(
+    dts({
+      root: "../src",
+      outputDir: "../dist/types",
+    })
+  );
 }
 
 if (format === "umd") {

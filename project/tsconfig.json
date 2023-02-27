@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "types": ["quasar-ui-bs/dist/types/volar"],
+      "allowJs": true
+    }
+  }
