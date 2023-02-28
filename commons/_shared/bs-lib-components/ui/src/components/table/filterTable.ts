@@ -33,7 +33,7 @@ export function searchTableFilter(
         const colsToFilter = cols.filter(col => colsToFilterNames.includes(col.name));
         filteredRows = filteredRows.filter(row => colsToFilter.every(col => {
             const colSearchVal = columns[col.name];
-            colIncludesValue(col, row, colSearchVal, cellValue);
+            return colIncludesValue(col, row, colSearchVal, cellValue);
         }))
     }
 

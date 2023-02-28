@@ -8,7 +8,7 @@
                 <BsTableColHeader
                     :sort="props.sort"
                     :col="col"
-                    @search-col="$emit('search-col', $event)"
+                    @search-col="(...args) => $emit('search-col', ...args)"
                 ></BsTableColHeader>
         </q-th>
     </q-tr>
