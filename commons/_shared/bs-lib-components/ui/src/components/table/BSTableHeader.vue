@@ -5,7 +5,11 @@
             :key="col.name"
             :props="props"
             >
-                <BsTableColHeader :sort="props.sort" :col="col"></BsTableColHeader>
+                <BsTableColHeader
+                    :sort="props.sort"
+                    :col="col"
+                    @search-col="$emit('search-col', $event)"
+                ></BsTableColHeader>
         </q-th>
     </q-tr>
 </template>
@@ -27,6 +31,7 @@ export default defineComponent({
             required: true,
         },
     },
+    emits: ["search-col"],
 });
 </script>
 

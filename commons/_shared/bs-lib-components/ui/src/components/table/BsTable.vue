@@ -16,7 +16,7 @@
         :columns="passedColumns"
 
         :filter="filter"
-        :filter-method="filterTable"
+        :filter-method="searchTableFilter"
 
         :loading="isLoading"
         
@@ -27,6 +27,7 @@
                 <span class="dss-table-name">{{ dssTableName }}</span>
                 <BsSearchWholeTable
                     v-model="searchedValue"
+                    @update:formatted-value="searchedValueFormatted = $event"
                     @update:loading="searching = $event"
                 ></BsSearchWholeTable>
             </div>
@@ -34,6 +35,7 @@
         <template v-slot:header="props">
             <BSTableHeader
                 :props="props"
+                @search-col="updateSearchedCols"
             ></BSTableHeader>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -48,7 +50,7 @@ import { QTableColumn, QTable, QTr } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue"
 import BsSearchWholeTable from "./BsSearchWholeTable.vue"
 import BSTableHeader from "./BSTableHeader.vue"
-import { filterTable } from './filterTable';
+import { searchTableFilter } from './filterTable';
 
 export default defineComponent({
     name: "BsTable",
@@ -82,8 +84,9 @@ export default defineComponent({
         return {
             searching: false,
             fetching: false,
-            searchedCol: null as string | null,
+            searchedCols: {} as Record<string, string>,
             searchedValue: null as string | null,
+            searchedValueFormatted: "",
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined
         };
@@ -101,10 +104,10 @@ export default defineComponent({
         passedColumns(): QTableColumn[] | undefined {
             return this.isDSSTable ? this._columns : this.columns;
         },
-        filter(): { column: string | null, searchVal: string | number | null } {
+        filter(): { columns: Record<string, string>, searchVal: string | number | null } {
             return {
-                column: this.searchedCol,
-                searchVal: this.searchedValue
+                columns: this.searchedCols,
+                searchVal: this.searchedValueFormatted
             };
         },
     },
@@ -117,8 +120,15 @@ export default defineComponent({
             this._columns = columns;
             this.$emit("update:columns", this._columns);
         },
-        filterTable(...args: Parameters<typeof filterTable>) {
-            return filterTable(...args);
+        searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
+            return searchTableFilter(...args);
+        },
+        updateSearchedCols(colName: string, searchedVal: string) {
+            if (searchedVal) {
+                this.searchedCols[colName] = searchedVal;
+            } else {
+                delete this.searchedCols[colName];
+            }
         },
     }
 });

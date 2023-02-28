@@ -5,6 +5,7 @@
             clearable
             borderless
             dense
+            format-input
             v-bind="$attrs"
     >
         <template #append>

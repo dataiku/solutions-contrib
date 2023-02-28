@@ -1,5 +1,12 @@
 import { QTableColumn } from "quasar";
 
+type filterFunc = (
+    rows: readonly Record<string, any>[],
+    {columns, searchVal}: { columns: Record<string, string>, searchVal: string | number | null },
+    cols: readonly QTableColumn[],
+    cellValue: (col: QTableColumn, row: Record<string, any>
+) => any) => readonly Record<string, any>[];
+
 function colIncludesValue(col: QTableColumn, row: Record<string, any>, lowerTerms: string, cellValue: (col: QTableColumn, row: Record<string, any>) => any) {
     {
         const val = cellValue(col, row) + ''
@@ -8,12 +15,31 @@ function colIncludesValue(col: QTableColumn, row: Record<string, any>, lowerTerm
     }
 }
 
-export function filterTable(rows: readonly Record<string, any>[], {column, searchVal}: { column: string | null, searchVal: string | number | null }, cols: readonly QTableColumn[], cellValue: (col: QTableColumn, row: Record<string, any>) => any) {
-    if (!searchVal) return rows;
-    const lowerTerms = searchVal ? `${searchVal}`.toLowerCase() : '';
-    if (column) {
-        const col = cols.find(col => col.name === column);
-        if (col) return rows.filter(row => colIncludesValue(col, row, lowerTerms, cellValue));
+export function formatSearchVal(searchVal: string | number | null): string {
+    return searchVal ? `${searchVal}`.toLowerCase() : '';
+}
+
+
+export function searchTableFilter(
+    rows: readonly Record<string, any>[],
+    {columns, searchVal}: { columns: Record<string, string>, searchVal: string },
+    cols: readonly QTableColumn[],
+    cellValue: (col: QTableColumn, row: Record<string, any>
+) => any) {
+    let filteredRows = rows;
+
+    const colsToFilterNames = Object.keys(columns);
+    if (colsToFilterNames.length) {
+        const colsToFilter = cols.filter(col => colsToFilterNames.includes(col.name));
+        filteredRows = filteredRows.filter(row => colsToFilter.every(col => {
+            const colSearchVal = columns[col.name];
+            colIncludesValue(col, row, colSearchVal, cellValue);
+        }))
     }
-    return rows.filter((row) => cols.some(col => colIncludesValue(col, row, lowerTerms, cellValue)))
+
+    if (searchVal) {
+        filteredRows = filteredRows.filter((row) => cols.some(col => colIncludesValue(col, row, searchVal, cellValue)))
+    }
+
+    return filteredRows;
 }

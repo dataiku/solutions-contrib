@@ -33,8 +33,8 @@
                             <q-item-section>
                                 <BsSearchTableCol
                                     :icon="searchColIcon"
-                                    :model-value="lastSearchedValue"
-                                    @update:model-value="searchColumn"
+                                    v-model="lastSearchedValue"
+                                    @update:formatted-value="searchColumn"
                                     autofocus
                                 ></BsSearchTableCol>
                             </q-item-section>
@@ -64,7 +64,7 @@ export default defineComponent({
     ,
     BsSearchTableCol,
 },
-    emits: ["search-col", "update:model-value"],
+    emits: ["search-col"],
     data() {
         return {
             mdiArrowUpThin,

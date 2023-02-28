@@ -6,6 +6,7 @@
             clearable
             dense
             filled
+            format-input
             v-bind="$attrs"
     >
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">

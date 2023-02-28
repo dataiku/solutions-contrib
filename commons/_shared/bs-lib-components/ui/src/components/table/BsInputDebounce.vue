@@ -15,7 +15,7 @@
 import { defineComponent, PropType } from 'vue';
 import { QInput } from 'quasar';
 import { timeoutExecuteOnce } from '../../utils/utils';
-
+import { formatSearchVal } from './filterTable';
 export default defineComponent({
     name: "BsInputDebounce",
     props: {
@@ -26,10 +26,18 @@ export default defineComponent({
         valueSearchDebounce: {
             type: [Number, String],
             default: 500
+        },
+        formatInput: {
+            type: Boolean,
+            default: false
+        },
+        formatInputMethod: {
+            type: Function as PropType<(inputValue: string | number | null) => typeof inputValue>,
+            default: formatSearchVal
         }
     },
     components: { QInput },
-    emits: ["update:model-value", "update:loading"],
+    emits: ["update:model-value", "update:loading", "update:formatted-value"],
     data() {
         return {
             inputDebouncing: false,
@@ -48,6 +56,12 @@ export default defineComponent({
         },
         updateSearchedValue(val: string | number | null) {
             this.$emit("update:model-value", val);
+            this.updateFormattedValue(val);
+        },
+        updateFormattedValue(val: string | number | null) {
+            if (this.formatInput) {
+                this.$emit("update:formatted-value", this.formatInputMethod(val));
+            }
         },
         updateValueDebounce(val: string | number | null) {
             this.value = val;
@@ -63,7 +77,8 @@ export default defineComponent({
         },
         syncModelValue() {
             this.value = this.modelValue;
-        }
+            this.updateFormattedValue(this.modelValue);
+        },
     },
     mounted() {
         this.syncModelValue();
