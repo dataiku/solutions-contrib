@@ -1,81 +1,76 @@
-import { defineConfig, searchForWorkspaceRoot } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from "path"
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
-import image from "@rollup/plugin-image"
+import { defineConfig, searchForWorkspaceRoot } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
+import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import image from "@rollup/plugin-image";
 
-
-let basePath = process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 ? process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 + "/" : "";
+let basePath = process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173
+  ? process.env.DKU_CODE_STUDIO_BROWSER_PATH_5173 + "/"
+  : "";
 
 let serverConfig = {
   port: 5173,
-    host: "127.0.0.1",
-    fs: {
-      strict: false,
-      allow: [
-        "..",
-      ]
-    },
-    // origin: "http://127.0.0.1:5173",
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:5000",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
+  host: "127.0.0.1",
+  fs: {
+    strict: false,
+    allow: [".."],
   },
-}
-
+  // origin: "http://127.0.0.1:5173",
+  proxy: {
+    "/api": {
+      target: "http://127.0.0.1:5000",
+      changeOrigin: true,
+      secure: false,
+      rewrite: (path) => path.replace(/^\/api/, ""),
+    },
+  },
+};
 
 if (basePath === "") {
-  serverConfig = {...serverConfig, origin: "http://127.0.0.1:5173"}
+  serverConfig = { ...serverConfig, origin: "http://127.0.0.1:5173" };
 }
 
 let defaultConfig = {
   plugins: [
     {
       ...image(),
-      enforce: 'pre',
+      enforce: "pre",
     },
     vue({
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
     }),
     quasar({
-      sassVariables: 'quasar-variables.sass',
-    })
+      sassVariables: "quasar-variables.sass",
+    }),
   ],
   build: {
     manifest: true,
     rollupOptions: {
       input: "./main.js",
-      
-    }
+    },
   },
-  base: basePath,
   server: serverConfig,
   resolve: {
     alias: {
-      '@' : resolve("..","./")
-    }
-  }
-}
+      "@": resolve("..", "./"),
+    },
+  },
+};
 
 if (basePath !== "") {
   defaultConfig = {
     ...defaultConfig,
     experimental: {
       renderBuiltUrl(filename, { hostType }) {
-        if (hostType === 'css') {
+        if (hostType === "css") {
           return "/" + filename;
         } else {
-          return { relative: true }
+          return { relative: true };
         }
-      }
-    }
-  }
+      },
+    },
+    base: basePath,
+  };
 }
-
-
 
 export default defineConfig(defaultConfig);
