@@ -7,10 +7,10 @@
       :docIcon="docLogo"
     >
       <BsHeader>
-        <div class="dku-medium-title-sb q-px-md">TEST HEADER FIRST</div>
+        <div class="dku-medium-title-sb q-px-md">Header first tab</div>
       </BsHeader>
       <BsDrawer>
-        <div class="dku-medium-title-sb q-px-md">Left Panel First</div>
+        <div class="dku-medium-title-sb q-px-md">Left Panel first tab</div>
       </BsDrawer>
       <BsDocumentation>
         <p class="dku-small-title">Documentation First tab</p>
@@ -42,7 +42,9 @@
           checks and individual traces.
         </p>
       </BsDocumentation>
-      <BsContent> TEST FIRST TAB</BsContent>
+      <BsContent>
+        <HelloWorld />
+      </BsContent>
     </BsTab>
     <BsTab
       icon="help"
@@ -55,7 +57,6 @@
       </BsHeader>
       <BsDrawer>
         <div class="dku-medium-title-sb q-px-md">Left Panel Second tab</div>
-        <BsButton class="bs-btn dku-text" unelevated>Fullscreen</BsButton>
       </BsDrawer>
       <BsDocumentation>
         <p class="dku-small-title">Documentation Second tab</p>
@@ -87,19 +88,25 @@
           checks and individual traces.
         </p>
       </BsDocumentation>
-      <BsContent> TEST SECOND TAB</BsContent>
+      <BsContent>
+        <HelloWorld />
+      </BsContent>
     </BsTab>
   </BsLayoutDefault>
 </template>
 
 <script>
 import docLogo from "./assets/images/doc-logo-example.svg";
+import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
   data() {
     return {
       docLogo,
     };
+  },
+  components: {
+    HelloWorld,
   },
 };
 </script>
