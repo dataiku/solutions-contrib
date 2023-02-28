@@ -8,9 +8,10 @@
     <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
 
     <title>UMD test</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet" type="text/css">
+    <link href="./index.umd.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/quasar@2/dist/quasar.prod.css" rel="stylesheet" type="text/css">
-    <link href="dist/style.css" rel="stylesheet" type="text/css">
+    <link href="../dist/style.css" rel="stylesheet" type="text/css">
   </head>
   <body>
     <div id="q-app">
@@ -40,7 +41,10 @@
               <bs-button class="bs-btn dku-text bs-btn-disabled" unelevated disable="">Fullscreen</bs-button>
               <bs-toggle v-model="value"></bs-toggle>
               <bs-toggle v-model="value" labelLeft="Widgets"></bs-toggle>
-              <bs-select v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test"></bs-select>
+              <div style="max-width: 300px;">
+                <bs-select v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test"></bs-select>
+              </div>
+              
             </div>
             
           </q-page>
@@ -50,7 +54,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2/dist/quasar.umd.prod.js"></script>
-    <script src="dist/quasar-ui-bs.umd.js"></script>
+    <script src="../dist/quasar-ui-bs.umd.js"></script>
 
     <script>
       const { ref } = Vue

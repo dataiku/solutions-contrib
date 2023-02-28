@@ -4,3 +4,4 @@
 node_modules
 package-lock.json
 commons/_shared/bs-lib-components/ui/yarn-error.log
+.vscode

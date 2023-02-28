@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "SourceSansPro";
+  src: url("../dev/src/css/fonts/SourceSansPro-Bold.woff") format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "SourceSansPro";
+  src: url("../dev/src/css/fonts/SourceSansPro-Semibold.woff") format("woff");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "SourceSansPro";
+  src: url("../dev/src/css/fonts/SourceSansPro-Regular.woff") format("woff");
+  font-weight: 400;
+}
+
+body {
+  font-family: "SourceSansPro";
+}
