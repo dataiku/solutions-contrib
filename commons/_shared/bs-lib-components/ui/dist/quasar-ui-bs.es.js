@@ -1680,14 +1680,11 @@ const Bn = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   CheckSlotComponentsMixin: J,
   ProvideMixin: G
 }, Symbol.toStringTag, { value: "Module" })), En = {
-  version: 1.3,
+  version: "1.3.8",
   install(e) {
-    He(
-      e,
-      { components: Bn }
-    );
+    He(e, { components: Bn });
   }
-}, Vn = 1.3;
+}, Vn = "1.3.8";
 export {
   tn as BsButton,
   An as BsCheckbox,

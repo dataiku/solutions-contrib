@@ -4,6 +4,9 @@ import vue from "@vitejs/plugin-vue";
 import { version } from "../package.json";
 import dts from "vite-plugin-dts";
 
+console.log(`version : ${version}`);
+console.log(typeof version);
+
 let format = process.env.format;
 
 let indexPath =
@@ -35,6 +38,9 @@ if (format === "umd") {
 }
 
 export default defineConfig({
+  define: {
+    __UI_VERSION__: JSON.stringify(version),
+  },
   build: {
     target: "es6",
     emptyOutDir: false,
@@ -52,7 +58,4 @@ export default defineConfig({
     },
   },
   plugins: plugins,
-  define: {
-    __UI_VERSION__: version,
-  },
 });

@@ -1,6 +1,6 @@
 export namespace QuasarBs {
-    const version: any;
+    const version: string;
     function install(app: any): void;
 }
 export * from "./components";
-export const version: any;
+export const version: string;

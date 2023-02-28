@@ -1,21 +1,17 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
-const path = require('path')
-const webpack = require('webpack')
+const path = require("path");
+const webpack = require("webpack");
 
 module.exports = function (ctx) {
   return {
     supportTS: true,
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
-    boot: [
-      'register.js'
-    ],
+    boot: ["register.js"],
 
-    css: [
-      'app.sass'
-    ],
+    css: ["app.sass"],
 
     extras: [
       // 'ionicons-v4',
@@ -26,53 +22,52 @@ module.exports = function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      'roboto-font', // optional, you are not bound to it
-      'material-icons', // optional, you are not bound to it
-      'material-icons-round'
+      "roboto-font", // optional, you are not bound to it
+      "material-icons", // optional, you are not bound to it
+      "material-icons-round",
     ],
 
     framework: {
-      iconSet: 'svg-mdi-v6',
+      iconSet: "svg-mdi-v6",
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
       config: {},
 
       // Quasar plugins
-      plugins: [
-        "Notify",
-      ]
+      plugins: ["Notify"],
     },
 
     // animations: 'all', // --- includes all animations
-    animations: [ 'fadeIn', 'fadeOut' ],
+    animations: ["fadeIn", "fadeOut"],
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'history',
+      vueRouterMode: "history",
 
-      chainWebpack (chain) {
+      chainWebpack(chain) {
         chain.resolve.alias.merge({
-          ui: path.resolve(__dirname, `../src/index.esm.js`)
-        })
+          ui: path.resolve(__dirname, `../src/index.esm.js`),
+        });
 
-        chain.plugin('define-ui')
-          .use(webpack.DefinePlugin, [{
-            __UI_VERSION__: `'${require('../package.json').version}'`
-          }])
-      }
+        chain.plugin("define-ui").use(webpack.DefinePlugin, [
+          {
+            __UI_VERSION__: `'${require("../package.json").version}'`,
+          },
+        ]);
+      },
     },
 
     devServer: {
       port: 31100,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
     },
 
     ssr: {
       middlewares: [
-        ctx.prod ? 'compression' : '',
-        'render' // keep this as last one
-      ]
-    }
-  }
-}
+        ctx.prod ? "compression" : "",
+        "render", // keep this as last one
+      ],
+    },
+  };
+};
