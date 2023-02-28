@@ -25,10 +25,10 @@
         <template #top>
             <div class="bs-dss-table-top-container">
                 <span class="dss-table-name">{{ dssTableName }}</span>
-                <BsSearchTable
+                <BsSearchWholeTable
                     v-model="searchedValue"
                     @update:loading="searching = $event"
-                ></BsSearchTable>
+                ></BsSearchWholeTable>
             </div>
         </template>
         <template v-slot:header="props">
@@ -46,7 +46,7 @@
 import { defineComponent, PropType } from 'vue';
 import { QTableColumn, QTable, QTr } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue"
-import BsSearchTable from "./BsSearchTable.vue"
+import BsSearchWholeTable from "./BsSearchWholeTable.vue"
 import BSTableHeader from "./BSTableHeader.vue"
 import { filterTable } from './filterTable';
 
@@ -56,7 +56,7 @@ export default defineComponent({
         QTable,
         QTr,
         BsDSSTableFunctional,
-        BsSearchTable,
+        BsSearchWholeTable,
         BSTableHeader,
     },
     emits: ["update:rows", "update:columns"],
