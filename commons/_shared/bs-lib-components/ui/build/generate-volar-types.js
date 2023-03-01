@@ -1,7 +1,7 @@
 // The file is not designed to run directly. `cwd` should be project root.
-const path = require("path");
-const fs = require("fs-extra");
-const glob = require("glob");
+import fs from "node:fs";
+import path from "node:path";
+import { glob } from "glob";
 
 const TYPE_ROOT = "../dist/types";
 
@@ -11,12 +11,11 @@ const excludeComponents = [];
 
 const globalComponents = [];
 
-glob(componentsFolder, {}, function (er, files) {
-  files.forEach((value) => {
-    globalComponents.push(path.parse(value).name);
-  });
-  generateComponentsType(globalComponents);
-});
+const componentFiles = await glob(componentsFolder, {});
+
+for (const file of componentFiles) {
+  globalComponents.push(path.parse(file).name);
+}
 
 async function generateComponentsType(globalComponents) {
   const components = {};
@@ -47,5 +46,7 @@ declare module 'vue' {
 export {}
 `;
 
-  await fs.writeFile(path.resolve(TYPE_ROOT, "volar.d.ts"), code, "utf-8");
+  await fs.writeFileSync(path.resolve(TYPE_ROOT, "volar.d.ts"), code, "utf-8");
 }
+
+generateComponentsType(globalComponents);
