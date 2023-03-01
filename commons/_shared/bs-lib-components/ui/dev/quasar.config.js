@@ -47,7 +47,10 @@ module.exports = function (ctx) {
 
       chainWebpack(chain) {
         chain.resolve.alias.merge({
-          ui: path.resolve(__dirname, `../src/index.esm.js`),
+          ui:
+            process.env.NODE_ENV === "production"
+              ? path.resolve(__dirname, `../dist/quasar-ui-bs.es.js`)
+              : path.resolve(__dirname, `../src/index.esm.js`),
         });
 
         chain.plugin("define-ui").use(webpack.DefinePlugin, [

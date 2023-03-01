@@ -73,16 +73,15 @@ async function main() {
     return;
   }
 
+  step("\nUpdating dependencies...");
+  updateVersions(targetVersion);
+
   step("\nBuilding the package...");
   if (!isDryRun) {
     await run("yarn", ["build"]);
   } else {
     console.log(`(skipped)`);
   }
-
-  step("\nUpdating dependencies...");
-
-  updateVersions(targetVersion);
 
   const { stdout } = await run("git", ["diff"], { stdio: "pipe" });
 

@@ -15,6 +15,7 @@
     "dev": "cd dev && yarn dev && cd ..",
     "dev:umd": "node build/script.open-umd.js",
     "build": "cd build && sh build.sh && cd ..",
+    "build:docs": "NODE_ENV=production && cd dev && quasar build && cd ..",
     "release": "node build/release.js"
   },
   "repository": {
