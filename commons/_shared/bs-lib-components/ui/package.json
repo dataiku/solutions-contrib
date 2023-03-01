@@ -15,7 +15,6 @@
     "dev": "cd dev && yarn dev && cd ..",
     "dev:umd": "node build/script.open-umd.js",
     "build": "cd build && sh build.sh && cd ..",
-    "gen-volar-dts": "cd build && esbuild generate-volar-types.js --bundle --platform=node | node && cd ..",
     "release": "node build/release.js"
   },
   "repository": {
