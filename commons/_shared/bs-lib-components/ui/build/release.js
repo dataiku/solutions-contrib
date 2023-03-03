@@ -7,6 +7,9 @@ import enquirer from "enquirer";
 import execa from "execa";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const { prompt } = enquirer;
 const currentVersion = createRequire(import.meta.url)(
@@ -14,6 +17,10 @@ const currentVersion = createRequire(import.meta.url)(
 ).version;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const docsBuildSourceDir = path.resolve(__dirname, "../dev/dist/spa");
+const docsBuildSourcePattern = `${docsBuildSourceDir}/`;
+const destDocsBuildDir = `${process.env.HOST_GROUP}@${process.env.HOST_NAME}:${process.env.HOST_DIR}`;
 
 const args = minimist(process.argv.slice(2));
 const preId = args.preid || semver.prerelease(currentVersion)?.[0];
@@ -79,6 +86,19 @@ async function main() {
   step("\nBuilding the package...");
   if (!isDryRun) {
     await run("yarn", ["build"]);
+  } else {
+    console.log(`(skipped)`);
+  }
+
+  step("\nPublishing documentation");
+  if (!isDryRun) {
+    await run("yarn", ["build:docs"]);
+    await runIfNotDry("rsync", [
+      "-aP",
+      "--delete",
+      docsBuildSourcePattern,
+      destDocsBuildDir,
+    ]);
   } else {
     console.log(`(skipped)`);
   }
