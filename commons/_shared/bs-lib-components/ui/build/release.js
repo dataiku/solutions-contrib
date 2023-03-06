@@ -8,6 +8,7 @@ import execa from "execa";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
+import { preprendReleaseNotes } from "./get-release-stories.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const currentVersion = createRequire(import.meta.url)(
 ).version;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const changeLogPath = path.resolve(__dirname, "../../../../../CHANGELOG.md");
 
 const docsBuildSourceDir = path.resolve(__dirname, "../dev/dist/spa");
 const docsBuildSourcePattern = `${docsBuildSourceDir}/`;
@@ -101,6 +103,11 @@ async function main() {
     ]);
   } else {
     console.log(`(skipped)`);
+  }
+
+  step("\nCreating Release Notes");
+  if (!isDryRun) {
+    await preprendReleaseNotes(targetVersion, changeLogPath);
   }
 
   const { stdout } = await run("git", ["diff"], { stdio: "pipe" });

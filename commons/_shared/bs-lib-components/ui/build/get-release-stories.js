@@ -1,4 +1,5 @@
 import execa from "execa";
+import fs from "node:fs";
 
 const SHORTCUT_STORY_LINK = "https://app.shortcut.com/dataiku/story/";
 
@@ -67,4 +68,16 @@ async function getShortCutStoriesLinks() {
   return stories.map((value) => `${SHORTCUT_STORY_LINK}${value}`);
 }
 
-const links = await getShortCutStoriesLinks();
+async function preprendReleaseNotes(releaseVersion, changeLogPath) {
+  const releaseNotes = await getShortCutStoriesLinks();
+  const releaseNotesStr = releaseNotes
+    .map((value) => `[${value}](${value})`)
+    .join("\n");
+  const entry = `## ${releaseVersion}\n\n${releaseNotesStr}\n\n`;
+  const contents = fs.readFileSync(changeLogPath);
+  fs.writeFileSync(changeLogPath, entry + contents, (err) => {
+    if (err) throw err;
+  });
+}
+
+export { preprendReleaseNotes };

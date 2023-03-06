@@ -26,3 +26,5 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+          body: |
+            Please refer to [CHANGELOG.md](https://github.com/dataiku/solutions-contrib/blob/${{ github.ref }}/CHANGELOG.md) for details.
