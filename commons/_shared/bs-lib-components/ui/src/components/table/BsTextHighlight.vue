@@ -62,7 +62,7 @@ export default defineComponent({
                     if (toIndex !== -1) unresolvedQueries.splice(toIndex, 1);
                 })
                 const classes = this.createClassesFromQueries(unresolvedQueries);
-                strSplitted[i] = `<span class="${classes}">${strSplitted[i]}</span>`;
+                strSplitted[i] = `<span class="text-underline ${classes}">${strSplitted[i]}</span>`;
 
                 i++;
             }
@@ -79,6 +79,18 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+
+span {
+    .resolved-query-0 {
+        color: red;
+    }
+    .resolved-query-1 {
+        color: blue;
+    }
+    .resolved-query-1.resolved-query-0 {
+        color: green;
+    }
+}
 
 </style>
