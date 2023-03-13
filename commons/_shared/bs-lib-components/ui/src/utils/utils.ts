@@ -53,3 +53,25 @@ export function timeoutExecuteOnce(
     }
     return _timeoutExecuteOnce(callback, timeout, callbackId);
 }
+
+export function getIndicesOf(searchStr: string, str: string, caseSensitive=false) {
+    let searchStrLen = searchStr.length;
+    let startIndex = 0;
+    let indices = [];
+
+    if (searchStrLen) {
+        const getSearchedIndex = (startIndex = 0) => str.indexOf(searchStr, startIndex);
+    
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+    
+        for (let foundIndex = getSearchedIndex(startIndex); foundIndex > -1; foundIndex = getSearchedIndex(startIndex)) {
+            indices.push(foundIndex);
+            startIndex = foundIndex + searchStrLen;
+        }
+    }
+
+    return indices;
+}
