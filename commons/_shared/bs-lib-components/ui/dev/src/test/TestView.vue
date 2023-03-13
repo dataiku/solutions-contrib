@@ -6,16 +6,19 @@
             
         >
         </BsTable>
+        <!-- <BsTextHighlight text="howtolive" :queries="['howt', 'wtolive']"></BsTextHighlight> -->
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BsTable from "../../../src/components/table/BsTable.vue";
+import BsTextHighlight from "../../../src/components/table/BsTextHighlight.vue";
 export default defineComponent({
     name: "default",
     components: {
-        BsTable
+        BsTable,
+        BsTextHighlight,
     },
     data() {
         return {};
