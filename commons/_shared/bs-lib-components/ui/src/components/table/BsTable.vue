@@ -1,5 +1,4 @@
 <template>
-    <!-- "update:fetching", "update:rows", "update:columns" -->
     <BsDSSTableFunctional
         v-if="isDSSTable"
         :dss-table-name="dssTableName"
@@ -32,6 +31,15 @@
                 ></BsSearchWholeTable>
             </div>
         </template>
+        
+        <template
+            v-for="([colSlot, colName]) in colSlots"
+            v-slot:[colSlot]="props"
+        >
+            <q-td :props="props">
+                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(colName)]" :text="props.value || undefined"></BsTextHighlight>
+            </q-td>
+        </template>
         <template v-slot:header="props">
             <BSTableHeader
                 :props="props"
@@ -45,11 +53,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ComponentPublicInstance } from 'vue';
 import { QTableColumn, QTable, QTr } from 'quasar';
-import BsDSSTableFunctional from "./BsDSSTableFunctional.vue"
-import BsSearchWholeTable from "./BsSearchWholeTable.vue"
-import BSTableHeader from "./BSTableHeader.vue"
+import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
+import BsSearchWholeTable from "./BsSearchWholeTable.vue";
+import BSTableHeader from "./BSTableHeader.vue";
+import BsTextHighlight from "./BsTextHighlight.vue"
 import { searchTableFilter } from './filterTable';
 
 export default defineComponent({
@@ -60,6 +69,7 @@ export default defineComponent({
         BsDSSTableFunctional,
         BsSearchWholeTable,
         BSTableHeader,
+        BsTextHighlight,
     },
     emits: ["update:rows", "update:columns"],
     inheritAttrs: false,
@@ -88,7 +98,7 @@ export default defineComponent({
             searchedValue: null as string | null,
             searchedValueFormatted: "",
             _rows: undefined as Record<string, any>[] | undefined,
-            _columns: undefined as QTableColumn[] | undefined
+            _columns: undefined as QTableColumn[] | undefined,
         };
     },
     computed: {
@@ -110,6 +120,10 @@ export default defineComponent({
                 searchVal: this.searchedValueFormatted
             };
         },
+        colSlots(): [string, string][] {
+            const passedColumns = this.passedColumns || [];
+            return passedColumns.map(col => [this.getColBodySlot(col.name), col.name]);
+        },
     },
     methods: {
         updateRows(rows: Record<string, any>[]) {
@@ -129,8 +143,18 @@ export default defineComponent({
             } else {
                 delete this.searchedCols[colName];
             }
+            this.searchedCols = {...this.searchedCols}
         },
-    }
+        getColBodySlot(colName: string) {
+            return `body-cell-${colName}`;
+        },
+        getObjectPropertyIfExists(obj: Record<string, any>, key: string) {
+            return obj.hasOwnProperty(key) ? obj[key] : undefined;
+        },
+        getColSearchedValue(colName: string) {
+            return this.getObjectPropertyIfExists(this.searchedCols, colName);
+        }
+    },
 });
 </script>
 
