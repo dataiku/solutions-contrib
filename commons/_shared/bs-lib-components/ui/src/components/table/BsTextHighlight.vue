@@ -8,7 +8,7 @@ import { escape } from 'lodash';
 import { getIndicesOf } from "../../utils/utils";
 
 export default defineComponent({
-    name: "default",
+    name: "BsTextHighlight",
     components: {
 
     },
@@ -16,14 +16,18 @@ export default defineComponent({
         return {};
     },
     props: {
-        queries: Array as PropType<string[]>,
-        text: String
+        queries: Array as PropType<(string | undefined)[]>,
+        text: [String, Number, Boolean]
     },
     computed: {
         highlightedText(): string {
-            const text = escape(this.text || "");
-            const queries = this.queries || [];
-            let hSections: Map<number, {from: number[], to: number[]}> = new Map();
+            let text = this.text === undefined ? "" : escape(`${this.text}`);
+            const queries = (this.queries || []).filter(q => q !== undefined) as string[];
+            if (!(text && queries.length)) return text;
+            let hSections: Map<number, {from: number[], to: number[]}> = new Map([
+                    [0, {from: [], to: []}],
+                    [text.length, {from: [], to: []}],
+                ]);
             
             queries.forEach((query, qIndex) =>
                 getIndicesOf(query, text).forEach((foundIndex) => {
@@ -41,9 +45,8 @@ export default defineComponent({
                 })
             );
             const sectionPoints = Array.from(hSections.keys()).sort((a, b) => a - b);
+            if (!sectionPoints.length) return text;
             const strSplittedLength = sectionPoints.length - 1;
-            console.log(sectionPoints);
-            console.log(Object.fromEntries(hSections.entries()));
             const unresolvedQueries: number[] = [];
             const strSplitted: string[] = new Array(strSplittedLength)
                 .fill("")
