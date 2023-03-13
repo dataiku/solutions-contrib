@@ -85,14 +85,20 @@ export default defineComponent({
 <style lang="scss">
 
 span {
+    $primary: #3B99FC;
+    $accent: #9C27B0;
+
     .resolved-query-0 {
-        color: red;
+        color: $accent;
+        text-decoration: underline;
     }
     .resolved-query-1 {
-        color: blue;
+        color: $primary;
+        text-decoration: underline;
     }
     .resolved-query-1.resolved-query-0 {
-        color: green;
+        color: mix($primary, $accent, 50%);
+        text-decoration: underline;
     }
 }
 
