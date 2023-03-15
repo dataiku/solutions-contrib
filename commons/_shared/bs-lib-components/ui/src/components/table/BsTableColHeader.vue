@@ -35,6 +35,7 @@
                                     :icon="searchColIcon"
                                     v-model="lastSearchedValue"
                                     @update:formatted-value="searchColumn"
+                                    @update:no-debounce:formatted-value="noDebounceValue = $event"
                                     autofocus
                                 ></BsSearchTableCol>
                             </q-item-section>
@@ -72,11 +73,18 @@ export default defineComponent({
             searchPopupActive: false,
             searching: false,
             lastSearchedValue: "" as string | null | number | undefined,
+            noDebounceValue: "" as string | null | number | undefined,
         };
     },
     props: {
         sort: Function as PropType<(col: any) => void>,
         col: Object as PropType<{label: string, name: string}>,
+    },
+    watch: {
+        searchPopupActive(newVal, lastVal) {
+            if (newVal || !lastVal) return;
+            this.searchColumn(this.noDebounceValue);
+        }
     },
     methods: {
         sortColumn() {

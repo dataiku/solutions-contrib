@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { escape } from 'lodash';
+import { escape, isNull, isUndefined } from 'lodash';
 import { getIndicesOf } from "../../utils/utils";
 
 export default defineComponent({
@@ -21,8 +21,8 @@ export default defineComponent({
     },
     computed: {
         highlightedText(): string {
-            let text = this.text === undefined ? "" : escape(`${this.text}`);
-            const queries = (this.queries || []).filter(q => q !== undefined) as string[];
+            let text =  (isUndefined(this.text) || isNull(this.text)) ? "" : escape(`${this.text}`);
+            const queries = (this.queries || []).filter(q => !isUndefined(q)) as string[];
             if (!(text && queries.length)) return text;
             let hSections: Map<number, {from: number[], to: number[]}> = new Map([
                     [0, {from: [], to: []}],

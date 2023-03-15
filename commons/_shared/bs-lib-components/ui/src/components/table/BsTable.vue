@@ -3,7 +3,7 @@
         v-if="isDSSTable"
         :dss-table-name="dssTableName"
         :batch-size="batchSize"
-        :batch-offset="batchOffset"
+        :batch-offset="_batchOffset"
 
         @update:fetching="fetching = $event"
         @update:rows="updateRows"
@@ -31,20 +31,28 @@
                 ></BsSearchWholeTable>
             </div>
         </template>
-        
         <template
             v-for="([colSlot, colName]) in colSlots"
             v-slot:[colSlot]="props"
         >
             <q-td :props="props">
-                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(colName)]" :text="props.value || undefined"></BsTextHighlight>
+                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(colName)]" :text="props.value"></BsTextHighlight>
             </q-td>
         </template>
-        <template v-slot:header="props">
+        <template #header="props">
             <BSTableHeader
                 :props="props"
                 @search-col="updateSearchedCols"
             ></BSTableHeader>
+        </template>
+        <template #bottom="scope">
+            <BsTableBottom
+                :scope="scope"
+                :batch-offset="_batchOffset"
+                :batch-size="batchSize"
+
+                @update:batch-offset="setBatchOffset"
+            ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope || {}" />
@@ -59,6 +67,8 @@ import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
 import BSTableHeader from "./BSTableHeader.vue";
 import BsTextHighlight from "./BsTextHighlight.vue"
+import BsTableBottom from "./BsTableBottom.vue"
+
 import { searchTableFilter } from './filterTable';
 
 export default defineComponent({
@@ -70,8 +80,9 @@ export default defineComponent({
         BsSearchWholeTable,
         BSTableHeader,
         BsTextHighlight,
+        BsTableBottom,
     },
-    emits: ["update:rows", "update:columns"],
+    emits: ["update:rows", "update:columns", "update:batch-offset"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -99,6 +110,7 @@ export default defineComponent({
             searchedValueFormatted: "",
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
+            _batchOffset: 0,
         };
     },
     computed: {
@@ -124,6 +136,11 @@ export default defineComponent({
             const passedColumns = this.passedColumns || [];
             return passedColumns.map(col => [this.getColBodySlot(col.name), col.name]);
         },
+    },
+    watch: {
+        batchOffset() {
+            this.syncBatchOffset();
+        }
     },
     methods: {
         updateRows(rows: Record<string, any>[]) {
@@ -153,8 +170,19 @@ export default defineComponent({
         },
         getColSearchedValue(colName: string) {
             return this.getObjectPropertyIfExists(this.searchedCols, colName);
-        }
+        },
+        setBatchOffset(batchOffset: number) {
+            if (batchOffset < 0) batchOffset = 0;
+            this._batchOffset = batchOffset;
+            this.$emit("update:batch-offset", batchOffset);
+        },
+        syncBatchOffset() {
+            this._batchOffset = this.batchOffset;
+        },
     },
+    mounted() {
+        this.syncBatchOffset();
+    }
 });
 </script>
 

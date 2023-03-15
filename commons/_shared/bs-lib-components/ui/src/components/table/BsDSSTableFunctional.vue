@@ -26,6 +26,24 @@ export default defineComponent({
             fetchingSchema: false,
         };
     },
+    computed: {
+        idOffset(): number {
+            const offset = this.batchOffset || 0;
+            const size = this.batchSize || 0;
+            return offset * size;
+        }
+    },
+    watch: {
+        dssTableName(...args: any[]) {
+            this.updateTableDataOnWatchedChanged(...args);
+        },
+        batchSize(...args: any[]) {
+            this.updateTableDataOnWatchedChanged(...args);
+        },
+        batchOffset(...args: any[]) {
+            this.updateTableDataOnWatchedChanged(...args);
+        },
+    },
     methods: {
         setFetching({fetchingChunk, fetchingSchema}: {fetchingChunk?: boolean, fetchingSchema?: boolean}) {
             if (fetchingChunk !== undefined) this.fetchingChunk = fetchingChunk;
@@ -43,7 +61,7 @@ export default defineComponent({
             return new Promise((resolve, reject) => {
                 this.setFetchingChunk(true);
                 ServerApi.getDatasetChunk(...args).then((val) => {
-                    const data = this.transformDSSDataToQTableRow(val);
+                    const data = this.transformDSSDataToQTableRow(val, this.idOffset);
                     this.setFetchingChunk(false);
                     resolve(data);
                 }).catch(reject);
@@ -84,13 +102,13 @@ export default defineComponent({
             }
         },
 
-        transformDSSDataToQTableRow(DSSData: DSSDatasetData): Record<string, any>[] | undefined {
+        transformDSSDataToQTableRow(DSSData: DSSDatasetData, idOffset = 0): Record<string, any>[] | undefined {
             const entries = Object.entries(DSSData)
             if (!entries?.length) return;
 
             const rowsAmount = Object.entries(entries[0][1]).length;
             const rows: any[] = Array(rowsAmount).fill(undefined).map((_, index) => {
-                return {id: index + 1};
+                return {id: index + idOffset + 1};
             });
             entries.forEach(([colName, colData]) => {
                 colName = this.parseDSSColumn(colName);
@@ -106,7 +124,7 @@ export default defineComponent({
         updateTableData() {
             if (this.dssTableName && this.batchSize && (this.batchOffset !== undefined)) {
                 this.updateColumns(this.dssTableName);
-                this.updateRows(this.dssTableName, this.batchSize);
+                this.updateRows(this.dssTableName, this.batchSize, this.batchOffset);
             }
         },
         watchedChanged(newVal?: any, oldVal?: any) {
@@ -115,17 +133,6 @@ export default defineComponent({
         updateTableDataOnWatchedChanged(newVal?: any, oldVal?: any) {
             if (this.watchedChanged(newVal, oldVal)) this.updateTableData();
         },
-    },
-    watch: {
-        dssTableName(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
-        },
-        batchSize(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
-        },
-        batchOffset(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
-        }
     },
     mounted() {
         this.updateTableData();

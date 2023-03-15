@@ -37,7 +37,7 @@ export default defineComponent({
         }
     },
     components: { QInput },
-    emits: ["update:model-value", "update:loading", "update:formatted-value"],
+    emits: ["update:model-value", "update:loading", "update:formatted-value", "update:no-debounce:formatted-value"],
     data() {
         return {
             inputDebouncing: false,
@@ -64,7 +64,7 @@ export default defineComponent({
             }
         },
         updateValueDebounce(val: string | number | null) {
-            this.value = val;
+            this.updateValueNoDebounce(val);
             this.setLoading(true);
             timeoutExecuteOnce(
                 () => {
@@ -75,8 +75,12 @@ export default defineComponent({
                 "bs-search-table-search-text"
             );
         },
+        updateValueNoDebounce(val: string | number | null) {
+            this.value = val;
+            this.$emit("update:no-debounce:formatted-value", this.formatInputMethod(val));
+        },
         syncModelValue() {
-            this.value = this.modelValue;
+            this.updateValueNoDebounce(this.modelValue);
             this.updateFormattedValue(this.modelValue);
         },
     },
