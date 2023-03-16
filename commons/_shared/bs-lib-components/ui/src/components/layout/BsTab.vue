@@ -157,6 +157,12 @@ export default defineComponent({
         registerTab() {
             this.tabs.push(this.tab);
         },
+        unregisterTab() {
+            const tabIndex = this.tabs.indexOf(this.tab);
+            if (tabIndex !== -1) {
+                this.tabs.splice(tabIndex, 1);
+            }
+        },
         onQPageMounted() {
             this.qPageMounted = true;
             this.$emit('mounted:q-page');
@@ -174,8 +180,11 @@ export default defineComponent({
     },
     emits: ['mounted:q-page'],
     mounted() {
-        console.log("mounted a tab");
+        console.log("mounted a tab: ", this.tab);
         this.registerTab();
+    },
+    unmounted() {
+        this.unregisterTab();
     }
 });
 </script>

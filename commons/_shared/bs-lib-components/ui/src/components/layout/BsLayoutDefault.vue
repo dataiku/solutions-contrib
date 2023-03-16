@@ -13,7 +13,7 @@
         :expandable="selectedTabDrawer"
         :collapsed-width="tabMenuWidth"
         :panel-width="leftPanelWidth"
-        :mini="isTabsMultiple"
+        :mini="!defaultTabUsed"
     ></BsLayoutDrawer>
     <BsLayoutHeader
         @vnode-mounted="headerMounted = true"
@@ -26,7 +26,7 @@
         Sidebar menu with tabs selection
     -->
     <BsMenuTabs
-        v-if="mounted && isTabsMultiple"
+        v-if="mounted && !defaultTabUsed"
         v-model="tabIndex"
         @vnode-mounted="menuTabsMounted = true"
     >
@@ -126,14 +126,13 @@ export default defineComponent({
                 'documentation',
                 'content',
             ],
-            defaultLayoutTabName: "Layout Default"
+            defaultLayoutTabName: "Layout Default",
+            defaultTabUsed: true,
         }  
     },
     provide() {
-        const provideStatic = this.provideStatic([
-            "tabs",
-        ]);
         let provideComputed = this.provideComputed([
+            "tabs",
             "selectedTab",
             "qLayoutMounted",
             "menuTabsMounted",
@@ -150,7 +149,7 @@ export default defineComponent({
             ]);
             provideComputed = {...provideComputed, ...provideVirtualTab};
         }
-        const provide = {...provideComputed, ...provideStatic};
+        const provide = provideComputed;
         return provide;
     },
     methods: {
@@ -172,12 +171,6 @@ export default defineComponent({
         selectedTabDrawer() {
             return this.selectedTab?.drawer;
         },
-        isTabsMultiple(): boolean {
-            return this.tabs.length > 1;
-        },
-        defaultTabUsed(): boolean {
-            return !!this.tabs.length;
-        },
         layoutDocsProps(): Partial<DocsProps> {
             const {docTitle, docIcon, docImageDimensions} = this;
             return {docTitle, docIcon, docImageDimensions};
@@ -195,6 +188,12 @@ export default defineComponent({
             return {
                 '--bs-drawer-width': `${this.leftPanelWidth}px`,
             };
+        },
+    },
+    watch: {
+        "tabs.length"(newVal: number) {
+            this.defaultTabUsed = (newVal === 0) || ((newVal === 1) && (this.tabs[0].name === this.defaultLayoutTabName));
+            console.log("this.defaultTabUsed: ", this.defaultTabUsed);
         },
     },
     mounted() {
