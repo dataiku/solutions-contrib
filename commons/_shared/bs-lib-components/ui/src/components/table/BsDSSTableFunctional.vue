@@ -3,6 +3,7 @@ import { defineComponent } from 'vue';
 import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
+import { isUndefined } from 'lodash';
 
 export default defineComponent({
     name: "BsDSSTable",
@@ -73,6 +74,7 @@ export default defineComponent({
                 ServerApi.getDatasetSchema(...args).then((schema) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createQTableCol(col.name));
+                    columns.unshift(this.createQTableCol("index", "#"));
                     this.setFetchingSchema(false);
                     resolve(columns);
                 }).catch(reject);
@@ -89,26 +91,27 @@ export default defineComponent({
             })
         },
         parseDSSColumn(columnName: string) {
-            return columnName === "id" ? "in_dss_id" : columnName;
+            return columnName === "index" ? "in_dss_index" : columnName;
         },
         
-        createQTableCol(name: string): QTableColumn {
+        createQTableCol(name: string, label?: string): QTableColumn {
             return {
                 name,
-                label: name,
+                label: isUndefined(label) ? name : label,
                 field: name,
                 sortable: false,
                 align: "left",
             }
         },
 
-        transformDSSDataToQTableRow(DSSData: DSSDatasetData, idOffset = 0): Record<string, any>[] | undefined {
+        transformDSSDataToQTableRow(DSSData: DSSDatasetData | string, idOffset = 0): Record<string, any>[] | undefined {
+            if (DSSData === "None") return;
             const entries = Object.entries(DSSData)
             if (!entries?.length) return;
 
             const rowsAmount = Object.entries(entries[0][1]).length;
             const rows: any[] = Array(rowsAmount).fill(undefined).map((_, index) => {
-                return {id: index + idOffset + 1};
+                return {'index': index + idOffset + 1};
             });
             entries.forEach(([colName, colData]) => {
                 colName = this.parseDSSColumn(colName);
@@ -118,7 +121,6 @@ export default defineComponent({
                     row[colName] = val;
                 });
             });
-
             return rows;
         },
         updateTableData() {

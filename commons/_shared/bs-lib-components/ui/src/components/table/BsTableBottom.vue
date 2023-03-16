@@ -19,7 +19,7 @@
                     round
                     dense
                     flat
-                    :disable="islastBatch"
+                    :disable="isLastBatch"
                     @click="nextBatch"
                 />
             </div>
@@ -127,6 +127,9 @@ export default defineComponent({
         batchOffset: {
             type: Number,
         },
+        lastBatchIndex: {
+            type: Number,
+        }
     },
     data() {
         return {};
@@ -163,9 +166,8 @@ export default defineComponent({
         isFirstBatch(): boolean {
             return this.batchOffset === 0;
         },
-        islastBatch(): boolean {
-            // return this.batchOffset === 0;
-            return false;
+        isLastBatch(): boolean {
+            return !(isUndefined(this.lastBatchIndex) || (this.batchOffset !== this.lastBatchIndex));
         }
     },
     methods: {
@@ -177,6 +179,7 @@ export default defineComponent({
         },
         changeCurrentBatchOffsetBy(changeBy: number) {
             const batchOffset = this.batchOffset || 0;
+            this.pagination.page = 1;
             this.$emit("update:batch-offset", batchOffset + changeBy);
         },
     },

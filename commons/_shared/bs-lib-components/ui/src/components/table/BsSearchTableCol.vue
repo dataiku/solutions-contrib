@@ -6,6 +6,7 @@
             borderless
             dense
             format-input
+            autofocus
             v-bind="$attrs"
     >
         <template #append>

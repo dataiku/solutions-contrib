@@ -36,13 +36,12 @@
                                     v-model="lastSearchedValue"
                                     @update:formatted-value="searchColumn"
                                     @update:no-debounce:formatted-value="noDebounceValue = $event"
-                                    autofocus
                                 ></BsSearchTableCol>
                             </q-item-section>
                         </q-item>
                     </q-list>
                 </q-menu>
-            </q-icon>
+            </q-icon> 
         </div>
     </div>
 </template>

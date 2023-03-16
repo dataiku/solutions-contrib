@@ -43,14 +43,14 @@
             <BSTableHeader
                 :props="props"
                 @search-col="updateSearchedCols"
-            ></BSTableHeader>
+                ></BSTableHeader>
         </template>
         <template #bottom="scope">
             <BsTableBottom
                 :scope="scope"
                 :batch-offset="_batchOffset"
                 :batch-size="batchSize"
-
+                :last-batch-index="lastBatchIndex"
                 @update:batch-offset="setBatchOffset"
             ></BsTableBottom>
         </template>
@@ -70,6 +70,8 @@ import BsTextHighlight from "./BsTextHighlight.vue"
 import BsTableBottom from "./BsTableBottom.vue"
 
 import { searchTableFilter } from './filterTable';
+
+import { getObjectPropertyIfExists } from "../../utils/utils"
 
 export default defineComponent({
     name: "BsTable",
@@ -111,6 +113,7 @@ export default defineComponent({
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
             _batchOffset: 0,
+            lastBatchIndex: -1,
         };
     },
     computed: {
@@ -143,7 +146,15 @@ export default defineComponent({
         }
     },
     methods: {
-        updateRows(rows: Record<string, any>[]) {
+        updateRows(rows: Record<string, any>[] | undefined) {
+            if (!rows) rows = [];
+            const rowKeys = Object.keys(rows);
+            if (rowKeys.length < this.batchSize) {
+                if (rowKeys.length == 0) {
+                    this.setBatchOffset(this._batchOffset - 1);
+                }
+                this.lastBatchIndex = this._batchOffset;
+            }
             this._rows = rows;
             this.$emit("update:rows", this._rows);
         },
@@ -157,19 +168,19 @@ export default defineComponent({
         updateSearchedCols(colName: string, searchedVal: string) {
             if (searchedVal) {
                 this.searchedCols[colName] = searchedVal;
-            } else {
-                delete this.searchedCols[colName];
             }
-            this.searchedCols = {...this.searchedCols}
+            if (this.searchedCols.hasOwnProperty(colName)) {
+                if (!searchedVal) {
+                    delete this.searchedCols[colName];
+                }
+                this.searchedCols = {...this.searchedCols};
+            }
         },
         getColBodySlot(colName: string) {
             return `body-cell-${colName}`;
         },
-        getObjectPropertyIfExists(obj: Record<string, any>, key: string) {
-            return obj.hasOwnProperty(key) ? obj[key] : undefined;
-        },
         getColSearchedValue(colName: string) {
-            return this.getObjectPropertyIfExists(this.searchedCols, colName);
+            return getObjectPropertyIfExists(this.searchedCols, colName);
         },
         setBatchOffset(batchOffset: number) {
             if (batchOffset < 0) batchOffset = 0;
