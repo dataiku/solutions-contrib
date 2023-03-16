@@ -1,8 +1,13 @@
 <template>
     <div class="bs-table-col-header-container">
-        <span class="bs-table-col-header-title">
-            {{ col?.label || col?.name || "" }}
-        </span>
+        <div class="bs-table-col-header-title-container">
+            <div class="bs-table-col-header-title">
+                {{ col?.label || col?.name || "" }}
+            </div>
+            <div v-if="(col as any)?.dataType" class="bs-table-col-header-data-type">
+                {{ (col as any)?.dataType }}
+            </div>
+        </div>
         <div
             ref="BsTableColHeaderActions"
             class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
@@ -110,6 +115,17 @@ export default defineComponent({
     display: flex;
     gap: 1rem;
     align-items: center;
+
+    .bs-table-col-header-title-container {
+        display: flex;
+        flex-direction: column;
+
+        .bs-table-col-header-data-type {
+            color: var(--q-positive);
+            font-size: .65rem;
+            margin-top: -5px;
+        }
+    }
 }
 
 

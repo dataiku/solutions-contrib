@@ -3,8 +3,10 @@ import { defineComponent } from 'vue';
 import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
-import { isUndefined } from 'lodash';
 
+interface BsTableCol extends QTableColumn {
+    dataType?: string,
+}
 export default defineComponent({
     name: "BsDSSTable",
     props: {
@@ -68,13 +70,14 @@ export default defineComponent({
                 }).catch(reject);
             })
         },
-        fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetSchema>): Promise<QTableColumn[]> {
+        fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetSchema>): Promise<BsTableCol[]> {
             this.setFetchingSchema(true);
             return new Promise((resolve, reject) => {
                 ServerApi.getDatasetSchema(...args).then((schema) => {
                     const DSSColumns = schema.columns;
-                    const columns = DSSColumns.map(col => this.createQTableCol(col.name));
-                    columns.unshift(this.createQTableCol("index", {label: "#"}));
+                    console.log({DSSColumns})
+                    const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
+                    columns.unshift(this.createBsTableCol({name: "index", label: "#"}));
                     this.setFetchingSchema(false);
                     resolve(columns);
                 }).catch(reject);
@@ -94,7 +97,8 @@ export default defineComponent({
             return columnName === "index" ? "in_dss_index" : columnName;
         },
         
-        createQTableCol(name: string, options?: Partial<QTableColumn>): QTableColumn {
+        createBsTableCol(options: Partial<BsTableCol>): BsTableCol {
+            const name = options?.name || "default";
             return {
                 name,
                 label: name,
