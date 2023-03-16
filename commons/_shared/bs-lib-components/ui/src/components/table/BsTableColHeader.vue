@@ -7,7 +7,7 @@
             ref="BsTableColHeaderActions"
             class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
         >
-            <q-icon  @click="sortColumn" :name="mdiArrowUpThin" size="1rem" class="sort-icon">
+            <q-icon v-if="sortable"  @click="sortColumn" :name="mdiArrowUpThin" size="1rem" class="sort-icon">
             </q-icon>
             <q-icon
                 :class="[
@@ -74,6 +74,11 @@ export default defineComponent({
             lastSearchedValue: "" as string | null | number | undefined,
             noDebounceValue: "" as string | null | number | undefined,
         };
+    },
+    computed: {
+        sortable(): boolean {
+            return !!(this.col as any)?._sortable;
+        }
     },
     props: {
         sort: Function as PropType<(col: any) => void>,

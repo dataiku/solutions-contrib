@@ -7,7 +7,6 @@
 <script lang="ts">
 import BsTable from "../../../src/components/table/BsTable.vue";
 
-
 const columns = [
     {
         name: 'name',

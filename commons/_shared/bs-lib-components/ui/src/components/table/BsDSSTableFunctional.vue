@@ -74,7 +74,7 @@ export default defineComponent({
                 ServerApi.getDatasetSchema(...args).then((schema) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createQTableCol(col.name));
-                    columns.unshift(this.createQTableCol("index", "#"));
+                    columns.unshift(this.createQTableCol("index", {label: "#"}));
                     this.setFetchingSchema(false);
                     resolve(columns);
                 }).catch(reject);
@@ -94,13 +94,14 @@ export default defineComponent({
             return columnName === "index" ? "in_dss_index" : columnName;
         },
         
-        createQTableCol(name: string, label?: string): QTableColumn {
+        createQTableCol(name: string, options?: Partial<QTableColumn>): QTableColumn {
             return {
                 name,
-                label: isUndefined(label) ? name : label,
+                label: name,
                 field: name,
-                sortable: false,
+                sortable: true,
                 align: "left",
+                ...options
             }
         },
 

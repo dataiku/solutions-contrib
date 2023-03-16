@@ -11,7 +11,7 @@
     ></BsDSSTableFunctional>
     <QTable
         :rows="passedRows"
-        :columns="passedColumns"
+        :columns="formattedColumns"
 
         :filter="filter"
         :filter-method="searchTableFilter"
@@ -128,6 +128,13 @@ export default defineComponent({
         },
         passedColumns(): QTableColumn[] | undefined {
             return this.isDSSTable ? this._columns : this.columns;
+        },
+        formattedColumns(): any[] |undefined {
+            if (this.passedColumns) {
+                return this.passedColumns.map(col => {
+                    return {...col, sortable: false, _sortable: col.sortable};
+                })
+            }
         },
         filter(): { columns: Record<string, string>, searchVal: string | number | null } {
             return {
