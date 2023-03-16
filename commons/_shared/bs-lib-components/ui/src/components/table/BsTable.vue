@@ -10,7 +10,6 @@
         @update:columns="updateColumns"
     ></BsDSSTableFunctional>
     <QTable
-        :dss-table-name="dssTableName"
         :rows="passedRows"
         :columns="passedColumns"
 
@@ -23,7 +22,7 @@
     >
         <template #top>
             <div class="bs-dss-table-top-container">
-                <span class="dss-table-name">{{ dssTableName }}</span>
+                <span class="dss-table-name">{{ title || dssTableName || "" }}</span>
                 <BsSearchWholeTable
                     v-model="searchedValue"
                     @update:formatted-value="searchedValueFormatted = $event"
@@ -88,6 +87,7 @@ export default defineComponent({
     inheritAttrs: false,
     props: {
         dssTableName: String,
+        title: String,
         batchSize: {
             type: Number,
             default: 10,
