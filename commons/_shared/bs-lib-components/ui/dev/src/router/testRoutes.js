@@ -10,4 +10,8 @@ export default [
         path: testTableGenericPath,
         component: () => import(`../test/BsTableGenericView.vue`),
     },
+    {
+        path: "/test_layout",
+        component: () => import(`../test/TestLayout.vue`),
+    },
 ]
