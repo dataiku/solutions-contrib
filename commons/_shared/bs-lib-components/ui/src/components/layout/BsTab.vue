@@ -64,7 +64,7 @@ export default defineComponent({
             qPageMounted: false,
         };
     },
-    inject: ["$tabs", "$selectedTab", "$defaultTabUsed", "$defaultDrawer"],
+    inject: ["$tabs", "$selectedTab", "$defaultTabUsed", "$defaultDrawer", "$defaultHeader"],
     provide() {
         return this.provideComputed([
             'isTabSelected',
@@ -174,6 +174,7 @@ export default defineComponent({
     },
     emits: ['mounted:q-page'],
     mounted() {
+        console.log("mounted a tab");
         this.registerTab();
     }
 });

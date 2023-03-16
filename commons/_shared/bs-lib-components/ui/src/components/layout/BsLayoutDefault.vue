@@ -176,7 +176,7 @@ export default defineComponent({
             return this.tabs.length > 1;
         },
         defaultTabUsed(): boolean {
-            return this.tabs.length < 2;
+            return !!this.tabs.length;
         },
         layoutDocsProps(): Partial<DocsProps> {
             const {docTitle, docIcon, docImageDimensions} = this;
