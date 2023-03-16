@@ -1,5 +1,17 @@
 import pages from './pages'
-import layoutGallery from '../assets/layout-gallery'
+
+function createLayoutGallery(...list) {
+  return list.map((layout) => ({
+  ...layout,
+  screenshot: `/imgs/layouts/${layout.path}.png`,
+  demoLink: `/layout/gallery/${layout.path}`,
+}));
+}
+
+export const layoutGallery = createLayoutGallery(
+  { name: "Layout with one tab", path: "empty-layout" },
+  { name: "Layout with multiple tabs", path: "layout-with-tabs" }
+);
 
 const docsPages = [
   {

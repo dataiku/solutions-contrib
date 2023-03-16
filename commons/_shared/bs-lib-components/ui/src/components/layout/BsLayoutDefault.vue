@@ -1,109 +1,204 @@
 <template>
-    <QLayout view="lHh LpR lFf" class="bg-white">
+<QLayout view="lHh LpR lFf" class="bg-white" :style="layoutStyles">
+    <!-- 
+        =========================
+        -----LAYOUT-ELEMENTS-----
+        =========================
         
-        <div class="toggle-left-button" :style="{ 'left' : leftDist + 'px'}" v-if="leftpanel">
-            <div @click="toggleLeftPanel">
-                <img src="../../assets/images/BtnImg.svg">
-            </div>
-        </div>
+        Slots from the <BSTab> component will move here
+    -->
+    <BsLayoutDrawer
+        v-model="drawerOpen"
+        @vnode-mounted="drawerMounted = true"
+        :expandable="selectedTabDrawer"
+        :collapsed-width="tabMenuWidth"
+        :panel-width="leftPanelWidth"
+        :mini="isTabsMultiple"
+    ></BsLayoutDrawer>
+    <BsLayoutHeader
+        @vnode-mounted="headerMounted = true"
+    ></BsLayoutHeader>
+    <!-- 
+        ===================
+        -----MENU-TABS-----
+        ===================
+        
+        Sidebar menu with tabs selection
+    -->
+    <BsMenuTabs
+        v-if="mounted && isTabsMultiple"
+        v-model="tabIndex"
+        @vnode-mounted="menuTabsMounted = true"
+    >
+        <BsMenuTab 
+            v-for="({name, icon, tabId}, index) in tabs"
+            :name="name"
+            :tab-id="tabId"
+            :icon="icon"
+            :tab-index="index"
+        ></BsMenuTab>
+    </BsMenuTabs>
+    <!-- 
+        ===================
+        ----DEFAULT-TAB----
+        ===================
 
-        <QHeader bordered class="bg-white bs-header" v-if="header">
-            <slot name="header"></slot>
-        </QHeader>
-
-        <QDrawer v-model="showLeftPanel" side="left" bordered behavior="desktop" v-if="leftpanel">
-            <slot name="leftpanel"></slot>
-        </QDrawer>
-
-        <QPageContainer>
-            <QPage>
-                <div class="content">
-                    <QBtn unelevated outline no-caps no-wrap class="btn-solution absolute" square @click="toggleDoc" v-if="doc">
-                        <div class="row items-center q-gutter-sm no-wrap">
-                            <img src="../../assets/images/solutions-icon.svg" width="15" height="16">
-                            <span class="btn-solution-text">Dataiku Solutions</span>
-                        </div>
-                    </QBtn>
-                    <QCard class="doc-content flex row" v-if="doc && openDoc">
-                        <div class="flex row items-center q-gutter-sm q-mb-lg">
-                            <img :src="docIcon" :width="docImageDimensions.width" :height="docImageDimensions.height" v-if="docIcon">
-                            <span class="dku-large-title-sb">{{ docTitle }}</span>
-                        </div>
-                        <div class="doc-body">
-                            <slot name="documentation"></slot>
-                        </div>
-                        <div class="doc-footer flex row items-center">
-                            <span class="doc-footer__icon"><img src="../../assets/images/solutions-icon.svg" width="14" height="12.5"></span>
-                            <span class="doc-footer__text dku-tiny-text-sb">Dataiku Solutions</span>
-                        </div>
-                    </QCard>
-                    <slot name="content"></slot>    
-                </div>
-            </QPage>
-            
-        </QPageContainer>
-    </QLayout>
+        If a user decides not to use a tab, the content will move here
+    -->
+    <BsTab
+        v-if="mounted && defaultTabUsed"
+        @mounted:q-page="qPageMounted = true"
+        :name="defaultLayoutTabName"
+    >
+        <template v-for="name in activeTabSlots" v-slot:[name]>
+            <slot :name="name"></slot>
+        </template>
+        <slot></slot>
+    </BsTab>
+    <slot v-else></slot>
+</QLayout>
 </template>
-<script>
-    import { QLayout, QHeader, QDrawer, QPageContainer, QBtn, QCard, QPage } from 'quasar';
-    import btnImg from "../../assets/images/BtnImg.svg"
-    export default {
-        name:"BsLayoutDefault",
-        data() {
-            return {
-                showLeftPanel : true,
-                btnImg : btnImg,
-                openDoc: false
-            }  
+
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { QLayout } from 'quasar';
+
+import { DocsProps, ImageDimensions, Tab } from './bsLayoutTypes'
+
+import BsMenuTabs from './BsMenuTabs.vue';
+import BsMenuTab from './BsMenuTab.vue';
+import BsLayoutDrawer from './BsLayoutDrawer.vue';
+import BsLayoutHeader from './BsLayoutHeader.vue';
+import BsTab from './BsTab.vue';
+import BsDrawer from './base-subcomponents/BsDrawer.vue'
+import BsHeader from './base-subcomponents/BsHeader.vue';
+import CheckSlotComponentsMixin from './CheckSlotComponentsMixin.vue';
+import ProvideMixin from './ProvideMixin.vue';
+
+import { Slugger } from './Slugger';
+const slugger = new Slugger();
+
+export default defineComponent({
+    name:"BsLayoutDefault",
+    mixins: [ProvideMixin, CheckSlotComponentsMixin],
+    components: {
+        BsTab,
+        BsMenuTab,
+        BsMenuTabs,
+        BsLayoutDrawer,
+        BsLayoutHeader,
+        QLayout,
+    },
+    props: {
+        docTitle: {
+            type: String,
         },
-        components: {
-            QLayout, 
-            QHeader, 
-            QDrawer, 
-            QPageContainer,
-            QBtn,
-            QCard,
-            QPage,
+        docIcon: {
+            type: String,
         },
-        methods: {
-            toggleLeftPanel() {
-                this.showLeftPanel = !this.showLeftPanel;
-            },
-            toggleDoc() {
-                this.openDoc = !this.openDoc;
-            },
+        docImageDimensions: {
+            type: Object as PropType<ImageDimensions>,
         },
-        computed: {
-            leftDist() {
-                return this.showLeftPanel ? 300 : 0;
-            }
+        tabMenuWidth: {
+            type: Number,
+            default: 50,
         },
-        props: {
-            header: {
-                type: Boolean,
-                default: true
-            },
-            leftpanel: {
-                type: Boolean,
-                default: true
-            },
-            docTitle: {
-                type: String,
-            },
-            docIcon: {
-                type: String,
-            },
-            doc: {
-                type: Boolean,
-                default: true
-            },
-            docImageDimensions: {
-                type: Object,
-                default: () => ({
-                    width: 36,
-                    height: 40,
-                })
-            }
+        leftPanelWidth: {
+            type: Number,
+            default: 300,
+        },
+    },
+    data() {
+        return {
+            tabIndex: 0,
+            tabs: [] as Tab[],
+            mounted: false,
+            headerMounted: false,
+            drawerMounted: false,
+            qPageMounted: false,
+            menuTabsMounted: false,
+            drawerOpen: true,
+            tabSlotNames: [
+                'header',
+                'head',
+                'leftpanel',
+                'drawer',
+                'documentation',
+                'content',
+            ],
+            defaultLayoutTabName: "Layout Default"
+        }  
+    },
+    provide() {
+        const provideStatic = this.provideStatic([
+            "tabs",
+        ]);
+        let provideComputed = this.provideComputed([
+            "selectedTab",
+            "qLayoutMounted",
+            "menuTabsMounted",
+            "layoutDocsProps",
+            "defaultTabUsed",
+            "drawerOpen",
+        ]);
+        if (this.defaultTabUsed) {
+            const provideVirtualTab = this.provideComputed([
+                'tabContentId',
+                'qPageMounted',
+                'defaultDrawer',
+                'defaultHeader',
+            ]);
+            provideComputed = {...provideComputed, ...provideVirtualTab};
         }
+        const provide = {...provideComputed, ...provideStatic};
+        return provide;
+    },
+    methods: {
+        getTabIndex(selectedTabId: string) {
+            return this.tabs.findIndex(({tabId}) => selectedTabId === tabId);
+        },
+    },
+    computed: {
+        tabContentId() {
+            const sluggedDefaultTabName = slugger.slug(this.defaultLayoutTabName);
+            return `tab-content-id-${sluggedDefaultTabName}`;
+        },
+        activeTabSlots() {
+            return Object.keys(this.$slots).filter(slot => this.tabSlotNames.includes(slot));
+        },
+        selectedTab(): Tab | undefined {
+            return this.tabs[this.tabIndex] as any;
+        },
+        selectedTabDrawer() {
+            return this.selectedTab?.drawer;
+        },
+        isTabsMultiple(): boolean {
+            return this.tabs.length > 1;
+        },
+        defaultTabUsed(): boolean {
+            return this.tabs.length < 2;
+        },
+        layoutDocsProps(): Partial<DocsProps> {
+            const {docTitle, docIcon, docImageDimensions} = this;
+            return {docTitle, docIcon, docImageDimensions};
+        },
+        qLayoutMounted() {
+            return this.drawerMounted && this.headerMounted;
+        },
+        defaultDrawer() {
+            return !!this.getSlotComponents(BsDrawer.name).length;
+        },
+        defaultHeader() {
+            return !!this.getSlotComponents(BsHeader.name).length;
+        },
+        layoutStyles() {
+            return {
+                '--bs-drawer-width': `${this.leftPanelWidth}px`,
+            };
+        },
+    },
+    mounted() {
+        this.mounted = true;
     }
+});
 </script>
