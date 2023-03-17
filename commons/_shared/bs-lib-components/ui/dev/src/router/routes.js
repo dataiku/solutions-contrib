@@ -48,8 +48,6 @@ pages.forEach(node => {
 
 const testRoutes = process.env.DEV ? require("./testRoutes").default : [];
 
-console.log(testRoutes);
-
 const routes = [
   {
     path: '/',
