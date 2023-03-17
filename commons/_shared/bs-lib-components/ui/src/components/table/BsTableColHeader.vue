@@ -1,5 +1,9 @@
 <template>
-    <div class="bs-table-col-header-container">
+    <div 
+        class="bs-table-col-header-container"
+        :style="{'--bs-table-header-cursor-type': sortable ? 'pointer' : 'default'}"
+        @click="sortColumn"
+        >
         <div class="bs-table-col-header-title-container">
             <div class="bs-table-col-header-title">
                 {{ col?.label || col?.name || "" }}
@@ -11,6 +15,7 @@
         <div
             ref="BsTableColHeaderActions"
             class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
+            @click.stop="1"
         >
             <q-icon v-if="sortable"  @click="sortColumn" :name="mdiArrowUpThin" size="1rem" class="sort-icon">
             </q-icon>
@@ -97,8 +102,7 @@ export default defineComponent({
     },
     methods: {
         sortColumn() {
-            if (!this.sort) return;
-            this.sort(this.col);
+            if (this.sortable && this.sort) this.sort(this.col);
         },
         searchColumn(searchVal: string | null | number | undefined) {
             this.lastSearchedValue = searchVal;
@@ -113,12 +117,14 @@ export default defineComponent({
 
 .bs-table-col-header-container {
     display: flex;
-    gap: 1rem;
     align-items: center;
 
     .bs-table-col-header-title-container {
         display: flex;
         flex-direction: column;
+        cursor: var(--bs-table-header-cursor-type);
+        user-select: text;
+        padding-right: 1rem;
 
         .bs-table-col-header-data-type {
             color: var(--q-positive);

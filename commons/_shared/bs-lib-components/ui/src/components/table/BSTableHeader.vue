@@ -46,6 +46,7 @@ export default defineComponent({
         box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 0px 0px;
 
         > * {
+            cursor: pointer;
             transition: rotate 0.3s, opacity 0.5s, scale 0.3s, color 0.3s;
             opacity: 0;
             scale: 0;
