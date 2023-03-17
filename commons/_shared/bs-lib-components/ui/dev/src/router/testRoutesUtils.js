@@ -1,4 +1,4 @@
-const PascalToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+const PascalToSnakeCase = str => str.replace(/\.?([A-Z]+)/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
 
 
 /**
