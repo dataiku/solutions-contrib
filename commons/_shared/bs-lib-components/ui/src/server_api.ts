@@ -1,5 +1,5 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
-import { DSSDatasetData, DSSDatasetSchema } from "./backend_model"
+import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
 
 // import axios_ from "axios";
 
@@ -98,6 +98,11 @@ export default class ServerApi {
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
         return this.doGet(`dataset/get_schema/dataset_name=${datasetName}`);
+    }
+
+
+    public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
+        return this.doGet(`dataset/get_generic_data/dataset_name=${datasetName}`);
     }
 }
 

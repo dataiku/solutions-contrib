@@ -8,6 +8,7 @@
         @update:fetching="fetching = $event"
         @update:rows="updateRows"
         @update:columns="updateColumns"
+        @update:columns-count="updateColumnsCount"
     ></BsDSSTableFunctional>
     <QTable
         :rows="passedRows"
@@ -50,6 +51,7 @@
                 :batch-offset="_batchOffset"
                 :batch-size="batchSize"
                 :last-batch-index="lastBatchIndex"
+                :columns-count="columnsCount"
                 @update:batch-offset="setBatchOffset"
             ></BsTableBottom>
         </template>
@@ -83,7 +85,7 @@ export default defineComponent({
         BsTextHighlight,
         BsTableBottom,
     },
-    emits: ["update:rows", "update:columns", "update:batch-offset"],
+    emits: ["update:rows", "update:columns", "update:columns-count", "update:batch-offset"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -112,6 +114,7 @@ export default defineComponent({
             searchedValueFormatted: "",
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
+            columnsCount: undefined as number | undefined,
             _batchOffset: 0,
             lastBatchIndex: -1,
         };
@@ -168,6 +171,10 @@ export default defineComponent({
         updateColumns(columns: QTableColumn[]) {
             this._columns = columns;
             this.$emit("update:columns", this._columns);
+        },
+        updateColumnsCount(columnsCount: number) {
+            this.columnsCount = columnsCount;
+            this.$emit("update:columns-count", this.columnsCount);
         },
         searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
             return searchTableFilter(...args);

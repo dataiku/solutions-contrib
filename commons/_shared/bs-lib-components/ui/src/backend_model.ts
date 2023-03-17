@@ -10,4 +10,9 @@ export interface DSSDatasetSchema {
     userModified: boolean;
 }
 
+export interface DSSDatasetGenericData {
+    schema: DSSDatasetSchema,
+    columnsCount: number
+}
+
 export interface DSSDatasetData extends Record<string, DSSColumnData> {}

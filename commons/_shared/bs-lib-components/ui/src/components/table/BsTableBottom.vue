@@ -1,8 +1,9 @@
 <template>
     <div class="bs-table-bottom-container">
-        <div class="bs-table-total">
-            <span>{{ recordsTotal }}</span>
-            <div class="bs-table-server-side-pagination-controls" v-if="batchSize">
+        <div class="bs-table-records-total" v-if="recordsTotal">{{ recordsTotal }}</div>
+        <div class="bs-table-sampled-records" v-if="!isFullDataset">
+            <span>{{ sampledRecords }}</span>
+            <div class="bs-table-server-side-pagination-controls">
                 <q-btn
                     icon="chevron_left"
                     color="grey-8"
@@ -121,15 +122,10 @@ export default defineComponent({
             type: Object as PropType<QTableBottomScope>,
             required: true,
         },
-        batchSize: {
-            type: Number,
-        },
-        batchOffset: {
-            type: Number,
-        },
-        lastBatchIndex: {
-            type: Number,
-        }
+        batchSize: Number,
+        batchOffset: Number,
+        lastBatchIndex: Number,
+        columnsCount: Number
     },
     data() {
         return {};
@@ -148,14 +144,17 @@ export default defineComponent({
             
             return `records ${from} - ${to}`;
         },
-        recordsTotal(): string {
-            const rowsPerPage = this.pagination.rowsPerPage;
-            const isFullDataset = isUndefined(this.batchSize) || isUndefined(this.batchOffset);
-            
-            if (isFullDataset) {
-                const total = this.scope.pagesNumber * rowsPerPage;
+        isFullDataset(): boolean {
+            return isUndefined(this.batchSize) || isUndefined(this.batchOffset);
+        },
+        recordsTotal(): string | undefined {
+            if (this.columnsCount || this.isFullDataset) {
+                const total = this.columnsCount || (this.scope.pagesNumber * this.pagination.rowsPerPage);
                 return `records total: ${total}`
-            } else {
+            }
+        },
+        sampledRecords(): string | undefined {
+            if (!this.isFullDataset) {
                 const batchSize = this.batchSize || 0;
                 const batchOffset = this.batchOffset || 0;
                 const from = batchSize * batchOffset;
@@ -195,10 +194,15 @@ export default defineComponent({
     justify-content: flex-end;
     align-items: center;
 
-    .bs-table-total {
+    .bs-table-sampled-records {
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    .bs-table-records-total {
+        display: flex;
+        align-items: center;
     }
 
     .bs-table-records-info {

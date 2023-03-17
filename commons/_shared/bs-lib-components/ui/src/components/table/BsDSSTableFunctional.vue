@@ -20,7 +20,7 @@ export default defineComponent({
             type: Number,
         },
     },
-    emts: ["update:fetching", "update:rows", "update:columns"],
+    emts: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
         return {
             DSSColumns: undefined as unknown as DSSColumnSchema[],
@@ -70,21 +70,22 @@ export default defineComponent({
                 }).catch(reject);
             })
         },
-        fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetSchema>): Promise<BsTableCol[]> {
+        fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>): Promise<{columns: BsTableCol[], columnsCount: number}> {
             this.setFetchingSchema(true);
             return new Promise((resolve, reject) => {
-                ServerApi.getDatasetSchema(...args).then((schema) => {
+                ServerApi.getDatasetGenericData(...args).then(({ schema, columnsCount }) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
                     columns.unshift(this.createBsTableCol({name: "index", label: "#"}));
                     this.setFetchingSchema(false);
-                    resolve(columns);
+                    resolve({ columns, columnsCount });
                 }).catch(reject);
             })
         },
-        updateColumns(...args: Parameters<typeof ServerApi.getDatasetSchema>) {
-            this.fetchDSSColumns(...args).then(columns => {
+        updateColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>) {
+            this.fetchDSSColumns(...args).then(({columns, columnsCount}) => {
                 this.$emit("update:columns", columns);
+                this.$emit("update:columns-count", columnsCount);
             });
         },
         updateRows(...args: Parameters<typeof ServerApi.getDatasetChunk>) {

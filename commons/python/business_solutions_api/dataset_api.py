@@ -39,3 +39,9 @@ def fetch_dataiku_dataset_schema(dataset_name: str):
     params = dataiku_api.get_dataset_schema(dataset=dataset_name)
     response = json_response(json.dumps(params))
     return response
+
+@dataset_api.route("/get_generic_data/dataset_name=<dataset_name>", methods=["GET"])
+def get_generic_data(dataset_name: str):
+    params = dataiku_api.get_dataset_generic_data(dataset=dataset_name)
+    response = json_response(json.dumps(params))
+    return response

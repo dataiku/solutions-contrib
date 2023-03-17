@@ -84,6 +84,13 @@ class DataikuApi:
             return None
 
     @using_dataset
+    def get_dataset_generic_data(self, dataset: DSSDataset, project: DSSProject):
+        return {
+            "schema": self.get_dataset_schema(dataset=dataset, project=project),
+            "columnsCount": self.get_dataset_records_count(dataset=dataset, project=project),
+        }
+
+    @using_dataset
     def get_dataset_chunk(self, dataset: DSSDataset, project: DSSProject, chunk_index: int, chunksize=10000):
         dataset_iterator = DatasetIterator(dataset=dataset, chunksize=chunksize);
         return dataset_iterator.get_chunk(index=chunk_index);
