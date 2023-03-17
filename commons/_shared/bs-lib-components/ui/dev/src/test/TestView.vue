@@ -1,7 +1,7 @@
 <template>
     <div class="test-container">
         <BsTable
-            dss-table-name="movies_data_top_1000"
+            dss-table-name="movies_data_top_1000_copy"
             :batchSize="100"
             
         >
