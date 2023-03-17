@@ -9,5 +9,5 @@ cache
 commons/_shared/bs-lib-components/ui/yarn-error.log
 commons/_shared/bs-lib-components/ui/dev/src/router/testRoutes.js
 
-commons/_shared/bs-lib-components/ui/dev/src/test/*
+commons/_shared/bs-lib-components/ui/dev/src/test
 !commons/_shared/bs-lib-components/ui/dev/src/test/TestRouteExample.vue
