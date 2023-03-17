@@ -12,7 +12,7 @@ def json_response(payload: Any):
 
 @dataset_api.route("/get/dataset_name=<dataset_name>/chunksize=<chunksize>/chunk_index=<chunk_index>", methods=["GET"])
 def fetch_dataiku_dataset(dataset_name: str, chunksize: str, chunk_index: str):
-    last_build_start = dataiku_api.get_dataset_last_build_start_time(dataset_name=dataset_name)
+    last_build_start = dataiku_api.get_dataset_last_build_start_time(dataset=dataset_name)
     timestamp = "None" if last_build_start is None else str(last_build_start.timestamp())
 
     return fetch_dataiku_dataset_cached(dataset_name=dataset_name, chunksize=chunksize, chunk_index=chunk_index, last_build_start_timestamp=timestamp)
@@ -26,7 +26,7 @@ def fetch_dataiku_dataset_cached(dataset_name: str, chunksize: str, chunk_index:
         return f"parsed_chunksize or parsed_chunk_index is not of Int type:\nchunksize = {chunksize};\nchunk_index = {chunk_index};"
     
     chunk = dataiku_api.get_dataset_chunk(
-        dataset_name=dataset_name,
+        dataset=dataset_name,
         chunk_index=parsed_chunk_index,
         chunksize=parsed_chunksize,
     )
@@ -36,6 +36,6 @@ def fetch_dataiku_dataset_cached(dataset_name: str, chunksize: str, chunk_index:
 
 @dataset_api.route("/get_schema/dataset_name=<dataset_name>", methods=["GET"])
 def fetch_dataiku_dataset_schema(dataset_name: str):
-    params = dataiku_api.get_dataset_schema(dataset_name=dataset_name)
+    params = dataiku_api.get_dataset_schema(dataset=dataset_name)
     response = json_response(json.dumps(params))
     return response
