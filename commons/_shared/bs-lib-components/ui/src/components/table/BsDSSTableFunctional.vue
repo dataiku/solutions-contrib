@@ -75,7 +75,6 @@ export default defineComponent({
             return new Promise((resolve, reject) => {
                 ServerApi.getDatasetSchema(...args).then((schema) => {
                     const DSSColumns = schema.columns;
-                    console.log({DSSColumns})
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
                     columns.unshift(this.createBsTableCol({name: "index", label: "#"}));
                     this.setFetchingSchema(false);
