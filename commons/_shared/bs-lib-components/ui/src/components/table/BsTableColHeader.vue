@@ -80,7 +80,6 @@ export default defineComponent({
             mdiArrowUpThin,
             searchColIcon: mdiMagnify,
             searchPopupActive: false,
-            searching: false,
             lastSearchedValue: "" as string | null | number | undefined,
             noDebounceValue: "" as string | null | number | undefined,
         };
@@ -88,16 +87,29 @@ export default defineComponent({
     computed: {
         sortable(): boolean {
             return !!(this.col as any)?._sortable;
-        }
+        },
+        searching(): boolean {
+            const searchVal = this.lastSearchedValue;
+            return !(isNull(searchVal) || isUndefined(searchVal)) && !!(searchVal as string)?.length;
+        },
     },
     props: {
         sort: Function as PropType<(col: any) => void>,
         col: Object as PropType<{label: string, name: string}>,
+        searchedCols: Object as PropType<Record<string, string>>
     },
     watch: {
         searchPopupActive(newVal, lastVal) {
             if (newVal || !lastVal) return;
             this.searchColumn(this.noDebounceValue);
+        },
+        searchedCols(newVal: Record<string, string>) {
+            console.log(this.searchedCols);
+            if (this.col?.name && newVal.hasOwnProperty(this.col.name)) {
+                this.lastSearchedValue = newVal[this.col.name];
+            } else {
+                this.lastSearchedValue = "";
+            }
         }
     },
     methods: {
@@ -106,7 +118,6 @@ export default defineComponent({
         },
         searchColumn(searchVal: string | null | number | undefined) {
             this.lastSearchedValue = searchVal;
-            this.searching = !(isNull(searchVal) || isUndefined(searchVal)) && !!(searchVal as string)?.length;
             this.$emit("search-col", this.col?.name, searchVal);
         },
     },

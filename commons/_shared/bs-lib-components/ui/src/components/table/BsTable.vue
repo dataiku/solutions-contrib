@@ -21,13 +21,19 @@
         v-bind="$attrs"
     >
         <template #top>
-            <div class="bs-dss-table-top-container">
-                <span class="dss-table-name">{{ title || dssTableName || "" }}</span>
-                <BsSearchWholeTable
-                    v-model="searchedValue"
-                    @update:formatted-value="searchedValueFormatted = $event"
-                    @update:loading="searching = $event"
-                ></BsSearchWholeTable>
+            <div class="bs-table-top-container">
+                <span class="bs-table-name">{{ title || dssTableName || "" }}</span>
+
+                <div class="bs-table-search-container">
+                    <BsSearchWholeTable
+                        v-model="searchedValue"
+                        @update:formatted-value="searchedValueFormatted = $event"
+                        @update:loading="searching = $event"
+                    ></BsSearchWholeTable>
+                    <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
+                        <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
+                    </div>
+                </div>
             </div>
         </template>
         <template
@@ -41,6 +47,7 @@
         <template #header="props">
             <BSTableHeader
                 :props="props"
+                :searched-cols="searchedCols"
                 @search-col="updateSearchedCols"
             ></BSTableHeader>
         </template>
@@ -72,6 +79,8 @@ import { searchTableFilter } from './filterTable';
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
 import { isEmpty } from 'lodash';
+import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
+
 
 export default defineComponent({
     name: "BsTable",
@@ -108,6 +117,8 @@ export default defineComponent({
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
             lastBatchIndex: -1,
+
+            mdiCloseCircleMultiple,
         };
     },
     computed: {
@@ -229,7 +240,12 @@ export default defineComponent({
                 recordsCount: undefined,
             } as ServerSidePagination;
         },
+        clearAllSearch() {
+            this.searchedValue = null;
+            this.searchedCols = {};
+        },
     },
+
     mounted() {
         if (this.dssTableName || this.serverSidePagination) {
             this.createServerSidePagination();
@@ -240,17 +256,35 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.dss-table-name {
+.bs-table-name {
     font-size: 1.5rem;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
-.bs-dss-table-top-container {
+.bs-table-top-container {
     min-width: 0;
     display: flex;
     gap: 10px;
     width: 100%;
     justify-content: space-between;
+}
+
+.bs-table-search-container {
+    display: flex;
+    .bs-table-clear-all-btn {
+        overflow: visible;
+        max-width: 0;
+        opacity: 0;
+        pointer-events: none;
+
+        transition: opacity .5s, max-width .5s;
+
+        &.bs-table-clear-all-btn--active {
+            max-width: 30px;
+            pointer-events: all;
+            opacity: 1;
+        }
+    }
 }
 </style>

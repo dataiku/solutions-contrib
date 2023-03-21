@@ -8,6 +8,7 @@
                 <BsTableColHeader
                     :sort="props.sort"
                     :col="col"
+                    :searched-cols="searchedCols"
                     @search-col="(...args) => $emit('search-col', ...args)"
                 ></BsTableColHeader>
         </q-th>
@@ -30,6 +31,7 @@ export default defineComponent({
             type: Object as PropType<QTableHeaderProps>,
             required: true,
         },
+        searchedCols: Object
     },
     emits: ["search-col"],
 });
