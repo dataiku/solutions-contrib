@@ -1,5 +1,12 @@
 <template>
     <div class="bs-table-bottom-container">
+        <div
+            v-if="!isFullDataset"
+            :class="['bs-table-warning', searching && 'bs-table-warning-active']"
+        >
+            <q-icon :name="mdiAlert"></q-icon>
+            <div class="bs-table-warning-text">the search is applied only to the sampled records!</div>
+        </div>
         <div class="bs-table-records-total" v-if="recordsTotal">{{ recordsTotal }}</div>
         <div class="bs-table-sampled-records" v-if="!isFullDataset">
             <span>{{ sampledRecords }}</span>
@@ -13,7 +20,6 @@
                     :disable="isFirstBatch"
                     @click="prevBatch"
                 />
-                
                 <q-btn
                     icon="chevron_right"
                     color="grey-8"
@@ -78,6 +84,8 @@
 import { isUndefined } from 'lodash';
 import { defineComponent, PropType } from 'vue';
 import { ServerSidePagination } from './tableHelper';
+import { mdiAlert } from '@quasar/extras/mdi-v6';
+import { QIcon } from "quasar";
 
 type QPagination = {
     /**
@@ -115,7 +123,7 @@ type QTableBottomScope = {
 export default defineComponent({
     name: "BsTableBottom",
     components: {
-
+        QIcon
     },
     emits: ["update:batch-offset"],
     props: {
@@ -124,12 +132,14 @@ export default defineComponent({
             required: true,
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
+        searching: Boolean,
     },
     data() {
         return {
             batchSize: 0,
             batchOffset: 0,
             recordsCount: 0,
+            mdiAlert,
         };
     },
     computed: {
@@ -217,6 +227,42 @@ export default defineComponent({
     justify-content: flex-end;
     align-items: center;
 
+    .bs-table-warning {
+        position: absolute;
+        bottom: 13px;
+        left: 20px;
+
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        
+        color: white;
+        background: var(--q-warning);
+        border-radius: 5px;
+        padding: 2px 4px;
+
+        transition: max-width .5s, opacity .5s;
+        
+        opacity: 0;
+        pointer-events: none;
+        
+        &.bs-table-warning-active {
+            pointer-events: all;
+            opacity: 1;
+        }
+        
+        max-width: 20px;
+        &:hover {
+            max-width: 275px;
+        }
+        
+        min-width: 0;
+        .bs-table-warning-text {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
     .bs-table-sampled-records {
         display: flex;
         align-items: center;

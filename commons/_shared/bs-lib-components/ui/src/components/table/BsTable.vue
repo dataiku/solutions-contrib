@@ -48,6 +48,7 @@
             <BsTableBottom
                 :scope="scope"
                 :server-side-pagination="_serverSidePagination"
+                :searching="anyColumnSearched"
                 @update:batch-offset="setBatchOffset($event, true)"
             ></BsTableBottom>
         </template>
@@ -70,6 +71,7 @@ import { searchTableFilter } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
+import { isEmpty } from 'lodash';
 
 export default defineComponent({
     name: "BsTable",
@@ -114,6 +116,9 @@ export default defineComponent({
         },
         isLoading(): boolean {
             return this.loading || this.searching || this.fetching;
+        },
+        anyColumnSearched(): boolean {
+            return !(!this.searchedValue && isEmpty(this.searchedCols));
         },
         isServerSidePaginationObject(): boolean {
             return typeof this.serverSidePagination !== "boolean";
