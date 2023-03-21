@@ -2,13 +2,12 @@
     <BsDSSTableFunctional
         v-if="isDSSTable"
         :dss-table-name="dssTableName"
-        :batch-size="batchSize"
-        :batch-offset="_batchOffset"
+        :server-side-pagination="_serverSidePagination"
 
         @update:fetching="fetching = $event"
-        @update:rows="updateRows"
-        @update:columns="updateColumns"
-        @update:columns-count="updateColumnsCount"
+        @update:rows="updateDSSRows"
+        @update:columns="updateDSSColumns"
+        @update:columns-count="setRecordsCount($event, true)"
     ></BsDSSTableFunctional>
     <QTable
         :rows="passedRows"
@@ -43,16 +42,13 @@
             <BSTableHeader
                 :props="props"
                 @search-col="updateSearchedCols"
-                ></BSTableHeader>
+            ></BSTableHeader>
         </template>
         <template #bottom="scope">
             <BsTableBottom
                 :scope="scope"
-                :batch-offset="_batchOffset"
-                :batch-size="batchSize"
-                :last-batch-index="lastBatchIndex"
-                :columns-count="columnsCount"
-                @update:batch-offset="setBatchOffset"
+                :server-side-pagination="_serverSidePagination"
+                @update:batch-offset="setBatchOffset($event, true)"
             ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -73,6 +69,7 @@ import BsTableBottom from "./BsTableBottom.vue"
 import { searchTableFilter } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
+import { ServerSidePagination } from './tableHelper';
 
 export default defineComponent({
     name: "BsTable",
@@ -85,19 +82,12 @@ export default defineComponent({
         BsTextHighlight,
         BsTableBottom,
     },
-    emits: ["update:rows", "update:columns", "update:columns-count", "update:batch-offset"],
+    emits: ["update:rows", "update:columns", "update:server-side-pagination"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
         title: String,
-        batchSize: {
-            type: Number,
-            default: 10,
-        },
-        batchOffset: {
-            type: Number,
-            default: 0,
-        },
+        serverSidePagination: [Object, Boolean] as PropType<ServerSidePagination | boolean>,
         loading: {
             type: Boolean,
             default: false
@@ -112,10 +102,9 @@ export default defineComponent({
             searchedCols: {} as Record<string, string>,
             searchedValue: null as string | null,
             searchedValueFormatted: "",
+            _serverSidePagination: undefined as unknown as ServerSidePagination,
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
-            columnsCount: undefined as number | undefined,
-            _batchOffset: 0,
             lastBatchIndex: -1,
         };
     },
@@ -125,6 +114,9 @@ export default defineComponent({
         },
         isLoading(): boolean {
             return this.loading || this.searching || this.fetching;
+        },
+        isServerSidePaginationObject(): boolean {
+            return typeof this.serverSidePagination !== "boolean";
         },
         passedRows(): Record<string, any>[] | undefined {
             return this.isDSSTable ? this._rows : this.rows;
@@ -151,30 +143,36 @@ export default defineComponent({
         },
     },
     watch: {
-        batchOffset() {
-            this.syncBatchOffset();
-        }
+        "serverSidePagination.batchOffset"() {
+            this.syncServerSidePagination();
+        },
+        "serverSidePagination.batchSize"() {
+            this.syncServerSidePagination();
+        },
+        "serverSidePagination.recordsCount"() {
+            this.syncServerSidePagination();
+        },
     },
     methods: {
-        updateRows(rows: Record<string, any>[] | undefined) {
+        updateDSSRows(rows: Record<string, any>[] | undefined) {
             if (!rows) rows = [];
-            const rowKeys = Object.keys(rows);
-            if (rowKeys.length < this.batchSize) {
-                if (rowKeys.length == 0) {
-                    this.setBatchOffset(this._batchOffset - 1);
+            const { batchSize, batchOffset } = this._serverSidePagination;
+            const fetchedRowsAmount = Object.keys(rows).length;
+            if (fetchedRowsAmount < batchSize) {
+                const updateObject: Partial<ServerSidePagination> = {};
+                updateObject.recordsCount = batchOffset * batchSize + fetchedRowsAmount;
+                if (fetchedRowsAmount == 0) {
+                    updateObject.batchOffset = batchOffset - 1;
                 }
-                this.lastBatchIndex = this._batchOffset;
+                this.setServerSidePagination(updateObject, true);
             }
+
             this._rows = rows;
             this.$emit("update:rows", this._rows);
         },
-        updateColumns(columns: QTableColumn[]) {
+        updateDSSColumns(columns: QTableColumn[]) {
             this._columns = columns;
             this.$emit("update:columns", this._columns);
-        },
-        updateColumnsCount(columnsCount: number) {
-            this.columnsCount = columnsCount;
-            this.$emit("update:columns-count", this.columnsCount);
         },
         searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
             return searchTableFilter(...args);
@@ -196,17 +194,42 @@ export default defineComponent({
         getColSearchedValue(colName: string) {
             return getObjectPropertyIfExists(this.searchedCols, colName);
         },
-        setBatchOffset(batchOffset: number) {
-            if (batchOffset < 0) batchOffset = 0;
-            this._batchOffset = batchOffset;
-            this.$emit("update:batch-offset", batchOffset);
+        setBatchOffset(batchOffset: number, emit = false) {
+            this.setServerSidePagination({batchOffset}, emit);
         },
-        syncBatchOffset() {
-            this._batchOffset = this.batchOffset;
+        setBatchSize(batchSize: number, emit = false) {
+            this.setServerSidePagination({batchSize}, emit);
+        },
+        setRecordsCount(recordsCount: number, emit = false) {
+            this.setServerSidePagination({recordsCount}, emit);
+        },
+        setServerSidePagination(pagination: Partial<ServerSidePagination>, emit = false) {
+            pagination = {...pagination};
+            Object.entries(pagination).forEach(([key, value]) => {
+                if (value < 0) value = 0;
+                pagination[key as keyof ServerSidePagination] = value;
+                this._serverSidePagination[key as keyof ServerSidePagination] = value;
+            })
+            if (emit) this.$emit("update:server-side-pagination", pagination);
+        },
+        syncServerSidePagination() {
+            if (this.isServerSidePaginationObject) {
+                this.setServerSidePagination(this.serverSidePagination as ServerSidePagination);
+            }
+        },
+        createServerSidePagination() {
+            this._serverSidePagination = {
+                batchOffset: 0,
+                batchSize: 100,
+                recordsCount: undefined,
+            } as ServerSidePagination;
         },
     },
     mounted() {
-        this.syncBatchOffset();
+        if (this.dssTableName || this.serverSidePagination) {
+            this.createServerSidePagination();
+            this.syncServerSidePagination();
+        }
     }
 });
 </script>

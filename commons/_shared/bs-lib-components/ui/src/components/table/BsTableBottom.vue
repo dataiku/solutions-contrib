@@ -77,6 +77,7 @@
 <script lang="ts">
 import { isUndefined } from 'lodash';
 import { defineComponent, PropType } from 'vue';
+import { ServerSidePagination } from './tableHelper';
 
 type QPagination = {
     /**
@@ -122,43 +123,41 @@ export default defineComponent({
             type: Object as PropType<QTableBottomScope>,
             required: true,
         },
-        batchSize: Number,
-        batchOffset: Number,
-        lastBatchIndex: Number,
-        columnsCount: Number
+        serverSidePagination: Object as PropType<ServerSidePagination>,
     },
     data() {
-        return {};
+        return {
+            batchSize: 0,
+            batchOffset: 0,
+            recordsCount: 0,
+        };
     },
     computed: {
         pagination(): QPagination {
             return this.scope.pagination;
         },
         recordsShown(): string {
-            const batchSize = this.batchSize || 0;
-            const batchOffset = this.batchOffset || 0;
             const rowsPerPage = this.pagination.rowsPerPage;
-            const to = (this.pagination.page * rowsPerPage) + batchSize * batchOffset;
+            let to = (this.pagination.page * rowsPerPage) + this.batchSize * this.batchOffset;
             const from = to - rowsPerPage;
-
+            if (this.recordsCount) to = Math.min(to, this.recordsCount);
             
             return `records ${from} - ${to}`;
         },
         isFullDataset(): boolean {
-            return isUndefined(this.batchSize) || isUndefined(this.batchOffset);
+            return isUndefined(this.serverSidePagination);
         },
         recordsTotal(): string | undefined {
-            if (this.columnsCount || this.isFullDataset) {
-                const total = this.columnsCount || (this.scope.pagesNumber * this.pagination.rowsPerPage);
-                return `records total: ${total}`
+            if (this.recordsCount || this.isFullDataset) {
+                const total = this.recordsCount || (this.scope.pagesNumber * this.pagination.rowsPerPage);
+                return `records total: ${total}`;
             }
         },
         sampledRecords(): string | undefined {
             if (!this.isFullDataset) {
-                const batchSize = this.batchSize || 0;
-                const batchOffset = this.batchOffset || 0;
-                const from = batchSize * batchOffset;
-                const to = from + batchSize;
+                const from = this.batchSize * this.batchOffset;
+                let to = from + this.batchSize;
+                if (this.recordsCount) to = Math.min(to, this.recordsCount);
                 return `sampled records: ${from} - ${to}`;
             }
         },
@@ -167,7 +166,23 @@ export default defineComponent({
         },
         isLastBatch(): boolean {
             return !(isUndefined(this.lastBatchIndex) || (this.batchOffset !== this.lastBatchIndex));
+        },
+        lastBatchIndex(): number | undefined {
+            if (this.recordsCount && this.batchSize) {
+                return Math.floor((this.recordsCount - 1)/ this.batchSize);
+            }
         }
+    },
+    watch: {
+        "serverSidePagination.batchOffset"() {
+            this.syncServerSidePagination();
+        },
+        "serverSidePagination.batchSize"() {
+            this.syncServerSidePagination();
+        },
+        "serverSidePagination.recordsCount"() {
+            this.syncServerSidePagination();
+        },
     },
     methods: {
         prevBatch() {
@@ -177,11 +192,18 @@ export default defineComponent({
             this.changeCurrentBatchOffsetBy(1);
         },
         changeCurrentBatchOffsetBy(changeBy: number) {
-            const batchOffset = this.batchOffset || 0;
             this.pagination.page = 1;
-            this.$emit("update:batch-offset", batchOffset + changeBy);
+            this.$emit("update:batch-offset", this.batchOffset + changeBy);
+        },
+        syncServerSidePagination() {
+            if (!isUndefined(this.serverSidePagination?.batchOffset)) this.batchOffset = this.serverSidePagination!.batchOffset;
+            if (this.serverSidePagination?.batchSize) this.batchSize = this.serverSidePagination?.batchSize;
+            if (this.serverSidePagination?.recordsCount) this.recordsCount = this.serverSidePagination?.recordsCount;
         },
     },
+    mounted() {
+        this.syncServerSidePagination();
+    }
 });
 </script>
 
@@ -190,6 +212,7 @@ export default defineComponent({
     display: flex;
     inset: 0;
     width: 100%;
+    gap: 10px;
 
     justify-content: flex-end;
     align-items: center;

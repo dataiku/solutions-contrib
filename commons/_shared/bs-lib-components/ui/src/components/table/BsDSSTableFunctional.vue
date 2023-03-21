@@ -1,24 +1,21 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
+import { ServerSidePagination } from "./tableHelper";
 
 interface BsTableCol extends QTableColumn {
     dataType?: string,
 }
+
 export default defineComponent({
     name: "BsDSSTable",
     props: {
         dssTableName: {
             type: String,
         },
-        batchSize: {
-            type: Number,
-        },
-        batchOffset: {
-            type: Number,
-        },
+        serverSidePagination: Object as PropType<ServerSidePagination>,
     },
     emts: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
@@ -31,19 +28,19 @@ export default defineComponent({
     },
     computed: {
         idOffset(): number {
-            const offset = this.batchOffset || 0;
-            const size = this.batchSize || 0;
+            const offset = this.serverSidePagination?.batchOffset || 0;
+            const size = this.serverSidePagination?.batchSize || 0;
             return offset * size;
-        }
+        },
     },
     watch: {
         dssTableName(...args: any[]) {
             this.updateTableDataOnWatchedChanged(...args);
         },
-        batchSize(...args: any[]) {
+        "serverSidePagination.batchSize"(...args: any[]) {
             this.updateTableDataOnWatchedChanged(...args);
         },
-        batchOffset(...args: any[]) {
+        "serverSidePagination.batchOffset"(...args: any[]) {
             this.updateTableDataOnWatchedChanged(...args);
         },
     },
@@ -129,9 +126,10 @@ export default defineComponent({
             return rows;
         },
         updateTableData() {
-            if (this.dssTableName && this.batchSize && (this.batchOffset !== undefined)) {
+            const {batchSize, batchOffset} = this.serverSidePagination || {}
+            if (this.dssTableName && batchSize && (batchOffset !== undefined)) {
                 this.updateColumns(this.dssTableName);
-                this.updateRows(this.dssTableName, this.batchSize, this.batchOffset);
+                this.updateRows(this.dssTableName, batchSize, batchOffset);
             }
         },
         watchedChanged(newVal?: any, oldVal?: any) {
