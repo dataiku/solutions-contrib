@@ -231,6 +231,7 @@ export default defineComponent({
         position: absolute;
         bottom: 13px;
         left: 20px;
+        z-index: 1;
 
         display: flex;
         align-items: center;
