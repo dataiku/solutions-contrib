@@ -8,29 +8,6 @@
             <div class="bs-table-warning-text">the search is applied only to the sampled records!</div>
         </div>
         <div class="bs-table-records-total" v-if="recordsTotal">{{ recordsTotal }}</div>
-        <div class="bs-table-sampled-records" v-if="!isFullDataset">
-            <span>{{ sampledRecords }}</span>
-            <div class="bs-table-server-side-pagination-controls">
-                <q-btn
-                    icon="chevron_left"
-                    color="grey-8"
-                    round
-                    dense
-                    flat
-                    :disable="isFirstBatch"
-                    @click="prevBatch"
-                />
-                <q-btn
-                    icon="chevron_right"
-                    color="grey-8"
-                    round
-                    dense
-                    flat
-                    :disable="isLastBatch"
-                    @click="nextBatch"
-                />
-            </div>
-        </div>
         <div class="bs-table-records-info">
             <span>{{ recordsShown }}</span>
         </div>
@@ -55,7 +32,6 @@
                 :disable="scope.isFirstPage"
                 @click="scope.prevPage"
             />
-            
             <q-btn
                 icon="chevron_right"
                 color="grey-8"
@@ -125,7 +101,6 @@ export default defineComponent({
     components: {
         QIcon
     },
-    emits: ["update:batch-offset"],
     props: {
         scope: {
             type: Object as PropType<QTableBottomScope>,
@@ -163,25 +138,6 @@ export default defineComponent({
                 return `records total: ${total}`;
             }
         },
-        sampledRecords(): string | undefined {
-            if (!this.isFullDataset) {
-                const from = this.batchSize * this.batchOffset;
-                let to = from + this.batchSize;
-                if (this.recordsCount) to = Math.min(to, this.recordsCount);
-                return `sampled records: ${from} - ${to}`;
-            }
-        },
-        isFirstBatch(): boolean {
-            return this.batchOffset === 0;
-        },
-        isLastBatch(): boolean {
-            return !(isUndefined(this.lastBatchIndex) || (this.batchOffset !== this.lastBatchIndex));
-        },
-        lastBatchIndex(): number | undefined {
-            if (this.recordsCount && this.batchSize) {
-                return Math.floor((this.recordsCount - 1)/ this.batchSize);
-            }
-        }
     },
     watch: {
         "serverSidePagination.batchOffset"() {
@@ -195,16 +151,6 @@ export default defineComponent({
         },
     },
     methods: {
-        prevBatch() {
-            this.changeCurrentBatchOffsetBy(-1);
-        },
-        nextBatch() {
-            this.changeCurrentBatchOffsetBy(1);
-        },
-        changeCurrentBatchOffsetBy(changeBy: number) {
-            this.pagination.page = 1;
-            this.$emit("update:batch-offset", this.batchOffset + changeBy);
-        },
         syncServerSidePagination() {
             if (!isUndefined(this.serverSidePagination?.batchOffset)) this.batchOffset = this.serverSidePagination!.batchOffset;
             if (this.serverSidePagination?.batchSize) this.batchSize = this.serverSidePagination?.batchSize;

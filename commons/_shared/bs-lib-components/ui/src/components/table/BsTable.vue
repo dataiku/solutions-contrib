@@ -20,10 +20,9 @@
         
         v-bind="$attrs"
     >
-        <template #top>
+        <template #top="{ pagination }">
             <div class="bs-table-top-container">
-                <span class="bs-table-name">{{ title || dssTableName || "" }}</span>
-
+                <div class="bs-table-name">{{ title || dssTableName || "" }}</div>
                 <div class="bs-table-search-container">
                     <BsSearchWholeTable
                         v-model="searchedValue"
@@ -35,6 +34,13 @@
                     </div>
                 </div>
             </div>
+            <BsTableServerSidePagination
+                :server-side-pagination="_serverSidePagination"
+                @update:batch-offset="($event) => {
+                    pagination.page = 1;
+                    setBatchOffset($event, true);
+                }"
+            ></BsTableServerSidePagination>
         </template>
         <template
             v-for="([colSlot, colName]) in colSlots"
@@ -56,7 +62,6 @@
                 :scope="scope"
                 :server-side-pagination="_serverSidePagination"
                 :searching="anyColumnSearched"
-                @update:batch-offset="setBatchOffset($event, true)"
             ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -80,19 +85,21 @@ import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
 import { isEmpty } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
+import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 
 
 export default defineComponent({
     name: "BsTable",
     components: {
-        QTable,
-        QTr,
-        BsDSSTableFunctional,
-        BsSearchWholeTable,
-        BSTableHeader,
-        BsTextHighlight,
-        BsTableBottom,
-    },
+    QTable,
+    QTr,
+    BsDSSTableFunctional,
+    BsSearchWholeTable,
+    BSTableHeader,
+    BsTextHighlight,
+    BsTableBottom,
+    BsTableServerSidePagination
+},
     emits: ["update:rows", "update:columns", "update:server-side-pagination"],
     inheritAttrs: false,
     props: {
