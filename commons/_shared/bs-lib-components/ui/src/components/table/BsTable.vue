@@ -19,6 +19,10 @@
         :loading="isLoading"
         
         v-bind="$attrs"
+
+        :virtual-scroll="virtualScroll"
+        :rows-per-page-options="virtualScroll ? [0] : undefined"
+        :class="[...classParsed, ...tableClasses]"
     >
         <template #top="{ pagination }">
             <div class="bs-table-top-container">
@@ -62,6 +66,7 @@
                 :scope="scope"
                 :server-side-pagination="_serverSidePagination"
                 :searching="anyColumnSearched"
+                :virtual-scroll="virtualScroll"
             ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -112,6 +117,12 @@ export default defineComponent({
         },
         rows: Array as PropType<Record<string, any>[]>,
         columns: Array as PropType<QTableColumn[]>,
+        virtualScroll: {
+            type: Boolean,
+            default: true
+        },
+        style: [Object, String],
+        class: [Array, String] as PropType<string[] | string>,
     },
     data() {
         return {
@@ -164,6 +175,16 @@ export default defineComponent({
             const passedColumns = this.passedColumns || [];
             return passedColumns.map(col => [this.getColBodySlot(col.name), col.name]);
         },
+        classParsed(): string[] {
+            let passedClass = this.class || "";
+            if (typeof passedClass === "string") passedClass = [passedClass];
+            return passedClass;
+        },
+        tableClasses(): string[] {
+            const tableClasses = ["bs-table"];
+            if (this.virtualScroll) tableClasses.push("bs-table-sticky");
+            return tableClasses;
+        }
     },
     watch: {
         "serverSidePagination.batchOffset"() {
@@ -263,6 +284,32 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+::v-deep.bs-table-sticky {
+    .q-table__top,
+    .q-table__bottom,
+    thead tr:first-child th {
+        background-color: #fff;
+    }
+
+    thead tr th {
+        position: sticky;
+        z-index: 1;
+    }
+
+  /* this will be the loading indicator */
+    thead tr:last-child th {
+        top: 48px;
+    }
+    /* height of all previous header rows */
+    thead tr:first-child th {
+        top: 0;
+    }
+}
+
+.bs-table {
+    max-height: 484px;
+}
+
 .bs-table-name {
     font-size: 1.5rem;
     text-overflow: ellipsis;

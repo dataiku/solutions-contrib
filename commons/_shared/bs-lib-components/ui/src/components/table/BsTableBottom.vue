@@ -7,99 +7,29 @@
             <q-icon :name="mdiAlert"></q-icon>
             <div class="bs-table-warning-text">the search is applied only to the sampled records!</div>
         </div>
-        <div class="bs-table-records-total" v-if="recordsTotal">{{ recordsTotal }}</div>
-        <div class="bs-table-records-info">
-            <span>{{ recordsShown }}</span>
-        </div>
-        <div class="bs-table-pagination-controls">
-            <q-btn
-                v-if="scope.pagesNumber > 2"
-                icon="first_page"
-                color="grey-8"
-                round
-                dense
-                flat
-                :disable="scope.isFirstPage"
-                @click="scope.firstPage"
-            />
-            
-            <q-btn
-                icon="chevron_left"
-                color="grey-8"
-                round
-                dense
-                flat
-                :disable="scope.isFirstPage"
-                @click="scope.prevPage"
-            />
-            <q-btn
-                icon="chevron_right"
-                color="grey-8"
-                round
-                dense
-                flat
-                :disable="scope.isLastPage"
-                @click="scope.nextPage"
-            />
-            
-            <q-btn
-                v-if="scope.pagesNumber > 2"
-                icon="last_page"
-                color="grey-8"
-                round
-                dense
-                flat
-                :disable="scope.isLastPage"
-                @click="scope.lastPage"
-            />
-        </div>
+        <div v-if="recordsTotal" class="bs-table-records-total">{{ recordsTotal }}</div>
+        <BsTablePagination
+            v-if="!virtualScroll"
+            :scope="scope"
+            :server-side-pagination="serverSidePagination"
+        ></BsTablePagination>
     </div>
 </template>
 
 <script lang="ts">
-import { isUndefined } from 'lodash';
 import { defineComponent, PropType } from 'vue';
+import BsTablePagination from "./BsTablePagination.vue";
+import { isUndefined } from 'lodash';
 import { ServerSidePagination } from './tableHelper';
 import { mdiAlert } from '@quasar/extras/mdi-v6';
 import { QIcon } from "quasar";
-
-type QPagination = {
-    /**
-       * Column name (from column definition)
-       */
-    sortBy: string;
-    /**
-       * Is sorting in descending order?
-       */
-    descending: boolean;
-    /**
-       * Page number (1-based)
-       */
-    page: number;
-    /**
-       * How many rows per page? 0 means Infinite
-       */
-    rowsPerPage: number;
-};
-
-type QTableBottomScope = {
-    pagination: QPagination;
-    pagesNumber: number;
-    isFirstPage: boolean;
-    isLastPage: boolean;
-    firstPage: () => void;
-    prevPage: () => void;
-    nextPage: () => void;
-    lastPage: () => void;
-    inFullscreen: boolean;
-    toggleFullscreen: () => void;
-}
-
+import { QTableBottomScope, QTablePagination } from './tableTypes';
 
 export default defineComponent({
     name: "BsTableBottom",
     components: {
-        QIcon
+        BsTablePagination,
+        QIcon,
     },
     props: {
         scope: {
@@ -108,26 +38,20 @@ export default defineComponent({
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
         searching: Boolean,
+        virtualScroll: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {
-            batchSize: 0,
-            batchOffset: 0,
             recordsCount: 0,
             mdiAlert,
         };
     },
     computed: {
-        pagination(): QPagination {
+        pagination(): QTablePagination {
             return this.scope.pagination;
-        },
-        recordsShown(): string {
-            const rowsPerPage = this.pagination.rowsPerPage;
-            let to = (this.pagination.page * rowsPerPage) + this.batchSize * this.batchOffset;
-            const from = to - rowsPerPage;
-            if (this.recordsCount) to = Math.min(to, this.recordsCount);
-            
-            return `records ${from} - ${to}`;
         },
         isFullDataset(): boolean {
             return isUndefined(this.serverSidePagination);
@@ -140,20 +64,12 @@ export default defineComponent({
         },
     },
     watch: {
-        "serverSidePagination.batchOffset"() {
-            this.syncServerSidePagination();
-        },
-        "serverSidePagination.batchSize"() {
-            this.syncServerSidePagination();
-        },
         "serverSidePagination.recordsCount"() {
             this.syncServerSidePagination();
         },
     },
     methods: {
         syncServerSidePagination() {
-            if (!isUndefined(this.serverSidePagination?.batchOffset)) this.batchOffset = this.serverSidePagination!.batchOffset;
-            if (this.serverSidePagination?.batchSize) this.batchSize = this.serverSidePagination?.batchSize;
             if (this.serverSidePagination?.recordsCount) this.recordsCount = this.serverSidePagination?.recordsCount;
         },
     },
@@ -210,26 +126,12 @@ export default defineComponent({
             text-overflow: ellipsis;
         }
     }
-    .bs-table-sampled-records {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
 
     .bs-table-records-total {
         display: flex;
         align-items: center;
     }
 
-    .bs-table-records-info {
-        display: flex;
-        gap: 10px;
-    }
-    
-    .bs-table-pagination-controls {
-        display: flex;
-        gap: 10px;
-    }
 }
 
 </style>
