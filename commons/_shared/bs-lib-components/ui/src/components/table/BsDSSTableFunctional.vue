@@ -1,3 +1,5 @@
+<template></template>
+
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { QTableColumn } from 'quasar';
@@ -25,13 +27,6 @@ export default defineComponent({
             fetchingChunk: false,
             fetchingSchema: false,
         };
-    },
-    computed: {
-        idOffset(): number {
-            const offset = this.serverSidePagination?.batchOffset || 0;
-            const size = this.serverSidePagination?.batchSize || 0;
-            return offset * size;
-        },
     },
     watch: {
         dssTableName(...args: any[]) {
@@ -61,7 +56,7 @@ export default defineComponent({
             return new Promise((resolve, reject) => {
                 this.setFetchingChunk(true);
                 ServerApi.getDatasetChunk(...args).then((val) => {
-                    const data = this.transformDSSDataToQTableRow(val, this.idOffset);
+                    const data = this.transformDSSDataToQTableRow(val);
                     this.setFetchingChunk(false);
                     resolve(data);
                 }).catch(reject);
@@ -73,7 +68,6 @@ export default defineComponent({
                 ServerApi.getDatasetGenericData(...args).then(({ schema, columnsCount }) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
-                    columns.unshift(this.createBsTableCol({name: "index", label: "#"}));
                     this.setFetchingSchema(false);
                     resolve({ columns, columnsCount });
                 }).catch(reject);
@@ -106,14 +100,14 @@ export default defineComponent({
             }
         },
 
-        transformDSSDataToQTableRow(DSSData: DSSDatasetData | string, idOffset = 0): Record<string, any>[] | undefined {
+        transformDSSDataToQTableRow(DSSData: DSSDatasetData | string): Record<string, any>[] | undefined {
             if (DSSData === "None") return;
             const entries = Object.entries(DSSData)
             if (!entries?.length) return;
 
             const rowsAmount = Object.entries(entries[0][1]).length;
             const rows: any[] = Array(rowsAmount).fill(undefined).map((_, index) => {
-                return {'index': index + idOffset + 1};
+                return {};
             });
             entries.forEach(([colName, colData]) => {
                 colName = this.parseDSSColumn(colName);

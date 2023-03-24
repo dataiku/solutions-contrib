@@ -354,6 +354,10 @@ export default defineComponent({
     max-height: 100%;
 }
 
+.bs-table-top-slot-container {
+    width: 100%;
+}
+
 .bs-table-name {
     font-size: 1.5rem;
     text-overflow: ellipsis;
