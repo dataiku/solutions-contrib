@@ -7,18 +7,23 @@
             <q-icon :name="mdiAlert"></q-icon>
             <div class="bs-table-warning-text">the search is applied only to the sampled records!</div>
         </div>
-        <div v-if="recordsTotal" class="bs-table-records-total">{{ recordsTotal }}</div>
+        <div v-if="recordsTotal && !virtualScroll || (!isFullDataset && recordsCount)" class="bs-table-records-total">records total: {{ recordsTotal }}</div>
         <BsTablePagination
             v-if="!virtualScroll"
             :scope="scope"
             :server-side-pagination="serverSidePagination"
         ></BsTablePagination>
+        <BsTableVirtualScrollIndicator v-else
+            :scroll-details="scrollDetails"
+            :elements-count="fetchedRowsLength"
+        ></BsTableVirtualScrollIndicator>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import BsTablePagination from "./BsTablePagination.vue";
+import BsTableVirtualScrollIndicator from "./BsTableVirtualScrollIndicator.vue";
 import { isUndefined } from 'lodash';
 import { ServerSidePagination } from './tableHelper';
 import { mdiAlert } from '@quasar/extras/mdi-v6';
@@ -29,6 +34,7 @@ export default defineComponent({
     name: "BsTableBottom",
     components: {
         BsTablePagination,
+        BsTableVirtualScrollIndicator,
         QIcon,
     },
     props: {
@@ -40,6 +46,11 @@ export default defineComponent({
         searching: Boolean,
         virtualScroll: {
             type: Boolean,
+            required: true,
+        },
+        fetchedRowsLength: Number,
+        scrollDetails: {
+            type: Object as PropType<any>,
             required: true,
         },
     },
@@ -56,11 +67,9 @@ export default defineComponent({
         isFullDataset(): boolean {
             return isUndefined(this.serverSidePagination);
         },
-        recordsTotal(): string | undefined {
-            if (this.recordsCount || this.isFullDataset) {
-                const total = this.recordsCount || (this.scope.pagesNumber * this.pagination.rowsPerPage);
-                return `records total: ${total}`;
-            }
+        recordsTotal(): number | undefined {
+            if (this.recordsCount) return this.recordsCount;
+            if (this.isFullDataset) return this.fetchedRowsLength;
         },
     },
     watch: {

@@ -10,6 +10,7 @@
         @update:columns-count="setRecordsCount($event, true)"
     ></BsDSSTableFunctional>
     <QTable
+        ref="qTable"
         :rows="passedRows"
         :columns="formattedColumns"
 
@@ -23,6 +24,7 @@
         :virtual-scroll="virtualScroll"
         :rows-per-page-options="virtualScroll ? [0] : undefined"
         :class="[...classParsed, ...tableClasses]"
+        @virtual-scroll="onVirtualScroll"
     >
         <template #top="{ pagination }">
             <div class="bs-table-top-container">
@@ -39,6 +41,7 @@
                 </div>
             </div>
             <BsTableServerSidePagination
+                v-if="_serverSidePagination"
                 :server-side-pagination="_serverSidePagination"
                 @update:batch-offset="($event) => {
                     pagination.page = 1;
@@ -67,6 +70,8 @@
                 :server-side-pagination="_serverSidePagination"
                 :searching="anyColumnSearched"
                 :virtual-scroll="virtualScroll"
+                :scroll-details="scrollDetails"
+                :fetched-rows-length="passedRows?.length"
             ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
@@ -105,7 +110,7 @@ export default defineComponent({
     BsTableBottom,
     BsTableServerSidePagination
 },
-    emits: ["update:rows", "update:columns", "update:server-side-pagination"],
+    emits: ["update:rows", "update:columns", "update:server-side-pagination", "virtual-scroll"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -135,7 +140,7 @@ export default defineComponent({
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
             lastBatchIndex: -1,
-
+            scrollDetails: {from: 0},
             mdiCloseCircleMultiple,
         };
     },
@@ -184,6 +189,9 @@ export default defineComponent({
             const tableClasses = ["bs-table"];
             if (this.virtualScroll) tableClasses.push("bs-table-sticky");
             return tableClasses;
+        },
+        tableEl(): HTMLElement {
+            return (this.$refs.qTable as any).$el;
         }
     },
     watch: {
@@ -272,6 +280,10 @@ export default defineComponent({
             this.searchedValue = null;
             this.searchedCols = {};
         },
+        onVirtualScroll(details: any) {
+            this.scrollDetails = details;
+            this.$emit("virtual-scroll", details)
+        }
     },
 
     mounted() {
@@ -307,7 +319,7 @@ export default defineComponent({
 }
 
 .bs-table {
-    max-height: 484px;
+    max-height: 100%;//484px;
 }
 
 .bs-table-name {
