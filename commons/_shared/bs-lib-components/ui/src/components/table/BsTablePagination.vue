@@ -9,7 +9,7 @@
             dense
             flat
             :disable="scope.isFirstPage"
-            @click="scope.firstPage"
+            @click="executeAndGoToTop(scope.firstPage)"
         />
         
         <q-btn
@@ -19,7 +19,7 @@
             dense
             flat
             :disable="scope.isFirstPage"
-            @click="scope.prevPage"
+            @click="executeAndGoToTop(scope.prevPage)"
         />
         <div class="bs-table-records-info">
             {{ recordsShown }}
@@ -31,7 +31,7 @@
             dense
             flat
             :disable="scope.isLastPage"
-            @click="scope.nextPage"
+            @click="executeAndGoToTop(scope.nextPage)"
         />
         
         <q-btn
@@ -42,7 +42,7 @@
             dense
             flat
             :disable="scope.isLastPage"
-            @click="scope.lastPage"
+            @click="executeAndGoToTop(scope.lastPage)"
         />
     </div>
 </div>
@@ -67,6 +67,10 @@ export default defineComponent({
             required: true,
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
+        startOfThePage: {
+            type: Function,
+            required: true,
+        },
     },
     data() {
         return {
@@ -104,6 +108,10 @@ export default defineComponent({
             if (!isUndefined(this.serverSidePagination?.batchOffset)) this.batchOffset = this.serverSidePagination!.batchOffset;
             if (this.serverSidePagination?.batchSize) this.batchSize = this.serverSidePagination?.batchSize;
             if (this.serverSidePagination?.recordsCount) this.recordsCount = this.serverSidePagination?.recordsCount;
+        },
+        executeAndGoToTop(f: Function) {
+            f();
+            if (this.startOfThePage) this.startOfThePage();
         },
     },
 });

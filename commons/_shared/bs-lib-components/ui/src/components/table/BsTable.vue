@@ -44,10 +44,12 @@
                 v-if="_serverSidePagination"
                 :server-side-pagination="_serverSidePagination"
                 @update:batch-offset="($event) => {
-                    pagination.page = 1;
                     setBatchOffset($event, true);
                 }"
             ></BsTableServerSidePagination>
+            <div v-if="$slots.top" class="bs-table-top-slot-container">
+                <slot name="top"></slot>
+            </div>
         </template>
         <template
             v-for="([colSlot, colName]) in colSlots"
@@ -68,20 +70,21 @@
             <BsTableBottom
                 :scope="scope"
                 :server-side-pagination="_serverSidePagination"
+                :startOfThePage="startOfThePage"
                 :searching="anyColumnSearched"
                 :virtual-scroll="virtualScroll"
                 :scroll-details="scrollDetails"
                 :fetched-rows-length="passedRows?.length"
             ></BsTableBottom>
         </template>
-        <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
+        <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
             <slot :name="slot" v-bind="scope || {}" />
         </template>
     </QTable>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, Slot } from 'vue';
 import { QTableColumn, QTable, QTr } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
@@ -115,7 +118,7 @@ export default defineComponent({
     props: {
         dssTableName: String,
         title: String,
-        serverSidePagination: [Object, Boolean] as PropType<ServerSidePagination | boolean>,
+        serverSidePagination: [Object, Boolean] as PropType<Partial<ServerSidePagination> | boolean>,
         loading: {
             type: Boolean,
             default: false
@@ -123,6 +126,10 @@ export default defineComponent({
         rows: Array as PropType<Record<string, any>[]>,
         columns: Array as PropType<QTableColumn[]>,
         virtualScroll: {
+            type: Boolean,
+            default: true
+        },
+        stickyHeader: {
             type: Boolean,
             default: true
         },
@@ -185,14 +192,25 @@ export default defineComponent({
             if (typeof passedClass === "string") passedClass = [passedClass];
             return passedClass;
         },
-        tableClasses(): string[] {
-            const tableClasses = ["bs-table"];
-            if (this.virtualScroll) tableClasses.push("bs-table-sticky");
+        tableClasses(): (string | boolean | undefined)[] {
+            const tableClasses = ["bs-table", this.stickyHeader && "bs-table-sticky"];
             return tableClasses;
         },
         tableEl(): HTMLElement {
-            return (this.$refs.qTable as any).$el;
-        }
+            return this.qTable.$el;
+        },
+        qTable(): InstanceType<typeof QTable> {
+            return this.$refs.qTable as any;
+        },
+        filteredSlots() {
+            const bsTableCustomSlots = ["top"];
+            console.log(this.$slots);
+            return Object.fromEntries(
+                Object.entries(this.$slots).filter(
+                    ([slotKey]) => !bsTableCustomSlots.includes(slotKey)
+                )
+            );
+        },
     },
     watch: {
         "serverSidePagination.batchOffset"() {
@@ -248,6 +266,7 @@ export default defineComponent({
         },
         setBatchOffset(batchOffset: number, emit = false) {
             this.setServerSidePagination({batchOffset}, emit);
+            this.startOfTheTable();
         },
         setBatchSize(batchSize: number, emit = false) {
             this.setServerSidePagination({batchSize}, emit);
@@ -283,7 +302,20 @@ export default defineComponent({
         onVirtualScroll(details: any) {
             this.scrollDetails = details;
             this.$emit("virtual-scroll", details)
-        }
+        },
+        startOfTheTable() {
+            if (!this.virtualScroll) this.firstPage();
+            this.startOfThePage();
+        },
+        startOfThePage() {
+            this.scrollTo(0);
+        },
+        firstPage() {
+            return this.qTable.firstPage();
+        },
+        scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined) {
+            return this.qTable.scrollTo(index, edge);
+        },
     },
 
     mounted() {
@@ -319,7 +351,7 @@ export default defineComponent({
 }
 
 .bs-table {
-    max-height: 100%;//484px;
+    max-height: 100%;
 }
 
 .bs-table-name {

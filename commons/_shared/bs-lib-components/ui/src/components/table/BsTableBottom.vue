@@ -12,6 +12,7 @@
             v-if="!virtualScroll"
             :scope="scope"
             :server-side-pagination="serverSidePagination"
+            :start-of-the-page="startOfThePage"
         ></BsTablePagination>
         <BsTableVirtualScrollIndicator v-else
             :scroll-details="scrollDetails"
@@ -51,6 +52,10 @@ export default defineComponent({
         fetchedRowsLength: Number,
         scrollDetails: {
             type: Object as PropType<any>,
+            required: true,
+        },
+        startOfThePage: {
+            type: Function,
             required: true,
         },
     },

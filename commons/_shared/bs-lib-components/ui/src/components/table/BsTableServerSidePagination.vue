@@ -1,5 +1,5 @@
 <template>
-<div class="bs-table-server-side-pagination">
+<div class="bs-table-server-side-pagination" v-if="lastBatchIndex !== 0">
     <div class="bs-table-server-side-pagination-label">
         sampled records:
     </div>
@@ -51,12 +51,11 @@ export default defineComponent({
     computed: {
         sampleFrom(): number {
             const from = this.batchSize * this.batchOffset;
-            // let to = from + this.batchSize;
-            // if (this.recordsCount) to = Math.min(to, this.recordsCount);
             return from;
         },
         sampleTo(): number {
             let to = this.sampleFrom + this.batchSize;
+            if (this.recordsCount) to = Math.min(to, this.recordsCount);
             return to;
         },
         isFirstBatch(): boolean {
