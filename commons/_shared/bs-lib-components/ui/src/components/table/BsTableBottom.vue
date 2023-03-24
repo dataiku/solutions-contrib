@@ -14,7 +14,8 @@
             :server-side-pagination="serverSidePagination"
             :start-of-the-page="startOfThePage"
         ></BsTablePagination>
-        <BsTableVirtualScrollIndicator v-else
+        <BsTableVirtualScrollIndicator
+            v-else
             :scroll-details="scrollDetails"
             :elements-count="fetchedRowsLength"
         ></BsTableVirtualScrollIndicator>
