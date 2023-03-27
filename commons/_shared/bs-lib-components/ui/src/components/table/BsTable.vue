@@ -206,7 +206,6 @@ export default defineComponent({
         },
         filteredSlots() {
             const bsTableCustomSlots = ["top"];
-            console.log(this.$slots);
             return Object.fromEntries(
                 Object.entries(this.$slots).filter(
                     ([slotKey]) => !bsTableCustomSlots.includes(slotKey)
