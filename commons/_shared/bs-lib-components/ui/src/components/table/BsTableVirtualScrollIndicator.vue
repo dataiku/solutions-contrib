@@ -3,9 +3,6 @@
         <div class="bs-table-virtual-scroll-progress-bar">
             <q-linear-progress :value="progress" rounded size="5px"/>
         </div>
-        <div class="bs-table-virtual-scroll-label">
-            {{ scrollDetails.to + 1 }} / {{ elementsCount }}
-        </div>
     </div>
 </template>
 
@@ -42,6 +39,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .bs-table-virtual-scroll-progress-bar {
-    width: 150px;
+    width: 200px;
+}
+
+.bs-table-virtual-scroll {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 </style>
