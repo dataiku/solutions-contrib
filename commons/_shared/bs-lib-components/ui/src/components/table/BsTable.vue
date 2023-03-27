@@ -75,11 +75,11 @@
             <BsTableBottom
                 :scope="scope"
                 :server-side-pagination="_serverSidePagination"
-                :startOfThePage="startOfThePage"
+                :start-of-the-page="startOfThePage"
                 :searching="anyColumnSearched"
                 :virtual-scroll="virtualScroll"
-                :scroll-details="scrollDetails"
-                :fetched-rows-length="passedRows?.length"
+                :q-table-middle="qTableMiddle"
+                :fetched-rows-length="passedRowsLength"
             ></BsTableBottom>
         </template>
         <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
@@ -153,6 +153,7 @@ export default defineComponent({
             _columns: undefined as QTableColumn[] | undefined,
             lastBatchIndex: -1,
             scrollDetails: {from: 0},
+            passedRowsLength: 0,
             mdiCloseCircleMultiple,
         };
     },
@@ -204,6 +205,9 @@ export default defineComponent({
         tableEl(): HTMLElement {
             return this.qTable.$el;
         },
+        qTableMiddle(): HTMLElement {
+            return this.tableEl.getElementsByClassName("q-table__middle")[0] as HTMLElement;
+        },
         qTable(): InstanceType<typeof QTable> {
             return this.$refs.qTable as any;
         },
@@ -226,6 +230,9 @@ export default defineComponent({
         },
         "serverSidePagination.recordsCount"() {
             this.syncServerSidePagination();
+        },
+        "passedRows.length"(newVal: number) {
+            this.passedRowsLength = newVal;
         },
     },
     methods: {
@@ -328,6 +335,7 @@ export default defineComponent({
             this.createServerSidePagination();
             this.syncServerSidePagination();
         }
+        this.passedRowsLength = this.passedRows?.length || 0;
     }
 });
 </script>

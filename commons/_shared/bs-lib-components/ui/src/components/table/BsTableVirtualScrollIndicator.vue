@@ -1,5 +1,5 @@
 <template>
-    <div class="bs-table-virtual-scroll" v-if="elementsCount">
+    <div class="bs-table-virtual-scroll">
         <div class="bs-table-virtual-scroll-progress-bar">
             <q-linear-progress :value="progress" rounded size="5px"/>
         </div>
@@ -7,15 +7,9 @@
 </template>
 
 <script lang="ts">
+import { timeoutExecuteOnce } from '../../utils/utils';
 import { QLinearProgress } from 'quasar';
 import { defineComponent, PropType } from 'vue';
-
-type scrollDetails = {
-    from: number;
-    to: number;
-    index: number;
-    direction: "increase" | "decrease";
-}
 
 export default defineComponent({
     name: "BsTableVirtualScrollIndicator",
@@ -23,17 +17,30 @@ export default defineComponent({
         QLinearProgress
     },
     props: {
-        scrollDetails: {
-            type: Object as PropType<scrollDetails>,
-            required: true,
-        },
-        elementsCount: Number,
+        qTableMiddle: Object as PropType<HTMLElement>
     },
-    computed: {
-        progress(): number {
-            return this.elementsCount ? (this.scrollDetails.to + 1) / (this.elementsCount) : 0;
+    data() {
+        return {
+            progress: 0,
         }
-    }
+    },
+    computed: {},
+    methods: {
+        addScrollEventListener() {
+            if (!this.qTableMiddle) return;
+            this.qTableMiddle.addEventListener("scroll", (e) => {
+                timeoutExecuteOnce(() => {
+                    if (!this.qTableMiddle) return;
+                    const scrollTop = this.qTableMiddle.scrollTop;
+                    const scrollHeight = this.qTableMiddle.scrollHeight - this.qTableMiddle.clientHeight;
+                    this.progress = scrollTop / scrollHeight;
+                }, 250, "bs-table-scroll-update-indicator");
+            });
+        },
+    },
+    mounted() {
+        this.addScrollEventListener();
+    },
 });
 </script>
 

@@ -16,8 +16,7 @@
         ></BsTablePagination>
         <BsTableVirtualScrollIndicator
             v-else
-            :scroll-details="scrollDetails"
-            :elements-count="fetchedRowsLength"
+            :q-table-middle="qTableMiddle"
         ></BsTableVirtualScrollIndicator>
     </div>
 </template>
@@ -51,14 +50,11 @@ export default defineComponent({
             required: true,
         },
         fetchedRowsLength: Number,
-        scrollDetails: {
-            type: Object as PropType<any>,
-            required: true,
-        },
         startOfThePage: {
             type: Function,
             required: true,
         },
+        qTableMiddle: Object as PropType<HTMLElement>
     },
     data() {
         return {
