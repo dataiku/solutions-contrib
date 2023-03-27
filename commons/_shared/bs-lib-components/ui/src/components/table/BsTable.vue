@@ -26,9 +26,14 @@
         :class="[...classParsed, ...tableClasses]"
         @virtual-scroll="onVirtualScroll"
     >
-        <template #top="{ pagination }">
+        <template #top>
             <div class="bs-table-top-container">
-                <div class="bs-table-name">{{ title || dssTableName || "" }}</div>
+                <div class="bs-table-name">
+                    <slot v-if="$slots.title" name="title"></slot>
+                    <span v-else>
+                        {{ title || dssTableName || "" }}
+                    </span>
+                </div>
                 <div class="bs-table-search-container">
                     <BsSearchWholeTable
                         v-model="searchedValue"
