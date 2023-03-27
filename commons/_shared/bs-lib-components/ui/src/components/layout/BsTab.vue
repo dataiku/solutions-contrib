@@ -64,7 +64,7 @@ export default defineComponent({
             qPageMounted: false,
         };
     },
-    inject: ["$tabs", "$selectedTab", "$defaultTabUsed", "$defaultDrawer"],
+    inject: ["$tabs", "$selectedTab", "$defaultTabUsed", "$defaultDrawer", "$defaultHeader"],
     provide() {
         return this.provideComputed([
             'isTabSelected',
@@ -157,6 +157,12 @@ export default defineComponent({
         registerTab() {
             this.tabs.push(this.tab);
         },
+        unregisterTab() {
+            const tabIndex = this.tabs.indexOf(this.tab);
+            if (tabIndex !== -1) {
+                this.tabs.splice(tabIndex, 1);
+            }
+        },
         onQPageMounted() {
             this.qPageMounted = true;
             this.$emit('mounted:q-page');
@@ -175,6 +181,9 @@ export default defineComponent({
     emits: ['mounted:q-page'],
     mounted() {
         this.registerTab();
+    },
+    unmounted() {
+        this.unregisterTab();
     }
 });
 </script>
