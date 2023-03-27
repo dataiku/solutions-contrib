@@ -193,7 +193,6 @@ export default defineComponent({
     watch: {
         "tabs.length"(newVal: number) {
             this.defaultTabUsed = (newVal === 0) || ((newVal === 1) && (this.tabs[0].name === this.defaultLayoutTabName));
-            console.log("this.defaultTabUsed: ", this.defaultTabUsed);
         },
     },
     mounted() {

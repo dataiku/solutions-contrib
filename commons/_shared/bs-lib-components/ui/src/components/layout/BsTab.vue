@@ -180,7 +180,6 @@ export default defineComponent({
     },
     emits: ['mounted:q-page'],
     mounted() {
-        console.log("mounted a tab: ", this.tab);
         this.registerTab();
     },
     unmounted() {
