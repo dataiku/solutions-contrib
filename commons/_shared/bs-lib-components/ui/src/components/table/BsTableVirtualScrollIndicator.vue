@@ -1,5 +1,5 @@
 <template>
-    <div class="bs-table-virtual-scroll">
+    <div :class="['bs-table-virtual-scroll', showProgressBar && 'bs-table-virtual-scroll--active']">
         <div class="bs-table-virtual-scroll-progress-bar">
             <q-linear-progress :value="progress" rounded size="5px"/>
         </div>
@@ -22,6 +22,7 @@ export default defineComponent({
     data() {
         return {
             progress: 0,
+            showProgressBar: false,
         }
     },
     computed: {},
@@ -29,17 +30,22 @@ export default defineComponent({
         addScrollEventListener() {
             if (!this.qTableMiddle) return;
             this.qTableMiddle.addEventListener("scroll", (e) => {
-                timeoutExecuteOnce(() => {
-                    if (!this.qTableMiddle) return;
-                    const scrollTop = this.qTableMiddle.scrollTop;
-                    const scrollHeight = this.qTableMiddle.scrollHeight - this.qTableMiddle.clientHeight;
-                    this.progress = scrollTop / scrollHeight;
-                }, 250, "bs-table-scroll-update-indicator");
+                this.onScroll();
             });
+        },
+        onScroll() {
+            timeoutExecuteOnce(() => {
+                if (!this.qTableMiddle) return;
+                const scrollTop = this.qTableMiddle.scrollTop;
+                const scrollHeight = this.qTableMiddle.scrollHeight - this.qTableMiddle.clientHeight;
+                this.showProgressBar = scrollHeight > 0;
+                this.progress = this.showProgressBar ? scrollTop / scrollHeight : 1;
+            }, 250, "bs-table-scroll-update-indicator");
         },
     },
     mounted() {
         this.addScrollEventListener();
+        this.onScroll();
     },
 });
 </script>
@@ -53,5 +59,11 @@ export default defineComponent({
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity .3s;
+
+    &.bs-table-virtual-scroll--active {
+        opacity: 1;
+    }
 }
 </style>

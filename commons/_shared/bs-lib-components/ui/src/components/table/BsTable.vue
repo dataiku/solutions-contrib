@@ -154,6 +154,8 @@ export default defineComponent({
             lastBatchIndex: -1,
             scrollDetails: {from: 0},
             passedRowsLength: 0,
+            tableEl: undefined as undefined | HTMLElement,
+            qTableMiddle: undefined as undefined | HTMLElement, 
             mdiCloseCircleMultiple,
         };
     },
@@ -201,15 +203,6 @@ export default defineComponent({
         tableClasses(): (string | boolean | undefined)[] {
             const tableClasses = ["bs-table", this.stickyHeader && "bs-table-sticky"];
             return tableClasses;
-        },
-        tableEl(): HTMLElement {
-            return this.qTable.$el;
-        },
-        qTableMiddle(): HTMLElement {
-            return this.tableEl.getElementsByClassName("q-table__middle")[0] as HTMLElement;
-        },
-        qTable(): InstanceType<typeof QTable> {
-            return this.$refs.qTable as any;
         },
         filteredSlots() {
             const bsTableCustomSlots = ["top"];
@@ -323,10 +316,10 @@ export default defineComponent({
             this.scrollTo(0);
         },
         firstPage() {
-            return this.qTable.firstPage();
+            return (this.$refs.qTable as any).firstPage();
         },
         scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined) {
-            return this.qTable.scrollTo(index, edge);
+            return (this.$refs.qTable as any).scrollTo(index, edge);
         },
     },
 
@@ -336,6 +329,8 @@ export default defineComponent({
             this.syncServerSidePagination();
         }
         this.passedRowsLength = this.passedRows?.length || 0;
+        this.tableEl = (this.$refs.qTable as any)?.$el;
+        this.qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
     }
 });
 </script>
