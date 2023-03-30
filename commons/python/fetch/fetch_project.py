@@ -1,5 +1,4 @@
-from flask import Blueprint, Response, make_response, render_template, request, jsonify
-import os
+from flask import Blueprint, make_response, render_template, request, jsonify
 import datetime
 import logging
 from .config_bs import ConfigBs

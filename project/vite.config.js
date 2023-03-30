@@ -30,7 +30,7 @@ if (basePath === "") {
   serverConfig = { ...serverConfig, origin: "http://127.0.0.1:5173" };
 }
 
-let defaultConfig = {
+let defaultConfig = defineConfig({
   plugins: [
     {
       ...image(),
@@ -52,10 +52,10 @@ let defaultConfig = {
   server: serverConfig,
   resolve: {
     alias: {
-      "@": resolve("..", "./"),
-    },
-  },
-};
+      '@' : resolve("..","./")
+    }
+  }
+})
 
 if (basePath !== "") {
   defaultConfig = {
@@ -73,4 +73,4 @@ if (basePath !== "") {
   };
 }
 
-export default defineConfig(defaultConfig);
+export default defaultConfig;

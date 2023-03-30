@@ -50,7 +50,7 @@ Start by creating the directory ~/.dataiku if you don't have one
 
    Create a config.json file in this directory if you don't have one.
 
-   `cd && cd ./dataiku && touch config.json`
+   `cd && cd .dataiku && touch config.json`
 
    Put the following configuration in your config.json replace the api_key value with a generated personal API key in Dataiku and put the url instance your projects are running on (exple : https://industry-solutions-design.industries.dataiku-dss.io/)
 
