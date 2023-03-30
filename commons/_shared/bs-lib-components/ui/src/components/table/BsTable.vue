@@ -36,6 +36,7 @@
                 </div>
                 <div class="bs-table-search-container">
                     <BsSearchWholeTable
+                        v-if="globalSearch"
                         v-model="searchedValue"
                         @update:formatted-value="searchedValueFormatted = $event"
                         @update:loading="searching = $event"
@@ -46,7 +47,7 @@
                 </div>
             </div>
             <BsTableServerSidePagination
-                v-if="_serverSidePagination"
+                v-if="_serverSidePagination && serverSidePaginationControls"
                 :server-side-pagination="_serverSidePagination"
                 @update:batch-offset="($event) => {
                     setBatchOffset($event, true);
@@ -135,6 +136,14 @@ export default defineComponent({
             default: true
         },
         stickyHeader: {
+            type: Boolean,
+            default: true
+        },
+        globalSearch: {
+            type: Boolean,
+            default: true
+        },
+        serverSidePaginationControls: {
             type: Boolean,
             default: true
         },
@@ -357,8 +366,12 @@ export default defineComponent({
     }
 }
 
-.bs-table {
+::v-deep.bs-table {
     max-height: 100%;
+
+    .q-table__top {
+        overflow: hidden;
+    }
 }
 
 .bs-table-top-slot-container {
