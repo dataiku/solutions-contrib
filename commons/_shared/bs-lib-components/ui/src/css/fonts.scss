@@ -1,24 +1,6 @@
 @import 'fonts-variables.scss';
 @import 'fonts-mixins.scss';
 
-@font-face {
-    font-family : 'SourceSansPro';
-    src : url("./fonts/SourceSansPro-Bold.woff") format('woff');
-    font-weight: $font-weight-bold;
-}
-
-@font-face {
-    font-family : 'SourceSansPro';
-    src : url("./fonts/SourceSansPro-Semibold.woff") format('woff');
-    font-weight: $font-weight-semi-bold;
-}
-
-@font-face {
-    font-family : 'SourceSansPro';
-    src : url("./fonts/SourceSansPro-Regular.woff") format('woff');
-    font-weight: $font-weight-normal;
-}
-
 .font-weight-normal {
     font-weight: $font-weight-normal;
 }
