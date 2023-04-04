@@ -20,6 +20,16 @@
       <DSSTableTest></DSSTableTest>
     </BsContent>
     </BsTab>
+    <BsTab
+      name="Simulated fetching table"
+    >
+    <BsTabIcon>
+      3
+    </BsTabIcon>
+    <BsContent>
+      <SimulatedFetchingTableTest></SimulatedFetchingTableTest>
+    </BsContent>
+    </BsTab>
   </BsLayoutDefault>
 </template>
 
@@ -27,6 +37,7 @@
 import docLogo from "./assets/images/doc-logo-example.svg";
 import StaticTableTest from "./components/StaticTableTest.vue";
 import DSSTableTest from "./components/DSSTableTest.vue";
+import SimulatedFetchingTableTest from "./components/SimulatedFetchingTableTest.vue";
 export default {
   data() {
     return {
@@ -36,6 +47,7 @@ export default {
   components: {
     StaticTableTest,
     DSSTableTest,
+    SimulatedFetchingTableTest,
   },
 };
 </script>
@@ -43,6 +55,6 @@ export default {
 <style lang="scss">
 
 .bs-tab-title {
-  transform: translateX(100px);
+  transform: translateX(100%);
 }
 </style>
