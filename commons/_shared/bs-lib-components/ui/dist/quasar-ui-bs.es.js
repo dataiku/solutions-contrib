@@ -1511,7 +1511,7 @@ function te(e) {
 }
 class q {
   static initClient() {
-    const t = Ys ? window.getWebAppBackendUrl("") : Zs;
+    const t = Ys ? parent.getWebAppBackendUrl("") : Zs;
     this._restApiEndpoint = `${t}/bs_api/`, this.client = ct.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
       (s) => s,
       (s) => {
