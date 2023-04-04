@@ -17,7 +17,12 @@
       2
     </BsTabIcon>
     <BsContent>
-      <DSSTableTest></DSSTableTest>
+      <DSSTableTest
+        :dssTableName="dssTableName"
+        :batchSize="batchSize"
+        :batchOffset="batchOffset"
+        :recordsAmount="recordsAmount"
+      ></DSSTableTest>
     </BsContent>
     </BsTab>
     <BsTab
@@ -38,6 +43,7 @@ import docLogo from "./assets/images/doc-logo-example.svg";
 import StaticTableTest from "./components/StaticTableTest.vue";
 import DSSTableTest from "./components/DSSTableTest.vue";
 import SimulatedFetchingTableTest from "./components/SimulatedFetchingTableTest.vue";
+import TableConfigurationControls from "./TableConfigurationControls.vue";
 export default {
   data() {
     return {
@@ -48,7 +54,8 @@ export default {
     StaticTableTest,
     DSSTableTest,
     SimulatedFetchingTableTest,
-  },
+    TableConfigurationControls
+},
 };
 </script>
 
