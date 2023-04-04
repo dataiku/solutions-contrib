@@ -46,6 +46,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     slotsKeys(): string[];
 }, {
     registerTab(): void;
+    unregisterTab(): void;
     onQPageMounted(): void;
     usingComponent(component: Component): boolean;
     usingSlot(component: Component, ...slots: string[]): boolean;

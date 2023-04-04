@@ -7,6 +7,7 @@ specifiers:
   '@vitejs/plugin-vue': ^3.1.0
   '@vue/runtime-core': ^3.2.41
   axios: ^1.1.2
+  lodash: ^4.17.21
   quasar: '>=2.8.0 <3.0.0'
   quasar-ui-bs: file:../commons/_shared/bs-lib-components/ui
   sass: 1.32.0
@@ -14,14 +15,15 @@ specifiers:
   vue: '>=3.2.25 <4.0.0'
 
 dependencies:
-  '@quasar/extras': 1.15.11
+  '@quasar/extras': 1.16.2
   axios: 1.3.4
-  quasar: 2.11.7
-  quasar-ui-bs: file:../commons/_shared/bs-lib-components/ui_quasar@2.11.7+vue@3.2.47
+  lodash: 4.17.21
+  quasar: 2.11.10
+  quasar-ui-bs: file:../commons/_shared/bs-lib-components/ui_jclpcfxjqm6yy6lll6mrbnwxce
   vue: 3.2.47
 
 devDependencies:
-  '@quasar/vite-plugin': 1.3.0_y7ro5luoihv2aams7srdb57ypa
+  '@quasar/vite-plugin': 1.3.0_vbxqdhu2et7qrgfuhex4h63vka
   '@rollup/plugin-image': 3.0.2
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.5+vue@3.2.47
   '@vue/runtime-core': 3.2.47
@@ -38,15 +40,15 @@ packages:
     resolution: {integrity: sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==}
     engines: {node: '>=6.9.0'}
 
-  /@babel/parser/7.21.2:
-    resolution: {integrity: sha512-URpaIJQwEkEC2T9Kn+Ai6Xe/02iNaVCuT/PtoRz3GPVJVDpPd7mLo+VddTbhCRU9TXqW5mSrQfXZyi8kDKOVpQ==}
+  /@babel/parser/7.21.4:
+    resolution: {integrity: sha512-alVJj7k7zIxqBZ7BTRhz0IqJFxW1VJbm6N8JbcYhQ186df9ZBPbZBmWSqAMXwHGsCJdYks7z/voa3ibiS5bCIw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
-      '@babel/types': 7.21.2
+      '@babel/types': 7.21.4
 
-  /@babel/types/7.21.2:
-    resolution: {integrity: sha512-3wRZSs7jiFaB8AjxiiD+VqN5DTG2iRvJGQ+qYFrs/654lg6kGTQWIOFjlBo5RaXuAZjBmP3+OQH4dmhqiiyYxw==}
+  /@babel/types/7.21.4:
+    resolution: {integrity: sha512-rU2oY501qDxE8Pyo7i/Orqma4ziCOrby0/9mvbDUGEfvZjb279Nk9k19e2fiCxHbRRpY2ZyrgW1eq22mvmOIzA==}
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/helper-string-parser': 7.19.4
@@ -71,11 +73,11 @@ packages:
     dev: true
     optional: true
 
-  /@quasar/extras/1.15.11:
-    resolution: {integrity: sha512-EEXL10EJQmL9jNs5fp0Kd/nyonG8hTODolj+qpYNPG3qEEoy3txr05Pdmp9qJYaXIzP9rOS9FGhFe9Mnq6MBBg==}
+  /@quasar/extras/1.16.2:
+    resolution: {integrity: sha512-spDc1DrwxGts0MjmOAJ11xpxJANhCI1vEadxaw89wRQJ/QfKd0HZrwN7uN1U15cRozGRkJpdbsnP4cVXpkPysA==}
     dev: false
 
-  /@quasar/vite-plugin/1.3.0_y7ro5luoihv2aams7srdb57ypa:
+  /@quasar/vite-plugin/1.3.0_vbxqdhu2et7qrgfuhex4h63vka:
     resolution: {integrity: sha512-wd7b/QrKu/WB53l+vxo6GLbkoEwh5FFKLtLl3fM8TXrDDRB1qsKKkRa/vwTU4dpuyBaOZDjycmYuAsOlTdNp8w==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -85,7 +87,7 @@ packages:
       vue: ^3.0.0
     dependencies:
       '@vitejs/plugin-vue': 3.2.0_vite@3.2.5+vue@3.2.47
-      quasar: 2.11.7
+      quasar: 2.11.10
       vite: 3.2.5_sass@1.32.0
       vue: 3.2.47
     dev: true
@@ -135,7 +137,7 @@ packages:
   /@vue/compiler-core/3.2.47:
     resolution: {integrity: sha512-p4D7FDnQb7+YJmO2iPEv0SQNeNzcbHdGByJDsT4lynf63AFkOTFN07HsiRSvjGo0QrxR/o3d0hUyNCUnBU2Tig==}
     dependencies:
-      '@babel/parser': 7.21.2
+      '@babel/parser': 7.21.4
       '@vue/shared': 3.2.47
       estree-walker: 2.0.2
       source-map: 0.6.1
@@ -149,7 +151,7 @@ packages:
   /@vue/compiler-sfc/3.2.47:
     resolution: {integrity: sha512-rog05W+2IFfxjMcFw10tM9+f7i/+FFpZJJ5XHX72NP9eC2uRD+42M3pYcQqDXVYoj74kHMSEdQ/WmCjt8JFksQ==}
     dependencies:
-      '@babel/parser': 7.21.2
+      '@babel/parser': 7.21.4
       '@vue/compiler-core': 3.2.47
       '@vue/compiler-dom': 3.2.47
       '@vue/compiler-ssr': 3.2.47
@@ -169,7 +171,7 @@ packages:
   /@vue/reactivity-transform/3.2.47:
     resolution: {integrity: sha512-m8lGXw8rdnPVVIdIFhf0LeQ/ixyHkH5plYuS83yop5n7ggVJU+z5v0zecwEnX7fa7HNLBhh2qngJJkxpwEEmYA==}
     dependencies:
-      '@babel/parser': 7.21.2
+      '@babel/parser': 7.21.4
       '@vue/compiler-core': 3.2.47
       '@vue/shared': 3.2.47
       estree-walker: 2.0.2
@@ -564,6 +566,10 @@ packages:
     engines: {node: '>=0.12.0'}
     dev: true
 
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
+
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
     dependencies:
@@ -586,8 +592,8 @@ packages:
     hasBin: true
     dev: true
 
-  /nanoid/3.3.4:
-    resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
+  /nanoid/3.3.6:
+    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -612,7 +618,7 @@ packages:
     resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
-      nanoid: 3.3.4
+      nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
@@ -620,8 +626,8 @@ packages:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: false
 
-  /quasar/2.11.7:
-    resolution: {integrity: sha512-OzDwYfoSwZbwqfNWz9Bfn1mhGE8YMxpTLhPvVkQU87ePF6qFj4aWttcTUifXITKldOAZziN1Mmv8VLQyITHwiw==}
+  /quasar/2.11.10:
+    resolution: {integrity: sha512-pV7bMdY/FUmOvNhZ2XjKSXJH92fsDu0cU/z7a9roPKV54cW41N1en3sLATrirjPComyZnk4uXrMdGtXp8+IpCg==}
     engines: {node: '>= 10.18.1', npm: '>= 6.13.4', yarn: '>= 1.21.1'}
 
   /readdirp/3.6.0:
@@ -727,15 +733,21 @@ packages:
       '@vue/server-renderer': 3.2.47_vue@3.2.47
       '@vue/shared': 3.2.47
 
-  file:../commons/_shared/bs-lib-components/ui_quasar@2.11.7+vue@3.2.47:
+  file:../commons/_shared/bs-lib-components/ui_jclpcfxjqm6yy6lll6mrbnwxce:
     resolution: {directory: ../commons/_shared/bs-lib-components/ui, type: directory}
     id: file:../commons/_shared/bs-lib-components/ui
     name: quasar-ui-bs
     version: 1.3.8
     peerDependencies:
+      '@quasar/extras': ^1.0.0
+      axios: ^1.3.2
+      lodash: ^4.17.21
       quasar: ^2.0.0
       vue: ^3.0.0
     dependencies:
-      quasar: 2.11.7
+      '@quasar/extras': 1.16.2
+      axios: 1.3.4
+      lodash: 4.17.21
+      quasar: 2.11.10
       vue: 3.2.47
     dev: false

@@ -89,7 +89,7 @@
         </p>
       </BsDocumentation>
       <BsContent>
-        <HelloWorld />
+        <TableTest />
       </BsContent>
     </BsTab>
   </BsLayoutDefault>
@@ -98,7 +98,7 @@
 <script>
 import docLogo from "./assets/images/doc-logo-example.svg";
 import HelloWorld from "./components/HelloWorld.vue";
-
+import TableTest from "./components/TableTest.vue";
 export default {
   data() {
     return {
@@ -107,6 +107,7 @@ export default {
   },
   components: {
     HelloWorld,
+    TableTest,
   },
 };
 </script>

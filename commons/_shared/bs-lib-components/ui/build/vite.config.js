@@ -17,7 +17,7 @@ let indexPath =
     : "../src/index.umd.js";
 
 let rollupOutput = {
-  globals: { vue: "Vue", quasar: "Quasar" },
+  globals: { vue: "Vue", quasar: "Quasar", lodash: "_", axios: "axios" },
 };
 
 const plugins = [vue()];
@@ -53,7 +53,7 @@ export default defineConfig({
     },
     rollupOptions: {
       input: resolve(indexPath),
-      external: ["vue", "quasar"],
+      external: ["vue", "quasar", "lodash", "axios", "@quasar/extras/mdi-v6"],
       output: rollupOutput,
     },
   },
