@@ -31,11 +31,11 @@
 import { isUndefined } from 'lodash';
 import { defineComponent, PropType } from 'vue';
 import { ServerSidePagination } from './tableHelper';
-
+import { QBtn } from 'quasar';
 export default defineComponent({
-    name: "default",
+    name: "BsTableServerSidePagination",
     components: {
-
+        QBtn
     },
     emits: ["update:batch-offset"],
     data() {

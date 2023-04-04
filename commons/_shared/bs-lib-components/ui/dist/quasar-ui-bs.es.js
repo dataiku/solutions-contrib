@@ -26,8 +26,8 @@ var ee = (e, t, s) => new Promise((n, o) => {
   }, r = (u) => u.done ? n(u.value) : Promise.resolve(u.value).then(i, a);
   r((s = s.apply(e, t)).next());
 });
-import { defineComponent as m, computed as pe, openBlock as d, createBlock as g, Teleport as x, renderSlot as f, createCommentVNode as S, resolveComponent as l, withCtx as h, createVNode as p, normalizeStyle as z, normalizeClass as O, createElementVNode as T, createElementBlock as D, createTextVNode as Qe, toDisplayString as N, pushScopeId as X, popScopeId as J, mergeProps as A, withDirectives as V, vShow as W, Fragment as K, renderList as C, createSlots as P, normalizeProps as y, guardReactiveProps as v, withModifiers as Ee, resolveDirective as Ue } from "vue";
-import { QCard as We, QBtn as q, QIcon as Q, QDrawer as He, QHeader as qe, QTab as Ye, QTooltip as me, QTabs as Ze, QPageContainer as Fe, QPage as Ge, QLayout as Re, QSelect as xe, QSlider as Xe, QRange as Je, QSpinner as Ke, QInput as ge, QTh as be, QMenu as et, QItem as tt, QItemSection as st, QList as nt, QTr as fe, QLinearProgress as ot, QTable as at, QTd as it, QImg as rt, QCheckbox as lt, QDate as dt, QPopupProxy as ut } from "quasar";
+import { defineComponent as m, computed as pe, openBlock as d, createBlock as g, Teleport as x, renderSlot as f, createCommentVNode as S, resolveComponent as l, withCtx as h, createVNode as p, normalizeStyle as z, normalizeClass as O, createElementVNode as T, createElementBlock as D, createTextVNode as Qe, toDisplayString as N, pushScopeId as X, popScopeId as J, mergeProps as A, withDirectives as V, vShow as H, Fragment as K, renderList as C, createSlots as P, normalizeProps as y, guardReactiveProps as v, withModifiers as Ee, resolveDirective as Ue } from "vue";
+import { QCard as We, QBtn as Q, QIcon as E, QDrawer as He, QHeader as qe, QTab as Ye, QTooltip as me, QTabs as Ze, QPageContainer as Fe, QPage as Ge, QLayout as Re, QSelect as xe, QSlider as Xe, QRange as Je, QSpinner as Ke, QInput as ge, QTh as be, QMenu as et, QItem as tt, QItemSection as st, QList as nt, QTr as fe, QLinearProgress as ot, QTable as at, QTd as it, QImg as rt, QCheckbox as lt, QDate as dt, QPopupProxy as ut } from "quasar";
 import ct from "axios";
 import { mdiTableSearch as ht, mdiArrowUpThin as pt, mdiMagnify as mt, mdiAlert as gt, mdiCloseCircleMultiple as bt } from "@quasar/extras/mdi-v6";
 import { isNull as Se, isUndefined as L, escape as ft, isEmpty as St } from "lodash";
@@ -150,7 +150,7 @@ const se = /* @__PURE__ */ b(_t, [["render", yt]]), vt = m({
   name: "BsDocumentation",
   components: {
     QCard: We,
-    QBtn: q,
+    QBtn: Q,
     BsTabPageChildWrapper: re
   },
   data() {
@@ -393,11 +393,11 @@ function Vt(e, t, s, n, o, i) {
       p(a),
       f(e.$slots, "default", {}, void 0, !0)
     ], 512), [
-      [W, e.showComponent]
+      [H, e.showComponent]
     ])
   ])) : S("", !0);
 }
-const E = /* @__PURE__ */ b(zt, [["render", Vt], ["__scopeId", "data-v-ef244777"]]), Qt = m({
+const U = /* @__PURE__ */ b(zt, [["render", Vt], ["__scopeId", "data-v-ef244777"]]), Qt = m({
   name: "BsHeader",
   components: {
     BsTabTitle: le
@@ -467,19 +467,19 @@ function Et(e, t, s, n, o, i) {
         "calculate-width": e.calculateHeaderTabTitleWidth,
         onCalculated: e.updateHeaderTabTitleWidth
       }, null, 8, ["calculate-width", "onCalculated"]), [
-        [W, e.appendTabTitleToHeader]
+        [H, e.appendTabTitleToHeader]
       ]),
       f(e.$slots, "default", {}, void 0, !0)
     ], 6), [
-      [W, e.showComponent]
+      [H, e.showComponent]
     ])
   ])) : S("", !0);
 }
-const U = /* @__PURE__ */ b(Qt, [["render", Et], ["__scopeId", "data-v-f4a44855"]]), Ut = m({
+const W = /* @__PURE__ */ b(Qt, [["render", Et], ["__scopeId", "data-v-f4a44855"]]), Ut = m({
   name: "BsTabIcon",
   inject: ["$menuTabsMounted", "$tabId"],
   components: {
-    QIcon: Q
+    QIcon: E
   },
   props: {
     name: String
@@ -563,7 +563,7 @@ function Gt(e, t, s, n, o, i) {
       "--hide-transition-duration": `.${e.hideTransitionDuration}s`
     })
   }, Ft, 6)), [
-    [W, e.showComponent]
+    [H, e.showComponent]
   ]);
 }
 const _e = /* @__PURE__ */ b(Ht, [["render", Gt], ["__scopeId", "data-v-9969ac6c"]]), Rt = m({
@@ -808,8 +808,8 @@ const is = new je("tabs"), rs = m({
   name: "BsTab",
   mixins: [ie, ae],
   components: {
-    BsDrawer: E,
-    BsHeader: U,
+    BsDrawer: U,
+    BsHeader: W,
     BsDocumentation: ne,
     BsContent: se,
     BsTabIcon: G,
@@ -898,19 +898,19 @@ const is = new je("tabs"), rs = m({
       };
     },
     header() {
-      return this.usingComponent(U) || this.usingSlotHeader || this.defaultHeader;
+      return this.usingComponent(W) || this.usingSlotHeader || this.defaultHeader;
     },
     drawer() {
-      return this.usingComponent(E) || this.usingSlotDrawer || this.defaultDrawer;
+      return this.usingComponent(U) || this.usingSlotDrawer || this.defaultDrawer;
     },
     tabIcon() {
       return this.usingComponent(G) || this.usingSlotTabIcon ? void 0 : this.icon;
     },
     usingSlotHeader() {
-      return this.usingSlot(U, "header", "head");
+      return this.usingSlot(W, "header", "head");
     },
     usingSlotDrawer() {
-      return this.usingSlot(E, "leftpanel", "drawer");
+      return this.usingSlot(U, "leftpanel", "drawer");
     },
     usingSlotDocumentation() {
       return this.usingSlot(ne, "documentation");
@@ -1009,7 +1009,7 @@ function ds(e, t, s, n, o, i) {
       ]),
       _: 3
     }, 512), [
-      [W, e.isTabSelected]
+      [H, e.isTabSelected]
     ]),
     f(e.$slots, "default", {}, void 0, !0)
   ], 64);
@@ -1114,10 +1114,10 @@ const Pe = /* @__PURE__ */ b(rs, [["render", ds], ["__scopeId", "data-v-694ef9e9
       return this.drawerMounted && this.headerMounted;
     },
     defaultDrawer() {
-      return !!this.getSlotComponents(E.name).length;
+      return !!this.getSlotComponents(U.name).length;
     },
     defaultHeader() {
-      return !!this.getSlotComponents(U.name).length;
+      return !!this.getSlotComponents(W.name).length;
     },
     layoutStyles() {
       return {
@@ -1383,7 +1383,7 @@ function ys(e, t, s, n, o, i) {
 const vs = /* @__PURE__ */ b(Is, [["render", ys]]), Cs = m({
   name: "BsButton",
   components: {
-    QBtn: q
+    QBtn: Q
   }
 });
 function ws(e, t, s, n, o, i) {
@@ -1509,7 +1509,7 @@ function te(e) {
     e.then((n) => t(n == null ? void 0 : n.data)).catch((n) => s(n));
   });
 }
-class H {
+class q {
   static initClient() {
     const t = Ys ? window.getWebAppBackendUrl("") : Zs;
     this._restApiEndpoint = `${t}/bs_api/`, this.client = ct.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
@@ -1555,9 +1555,9 @@ class H {
     return this.doGet(`dataset/get_generic_data/dataset_name=${t}`);
   }
 }
-H.errors = [];
-H.initialized = !1;
-H.init();
+q.errors = [];
+q.initialized = !1;
+q.init();
 const Fs = m({
   name: "BsDSSTable",
   props: {
@@ -1600,7 +1600,7 @@ const Fs = m({
     },
     fetchDSSData(...e) {
       return new Promise((t, s) => {
-        this.setFetchingChunk(!0), H.getDatasetChunk(...e).then((n) => {
+        this.setFetchingChunk(!0), q.getDatasetChunk(...e).then((n) => {
           const o = this.transformDSSDataToQTableRow(n);
           this.setFetchingChunk(!1), t(o);
         }).catch(s);
@@ -1608,7 +1608,7 @@ const Fs = m({
     },
     fetchDSSColumns(...e) {
       return this.setFetchingSchema(!0), new Promise((t, s) => {
-        H.getDatasetGenericData(...e).then(({ schema: n, columnsCount: o }) => {
+        q.getDatasetGenericData(...e).then(({ schema: n, columnsCount: o }) => {
           const a = n.columns.map((r) => this.createBsTableCol({ name: r.name, dataType: r.type }));
           this.setFetchingSchema(!1), t({ columns: a, columnsCount: o });
         }).catch(s);
@@ -1802,7 +1802,7 @@ function nn(e, t, s, n, o, i) {
 const Oe = /* @__PURE__ */ b(sn, [["render", nn]]), on = m({
   name: "BsSearchWholeTable",
   components: {
-    QIcon: Q,
+    QIcon: E,
     BsInputDebounce: Oe
   },
   data() {
@@ -1871,7 +1871,7 @@ function un(e, t, s, n, o, i) {
 const cn = /* @__PURE__ */ b(dn, [["render", un]]), hn = m({
   name: "BSTableColHeader",
   components: {
-    QIcon: Q,
+    QIcon: E,
     QTh: be,
     QMenu: et,
     QItem: tt,
@@ -2101,7 +2101,7 @@ function _n(e, t, s, n, o, i) {
 const yn = /* @__PURE__ */ b($n, [["render", _n]]), vn = m({
   name: "BsTablePagination",
   components: {
-    QBtn: q
+    QBtn: Q
   },
   props: {
     scope: {
@@ -2254,7 +2254,7 @@ const kn = /* @__PURE__ */ b(Bn, [["render", An], ["__scopeId", "data-v-15d38d19
   components: {
     BsTablePagination: Pn,
     BsTableVirtualScrollIndicator: kn,
-    QIcon: Q
+    QIcon: E
   },
   props: {
     scope: {
@@ -2336,8 +2336,10 @@ function Un(e, t, s, n, o, i) {
   ]);
 }
 const Wn = /* @__PURE__ */ b(zn, [["render", Un], ["__scopeId", "data-v-e7e3b82f"]]), Hn = m({
-  name: "default",
-  components: {},
+  name: "BsTableServerSidePagination",
+  components: {
+    QBtn: Q
+  },
   emits: ["update:batch-offset"],
   data() {
     return {
@@ -2398,7 +2400,7 @@ const Wn = /* @__PURE__ */ b(zn, [["render", Un], ["__scopeId", "data-v-e7e3b82f
     this.syncServerSidePagination();
   }
 });
-const qn = (e) => (X("data-v-9c8eccd1"), e = e(), J(), e), Yn = {
+const qn = (e) => (X("data-v-10f3a6ab"), e = e(), J(), e), Yn = {
   key: 0,
   class: "bs-table-server-side-pagination"
 }, Zn = /* @__PURE__ */ qn(() => /* @__PURE__ */ T("div", { class: "bs-table-server-side-pagination-label" }, " sampled records: ", -1)), Fn = { class: "bs-table-server-side-pagination-controls" }, Gn = { class: "bs-table-server-side-pagination-offset" };
@@ -2429,12 +2431,12 @@ function Rn(e, t, s, n, o, i) {
     ])
   ])) : S("", !0);
 }
-const xn = /* @__PURE__ */ b(Hn, [["render", Rn], ["__scopeId", "data-v-9c8eccd1"]]), Xn = m({
+const xn = /* @__PURE__ */ b(Hn, [["render", Rn], ["__scopeId", "data-v-10f3a6ab"]]), Xn = m({
   name: "BsTable",
   components: {
     QTable: at,
     QTr: fe,
-    QBtn: q,
+    QBtn: Q,
     QTd: it,
     BsDSSTableFunctional: Rs,
     BsSearchWholeTable: ln,
@@ -2756,7 +2758,7 @@ function io(e, t, s, n, o, i) {
 const ro = /* @__PURE__ */ b(ao, [["render", io]]), lo = m({
   name: "BsIcon",
   components: {
-    QIcon: Q
+    QIcon: E
   }
 });
 function uo(e, t, s, n, o, i) {
@@ -2821,8 +2823,8 @@ const go = /* @__PURE__ */ b(ho, [["render", mo]]), bo = m({
     QInput: ge,
     QDate: dt,
     QPopupProxy: ut,
-    QIcon: Q,
-    QBtn: q
+    QIcon: E,
+    QBtn: Q
   },
   props: {
     bsLabel: {
@@ -2894,9 +2896,9 @@ const Do = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   BsContent: se,
   BsDateRange: Mo,
   BsDocumentation: ne,
-  BsDrawer: E,
+  BsDrawer: U,
   BsDrawerBtn: _e,
-  BsHeader: U,
+  BsHeader: W,
   BsIcon: co,
   BsImg: ro,
   BsLayoutDefault: ps,
@@ -2930,9 +2932,9 @@ export {
   se as BsContent,
   Mo as BsDateRange,
   ne as BsDocumentation,
-  E as BsDrawer,
+  U as BsDrawer,
   _e as BsDrawerBtn,
-  U as BsHeader,
+  W as BsHeader,
   co as BsIcon,
   ro as BsImg,
   ps as BsLayoutDefault,
