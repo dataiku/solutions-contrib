@@ -17,14 +17,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { QTr } from 'quasar';
+import { QTr, QTh } from 'quasar';
 import BsTableColHeader from "./BsTableColHeader.vue";
 import { QTableHeaderProps } from "./tableTypes";
 
 export default defineComponent({
     name: "BSTableHeader",
     components: {
-        QTr, BsTableColHeader
+        QTr, QTh, BsTableColHeader
     },
     props: {
         props: {
