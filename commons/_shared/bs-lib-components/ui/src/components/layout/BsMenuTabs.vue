@@ -45,8 +45,8 @@ export default defineComponent({
         scale: -1 1;
     }
     .q-icon {
+        display: block;
         --tab-icon-size: 20px;
-
         width: var(--tab-icon-size);
         height: var(--tab-icon-size);
         font-size: var(--tab-icon-size);

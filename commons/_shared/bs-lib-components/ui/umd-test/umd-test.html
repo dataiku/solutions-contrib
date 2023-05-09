@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
+
+    <title>UMD test</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet" type="text/css">
+    <link href="./index.umd.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+    <link href="../dist/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div id="q-app">
+      <q-layout view="lHh Lpr fff">
+        <q-header class="glossy bg-primary">
+          <q-toolbar>
+            <q-toolbar-title>
+              quasar-ui-bs v{{ version }}
+            </q-toolbar-title>
+
+            <div>Quasar v{{ $q.version }}</div>
+          </q-toolbar>
+        </q-header>
+
+        <q-page-container>
+          <q-page padding>
+            <ul class="q-mb-lg">
+              <li>In /ui, run: "yarn build"</li>
+              <li class="text-red">You need to build & refresh page on each change manually.</li>
+              <li>Use self-closing tags only!</li>
+              <li>Example: &lt;my-component&gt;&lt;/my-component&gt;</li>
+            </ul>
+            <div class="q-gutter-sm">
+              <bs-button class="bs-btn dku-text" unelevated>Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text" unelevated icon="fullscreen">Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text" unelevated icon-right="fullscreen">Fullscreen</bs-button>
+              <bs-button class="bs-btn dku-text bs-btn-disabled" unelevated disable="">Fullscreen</bs-button>
+              <bs-toggle v-model="value"></bs-toggle>
+              <bs-toggle v-model="value" labelLeft="Widgets"></bs-toggle>
+              <div style="max-width: 300px;">
+                <bs-select v-model="model" :options="options" outlined bsLabel="Font Size" bsLabelId="test"></bs-select>
+              </div>
+              
+            </div>
+            
+          </q-page>
+        </q-page-container>
+      </q-layout>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2/dist/quasar.umd.prod.js"></script>
+    <script src="../dist/quasar-ui-bs.umd.js"></script>
+
+    <script>
+      const { ref } = Vue
+      const app = Vue.createApp({
+        setup () {
+          return {
+            version: QuasarBs.version,
+            value: ref(true),
+            model: ref(null),
+            options: ref([
+                "Extra small",
+                "Small",
+                "Medium",
+                "Large",
+                "Extra large",
+                "Custom"
+            ]),
+          }
+        }
+      })
+      app.use(Quasar)
+      app.use(QuasarBs)
+      app.mount('#q-app')
+    </script>
+  </body>
+</html>
