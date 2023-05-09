@@ -1,17 +1,13 @@
+import installApp from "./install-lib.js";
 
-import installApp from "./install-lib";
-
-import * as components from "./components";
+import * as components from "./components.js";
 
 export const QuasarBs = {
-    version: __UI_VERSION__,
-    install (app) {
-        installApp(
-        app,
-        { components },
-        )
-    }
-}
+  version: __UI_VERSION__,
+  install(app) {
+    installApp(app, { components });
+  },
+};
 
-export * from "./components";
+export * from "./components.js";
 export const version = __UI_VERSION__;

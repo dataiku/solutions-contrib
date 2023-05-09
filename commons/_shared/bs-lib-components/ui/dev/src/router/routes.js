@@ -9,7 +9,7 @@ function createLayoutGallery(...list) {
 }
 
 export const layoutGallery = createLayoutGallery(
-  { name: "Layout with one tab", path: "empty-layout" },
+  { name: "Layout with no tabs", path: "empty-layout" },
   { name: "Layout with multiple tabs", path: "layout-with-tabs" }
 );
 
