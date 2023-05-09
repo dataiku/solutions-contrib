@@ -6,5 +6,6 @@ export default [
         "TestTableGeneric",
         "TestLayout",
         "TestRouteExample",
+        "TestReactivity",
     ].map(component => createTestRoute(component)),
 ];
