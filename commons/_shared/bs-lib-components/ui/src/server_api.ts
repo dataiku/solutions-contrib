@@ -37,7 +37,7 @@ export default class ServerApi {
     private static initialized = false;
 
     private static initClient() {
-        const serverUrl = isProd ? (window as any).getWebAppBackendUrl('') : baseURLVite;
+        const serverUrl = isProd ? (parent as any).getWebAppBackendUrl('') : baseURLVite;
         this._restApiEndpoint = `${serverUrl}/bs_api/`
         this.client = axios_.create({ baseURL: this._restApiEndpoint });
         
