@@ -24,11 +24,16 @@
 import { defineComponent } from 'vue';
 import { mdiTableSearch } from '@quasar/extras/mdi-v6';
 
+import { QIcon } from 'quasar';
+
 import BsInputDebounce from "./BsInputDebounce.vue"
 
 export default defineComponent({
     name: "BsSearchTable",
-    components: { BsInputDebounce },
+    components: {
+        QIcon,
+        BsInputDebounce,
+    },
     data() {
         return {
             mdiTableSearch,

@@ -90,8 +90,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Slot } from 'vue';
-import { QTableColumn, QTable, QTr } from 'quasar';
+import { defineComponent, PropType } from 'vue';
+import { QTableColumn, QTable, QTr, QTd, QBtn } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
 import BSTableHeader from "./BSTableHeader.vue";
@@ -112,6 +112,8 @@ export default defineComponent({
     components: {
     QTable,
     QTr,
+    QTd,
+    QBtn,
     BsDSSTableFunctional,
     BsSearchWholeTable,
     BSTableHeader,
