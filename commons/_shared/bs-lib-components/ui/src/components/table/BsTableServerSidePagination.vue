@@ -30,12 +30,15 @@
 <script lang="ts">
 import { isUndefined } from 'lodash';
 import { defineComponent, PropType } from 'vue';
+
+import { QBtn } from 'quasar';
+
 import { ServerSidePagination } from './tableHelper';
 
 export default defineComponent({
     name: "default",
     components: {
-
+        QBtn,
     },
     emits: ["update:batch-offset"],
     data() {
