@@ -79,7 +79,7 @@
                 :start-of-the-page="startOfThePage"
                 :searching="anyColumnSearched"
                 :virtual-scroll="virtualScroll"
-                :q-table-middle="qTableMiddle"
+                :q-table-middle="(qTableMiddle as HTMLElement)"
                 :fetched-rows-length="passedRowsLength"
             ></BsTableBottom>
         </template>
