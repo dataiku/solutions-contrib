@@ -57,13 +57,24 @@
                 <slot name="top"></slot>
             </div>
         </template>
-        <template
-            v-for="([colSlot, colName]) in colSlots"
-            v-slot:[colSlot]="props"
-        >
-            <q-td :props="props">
-                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(colName)]" :text="props.value"></BsTextHighlight>
+        <template #body-cell="props">
+            <slot
+                v-if="$slots.hasOwnProperty('body-cell')"
+                name="body-cell"
+                v-bind="getBodyCellProps(props)"
+            ></slot>
+            <q-td v-else :props="props">
+                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(props.col.name)]" :text="props.value"></BsTextHighlight>
             </q-td>
+        </template>
+        <template 
+            v-for="col in colSlotsUsed"
+            #[getColBodySlot(col)]="props"
+        >
+            <slot
+                :name="getColBodySlot(col)"
+                v-bind="getBodyCellProps(props)"
+            ></slot>
         </template>
         <template #header="props">
             <BSTableHeader
@@ -82,9 +93,6 @@
                 :q-table-middle="(qTableMiddle as HTMLElement)"
                 :fetched-rows-length="passedRowsLength"
             ></BsTableBottom>
-        </template>
-        <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
-            <slot :name="slot" v-bind="scope || {}" />
         </template>
     </QTable>
 </template>
@@ -105,6 +113,7 @@ import { ServerSidePagination } from './tableHelper';
 import { isEmpty } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
+import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 
 
 export default defineComponent({
@@ -166,7 +175,7 @@ export default defineComponent({
             scrollDetails: {from: 0},
             passedRowsLength: 0,
             tableEl: undefined as undefined | HTMLElement,
-            qTableMiddle: undefined as undefined | HTMLElement, 
+            qTableMiddle: undefined as undefined | HTMLElement,
             mdiCloseCircleMultiple,
         };
     },
@@ -189,6 +198,11 @@ export default defineComponent({
         passedColumns(): QTableColumn[] | undefined {
             return this.isDSSTable ? this._columns : this.columns;
         },
+        colSlotsUsed(): QTableColumn[] | undefined {
+            if (this.passedColumns) {
+                return this.passedColumns.filter(col => this.colBodySlotUsed(col));
+            }
+        },
         formattedColumns(): any[] |undefined {
             if (this.passedColumns) {
                 return this.passedColumns.map(col => {
@@ -202,10 +216,6 @@ export default defineComponent({
                 searchVal: this.searchedValueFormatted
             };
         },
-        colSlots(): [string, string][] {
-            const passedColumns = this.passedColumns || [];
-            return passedColumns.map(col => [this.getColBodySlot(col.name), col.name]);
-        },
         classParsed(): string[] {
             let passedClass = this.class || "";
             if (typeof passedClass === "string") passedClass = [passedClass];
@@ -214,14 +224,6 @@ export default defineComponent({
         tableClasses(): (string | boolean | undefined)[] {
             const tableClasses = ["bs-table", this.stickyHeader && "bs-table-sticky"];
             return tableClasses;
-        },
-        filteredSlots() {
-            const bsTableCustomSlots = ["top"];
-            return Object.fromEntries(
-                Object.entries(this.$slots).filter(
-                    ([slotKey]) => !bsTableCustomSlots.includes(slotKey)
-                )
-            );
         },
     },
     watch: {
@@ -273,8 +275,11 @@ export default defineComponent({
                 this.searchedCols = {...this.searchedCols};
             }
         },
-        getColBodySlot(colName: string) {
-            return `body-cell-${colName}`;
+        colBodySlotUsed(col: QTableColumn): boolean {
+            return this.$slots.hasOwnProperty(this.getColBodySlot(col));
+        },
+        getColBodySlot(col: QTableColumn): string {
+            return `body-cell-${col.name}`;
         },
         getColSearchedValue(colName: string) {
             return getObjectPropertyIfExists(this.searchedCols, colName);
@@ -330,6 +335,16 @@ export default defineComponent({
         },
         scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined) {
             return (this.$refs.qTable as any).scrollTo(index, edge);
+        },
+        getBodyCellProps(props: QTableBodyCellProps): BsTableBodyCellProps {
+            return {
+                ...props,
+                cellValueComponent: BsTextHighlight,
+                cellValueComponentProps: {
+                    queries: [this.searchedValueFormatted, this.getColSearchedValue(props.col.name)],
+                    text: props.value,
+                },
+            };
         },
     },
 
