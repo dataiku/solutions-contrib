@@ -92,6 +92,9 @@
                 :fetched-rows-length="passedRowsLength"
             ></BsTableBottom>
         </template>
+        <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
+            <slot :name="slot" v-bind="scope || {}" />
+        </template>
     </QTable>
 </template>
 
@@ -222,6 +225,14 @@ export default defineComponent({
         tableClasses(): (string | boolean | undefined)[] {
             const tableClasses = ["bs-table", this.stickyHeader && "bs-table-sticky"];
             return tableClasses;
+        },
+        filteredSlots() {
+            const bsTableCustomSlots = ["top"];
+            return Object.fromEntries(
+                Object.entries(this.$slots).filter(
+                    ([slotKey]) => !bsTableCustomSlots.includes(slotKey) || slotKey.includes("body-cell")
+                )
+            );
         },
     },
     watch: {
