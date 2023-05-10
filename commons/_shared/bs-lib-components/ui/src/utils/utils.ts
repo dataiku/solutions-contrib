@@ -77,6 +77,6 @@ export function getIndicesOf(searchStr: string, str: string, caseSensitive=false
 }
 
 
-export function getObjectPropertyIfExists(obj: Record<string, any>, key: string) {
+export function getObjectPropertyIfExists<T>(obj: Record<string, T>, key: string) {
     return obj.hasOwnProperty(key) ? obj[key] : undefined;
 }
