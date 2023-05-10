@@ -49,9 +49,7 @@
             <BsTableServerSidePagination
                 v-if="_serverSidePagination && serverSidePaginationControls"
                 :server-side-pagination="_serverSidePagination"
-                @update:batch-offset="($event) => {
-                    setBatchOffset($event, true);
-                }"
+                @update:batch-offset="setBatchOffset($event, true)"
             ></BsTableServerSidePagination>
             <div v-if="$slots.top" class="bs-table-top-slot-container">
                 <slot name="top"></slot>
