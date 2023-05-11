@@ -76,7 +76,7 @@ function updatePrecompileFiles() {
 
     createPrecompiledFile(
 		createStringVarsFromObject({
-            testRoutes: {
+            testViews: {
                 data: getTestViews(),
 				declareType: VarDeclareType.Const,
             },

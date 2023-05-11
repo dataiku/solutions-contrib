@@ -1,5 +1,6 @@
-const PascalToSnakeCase = str => str.replace(/\.?([A-Z]+)/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "");
-
+function PascalToSnakeCase (str: string) {
+    return str.replace(/\.?([A-Z]+)/g, (x,y) => "_" + y.toLowerCase()).replace(/^_/, "");
+}
 
 /**
  * function for creating a test route
@@ -9,7 +10,8 @@ const PascalToSnakeCase = str => str.replace(/\.?([A-Z]+)/g, function (x,y){retu
  * @param {string} componentName **PascalCase** formatted component name
  * @param {string=} urlPath path to the test route => defaults to snake_cased name of the component
  */
-export function createTestRoute(componentName, urlPath) {
+
+export function createTestRoute(componentName: string, urlPath?: string) {
     const path = `/${urlPath || PascalToSnakeCase(componentName)}`;
     const component =  () => import(`../test/${componentName}.vue`);
     
