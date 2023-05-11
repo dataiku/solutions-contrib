@@ -1,9 +1,9 @@
 from typing import Any
 from flask import Blueprint, Response
 from commons.python.business_solutions_api.dataiku_api import dataiku_api
-from commons.python.caching import cache
 from pandas import DataFrame
 import json
+# from commons.python.caching import cache
 
 dataset_api = Blueprint("dataset_api",__name__, url_prefix="/dataset")
 
@@ -17,7 +17,6 @@ def fetch_dataiku_dataset(dataset_name: str, chunksize: str, chunk_index: str):
 
     return fetch_dataiku_dataset_cached(dataset_name=dataset_name, chunksize=chunksize, chunk_index=chunk_index, last_build_start_timestamp=timestamp)
 
-@cache.memoize(timeout=300)
 def fetch_dataiku_dataset_cached(dataset_name: str, chunksize: str, chunk_index: str, last_build_start_timestamp: str):
     try:
         parsed_chunksize = int(chunksize)
