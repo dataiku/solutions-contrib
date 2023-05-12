@@ -29,8 +29,8 @@ let {server: serverConfig} = defineConfig({
     }
 );
 
-if (basePath === "") {
-    serverConfig = { ...serverConfig, origin: "http://127.0.0.1:5173" };
+if (!basePath) {
+    serverConfig.origin = "http://127.0.0.1:5173";
 }
 
 let defaultConfig = defineConfig({
@@ -73,7 +73,7 @@ if (basePath !== "") {
         },
         base: basePath,
     });
-    
+
     defaultConfig.experimental = experimental;
     defaultConfig.base = base;
 }
