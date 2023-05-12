@@ -6,6 +6,7 @@ import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
 import { ServerSidePagination } from "./tableHelper";
+import { isEqual } from 'lodash';
 
 interface BsTableCol extends QTableColumn {
     dataType?: string,
@@ -126,11 +127,9 @@ export default defineComponent({
                 this.updateRows(this.dssTableName, batchSize, batchOffset);
             }
         },
-        watchedChanged(newVal?: any, oldVal?: any) {
-            return newVal !== oldVal;
-        },
+
         updateTableDataOnWatchedChanged(newVal?: any, oldVal?: any) {
-            if (this.watchedChanged(newVal, oldVal)) this.updateTableData();
+            if (!isEqual(newVal, oldVal)) this.updateTableData();
         },
     },
     mounted() {
