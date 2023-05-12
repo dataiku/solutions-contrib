@@ -1,28 +1,11 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
 import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
 
-// import axios_ from "axios";
-
-
 const mode = process.env.NODE_ENV;
 const isProd = mode === "production";
 
-const baseURLVite = "http://127.0.0.1:15000";
-
-// const axios = axios_.create({
-//     baseURL: mode === "production" ?  getWebAppBackendUrl('') : baseURLVite,
-// })
-
-// axios.interceptors.response.use((response) => {
-//     return response.data
-// }, (error) => {
-//     APIErrors.push(error.response);
-//     return Promise.reject(error);
-// })
-
-// export let APIErrors = [];
-
-
+const localBackendPort = process.env.FLASK_RUN_PORT;
+const baseURLVite = `http://127.0.0.1:${localBackendPort}`;
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
     return new Promise((resolve, reject) => {
         request.then((res) => resolve(res?.data)).catch(reason => reject(reason));

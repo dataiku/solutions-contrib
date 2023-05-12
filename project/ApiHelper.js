@@ -1,6 +1,5 @@
 import axios_ from "axios";
 
-
 const mode = process.env.NODE_ENV;
 
 let baseURLVite = import.meta.env.BASE_URL;
@@ -10,7 +9,7 @@ baseURLVite = baseURLVite.replace("5173","5000");
 
 const axios = axios_.create({
     baseURL: mode === "production" ?  getWebAppBackendUrl('') : baseURLVite,
-})
+});
 
 axios.interceptors.response.use((response) => {
     return response.data
