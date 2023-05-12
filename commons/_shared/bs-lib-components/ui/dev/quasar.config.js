@@ -13,6 +13,8 @@ function getDotenvVar(varName) {
         const valParsed = dotenv.parse(valUnparsed);
         if (valParsed.hasOwnProperty(varName)) {
             return valParsed[varName];
+        } else {
+            console.error(`${varName} environment variable does not exist (in the {root}/.env)`);
         }
     } catch (error) {
         console.error(`Create a .env file in the root directory of the project containing ${varName} variable`);
