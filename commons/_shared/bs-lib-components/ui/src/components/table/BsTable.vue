@@ -230,7 +230,7 @@ export default defineComponent({
             const bsTableCustomSlots = ["top"];
             return Object.fromEntries(
                 Object.entries(this.$slots).filter(
-                    ([slotKey]) => !bsTableCustomSlots.includes(slotKey) || slotKey.includes("body-cell")
+                    ([slotKey]) => !(bsTableCustomSlots.includes(slotKey) || slotKey.includes("body-cell"))
                 )
             );
         },
