@@ -8,18 +8,25 @@
             use it in combination with <b><code>@update:server-side-pagination</code></b> event for custom your custom logic.
         </p>
         <code-prism lang="js" :code="serverSidePaginationPropType"></code-prism><br>
-        <Warning :text="warning" class="q-mt-md"></Warning>
+        To use <b>body-cell, body-cell-[column]</b> slots with searched text highlighting feature use <b>cellValueComponent, cellValueComponentProps</b> scoped slot's props.<br>
+        Other scoped slot's props are described on <b>QTable</b> documentation page. 
+        <code-prism lang="html" :code="bodyCellSlotUseExample"></code-prism><br>
+        
         <DocExample file="BsTable/Basic" title="Basic"/>
+        <template #quasar-ref="{quasarUrl}">
+            It can inherit all the props and events available for the corresponding quasar component. Currently only <b>top, body-cell, body-cell-[column]</b> and custom <b>title</b> slots are implemented and tested. Please refer to this
+            <a :href="quasarUrl" target="_blank">page</a>
+            for more details.
+        </template>
     </doc-page-core>
 </template>
-<script>
+<script lang="ts">
 import DocExample from '../../components/DocExample.vue';
 import DocPageCore from '../../components/DocPageCore.vue';
 import Warning from '../../components/Warning.vue';
 import CodePrism from 'src/components/CodePrism';
-
-export default {
-
+import { defineComponent } from 'vue';
+export default defineComponent( {
     components: {
         DocExample, 
         DocPageCore,
@@ -29,20 +36,29 @@ export default {
     setup() {
         const description = "QTable is a component that allows you to display data in a tabular manner";
         const quasarURL = "https://quasar.dev/vue-components/table";
-        const warning = "This component was built without UX specifications, it will be modified as soon as the specs are available";
         const serverSidePaginationPropType = 
 `type ServerSidePagination = {
     batchSize: number;
     batchOffset: number;
 
     recordsCount: number | undefined;
-} | boolean;`
+} | boolean;`;
+
+        const bodyCellSlotUseExample = `
+<BsTable>
+    <template #body-cell=props> <!-- or #body-cell-[colName]=props -->
+        <q-td :props="props">
+            <component :is="props.cellValueComponent" v-bind="props.cellValueComponentProps"></component>
+        </q-td>
+    </template>
+</BsTable>`;
+
         return {
             description,
             quasarURL,
-            warning,
             serverSidePaginationPropType,
+            bodyCellSlotUseExample,
         };
     },
-};
+});
 </script>
