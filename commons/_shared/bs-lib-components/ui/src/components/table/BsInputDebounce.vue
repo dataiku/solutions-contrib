@@ -16,6 +16,7 @@ import { defineComponent, PropType } from 'vue';
 import { QInput } from 'quasar';
 import { timeoutExecuteOnce } from '../../utils/utils';
 import { formatSearchVal } from './filterTable';
+import { uniqueId } from 'lodash';
 export default defineComponent({
     name: "BsInputDebounce",
     props: {
@@ -42,6 +43,7 @@ export default defineComponent({
         return {
             inputDebouncing: false,
             value: null as string | number | null,
+            id: uniqueId("bs-input-debounce-")
         };
     },
     watch: {
@@ -72,7 +74,7 @@ export default defineComponent({
                     this.setLoading(false);
                 },
                 +this.valueSearchDebounce,
-                "bs-search-table-search-text"
+                this.id
             );
         },
         updateValueNoDebounce(val: string | number | null) {
