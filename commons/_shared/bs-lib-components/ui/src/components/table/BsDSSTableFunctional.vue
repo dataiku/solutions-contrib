@@ -19,7 +19,7 @@ export default defineComponent({
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
     },
-    emts: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
+    emits: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
         return {
             DSSColumns: undefined as unknown as DSSColumnSchema[],
