@@ -1,15 +1,10 @@
 from functools import wraps
 from typing import Any, Dict, Optional, Union, Callable
-import logging
+
 from dataikuapi.dss.dataset import DSSDataset
 from dataikuapi.dss.project import DSSProject
 
-logger = logging.getLogger(__name__)
-
 from commons.python.business_solutions_api.dataset_iterator import DatasetIterator
-
-logger = logging.getLogger(__name__)
-NO_TRACKING_CONFIG = {"udr_mode": "NO"}
 
 def using_project(func: Callable):
     @wraps(func)
