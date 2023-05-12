@@ -26,9 +26,9 @@ def using_dataset(func: Callable):
 
 
 class DataikuApi:
-    def __init__(self):
+    def __init__(self, default_project_key:Optional[str]=None):
         self._instanse_info = None
-        self._default_project = None
+        self._default_project_key = default_project_key
         try:
             import dataiku
         except:
@@ -51,7 +51,7 @@ class DataikuApi:
             if self._default_project_key:
                 return self.client.get_project(self._default_project_key)
             else:
-                raise Exception("Please define the default project before using it.")
+                raise Exception(f"Please define the default project or set a DKU_CURRENT_PROJECT_KEY environment variable before using it.")
 
     @property
     def client(self):

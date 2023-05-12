@@ -7,11 +7,16 @@ const dotenv = require("dotenv");
 const fs = require("fs");
 
 function getDotenvVar(varName) {
-    const valPath = path.resolve(__dirname, "../../../../..", ".env");
-    const valUnparsed = fs.readFileSync(valPath);
-    const valParsed = dotenv.parse(valUnparsed);
-    if (valParsed.hasOwnProperty(varName)) {
-        return valParsed[varName];
+    try {
+        const valPath = path.resolve(__dirname, "../../../../..", ".env");
+        const valUnparsed = fs.readFileSync(valPath);
+        const valParsed = dotenv.parse(valUnparsed);
+        if (valParsed.hasOwnProperty(varName)) {
+            return valParsed[varName];
+        }
+    } catch (error) {
+        console.error(`Create a .env file in the root directory of the project containing ${varName} variable`);
+        console.error(error);
     }
     return undefined;
 }

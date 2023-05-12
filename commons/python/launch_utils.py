@@ -13,7 +13,6 @@ if os.environ.get("FLASK_RUN_PORT") == None: os.environ["FLASK_RUN_PORT"] = "500
 
 def get_local_development_port():
     lcport = os.environ.get("FLASK_RUN_PORT")
-    print(lcport)
     if lcport != None:
         return int(lcport)
     return 5000
