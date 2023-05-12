@@ -1,14 +1,9 @@
-from typing import Any
-from flask import Blueprint, Response
+from flask import Blueprint, jsonify
 from commons.python.business_solutions_api.dataiku_api import dataiku_api
 from pandas import DataFrame
-import json
 # from commons.python.caching import cache
 
 dataset_api = Blueprint("dataset_api",__name__, url_prefix="/dataset")
-
-def json_response(payload: Any):
-    return Response(payload, mimetype='application/json')
 
 @dataset_api.route("/get/dataset_name=<dataset_name>/chunksize=<chunksize>/chunk_index=<chunk_index>", methods=["GET"])
 def fetch_dataiku_dataset(dataset_name: str, chunksize: str, chunk_index: str):
@@ -29,18 +24,18 @@ def fetch_dataiku_dataset_cached(dataset_name: str, chunksize: str, chunk_index:
         chunk_index=parsed_chunk_index,
         chunksize=parsed_chunksize,
     )
-    payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"
-    response = json_response(payload)
+    payload = chunk if isinstance(chunk, DataFrame) else None
+    response = jsonify(payload)
     return response
 
 @dataset_api.route("/get_schema/dataset_name=<dataset_name>", methods=["GET"])
 def fetch_dataiku_dataset_schema(dataset_name: str):
     params = dataiku_api.get_dataset_schema(dataset=dataset_name)
-    response = json_response(json.dumps(params))
+    response = jsonify(params)
     return response
 
 @dataset_api.route("/get_generic_data/dataset_name=<dataset_name>", methods=["GET"])
 def get_generic_data(dataset_name: str):
     params = dataiku_api.get_dataset_generic_data(dataset=dataset_name)
-    response = json_response(json.dumps(params))
+    response = jsonify(params)
     return response
