@@ -5,9 +5,13 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
-import isNull from 'lodash/isNull';
-import escape from 'lodash/escape';
-import isUndefined from 'lodash/isUndefined';
+// import isNull from 'lodash/isNull';
+import { isNull } from 'lodash';
+// import isUndefined from 'lodash/isUndefined';
+import { isUndefined } from 'lodash';
+// import escape from 'lodash/escape';
+import { escape } from 'lodash';
+
 
 import { getIndicesOf } from "../../utils/utils";
 

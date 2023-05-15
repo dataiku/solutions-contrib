@@ -1,3 +1,5 @@
+import { QTableColumn } from "quasar";
+import BsTextHighlight from "./BsTextHighlight.vue";
 export type QTableHeaderProps = {
     cols: any;
     colsMap: any;
@@ -40,3 +42,26 @@ export type QTableBottomScope = {
     inFullscreen: boolean;
     toggleFullscreen: () => void;
 };
+export interface QTableBodyCellProps {
+    col: QTableColumn;
+    value: any;
+    key: any;
+    row: any;
+    rowIndex: number;
+    pageIndex: number;
+    cols: QTableColumn[];
+    colsMap: any;
+    sort: (col: QTableColumn) => void;
+    selected: boolean;
+    expand: boolean;
+    color: string;
+    dark: boolean;
+    dense: boolean;
+}
+export interface BsTableBodyCellProps extends QTableBodyCellProps {
+    cellValueComponent: typeof BsTextHighlight;
+    cellValueComponentProps: {
+        queries: [string | undefined, string | undefined];
+        text: string;
+    };
+}

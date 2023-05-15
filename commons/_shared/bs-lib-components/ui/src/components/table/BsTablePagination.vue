@@ -54,7 +54,8 @@ import { QBtn } from "quasar";
 
 import { QTablePagination, QTableBottomScope } from './tableTypes';
 import { ServerSidePagination } from './tableHelper';
-import isUndefined from 'lodash/isUndefined';
+// import isUndefined from 'lodash/isUndefined';
+import { isUndefined } from 'lodash';
 
 export default defineComponent({
     name: "BsTablePagination",

@@ -33,12 +33,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
     createBsTableCol(options: Partial<BsTableCol>): BsTableCol;
     transformDSSDataToQTableRow(DSSData: DSSDatasetData | string): Record<string, any>[] | undefined;
     updateTableData(): void;
-    watchedChanged(newVal?: any, oldVal?: any): boolean;
     updateTableDataOnWatchedChanged(newVal?: any, oldVal?: any): void;
-}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:fetching" | "update:columns-count")[], "update:rows" | "update:columns" | "update:fetching" | "update:columns-count", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     dssTableName: {
         type: StringConstructor;
     };
     serverSidePagination: PropType<ServerSidePagination>;
-}>>, {}>;
+}>> & {
+    "onUpdate:rows"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:columns"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:fetching"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:columns-count"?: ((...args: any[]) => any) | undefined;
+}, {}>;
 export default _sfc_main;
