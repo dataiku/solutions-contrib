@@ -7,7 +7,7 @@ import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
 import { ServerSidePagination } from "./tableHelper";
 import isEqual from 'lodash/isEqual';
-import { ToBeDefined } from 'app/utils/types';
+import { ToBeDefined } from '../../utils/types';
 interface BsTableCol extends QTableColumn {
     dataType?: string,
 }

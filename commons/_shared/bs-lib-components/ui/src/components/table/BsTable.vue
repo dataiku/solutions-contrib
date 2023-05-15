@@ -115,7 +115,7 @@ import isEmpty from 'lodash/isEmpty';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
-import { ToBeDefined } from 'app/utils/types';
+import { ToBeDefined } from '../../utils/types';
 
 
 export default defineComponent({
