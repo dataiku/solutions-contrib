@@ -38,7 +38,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-::v-deep .q-tabs--vertical .q-tab {
+:deep(.q-tabs--vertical) .q-tab {
     padding: 0 5px;
     scale: -1 1;
     .q-tab__content {

@@ -371,32 +371,32 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-::v-deep.bs-table-sticky {
-    .q-table__top,
-    .q-table__bottom,
-    thead tr:first-child th {
+.bs-table-sticky {
+    :deep(.q-table__top),
+    :deep(.q-table__bottom),
+    :deep(thead) tr:first-child th {
         background-color: #fff;
     }
 
-    thead tr th {
-        position: sticky;
-        z-index: 1;
-    }
-
-  /* this will be the loading indicator */
-    thead tr:last-child th {
-        top: 48px;
-    }
-    /* height of all previous header rows */
-    thead tr:first-child th {
-        top: 0;
+    :deep(thead) {
+        tr th {
+            position: sticky;
+            z-index: 1;
+        }
+        tr:last-child th {
+            /* height of all previous header rows */
+            top: 48px;
+        }
+        tr:first-child th {
+            top: 0;
+        }
     }
 }
 
-::v-deep.bs-table {
+.bs-table {
     max-height: 100%;
 
-    .q-table__top {
+    :deep(.q-table__top) {
         overflow: hidden;
     }
 }

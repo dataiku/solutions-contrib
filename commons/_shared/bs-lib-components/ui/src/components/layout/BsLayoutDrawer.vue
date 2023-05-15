@@ -94,7 +94,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-::v-deep .q-drawer {
+:deep(.q-drawer) {
     box-sizing: content-box;
     z-index: 3000;
 
