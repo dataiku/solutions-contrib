@@ -111,7 +111,8 @@ import { searchTableFilter } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
-import isEmpty from 'lodash/isEmpty';
+// import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';

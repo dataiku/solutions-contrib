@@ -25,7 +25,8 @@
 import { defineComponent, PropType } from 'vue';
 import BsTablePagination from "./BsTablePagination.vue";
 import BsTableVirtualScrollIndicator from "./BsTableVirtualScrollIndicator.vue";
-import isUndefined from 'lodash/isUndefined';
+// import isUndefined from 'lodash/isUndefined';
+import { isUndefined } from 'lodash';
 import { ServerSidePagination } from './tableHelper';
 import { mdiAlert } from '@quasar/extras/mdi-v6';
 import { QIcon } from "quasar";
