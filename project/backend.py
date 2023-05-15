@@ -1,16 +1,11 @@
 from flask import Flask
-import sys
-import os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from commons.python.fetch.fetch_project import fetch_route
+
+from commons.python.launch_utils import create_app, get_local_development_port
 from project.src.fetch_api import fetch_api
 
-app = Flask(__name__)
-
-app.register_blueprint(fetch_route)
+app: Flask = create_app(__name__)
 app.register_blueprint(fetch_api)
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000)
-
+    app.run(host="127.0.0.1", port=get_local_development_port())

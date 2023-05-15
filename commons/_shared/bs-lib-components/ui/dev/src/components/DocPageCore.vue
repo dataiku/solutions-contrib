@@ -10,9 +10,12 @@
         
         <section class="column q-mb-xl" v-if="quasarUrl">
             <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
-            <span class="dku-small-title quasar-ref-card q-pa-md">The {{ title }} is a components that wraps the quasar {{ title.replace("Bs","Q")}} component. 
-                It can inherit all the props, slots and events available for the corresponding quasar component. Please refer to this <a :href="quasarUrl" target="_blank">page</a>
-                for more details
+            <span class="dku-small-title quasar-ref-card q-pa-md">The {{ title }} is a components that wraps the quasar {{ title.replace("Bs","Q")}} component.
+                <slot name="quasar-ref" v-if="$slots.hasOwnProperty('quasar-ref')" :quasar-url="quasarUrl"></slot>
+                <span v-else>
+                    It can inherit all the props, slots and events available for the corresponding quasar component. Please refer to this <a :href="quasarUrl" target="_blank">page</a>
+                    for more details
+                </span>
             </span>
         </section>
 

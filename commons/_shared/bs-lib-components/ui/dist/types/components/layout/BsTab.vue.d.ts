@@ -46,6 +46,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     slotsKeys(): string[];
 }, {
     registerTab(): void;
+    unregisterTab(): void;
     onQPageMounted(): void;
     usingComponent(component: Component): boolean;
     usingSlot(component: Component, ...slots: string[]): boolean;
@@ -62,7 +63,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         prefix?: string | undefined;
     } | undefined): Record<string, any>;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}> | import("vue").DefineComponent<{}, {}, {}, {}, {
-    getSlotComponents(componentName: string, slotName?: string): Component<any, any, any, import("vue").ComputedOptions, import("vue").MethodOptions>[];
+    getSlotComponents(componentName: string, slotName?: string): Component[];
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}>, import("vue").ComponentOptionsMixin, "mounted:q-page"[], "mounted:q-page", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     name: {
         type: StringConstructor;

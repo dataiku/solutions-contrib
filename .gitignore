@@ -1,11 +1,14 @@
 *.DS_Store
 *__pycache__*
 .venv
+.env
 node_modules
 package-lock.json
+project/venv
+cache
 commons/_shared/bs-lib-components/ui/yarn-error.log
-.vscode
-.env
 
 commons/_shared/bs-lib-components/ui/dev/src/test
-project/venv
+!commons/_shared/bs-lib-components/ui/dev/src/test/TestRouteExample.vue
+.vscode
+commons/_shared/bs-lib-components/ui/dev/src/precompiled/localPrecompiledData.ts

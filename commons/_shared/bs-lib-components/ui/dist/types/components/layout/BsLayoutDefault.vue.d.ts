@@ -1,5 +1,5 @@
-import { PropType } from "vue";
-import { DocsProps, ImageDimensions, Tab } from "./bsLayoutTypes";
+import { PropType } from 'vue';
+import { DocsProps, ImageDimensions, Tab } from './bsLayoutTypes';
 declare const _sfc_main: import("vue").DefineComponent<{
     docTitle: {
         type: StringConstructor;
@@ -29,19 +29,18 @@ declare const _sfc_main: import("vue").DefineComponent<{
     drawerOpen: boolean;
     tabSlotNames: string[];
     defaultLayoutTabName: string;
+    defaultTabUsed: boolean;
 }, {
     tabContentId(): string;
     activeTabSlots(): string[];
     selectedTab(): Tab | undefined;
     selectedTabDrawer(): boolean | undefined;
-    isTabsMultiple(): boolean;
-    defaultTabUsed(): boolean;
     layoutDocsProps(): Partial<DocsProps>;
     qLayoutMounted(): boolean;
     defaultDrawer(): boolean;
     defaultHeader(): boolean;
     layoutStyles(): {
-        "--bs-drawer-width": string;
+        '--bs-drawer-width': string;
     };
 }, {
     getTabIndex(selectedTabId: string): number;
@@ -58,7 +57,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         prefix?: string | undefined;
     } | undefined): Record<string, any>;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}> | import("vue").DefineComponent<{}, {}, {}, {}, {
-    getSlotComponents(componentName: string, slotName?: string): import("vue").Component<any, any, any, import("vue").ComputedOptions, import("vue").MethodOptions>[];
+    getSlotComponents(componentName: string, slotName?: string): import("vue").Component[];
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}>, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     docTitle: {
         type: StringConstructor;

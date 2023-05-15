@@ -50,7 +50,7 @@ Start by creating the directory ~/.dataiku if you don't have one
 
    Create a config.json file in this directory if you don't have one.
 
-   `cd && cd ./dataiku && touch config.json`
+   `cd && cd .dataiku && touch config.json`
 
    Put the following configuration in your config.json replace the api_key value with a generated personal API key in Dataiku and put the url instance your projects are running on (exple : https://industry-solutions-design.industries.dataiku-dss.io/)
 
@@ -141,6 +141,7 @@ You should create a virtual env for the project where you can install the requir
 - `python3 backend.py` : This will run the flask server, use a virtual environement to start your backend and install the python dependencies. (run this in another window of your terminal)
 
 Once you run these three commands the project will be served in the url : http://127.0.0.1:5000/fetch/bs_init
+*Port is set through the `FLASK_RUN_PORT` .env variable *
 
 ### <span style="background-color:white;color:black">Build and deploy webapps to Dataiku</span>
 
