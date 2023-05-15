@@ -12,7 +12,7 @@
         Other scoped slot's props are described on <b>QTable</b> documentation page. 
         <code-prism lang="html" :code="bodyCellSlotUseExample"></code-prism><br>
         
-        <DocExample file="BsTable/Basic" title="Basic"/>
+        <DocExample file="BsTable/Basic" title="Basic" class="bs-table-example"/>
         <template #quasar-ref="{quasarUrl}">
             It can inherit all the props and events available for the corresponding quasar component. Currently only <b>top, body-cell, body-cell-[column]</b> and custom <b>title</b> slots are implemented and tested. Please refer to this
             <a :href="quasarUrl" target="_blank">page</a>
@@ -62,3 +62,11 @@ export default defineComponent( {
     },
 });
 </script>
+
+<style lang="scss" scoped>
+.bs-table-example {
+    :deep(.doc-example__content) {
+        width: 0;
+    }
+}
+</style>
