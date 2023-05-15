@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { isUndefined } from 'lodash';
+import isUndefined from 'lodash/isUndefined';
 import { defineComponent, PropType } from 'vue';
 
 import { QBtn } from 'quasar';

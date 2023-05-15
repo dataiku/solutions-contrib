@@ -4,7 +4,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { escape, isNull, isUndefined } from 'lodash';
+
+import isNull from 'lodash/isNull';
+import escape from 'lodash/escape';
+import isUndefined from 'lodash/isUndefined';
+
 import { getIndicesOf } from "../../utils/utils";
 
 export default defineComponent({

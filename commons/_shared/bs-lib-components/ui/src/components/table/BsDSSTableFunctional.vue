@@ -6,7 +6,7 @@ import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
 import { ServerSidePagination } from "./tableHelper";
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { ToBeDefined } from 'app/utils/types';
 interface BsTableCol extends QTableColumn {
     dataType?: string,

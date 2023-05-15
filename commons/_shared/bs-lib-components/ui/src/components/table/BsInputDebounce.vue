@@ -16,7 +16,7 @@ import { defineComponent, PropType } from 'vue';
 import { QInput } from 'quasar';
 import { timeoutExecuteOnce } from '../../utils/utils';
 import { formatSearchVal } from './filterTable';
-import { uniqueId } from 'lodash';
+import uniqueId from 'lodash/uniqueId';
 export default defineComponent({
     name: "BsInputDebounce",
     props: {

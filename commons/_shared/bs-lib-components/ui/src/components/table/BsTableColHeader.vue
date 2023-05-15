@@ -58,7 +58,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { isNull, isUndefined } from "lodash";
+
+import isUndefined from 'lodash/isUndefined';
+import isNull from 'lodash/isNull';
+
 
 import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from 'quasar';
 import {
