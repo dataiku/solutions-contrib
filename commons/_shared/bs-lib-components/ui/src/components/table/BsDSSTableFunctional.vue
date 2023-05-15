@@ -7,7 +7,7 @@ import ServerApi from "../../server_api";
 import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
 import { ServerSidePagination } from "./tableHelper";
 import { isEqual } from 'lodash';
-
+import { ToBeDefined } from 'app/utils/types';
 interface BsTableCol extends QTableColumn {
     dataType?: string,
 }
@@ -23,8 +23,8 @@ export default defineComponent({
     emits: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
         return {
-            DSSColumns: undefined as unknown as DSSColumnSchema[],
-            DSSData: undefined as unknown as DSSDatasetData,
+            DSSColumns: undefined as unknown as ToBeDefined<DSSColumnSchema[]>,
+            DSSData: undefined as unknown as ToBeDefined<DSSDatasetData>,
             fetchingChunk: false,
             fetchingSchema: false,
         };

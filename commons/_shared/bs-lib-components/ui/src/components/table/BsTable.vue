@@ -115,6 +115,7 @@ import { isEmpty } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
+import { ToBeDefined } from 'app/utils/types';
 
 
 export default defineComponent({
@@ -169,7 +170,7 @@ export default defineComponent({
             searchedCols: {} as Record<string, string>,
             searchedValue: null as string | null,
             searchedValueFormatted: "",
-            _serverSidePagination: undefined as unknown as ServerSidePagination,
+            _serverSidePagination: undefined as unknown as ToBeDefined<ServerSidePagination>,
             _rows: undefined as Record<string, any>[] | undefined,
             _columns: undefined as QTableColumn[] | undefined,
             lastBatchIndex: -1,
