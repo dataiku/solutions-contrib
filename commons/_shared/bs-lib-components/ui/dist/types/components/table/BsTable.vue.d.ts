@@ -1,6 +1,7 @@
 import { PropType } from 'vue';
 import { QTableColumn } from 'quasar';
 import { ServerSidePagination } from './tableHelper';
+import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 declare const _sfc_main: import("vue").DefineComponent<{
     dssTableName: StringConstructor;
     title: StringConstructor;
@@ -53,12 +54,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     isServerSidePaginationObject(): boolean;
     passedRows(): Record<string, any>[] | undefined;
     passedColumns(): QTableColumn[] | undefined;
+    colSlotsUsed(): QTableColumn[] | undefined;
     formattedColumns(): any[] | undefined;
     filter(): {
         columns: Record<string, string>;
         searchVal: string | number | null;
     };
-    colSlots(): [string, string][];
     classParsed(): string[];
     tableClasses(): (string | boolean | undefined)[];
     filteredSlots(): {
@@ -72,8 +73,9 @@ declare const _sfc_main: import("vue").DefineComponent<{
         searchVal: string;
     }, args_2: readonly QTableColumn[], args_3: (col: QTableColumn, row: Record<string, any>) => any): readonly Record<string, any>[];
     updateSearchedCols(colName: string, searchedVal: string): void;
-    getColBodySlot(colName: string): string;
-    getColSearchedValue(colName: string): any;
+    colBodySlotUsed(col: QTableColumn): boolean;
+    getColBodySlot(col: QTableColumn): string;
+    getColSearchedValue(colName: string): string | undefined;
     setBatchOffset(batchOffset: number, emit?: boolean): void;
     setBatchSize(batchSize: number, emit?: boolean): void;
     setRecordsCount(recordsCount: number, emit?: boolean): void;
@@ -86,6 +88,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     startOfThePage(): void;
     firstPage(): any;
     scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined): any;
+    getBodyCellProps(props: QTableBodyCellProps): BsTableBodyCellProps;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:server-side-pagination" | "virtual-scroll")[], "update:rows" | "update:columns" | "update:server-side-pagination" | "virtual-scroll", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     dssTableName: StringConstructor;
     title: StringConstructor;

@@ -20,6 +20,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
 }, unknown, {
     inputDebouncing: boolean;
     value: string | number | null;
+    id: string;
 }, {}, {
     setLoading(loading: boolean): void;
     updateSearchedValue(val: string | number | null): void;
