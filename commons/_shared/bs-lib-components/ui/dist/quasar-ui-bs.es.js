@@ -2936,11 +2936,11 @@ const yo = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   CheckSlotComponentsMixin: ae,
   ProvideMixin: oe
 }, Symbol.toStringTag, { value: "Module" })), Po = {
-  version: "1.3.8",
+  version: "1.4.0",
   install(e) {
     It(e, { components: yo });
   }
-}, Bo = "1.3.8";
+}, Bo = "1.4.0";
 export {
   Bs as BsButton,
   So as BsCheckbox,

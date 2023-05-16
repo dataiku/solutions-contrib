@@ -11,7 +11,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         default: boolean;
     };
     rows: PropType<Record<string, any>[]>;
-    columns: PropType<QTableColumn[]>;
+    columns: PropType<QTableColumn<any, string, string | ((row: any) => any)>[]>;
     virtualScroll: {
         type: BooleanConstructor;
         default: boolean;
@@ -38,7 +38,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searchedValueFormatted: string;
     _serverSidePagination: ServerSidePagination;
     _rows: Record<string, any>[] | undefined;
-    _columns: QTableColumn[] | undefined;
+    _columns: QTableColumn<any, string, string | ((row: any) => any)>[] | undefined;
     lastBatchIndex: number;
     scrollDetails: {
         from: number;
@@ -71,7 +71,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searchTableFilter(args_0: readonly Record<string, any>[], args_1: {
         columns: Record<string, string>;
         searchVal: string;
-    }, args_2: readonly QTableColumn[], args_3: (col: QTableColumn, row: Record<string, any>) => any): readonly Record<string, any>[];
+    }, args_2: readonly QTableColumn<any, string, string | ((row: any) => any)>[], args_3: (col: QTableColumn<any, string, string | ((row: any) => any)>, row: Record<string, any>) => any): readonly Record<string, any>[];
     updateSearchedCols(colName: string, searchedVal: string): void;
     colBodySlotUsed(col: QTableColumn): boolean;
     getColBodySlot(col: QTableColumn): string;
@@ -98,7 +98,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         default: boolean;
     };
     rows: PropType<Record<string, any>[]>;
-    columns: PropType<QTableColumn[]>;
+    columns: PropType<QTableColumn<any, string, string | ((row: any) => any)>[]>;
     virtualScroll: {
         type: BooleanConstructor;
         default: boolean;

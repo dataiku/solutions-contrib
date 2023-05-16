@@ -1,3 +1,19 @@
+## Release 1.4.0
+
+- Bs Tables
+
+	 - type: feature
+	 - link : [https://app.shortcut.com/dataiku/story/105722](https://app.shortcut.com/dataiku/story/105722)
+
+
+- Fix compilation issues of the components library with typescript support
+
+	 - type: bug
+	 - link : [https://app.shortcut.com/dataiku/story/122869](https://app.shortcut.com/dataiku/story/122869)
+
+
+
+
 ## Release 1.3.8
 
 - Add tabs to the Layout
