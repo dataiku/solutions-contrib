@@ -4,7 +4,7 @@ const mode = process.env.NODE_ENV;
 
 let baseURLVite = import.meta.env.BASE_URL;
 
-baseURLVite = baseURLVite.replace("5173","5000");
+baseURLVite = baseURLVite.replace("5173", process.env.FLASK_RUN_PORT);
 
 
 const axios = axios_.create({
