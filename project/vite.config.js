@@ -82,7 +82,7 @@ let defaultConfig = defineConfig({
     },
     define: {
         'process.env': {
-            FLASK_RUN_PORT: JSON.stringify(getDotenvVar("FLASK_RUN_PORT") || 5000),
+            FLASK_RUN_PORT: JSON.stringify(+(getDotenvVar("FLASK_RUN_PORT") || 5000)),
         }
     }
 })
