@@ -76,16 +76,24 @@ export default class ServerApi {
     }
 
     public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
-        return this.doGet(`dataset/get/dataset_name=${datasetName}/chunksize=${chunksize}/chunk_index=${chunkIndex}`);
+        return this.doPost(`dataset/get`, {
+            dataset_name: datasetName,
+            chunksize: chunksize,
+            chunk_index: chunkIndex,
+        });
     }
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
-        return this.doGet(`dataset/get_schema/dataset_name=${datasetName}`);
+        return this.doPost(`dataset/get_schema`,{
+            dataset_name: datasetName,
+        });
     }
 
 
     public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
-        return this.doGet(`dataset/get_generic_data/dataset_name=${datasetName}`);
+        return this.doPost(`dataset/get_generic_data`,{
+            dataset_name: datasetName,
+        });
     }
 }
 
