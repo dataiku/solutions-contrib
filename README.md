@@ -140,8 +140,13 @@ You should create a virtual env for the project where you can install the requir
 
 - `python3 backend.py` : This will run the flask server, use a virtual environement to start your backend and install the python dependencies. (run this in another window of your terminal)
 
+You have to create a .env file in the root of the project with variables `FLASK_RUN_PORT` to set the default flask application port and `DKU_CURRENT_PROJECT_KEY` to set the default project webapp connects to
+
 Once you run these three commands the project will be served in the url : http://127.0.0.1:5000/fetch/bs_init
+
 *Port is set through the `FLASK_RUN_PORT` .env variable *
+
+
 
 ### <span style="background-color:white;color:black">Build and deploy webapps to Dataiku</span>
 
