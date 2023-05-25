@@ -92,8 +92,7 @@ export default defineComponent({
                 this.$emit("update:rows", rows);
             }).catch(err => {
                 //TODO better handle errors
-                console.log(err);
-                reject(err);
+                console.error(err);
             })
         },
         parseDSSColumn(columnName: string) {
