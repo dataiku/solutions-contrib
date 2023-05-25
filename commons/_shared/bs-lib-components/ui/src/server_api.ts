@@ -3,8 +3,14 @@ import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backe
 
 const mode = process.env.NODE_ENV;
 const isProd = mode === "production";
+let localBackendPort = "5000"
 
-const localBackendPort = process.env.FLASK_RUN_PORT;
+try {
+    localBackendPort = process.env.FLASK_RUN_PORT as string;
+} catch (error) {
+    console.error(error);
+}
+
 const baseURLVite = `http://127.0.0.1:${localBackendPort}`;
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
     return new Promise((resolve, reject) => {
