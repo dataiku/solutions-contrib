@@ -61,7 +61,10 @@ export default defineComponent({
                     const data = this.transformDSSDataToQTableRow(val);
                     this.setFetchingChunk(false);
                     resolve(data);
-                }).catch(reject);
+                }).catch(err => {
+                    this.setFetchingChunk(false);
+                    reject(err);
+                });
             })
         },
         fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>): Promise<{columns: BsTableCol[], columnsCount: number}> {
@@ -72,7 +75,10 @@ export default defineComponent({
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
                     this.setFetchingSchema(false);
                     resolve({ columns, columnsCount });
-                }).catch(reject);
+                }).catch(err => {
+                    this.setFetchingSchema(false);
+                    reject(err);
+                });
             })
         },
         updateColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>) {
@@ -84,6 +90,10 @@ export default defineComponent({
         updateRows(...args: Parameters<typeof ServerApi.getDatasetChunk>) {
             this.fetchDSSData(...args).then(rows => {
                 this.$emit("update:rows", rows);
+            }).catch(err => {
+                //TODO better handle errors
+                console.log(err);
+                reject(err);
             })
         },
         parseDSSColumn(columnName: string) {

@@ -5,6 +5,7 @@
             :rows="rows"
             :columns="columns"
             row-key="name"
+            @update:loading="loading"
         />
     </div>
 </template>
@@ -138,5 +139,10 @@
                 columns: columns
             }
         },
+        methods: {
+            loading(val){
+                console.log("<BSTable> component emit $event : `update:loading` ");
+            }
+        }
     }
 </script>

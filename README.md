@@ -52,7 +52,7 @@ Start by creating the directory ~/.dataiku if you don't have one
 
    `cd && cd .dataiku && touch config.json`
 
-   Put the following configuration in your config.json replace the api_key value with a generated personal API key in Dataiku and put the url instance your projects are running on (exple : https://industry-solutions-design.industries.dataiku-dss.io/)
+   Put the following configuration in your config.json replace the api_key value with a generated personal API key in Dataiku (Procedure: https://doc.dataiku.com/dss/latest/publicapi/keys.html and use the secret as the value) and put the url instance your projects are running on (exple : https://industry-solutions-design.industries.dataiku-dss.io/)
 
    
    ```
@@ -68,7 +68,7 @@ Start by creating the directory ~/.dataiku if you don't have one
 
 	    "no_check_certificate": true
 
-        },
+        }
 
     },
 
@@ -90,16 +90,18 @@ Each webapp project will have two main directories **commons** & **project**.
     > commons
     > project
 
-Commons is a shared library that contains code for the development & production env to work, python usefull functions (dku_utils) and pre-packaged Vue / Quasar components to use in the webapps. 
+Commons is a shared library that contains code for the development & production env to work, python useful functions (dku_utils) and pre-packaged Vue / Quasar components to use in the webapps. 
 
-The commons library is versionned using git tags, each project will depend on a certain version of the commons library that can be updated or downgraded. 
+The commons library is versioned using git tags, each project will depend on a certain version of the commons library that can be updated or downgraded. 
 
 [bs_project_manager.py](commons/scripts/bs_projects_manager.py) script is provided to help update the commons library of a project, create a new webapp project from the default template or pull an existing project with its corresponding commons library.
 
 
 1. **Usage of *bs_projects_manager.py* script**
 
-Put the script at the root directory where you will clone your webapp porjects and use the [requirements.txt](commons/scripts/requirements.txt) file to install the dependencies needed to run the script. 
+Put the script at the root directory where you will clone your webapp projects and use the [requirements.txt](commons/scripts/requirements.txt) file to install the dependencies needed to run the script :
+
+` pip3 install -r requirements.txt`
 
 It is advised to use a python virtual environment to run the script, you can either setup up one locally on your projects folder or use conda or pyenv virtualenv to manage your venvs and python versions. 
 
@@ -131,14 +133,14 @@ The t argument is optional, when it is not provided the latest version of common
 
 2. **Starting the webapp locally**
 
-Once you created a new project or joined an existing project, you can start it locally by running in the project folder:
+Once you created a new project or joined an existing project, you can start it locally by running **in the project folder**:
 
 - `pnpm install` : This will install you the JS packages needed for the project (Vue, Quasar, axios ...).
 - `pnpm run dev` : This will run the node server 
 
-You should create a virtual env for the project where you can install the requirements.txt of the project , then you can start the backend of your project
+You should create a virtual env for the project where you can install the requirements.txt of the project inside project folder. After installing python dependencies using requirements.txt you can start the backend of your project from the project folder
 
-- `python3 backend.py` : This will run the flask server, use a virtual environement to start your backend and install the python dependencies. (run this in another window of your terminal)
+- `python3 backend.py` : This will run the flask server, use a virtual environment to start your backend and install the python dependencies. (run this in another window of your terminal)
 
 Once you run these three commands the project will be served in the url : http://127.0.0.1:5000/fetch/bs_init
 *Port is set through the `FLASK_RUN_PORT` .env variable *
