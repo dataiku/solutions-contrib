@@ -59,11 +59,9 @@ export default defineComponent({
                 this.setFetchingChunk(true);
                 ServerApi.getDatasetChunk(...args).then((val) => {
                     const data = this.transformDSSDataToQTableRow(val);
-                    this.setFetchingChunk(false);
                     resolve(data);
-                }).catch(err => {
+                }).catch(reject).finally(() => {
                     this.setFetchingChunk(false);
-                    reject(err);
                 });
             })
         },
@@ -73,11 +71,9 @@ export default defineComponent({
                 ServerApi.getDatasetGenericData(...args).then(({ schema, columnsCount }) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
-                    this.setFetchingSchema(false);
                     resolve({ columns, columnsCount });
-                }).catch(err => {
+                }).catch(reject).finally(() => {
                     this.setFetchingSchema(false);
-                    reject(err);
                 });
             })
         },
@@ -90,9 +86,6 @@ export default defineComponent({
         updateRows(...args: Parameters<typeof ServerApi.getDatasetChunk>) {
             this.fetchDSSData(...args).then(rows => {
                 this.$emit("update:rows", rows);
-            }).catch(err => {
-                //TODO better handle errors
-                console.error(err);
             })
         },
         parseDSSColumn(columnName: string) {
