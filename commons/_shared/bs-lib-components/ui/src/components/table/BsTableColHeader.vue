@@ -134,6 +134,7 @@ export default defineComponent({
 .bs-table-col-header-container {
     display: flex;
     align-items: center;
+    height: 36px;
 
     .bs-table-col-header-title-container {
         display: flex;
@@ -141,11 +142,20 @@ export default defineComponent({
         cursor: var(--bs-table-header-cursor-type);
         user-select: text;
         padding-right: 1rem;
-
+        justify-content: space-between;
+        align-items: flex-start;
+        height: 100%;
+        .bs-table-col-header-title{
+            font-weight: 600;
+            line-height: 15px;
+        }
         .bs-table-col-header-data-type {
-            color: var(--q-positive);
+            color: var(--q-dark);
             font-size: .65rem;
             margin-top: -5px;
+            font-family: Monaco;
+            font-weight: 400;
+            line-height: 15px;
         }
     }
 }

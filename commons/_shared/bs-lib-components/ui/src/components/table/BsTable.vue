@@ -27,31 +27,30 @@
         @virtual-scroll="onVirtualScroll"
     >
         <template #top>
-            <div class="bs-table-top-container">
-                <div class="bs-table-name">
-                    <slot v-if="$slots.title" name="title"></slot>
-                    <span v-else>
-                        {{ title || dssTableName || "" }}
-                    </span>
-                </div>
-                <div class="bs-table-search-container">
-                    <BsSearchWholeTable
-                        v-if="globalSearch"
-                        v-model="searchedValue"
-                        @update:formatted-value="searchedValueFormatted = $event"
-                        @update:loading="searching = $event"
-                    ></BsSearchWholeTable>
-                    <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
-                        <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
-                    </div>
+            <div class="bs-table-top-container bs-table-name bordered">
+                <slot v-if="$slots.title" name="title"></slot>
+                <span v-else>
+                    {{ title || dssTableName || "" }}
+                </span>
+            </div>
+            <div class="bs-table-search-container bordered">
+                <BsSearchWholeTable
+                    v-if="globalSearch"
+                    v-model="searchedValue"
+                    @update:formatted-value="searchedValueFormatted = $event"
+                    @update:loading="searching = $event"
+                ></BsSearchWholeTable>
+                <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
+                    <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
                 </div>
             </div>
             <BsTableServerSidePagination
-                v-if="_serverSidePagination && serverSidePaginationControls"
+                v-if="_serverSidePagination && serverSidePaginationControls && columns"
                 :server-side-pagination="_serverSidePagination"
                 @update:batch-offset="setBatchOffset($event, true)"
+                class="bordered"
             ></BsTableServerSidePagination>
-            <div v-if="$slots.top" class="bs-table-top-slot-container">
+            <div class="bs-table-top-slot-container bordered">
                 <slot name="top"></slot>
             </div>
         </template>
@@ -76,6 +75,7 @@
         </template>
         <template #header="props">
             <BSTableHeader
+                v-if="columns"
                 :props="props"
                 :searched-cols="searchedCols"
                 @search-col="updateSearchedCols"
@@ -375,13 +375,27 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
+@mixin borders-style(){
+    border: solid #BBBBBB;
+    border-width: 1px 1px 0px 1px;
+}
+$border-color: #BBBBBB;
 .bs-table-sticky {
     :deep(.q-table__top),
     :deep(.q-table__bottom),
     :deep(thead) tr:first-child th {
         background-color: #fff;
     }
-
+    :deep(.q-table__bottom){
+        @include borders-style();
+    }
+    :deep(.q-table){
+        @include borders-style();
+        tbody td{
+            height: 36px;
+        }
+    }
     :deep(thead) {
         tr th {
             position: sticky;
@@ -399,18 +413,20 @@ export default defineComponent({
 
 .bs-table {
     max-height: 100%;
-
     :deep(.q-table__top) {
         overflow: hidden;
+        padding: 0px;
     }
 }
 
 .bs-table-top-slot-container {
     width: 100%;
+    border-top-width: 0px !important;
 }
 
 .bs-table-name {
-    font-size: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
     text-overflow: ellipsis;
     overflow: hidden;
 }
@@ -418,13 +434,21 @@ export default defineComponent({
 .bs-table-top-container {
     min-width: 0;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    justify-content: space-between;
+    height: 41px;
 }
 
+.bordered {
+    @include borders-style();
+}
 .bs-table-search-container {
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 50px;
     .bs-table-clear-all-btn {
         overflow: visible;
         max-width: 0;

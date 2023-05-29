@@ -43,27 +43,12 @@ export default defineComponent({
         flex: 0 0 none;
         display: flex;
         gap: .2rem;
-        transition: box-shadow 0.3s;
 
         box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 0px 0px;
 
         > * {
             cursor: pointer;
             transition: rotate 0.3s, opacity 0.5s, scale 0.3s, color 0.3s;
-            opacity: 0;
-            scale: 0;
-
-            &:hover {
-                opacity: .8;
-                scale: 1.1;
-            }
-        }
-    }
-    &:hover .bs-table-col-header-actions {
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        > * {
-            opacity: 0.5;
-            scale: 1;
         }
     }
     

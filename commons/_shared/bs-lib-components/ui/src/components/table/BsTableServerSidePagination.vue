@@ -1,8 +1,5 @@
 <template>
 <div class="bs-table-server-side-pagination" v-if="lastBatchIndex !== 0">
-    <div class="bs-table-server-side-pagination-label">
-        sampled records:
-    </div>
     <div class="bs-table-server-side-pagination-controls">
         <q-btn
         icon="chevron_left"
@@ -23,6 +20,9 @@
             :disable="isLastBatch"
             @click="nextBatch"
         />
+    </div>
+    <div class="bs-table-server-side-pagination-label">
+        rows
     </div>
 </div>
 </template>
@@ -113,9 +113,11 @@ export default defineComponent({
     align-items: center;
     justify-content: flex-start;
     gap: 10px;
-
+    width: 100%;
+    padding: 0px 12px;
+    font-size: 10px;
     .bs-table-server-side-pagination-label {
-        color: #999
+        color: #666666;
     }
 
     .bs-table-server-side-pagination-offset {
