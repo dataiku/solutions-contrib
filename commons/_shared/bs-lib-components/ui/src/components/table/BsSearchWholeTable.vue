@@ -3,7 +3,6 @@
     <BsInputDebounce
             width="190"
             label="Search items"
-            clearable
             dense
             filled
             format-input
@@ -51,7 +50,6 @@ export default defineComponent({
     border: 1px solid #CCCCCC;
     border-radius: 2px;
     padding: 0px 8px;
-    margin-right: 20px;
     height: 26px;
 
     :deep(.q-field--filled){
@@ -76,6 +74,9 @@ export default defineComponent({
     }
     :deep(.q-field__append){
         max-height: 100%;
+    }
+    :deep(.q-field__marginal){
+        font-size: 0.8rem;
     }
 }
 .bs-search-table-container > * {

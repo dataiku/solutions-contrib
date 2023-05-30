@@ -13,10 +13,8 @@
         ref="qTable"
         :rows="passedRows"
         :columns="formattedColumns"
-
         :filter="filter"
         :filter-method="searchTableFilter"
-
         :loading="isLoading"
         
         v-bind="$attrs"
@@ -77,9 +75,17 @@
             <BSTableHeader
                 v-if="columns"
                 :props="props"
-                :searched-cols="searchedCols"
-                @search-col="updateSearchedCols"
+                @search-col="searchCol"
             ></BSTableHeader>
+            <BSTableSearchHeader
+                class="bordered"
+                v-if="columns"
+                :props="props"
+                :searched-cols="searchedCols"
+                :searched-col="searchedCol"
+                @search-col="updateSearchedCols"
+                @clear-all="clearAllSearch"
+            ></BSTableSearchHeader>
         </template>
         <template #bottom="scope">
             <BsTableBottom
@@ -117,6 +123,7 @@ import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 import { ToBeDefined } from '../../utils/types';
+import BSTableSearchHeader from './BSTableSearchHeader.vue';
 
 
 export default defineComponent({
@@ -131,7 +138,8 @@ export default defineComponent({
     BSTableHeader,
     BsTextHighlight,
     BsTableBottom,
-    BsTableServerSidePagination
+    BsTableServerSidePagination,
+    BSTableSearchHeader
 },
     emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
     inheritAttrs: false,
@@ -169,6 +177,7 @@ export default defineComponent({
             searching: false,
             fetching: false,
             searchedCols: {} as Record<string, string>,
+            searchedCol: null as string | null,
             searchedValue: null as string | null,
             searchedValueFormatted: "",
             _serverSidePagination: undefined as unknown as ToBeDefined<ServerSidePagination>,
@@ -279,15 +288,10 @@ export default defineComponent({
             return searchTableFilter(...args);
         },
         updateSearchedCols(colName: string, searchedVal: string) {
-            if (searchedVal) {
-                this.searchedCols[colName] = searchedVal;
-            }
-            if (this.searchedCols.hasOwnProperty(colName)) {
-                if (!searchedVal) {
-                    delete this.searchedCols[colName];
-                }
-                this.searchedCols = {...this.searchedCols};
-            }
+            this.searchedCols[colName] = searchedVal;
+        },
+        searchCol(colName: string){
+            this.searchedCol = colName;
         },
         colBodySlotUsed(col: QTableColumn): boolean {
             return this.$slots.hasOwnProperty(this.getColBodySlot(col));
@@ -331,6 +335,7 @@ export default defineComponent({
         },
         clearAllSearch() {
             this.searchedValue = null;
+            this.searchedCol = null;
             this.searchedCols = {};
         },
         onVirtualScroll(details: any) {
@@ -451,14 +456,13 @@ $border-color: #BBBBBB;
     height: 50px;
     .bs-table-clear-all-btn {
         overflow: visible;
-        max-width: 0;
+        max-width: 30px;
         opacity: 0;
         pointer-events: none;
-
+        margin-right: 15px;
         transition: opacity .5s, max-width .5s;
 
         &.bs-table-clear-all-btn--active {
-            max-width: 30px;
             pointer-events: all;
             opacity: 1;
         }

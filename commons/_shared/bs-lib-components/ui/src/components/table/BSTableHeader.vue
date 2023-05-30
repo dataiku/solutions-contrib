@@ -8,10 +8,10 @@
                 <BsTableColHeader
                     :sort="props.sort"
                     :col="col"
-                    :searched-cols="searchedCols"
-                    @search-col="(...args) => $emit('search-col', ...args)"
+                    @search-col="activateSearchCol"
                 ></BsTableColHeader>
         </q-th>
+        <q-th auto-width />
     </q-tr>
 </template>
 
@@ -24,16 +24,22 @@ import { QTableHeaderProps } from "./tableTypes";
 export default defineComponent({
     name: "BSTableHeader",
     components: {
-        QTr, QTh, BsTableColHeader
-    },
+    QTr,
+    QTh,
+    BsTableColHeader,
+},
     props: {
         props: {
             type: Object as PropType<QTableHeaderProps>,
             required: true,
         },
-        searchedCols: Object
     },
     emits: ["search-col"],
+    methods: {
+        activateSearchCol(colName: string){
+            this.$emit('search-col', colName);
+        },
+    }
 });
 </script>
 
@@ -50,15 +56,6 @@ export default defineComponent({
             cursor: pointer;
             transition: rotate 0.3s, opacity 0.5s, scale 0.3s, color 0.3s;
         }
-    }
-    
-    &.sorted .sort-icon, .bs-table-col-header-action-interacting, .bs-table-col-header-action-active {
-        opacity: 1 !important;
-        scale: 1 !important;
-    }
-
-    &.sorted .sort-icon, .bs-table-col-header-action-active {
-        color: var(--q-primary);
     }
     
     &.sort-desc .sort-icon {
