@@ -86,8 +86,8 @@ class DataikuApi:
         }
 
     @using_dataset
-    def get_dataset_chunk(self, dataset: DSSDataset, project: DSSProject, chunk_index: int, chunksize=10000):
-        dataset_iterator = DatasetIterator(dataset=dataset, chunksize=chunksize);
+    def get_dataset_chunk(self, dataset: DSSDataset, project: DSSProject, chunk_index: int, chunksize=10000, filter=None):
+        dataset_iterator = DatasetIterator(dataset=dataset, chunksize=chunksize, filter=filter); 
         return dataset_iterator.get_chunk(index=chunk_index);
 
     @using_dataset

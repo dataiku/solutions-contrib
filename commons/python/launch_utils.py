@@ -1,7 +1,6 @@
 from flask import Flask
-import sys
 import os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from commons.python.fetch.fetch_project import fetch_route
 from commons.python.business_solutions_api import business_solutions_api
 # from commons.python.caching import cache

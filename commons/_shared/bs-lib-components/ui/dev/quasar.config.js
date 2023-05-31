@@ -6,9 +6,10 @@ const webpack = require("webpack");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
-function getDotenvVar(varName) {
+function getDotenvVar(varName, relativeDotenvPath) {
+    if (!relativeDotenvPath) relativeDotenvPath = "../../../../..";
     try {
-        const valPath = path.resolve(__dirname, "../../../../..", ".env");
+        const valPath = path.resolve(__dirname, relativeDotenvPath, ".env");
         const valUnparsed = fs.readFileSync(valPath);
         const valParsed = dotenv.parse(valUnparsed);
         if (valParsed.hasOwnProperty(varName)) {

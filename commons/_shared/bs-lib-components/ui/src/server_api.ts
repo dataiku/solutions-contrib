@@ -3,8 +3,14 @@ import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backe
 
 const mode = process.env.NODE_ENV;
 const isProd = mode === "production";
+let localBackendPort = "5000"
 
-const localBackendPort = process.env.FLASK_RUN_PORT;
+try {
+    localBackendPort = process.env.FLASK_RUN_PORT as string;
+} catch (error) {
+    console.error(error);
+}
+
 const baseURLVite = `http://127.0.0.1:${localBackendPort}`;
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
     return new Promise((resolve, reject) => {
@@ -76,16 +82,24 @@ export default class ServerApi {
     }
 
     public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
-        return this.doGet(`dataset/get/dataset_name=${datasetName}/chunksize=${chunksize}/chunk_index=${chunkIndex}`);
+        return this.doPost(`dataset/get`, {
+            dataset_name: datasetName,
+            chunksize: chunksize,
+            chunk_index: chunkIndex,
+        });
     }
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
-        return this.doGet(`dataset/get_schema/dataset_name=${datasetName}`);
+        return this.doPost(`dataset/get_schema`,{
+            dataset_name: datasetName,
+        });
     }
 
 
     public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
-        return this.doGet(`dataset/get_generic_data/dataset_name=${datasetName}`);
+        return this.doPost(`dataset/get_generic_data`,{
+            dataset_name: datasetName,
+        });
     }
 }
 
