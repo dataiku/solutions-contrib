@@ -89,7 +89,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     firstPage(): any;
     scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined): any;
     getBodyCellProps(props: QTableBodyCellProps): BsTableBodyCellProps;
-}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:server-side-pagination" | "virtual-scroll")[], "update:rows" | "update:columns" | "update:server-side-pagination" | "virtual-scroll", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:loading" | "update:server-side-pagination" | "virtual-scroll")[], "update:rows" | "update:columns" | "update:server-side-pagination" | "virtual-scroll", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     dssTableName: StringConstructor;
     title: StringConstructor;
     serverSidePagination: PropType<boolean | Partial<ServerSidePagination>>;
@@ -122,6 +122,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     "onUpdate:columns"?: ((...args: any[]) => any) | undefined;
     "onUpdate:server-side-pagination"?: ((...args: any[]) => any) | undefined;
     "onVirtual-scroll"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:loading"?: ((...args: any[]) => any) | undefined;
 }, {
     loading: boolean;
     virtualScroll: boolean;

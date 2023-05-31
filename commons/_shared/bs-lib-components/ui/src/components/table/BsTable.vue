@@ -133,7 +133,7 @@ export default defineComponent({
     BsTableBottom,
     BsTableServerSidePagination
 },
-    emits: ["update:rows", "update:columns", "update:server-side-pagination", "virtual-scroll"],
+    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -250,6 +250,9 @@ export default defineComponent({
         "passedRows.length"(newVal: number) {
             this.passedRowsLength = newVal;
         },
+        isLoading(newVal: boolean){
+            this.$emit("update:loading", newVal);
+        }
     },
     methods: {
         updateDSSRows(rows: Record<string, any>[] | undefined) {
