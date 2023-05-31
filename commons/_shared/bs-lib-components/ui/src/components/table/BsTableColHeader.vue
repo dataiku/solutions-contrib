@@ -1,42 +1,59 @@
 <template>
-    <div 
+    <div
         class="bs-table-col-header-container"
-        :style="{'--bs-table-header-cursor-type': sortable ? 'pointer' : 'default'}"
-        >
+        :style="{
+            '--bs-table-header-cursor-type': sortable ? 'pointer' : 'default',
+        }"
+    >
         <div class="bs-table-col-header-title-container">
             <div class="bs-table-col-header-title">
                 <div class="bs-table-col-header-title-label">
                     {{ col?.label || col?.name || "" }}
                 </div>
                 <div class="bs-table-col-header-title-icon">
-                    <q-icon
-                        :name="mdiChevronDown"
-                        size="1rem"
-                    >
-                        <q-menu auto-close
+                    <q-icon :name="mdiChevronDown" size="1rem">
+                        <q-menu
+                            auto-close
                             anchor="bottom middle"
                             self="top middle"
-                            
                             transition-show="scale"
                             transition-hide="scale"
-
                             :offset="[0, 10]"
                         >
-                            <q-list  
+                            <q-list
                                 ref="BsTableColHeaderActions"
-                                class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders">
+                                class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
+                            >
                                 <q-item v-if="sortable">
                                     <q-item-section>
-                                        <div class="bs-table-col-header-action-section cursor-pointer" @click="sortColumn">
-                                            <q-icon :name="sortColIcon" size="0.8rem" class="sort-icon">
+                                        <div
+                                            class="bs-table-col-header-action-section cursor-pointer"
+                                            @click="sortColumn"
+                                        >
+                                            <q-icon
+                                                :name="sortColIcon"
+                                                size="0.8rem"
+                                                class="sort-icon"
+                                                :class="{ 'sorted': sorted }"
+                                            >
                                             </q-icon>
-                                            <div>Sort {{ sortDesc ? 'descending' : 'ascending'}}</div>
+                                            <div>
+                                                Sort
+                                                {{
+                                                    sortDesc
+                                                        ? "descending"
+                                                        : "ascending"
+                                                }}
+                                            </div>
                                         </div>
                                     </q-item-section>
                                 </q-item>
                                 <q-item>
                                     <q-item-section>
-                                        <div class="bs-table-col-header-action-section cursor-pointer" @click="searchColumn">
+                                        <div
+                                            class="bs-table-col-header-action-section cursor-pointer"
+                                            @click="searchColumn"
+                                        >
                                             <q-icon
                                                 :name="searchColIcon"
                                                 size="0.8rem"
@@ -48,10 +65,13 @@
                                 </q-item>
                             </q-list>
                         </q-menu>
-                    </q-icon> 
+                    </q-icon>
                 </div>
             </div>
-            <div v-if="(col as any)?.dataType" class="bs-table-col-header-data-type">
+            <div
+                v-if="(col as any)?.dataType"
+                class="bs-table-col-header-data-type"
+            >
                 {{ (col as any)?.dataType }}
             </div>
         </div>
@@ -59,24 +79,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from "vue";
 
-
-import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from 'quasar';
+import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from "quasar";
 import {
-        mdiArrowUpThin,
-        mdiMagnify,
-        mdiChevronDown,
-        mdiSortAscending,
-        mdiSortDescending
-    } from '@quasar/extras/mdi-v6';
+    mdiArrowUpThin,
+    mdiMagnify,
+    mdiChevronDown,
+    mdiSortAscending,
+    mdiSortDescending,
+} from "@quasar/extras/mdi-v6";
 
 export default defineComponent({
     name: "BSTableColHeader",
     components: {
-        QIcon, QTh, QMenu, QItem, QItemSection, QList
-    ,
-},
+        QIcon,
+        QTh,
+        QMenu,
+        QItem,
+        QItemSection,
+        QList,
+    },
     emits: ["search-col"],
     data() {
         return {
@@ -86,6 +109,7 @@ export default defineComponent({
             searchColIcon: mdiMagnify,
             noDebounceValue: "" as string | null | number | undefined,
             sortDesc: true,
+            sorted: false,
         };
     },
     computed: {
@@ -95,13 +119,16 @@ export default defineComponent({
     },
     props: {
         sort: Function as PropType<(col: any) => void>,
-        col: Object as PropType<{label: string, name: string}>,
+        col: Object as PropType<{ label: string; name: string }>,
     },
     methods: {
         sortColumn() {
             if (this.sortable && this.sort) this.sort(this.col);
             this.sortDesc = !this.sortDesc;
-            this.sortColIcon = this.sortDesc ? mdiSortAscending : mdiSortDescending;
+            this.sortColIcon = this.sortDesc
+                ? mdiSortAscending
+                : mdiSortDescending;
+            this.sorted = true;
         },
         searchColumn() {
             this.$emit("search-col", this.col?.name);
@@ -111,12 +138,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
 .bs-table-col-header-container {
-    display: flex;
-    align-items: center;
     height: 36px;
-
+    display: inline-block;
     .bs-table-col-header-title-container {
         display: flex;
         flex-direction: column;
@@ -125,16 +149,16 @@ export default defineComponent({
         justify-content: space-between;
         align-items: flex-start;
         height: 100%;
-        .bs-table-col-header-title{
+        .bs-table-col-header-title {
             font-weight: 600;
             line-height: 15px;
             display: flex;
             flex-direction: row;
-            gap:10px
+            gap: 10px;
         }
         .bs-table-col-header-data-type {
             color: var(--q-dark);
-            font-size: .65rem;
+            font-size: 0.65rem;
             margin-top: -5px;
             font-family: Monaco;
             font-weight: 400;
@@ -149,17 +173,18 @@ export default defineComponent({
     flex-direction: column;
     gap: 4px;
 
-    :deep(.q-item){
+    :deep(.q-item) {
         min-height: auto;
         padding: 0px;
     }
-    .bs-table-col-header-action-section{
+    .bs-table-col-header-action-section {
         display: flex;
         flex-direction: row;
         gap: 4px;
         font-size: 10px;
     }
-
+    .sorted {
+        color: var(--q-primary);
+    }
 }
-
 </style>

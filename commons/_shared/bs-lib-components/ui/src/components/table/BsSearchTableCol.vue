@@ -4,6 +4,8 @@
                 class="bs-search-table-col-input"
                 width="102"
                 label="Search"
+                clearable
+                clear-icon="close"
                 borderless
                 dense
                 format-input
@@ -46,12 +48,12 @@ export default defineComponent({
             mdiTrashCanOutline,
         }
     },
+    emits: ['clear-search'],
     watch: {
         clear() {
-            this.clearField();
+            this.value = null;
         },
         searchedCols(newVal: Record<string, string>){
-            console.log('searched cols', newVal);
             if (this.colName && newVal.hasOwnProperty(this.colName)) {
                 this.value = newVal[this.colName]!;
             } else {
@@ -61,7 +63,7 @@ export default defineComponent({
     },
     methods: {
         clearField(){
-            this.value = null;
+            this.$emit('clear-search', this.colName);
         }
     }
 });
@@ -100,6 +102,9 @@ export default defineComponent({
     :deep(.q-field__marginal){
         height: 100%;
         max-height: 100%;
+    }
+    :deep(.q-field__append .q-icon){
+        top: 1px;
     }
 }
 

@@ -3,18 +3,23 @@
         :props="props" 
         v-if="!noSearches">
         <q-th 
-            v-for="col in props.cols" 
-            :key="col.name">
-            <BsSearchTableCol
-                v-if="searchedCols?.hasOwnProperty(col.name)"
-                :icon="searchColIcon"
-                :searchedCols="searchedCols"
-                :col-name="col.name"
-                @update:formatted-value="searchColumn(col.name, $event)"
-                @update:no-debounce:formatted-value="noDebounceValue = $event"
-            ></BsSearchTableCol>
+            v-for="col in cols" 
+            :key="col.name"
+            :style="{'text-align': col.align ? col.align : 'left'}">
+            <div class="bs-table-search-header">
+                <BsSearchTableCol
+                    v-if="searchedCols?.hasOwnProperty(col.name)"
+                    :icon="searchColIcon"
+                    :searchedCols="searchedCols"
+                    :col-name="col.name"
+                    @update:formatted-value="searchColumn(col.name, $event)"
+                    @update:no-debounce:formatted-value="noDebounceValue = $event"
+                    @clear-search="searchColumn(col.name, null)"
+                ></BsSearchTableCol>
+            </div>
         </q-th>
-        <q-th v-if="!noSearches">
+        <q-th v-if="!noSearches"
+            :key="'clearAllCol'">
             <span @click="clearAll" 
             class="bs-table-header-clear-all-btn">
                 Clear all
@@ -44,9 +49,9 @@ export default defineComponent({
             required: true,
         },
         searchedCols: Object as PropType<Record<string, string>>,
-        searchedCol: String || undefined,
+        searchedCol: String,
     },
-    emits: ["search-col", 'clear-all'],
+    emits: ['search-col', 'clear-all'],
     data() {
         return {
             noDebounceValue: "" as string | null | number | undefined,
@@ -64,7 +69,7 @@ export default defineComponent({
                 this.$emit("search-col", colName, '');
             }
         },
-        searchColumn(colName: string, searchVal: string) {
+        searchColumn(colName: string, searchVal: string | null) {
             this.$emit("search-col", colName, searchVal);
         },
         clearAll(){
@@ -74,12 +79,18 @@ export default defineComponent({
     computed: {
         noSearches(): boolean{
             return isEmpty(this.searchedCols);
-        }
+        },
+        cols(): any[]{
+            return this.props.cols.filter((col:any) => col.name !=='clearAllCol');
+        },
     }
 });
 </script>
 
 <style scoped lang="scss">
+.bs-table-search-header {
+    display: inline-block;
+}
 .bs-table-header-clear-all-btn {
     font-size: 12px;
     text-decoration-line: underline;

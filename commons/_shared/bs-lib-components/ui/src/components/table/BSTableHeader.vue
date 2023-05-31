@@ -1,7 +1,7 @@
 <template>
     <q-tr :props="props">
         <q-th
-            v-for="col in props.cols"
+            v-for="col in cols"
             :key="col.name"
             :props="props"
             >
@@ -11,7 +11,7 @@
                     @search-col="activateSearchCol"
                 ></BsTableColHeader>
         </q-th>
-        <q-th auto-width />
+        <q-th auto-width :key="'clearAllCol'"/>
     </q-tr>
 </template>
 
@@ -39,6 +39,11 @@ export default defineComponent({
         activateSearchCol(colName: string){
             this.$emit('search-col', colName);
         },
+    },
+    computed: {
+        cols(): any[]{
+            return this.props.cols.filter((col:any) => col.name !=='clearAllCol');
+        }
     }
 });
 </script>

@@ -1,107 +1,114 @@
 <template>
-    <BsDSSTableFunctional
-        v-if="isDSSTable"
-        :dss-table-name="dssTableName"
-        :server-side-pagination="_serverSidePagination"
+    <div>
+        <BsDSSTableFunctional
+            v-if="isDSSTable"
+            :dss-table-name="dssTableName"
+            :server-side-pagination="_serverSidePagination"
 
-        @update:fetching="fetching = $event"
-        @update:rows="updateDSSRows"
-        @update:columns="updateDSSColumns"
-        @update:columns-count="setRecordsCount($event, true)"
-    ></BsDSSTableFunctional>
-    <QTable
-        ref="qTable"
-        :rows="passedRows"
-        :columns="formattedColumns"
-        :filter="filter"
-        :filter-method="searchTableFilter"
-        :loading="isLoading"
-        
-        v-bind="$attrs"
-
-        :virtual-scroll="virtualScroll"
-        :rows-per-page-options="virtualScroll ? [0] : undefined"
-        :class="[...classParsed, ...tableClasses]"
-        @virtual-scroll="onVirtualScroll"
-    >
-        <template #top>
-            <div class="bs-table-top-container bs-table-name bordered">
-                <slot v-if="$slots.title" name="title"></slot>
-                <span v-else>
-                    {{ title || dssTableName || "" }}
-                </span>
-            </div>
-            <div class="bs-table-search-container bordered">
-                <BsSearchWholeTable
-                    v-if="globalSearch"
-                    v-model="searchedValue"
-                    @update:formatted-value="searchedValueFormatted = $event"
-                    @update:loading="searching = $event"
-                ></BsSearchWholeTable>
-                <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
-                    <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
-                </div>
-            </div>
-            <BsTableServerSidePagination
-                v-if="_serverSidePagination && serverSidePaginationControls && columns"
-                :server-side-pagination="_serverSidePagination"
-                @update:batch-offset="setBatchOffset($event, true)"
-                class="bordered"
-            ></BsTableServerSidePagination>
-            <div class="bs-table-top-slot-container bordered">
-                <slot name="top"></slot>
-            </div>
-        </template>
-        <template #body-cell="props">
-            <slot
-                v-if="$slots.hasOwnProperty('body-cell')"
-                name="body-cell"
-                v-bind="getBodyCellProps(props)"
-            ></slot>
-            <q-td v-else :props="props">
-                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(props.col.name)]" :text="props.value"></BsTextHighlight>
-            </q-td>
-        </template>
-        <template 
-            v-for="col in colSlotsUsed"
-            #[getColBodySlot(col)]="props"
+            @update:fetching="fetching = $event"
+            @update:rows="updateDSSRows"
+            @update:columns="updateDSSColumns"
+            @update:columns-count="setRecordsCount($event, true)"
+        ></BsDSSTableFunctional>
+        <QTable
+            ref="qTable"
+            :rows="passedRows"
+            :columns="formattedColumns"
+            :filter="filter"
+            :filter-method="searchTableFilter"
+            :loading="isLoading"
+            v-bind="$attrs"
+            header-align="left"
+            :virtual-scroll="virtualScroll"
+            :rows-per-page-options="virtualScroll ? [0] : undefined"
+            :class="[...classParsed, ...tableClasses]"
+            @virtual-scroll="onVirtualScroll"
         >
-            <slot
-                :name="getColBodySlot(col)"
-                v-bind="getBodyCellProps(props)"
-            ></slot>
-        </template>
-        <template #header="props">
-            <BSTableHeader
-                v-if="columns"
-                :props="props"
-                @search-col="searchCol"
-            ></BSTableHeader>
-            <BSTableSearchHeader
-                class="bordered"
-                v-if="columns"
-                :props="props"
-                :searched-cols="searchedCols"
-                :searched-col="searchedCol"
-                @search-col="updateSearchedCols"
-                @clear-all="clearAllSearch"
-            ></BSTableSearchHeader>
-        </template>
-        <template #bottom="scope">
-            <BsTableBottom
-                :scope="scope"
-                :server-side-pagination="_serverSidePagination"
-                :start-of-the-page="startOfThePage"
-                :searching="anyColumnSearched"
-                :virtual-scroll="virtualScroll"
-                :q-table-middle="(qTableMiddle as HTMLElement)"
-                :fetched-rows-length="passedRowsLength"
-            ></BsTableBottom>
-        </template>
-        <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
-            <slot :name="slot" v-bind="scope || {}" />
-        </template>
-    </QTable>
+            <template #top>
+                <div class="bs-table-top-container bs-table-name bordered">
+                    <slot v-if="$slots.title" name="title"></slot>
+                    <span v-else>
+                        {{ title || dssTableName || "" }}
+                    </span>
+                </div>
+                <div class="bs-table-search-container bordered">
+                    <BsSearchWholeTable
+                        v-if="globalSearch"
+                        v-model="searchedValue"
+                        @update:formatted-value="searchedValueFormatted = $event"
+                        @update:loading="searching = $event"
+                    ></BsSearchWholeTable>
+                    <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
+                        <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
+                    </div>
+                </div>
+                <BsTableServerSidePagination
+                    v-if="_serverSidePagination && serverSidePaginationControls && columns"
+                    :server-side-pagination="_serverSidePagination"
+                    @update:batch-offset="setBatchOffset($event, true)"
+                    class="bordered"
+                ></BsTableServerSidePagination>
+                <div class="bs-table-top-slot-container bordered">
+                    <slot name="top"></slot>
+                </div>
+            </template>
+            <template #body-cell="props">
+                <slot
+                    v-if="$slots.hasOwnProperty('body-cell')"
+                    name="body-cell"
+                    v-bind="getBodyCellProps(props)"
+                ></slot>
+                <q-td v-else :props="props">
+                    <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(props.col.name)]" :text="props.value"></BsTextHighlight>
+                </q-td>
+            </template>
+            <template 
+                v-for="col in colSlotsUsed"
+                #[getColBodySlot(col)]="props"
+                >
+                <slot
+                    :name="getColBodySlot(col)"
+                    v-bind="getBodyCellProps(props)"
+                ></slot>
+            </template>
+            <template v-slot:body-cell-clearAllCol="props">
+                <q-td :props="props">
+                    <div class="my-table-details">
+                    </div>
+                </q-td>
+            </template>
+            <template #header="props">
+                <BSTableHeader
+                    v-if="columns"
+                    :props="props"
+                    @search-col="searchCol"
+                ></BSTableHeader>
+                <BSTableSearchHeader
+                    v-if="columns"
+                    class="bordered"
+                    :props="props"
+                    :searched-cols="searchedCols"
+                    :searched-col="searchedCol"
+                    @search-col="updateSearchedCols"
+                    @clear-all="clearAllSearch"
+                ></BSTableSearchHeader>
+            </template>
+            <template #bottom="scope">
+                <BsTableBottom
+                    :scope="scope"
+                    :server-side-pagination="_serverSidePagination"
+                    :start-of-the-page="startOfThePage"
+                    :searching="anyColumnSearched"
+                    :virtual-scroll="virtualScroll"
+                    :q-table-middle="(qTableMiddle as HTMLElement)"
+                    :fetched-rows-length="passedRowsLength"
+                ></BsTableBottom>
+            </template>
+            <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
+                <slot :name="slot" v-bind="scope || {}" />
+            </template>
+        </QTable>
+    </div>
 </template>
 
 <script lang="ts">
@@ -217,9 +224,18 @@ export default defineComponent({
         },
         formattedColumns(): any[] |undefined {
             if (this.passedColumns) {
-                return this.passedColumns.map(col => {
+                const output = this.passedColumns.map(col => {
                     return {...col, sortable: false, _sortable: col.sortable};
-                })
+                });
+                const  clearAllCol = {
+                    name: 'clearAllCol', 
+                    required: true, label: '', 
+                    field: '',
+                    sortable: false, 
+                    _sortable: false
+                };
+                output.push(clearAllCol);
+                return output;
             }
         },
         filter(): { columns: Record<string, string>, searchVal: string | number | null } {
@@ -287,8 +303,13 @@ export default defineComponent({
         searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
             return searchTableFilter(...args);
         },
-        updateSearchedCols(colName: string, searchedVal: string) {
-            this.searchedCols[colName] = searchedVal;
+        updateSearchedCols(colName: string, searchedVal: string | null) {
+            if(searchedVal == null){
+                delete this.searchedCols[colName];
+                if(colName === this.searchedCol) this.searchedCol = null;
+            }else{
+                this.searchedCols[colName] = searchedVal;
+            }
         },
         searchCol(colName: string){
             this.searchedCol = colName;
