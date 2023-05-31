@@ -59,9 +59,10 @@ export default defineComponent({
                 this.setFetchingChunk(true);
                 ServerApi.getDatasetChunk(...args).then((val) => {
                     const data = this.transformDSSDataToQTableRow(val);
-                    this.setFetchingChunk(false);
                     resolve(data);
-                }).catch(reject);
+                }).catch(reject).finally(() => {
+                    this.setFetchingChunk(false);
+                });
             })
         },
         fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>): Promise<{columns: BsTableCol[], columnsCount: number}> {
@@ -70,9 +71,10 @@ export default defineComponent({
                 ServerApi.getDatasetGenericData(...args).then(({ schema, columnsCount }) => {
                     const DSSColumns = schema.columns;
                     const columns = DSSColumns.map(col => this.createBsTableCol({name: col.name, dataType: col.type}));
-                    this.setFetchingSchema(false);
                     resolve({ columns, columnsCount });
-                }).catch(reject);
+                }).catch(reject).finally(() => {
+                    this.setFetchingSchema(false);
+                });
             })
         },
         updateColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>) {
