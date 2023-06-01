@@ -1,114 +1,112 @@
 <template>
-    <div>
-        <BsDSSTableFunctional
-            v-if="isDSSTable"
-            :dss-table-name="dssTableName"
-            :server-side-pagination="_serverSidePagination"
+    <BsDSSTableFunctional
+        v-if="isDSSTable"
+        :dss-table-name="dssTableName"
+        :server-side-pagination="_serverSidePagination"
 
-            @update:fetching="fetching = $event"
-            @update:rows="updateDSSRows"
-            @update:columns="updateDSSColumns"
-            @update:columns-count="setRecordsCount($event, true)"
-        ></BsDSSTableFunctional>
-        <QTable
-            ref="qTable"
-            :rows="passedRows"
-            :columns="formattedColumns"
-            :filter="filter"
-            :filter-method="searchTableFilter"
-            :loading="isLoading"
-            v-bind="$attrs"
-            header-align="left"
-            :virtual-scroll="virtualScroll"
-            :rows-per-page-options="virtualScroll ? [0] : undefined"
-            :class="[...classParsed, ...tableClasses]"
-            @virtual-scroll="onVirtualScroll"
-        >
-            <template #top>
-                <div class="bs-table-top-container bs-table-name bordered">
-                    <slot v-if="$slots.title" name="title"></slot>
-                    <span v-else>
-                        {{ title || dssTableName || "" }}
-                    </span>
+        @update:fetching="fetching = $event"
+        @update:rows="updateDSSRows"
+        @update:columns="updateDSSColumns"
+        @update:columns-count="setRecordsCount($event, true)"
+    ></BsDSSTableFunctional>
+    <QTable
+        ref="qTable"
+        :rows="passedRows"
+        :columns="formattedColumns"
+        :filter="filter"
+        :filter-method="searchTableFilter"
+        :loading="isLoading"
+        v-bind="$attrs"
+        header-align="left"
+        :virtual-scroll="virtualScroll"
+        :rows-per-page-options="virtualScroll ? [0] : undefined"
+        :class="[...classParsed, ...tableClasses]"
+        @virtual-scroll="onVirtualScroll"
+    >
+        <template #top>
+            <div class="bs-table-top-container bs-table-name bordered">
+                <slot v-if="$slots.title" name="title"></slot>
+                <span v-else>
+                    {{ title || dssTableName || "" }}
+                </span>
+            </div>
+            <div class="bs-table-search-container bordered">
+                <BsSearchWholeTable
+                    v-if="globalSearch"
+                    v-model="searchedValue"
+                    @update:formatted-value="searchedValueFormatted = $event"
+                    @update:loading="searching = $event"
+                ></BsSearchWholeTable>
+                <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
+                    <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
                 </div>
-                <div class="bs-table-search-container bordered">
-                    <BsSearchWholeTable
-                        v-if="globalSearch"
-                        v-model="searchedValue"
-                        @update:formatted-value="searchedValueFormatted = $event"
-                        @update:loading="searching = $event"
-                    ></BsSearchWholeTable>
-                    <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
-                        <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
-                    </div>
+            </div>
+            <BsTableServerSidePagination
+                v-if="_serverSidePagination && serverSidePaginationControls && passedColumns"
+                :server-side-pagination="_serverSidePagination"
+                @update:batch-offset="setBatchOffset($event, true)"
+                class="bordered"
+            ></BsTableServerSidePagination>
+            <div class="bs-table-top-slot-container bordered">
+                <slot name="top"></slot>
+            </div>
+        </template>
+        <template #body-cell="props">
+            <slot
+                v-if="$slots.hasOwnProperty('body-cell')"
+                name="body-cell"
+                v-bind="getBodyCellProps(props)"
+            ></slot>
+            <q-td v-else :props="props">
+                <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(props.col.name)]" :text="props.value"></BsTextHighlight>
+            </q-td>
+        </template>
+        <template 
+            v-for="col in colSlotsUsed"
+            #[getColBodySlot(col)]="props"
+            >
+            <slot
+                :name="getColBodySlot(col)"
+                v-bind="getBodyCellProps(props)"
+            ></slot>
+        </template>
+        <template v-slot:body-cell-clearAllCol="props">
+            <q-td :props="props">
+                <div class="my-table-details">
                 </div>
-                <BsTableServerSidePagination
-                    v-if="_serverSidePagination && serverSidePaginationControls && columns"
-                    :server-side-pagination="_serverSidePagination"
-                    @update:batch-offset="setBatchOffset($event, true)"
-                    class="bordered"
-                ></BsTableServerSidePagination>
-                <div class="bs-table-top-slot-container bordered">
-                    <slot name="top"></slot>
-                </div>
-            </template>
-            <template #body-cell="props">
-                <slot
-                    v-if="$slots.hasOwnProperty('body-cell')"
-                    name="body-cell"
-                    v-bind="getBodyCellProps(props)"
-                ></slot>
-                <q-td v-else :props="props">
-                    <BsTextHighlight :queries="[searchedValueFormatted, getColSearchedValue(props.col.name)]" :text="props.value"></BsTextHighlight>
-                </q-td>
-            </template>
-            <template 
-                v-for="col in colSlotsUsed"
-                #[getColBodySlot(col)]="props"
-                >
-                <slot
-                    :name="getColBodySlot(col)"
-                    v-bind="getBodyCellProps(props)"
-                ></slot>
-            </template>
-            <template v-slot:body-cell-clearAllCol="props">
-                <q-td :props="props">
-                    <div class="my-table-details">
-                    </div>
-                </q-td>
-            </template>
-            <template #header="props">
-                <BSTableHeader
-                    v-if="columns"
-                    :props="props"
-                    @search-col="searchCol"
-                ></BSTableHeader>
-                <BSTableSearchHeader
-                    v-if="columns"
-                    class="bordered"
-                    :props="props"
-                    :searched-cols="searchedCols"
-                    :searched-col="searchedCol"
-                    @search-col="updateSearchedCols"
-                    @clear-all="clearAllSearch"
-                ></BSTableSearchHeader>
-            </template>
-            <template #bottom="scope">
-                <BsTableBottom
-                    :scope="scope"
-                    :server-side-pagination="_serverSidePagination"
-                    :start-of-the-page="startOfThePage"
-                    :searching="anyColumnSearched"
-                    :virtual-scroll="virtualScroll"
-                    :q-table-middle="(qTableMiddle as HTMLElement)"
-                    :fetched-rows-length="passedRowsLength"
-                ></BsTableBottom>
-            </template>
-            <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
-                <slot :name="slot" v-bind="scope || {}" />
-            </template>
-        </QTable>
-    </div>
+            </q-td>
+        </template>
+        <template #header="props">
+            <BSTableHeader
+                v-if="passedColumns"
+                :props="props"
+                @search-col="searchCol"
+            ></BSTableHeader>
+            <BSTableSearchHeader
+                v-if="passedColumns"
+                class="bordered"
+                :props="props"
+                :searched-cols="searchedCols"
+                :searched-col="searchedCol"
+                @search-col="updateSearchedCols"
+                @clear-all="clearAllSearch"
+            ></BSTableSearchHeader>
+        </template>
+        <template #bottom="scope">
+            <BsTableBottom
+                :scope="scope"
+                :server-side-pagination="_serverSidePagination"
+                :start-of-the-page="startOfThePage"
+                :searching="anyColumnSearched"
+                :virtual-scroll="virtualScroll"
+                :q-table-middle="(qTableMiddle as HTMLElement)"
+                :fetched-rows-length="passedRowsLength"
+            ></BsTableBottom>
+        </template>
+        <template v-for="(_, slot) in filteredSlots" v-slot:[slot]="scope">
+            <slot :name="slot" v-bind="scope || {}" />
+        </template>
+    </QTable>
 </template>
 
 <script lang="ts">
@@ -410,13 +408,15 @@ $border-color: #BBBBBB;
 .bs-table-sticky {
     :deep(.q-table__top),
     :deep(.q-table__bottom),
-    :deep(thead) tr:first-child th {
+    :deep(thead) tr:first-child th, 
+    :deep(thead) tr:last-child th {
         background-color: #fff;
     }
     :deep(.q-table__bottom){
         @include borders-style();
     }
     :deep(.q-table){
+        scroll-margin-top: 100px;
         @include borders-style();
         tbody td{
             height: 36px;
@@ -426,6 +426,8 @@ $border-color: #BBBBBB;
         tr th {
             position: sticky;
             z-index: 1;
+            border: solid #BBBBBB;
+            border-width: 1px 0px 1px 0px;
         }
         tr:last-child th {
             /* height of all previous header rows */
