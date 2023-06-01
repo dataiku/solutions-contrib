@@ -1,11 +1,8 @@
 <template>
     <div
         class="bs-table-col-header-container"
-        :style="{
-            '--bs-table-header-cursor-type': sortable ? 'pointer' : 'default',
-        }"
     >
-        <div class="bs-table-col-header-title-container">
+        <div class="bs-table-col-header-title-container" ref="BsTableColHeaderTitleContainer">
             <div class="bs-table-col-header-title">
                 <div class="bs-table-col-header-title-label">
                     {{ col?.label || col?.name || "" }}
@@ -34,16 +31,11 @@
                                                 :name="sortColIcon"
                                                 size="0.8rem"
                                                 class="sort-icon"
-                                                :class="{ 'sorted': sorted }"
+                                                :class="{'sorted': sorted}"
                                             >
                                             </q-icon>
                                             <div>
-                                                Sort
-                                                {{
-                                                    sortDesc
-                                                        ? "descending"
-                                                        : "ascending"
-                                                }}
+                                                Sort {{ sortText }}
                                             </div>
                                         </div>
                                     </q-item-section>
@@ -104,11 +96,11 @@ export default defineComponent({
     data() {
         return {
             mdiArrowUpThin,
-            sortColIcon: mdiSortAscending,
+            mdiSortAscending,
             mdiChevronDown,
             searchColIcon: mdiMagnify,
             noDebounceValue: "" as string | null | number | undefined,
-            sortDesc: true,
+            sortDesc: false,
             sorted: false,
         };
     },
@@ -116,24 +108,38 @@ export default defineComponent({
         sortable(): boolean {
             return !!(this.col as any)?._sortable;
         },
+        sortColIcon(): any {
+            return !this.sortDesc ? mdiSortAscending : mdiSortDescending;
+        },
+        sortText(): string{
+            return !this.sortDesc ? 'descending' : 'ascending' ;
+        }
     },
     props: {
         sort: Function as PropType<(col: any) => void>,
         col: Object as PropType<{ label: string; name: string }>,
+        sortedCol: String,
     },
     methods: {
         sortColumn() {
             if (this.sortable && this.sort) this.sort(this.col);
-            this.sortDesc = !this.sortDesc;
-            this.sortColIcon = this.sortDesc
-                ? mdiSortAscending
-                : mdiSortDescending;
-            this.sorted = true;
+            this.sortDesc = this.sorted ? !this.sortDesc : true;
         },
         searchColumn() {
             this.$emit("search-col", this.col?.name);
         },
     },
+    watch: {
+        sortedCol(newVal: string){
+            if(newVal === this.col?.name){
+                this.sortDesc = this.sorted ? !this.sortDesc : true;
+                this.sorted = true;
+            }else{
+                this.sorted = false;
+                this.sortDesc = false;
+            }
+        }
+    }
 });
 </script>
 
@@ -141,6 +147,7 @@ export default defineComponent({
 .bs-table-col-header-container {
     height: 36px;
     display: inline-block;
+    --bs-table-header-cursor-type: pointer;
     .bs-table-col-header-title-container {
         display: flex;
         flex-direction: column;

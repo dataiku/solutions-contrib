@@ -6,12 +6,13 @@
             :props="props"
             >
                 <BsTableColHeader
-                    :sort="props.sort"
+                    :sort="sort"
                     :col="col"
+                    :sorted-col="sortedCol"
                     @search-col="activateSearchCol"
                 ></BsTableColHeader>
         </q-th>
-        <q-th auto-width :key="'clearAllCol'"/>
+        <q-th auto-width :key="'clearAllCol'"></q-th>
     </q-tr>
 </template>
 
@@ -34,11 +35,20 @@ export default defineComponent({
             required: true,
         },
     },
+    data() {
+        return {
+            sortedCol: '',
+        }
+    },
     emits: ["search-col"],
     methods: {
         activateSearchCol(colName: string){
             this.$emit('search-col', colName);
         },
+        sort(col: any) {
+            this.sortedCol = col.name;
+            this.props.sort(col);
+        }
     },
     computed: {
         cols(): any[]{
@@ -61,10 +71,6 @@ export default defineComponent({
             cursor: pointer;
             transition: rotate 0.3s, opacity 0.5s, scale 0.3s, color 0.3s;
         }
-    }
-    
-    &.sort-desc .sort-icon {
-        rotate: 180deg;
     }
 }
 </style>

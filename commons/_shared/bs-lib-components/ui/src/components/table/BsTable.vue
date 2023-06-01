@@ -416,7 +416,6 @@ $border-color: #BBBBBB;
         @include borders-style();
     }
     :deep(.q-table){
-        scroll-margin-top: 100px;
         @include borders-style();
         tbody td{
             height: 36px;
