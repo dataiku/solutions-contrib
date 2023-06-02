@@ -1,15 +1,15 @@
-var ke = Object.defineProperty, ze = Object.defineProperties;
-var Ve = Object.getOwnPropertyDescriptors;
+var ze = Object.defineProperty, Ve = Object.defineProperties;
+var Le = Object.getOwnPropertyDescriptors;
 var le = Object.getOwnPropertySymbols;
-var Le = Object.prototype.hasOwnProperty, Qe = Object.prototype.propertyIsEnumerable;
-var de = (e, t, s) => t in e ? ke(e, t, { enumerable: !0, configurable: !0, writable: !0, value: s }) : e[t] = s, w = (e, t) => {
+var Qe = Object.prototype.hasOwnProperty, Ee = Object.prototype.propertyIsEnumerable;
+var de = (e, t, s) => t in e ? ze(e, t, { enumerable: !0, configurable: !0, writable: !0, value: s }) : e[t] = s, w = (e, t) => {
   for (var s in t || (t = {}))
-    Le.call(t, s) && de(e, s, t[s]);
+    Qe.call(t, s) && de(e, s, t[s]);
   if (le)
     for (var s of le(t))
-      Qe.call(t, s) && de(e, s, t[s]);
+      Ee.call(t, s) && de(e, s, t[s]);
   return e;
-}, U = (e, t) => ze(e, Ve(t));
+}, U = (e, t) => Ve(e, Le(t));
 var K = (e, t, s) => new Promise((n, o) => {
   var i = (u) => {
     try {
@@ -26,17 +26,17 @@ var K = (e, t, s) => new Promise((n, o) => {
   }, r = (u) => u.done ? n(u.value) : Promise.resolve(u.value).then(i, a);
   r((s = s.apply(e, t)).next());
 });
-import { defineComponent as m, computed as pe, openBlock as d, createBlock as g, Teleport as R, renderSlot as f, createCommentVNode as S, resolveComponent as l, withCtx as h, createVNode as p, normalizeStyle as z, normalizeClass as A, createElementVNode as T, createElementBlock as $, createTextVNode as Ee, toDisplayString as N, pushScopeId as X, popScopeId as J, mergeProps as O, withDirectives as L, vShow as q, Fragment as x, renderList as C, createSlots as P, normalizeProps as y, guardReactiveProps as _, withModifiers as Ue, resolveDirective as We } from "vue";
-import { QCard as He, QBtn as Q, QIcon as E, QDrawer as qe, QHeader as Ye, QTab as Ze, QTooltip as me, QTabs as Fe, QPageContainer as Ge, QPage as Re, QLayout as Xe, QSelect as Je, QSlider as xe, QRange as Ke, QSpinner as et, QInput as ge, QTh as be, QMenu as tt, QItem as st, QItemSection as nt, QList as ot, QTr as fe, QLinearProgress as at, QTable as it, QTd as rt, QImg as lt, QCheckbox as dt, QDate as ut, QPopupProxy as ct } from "quasar";
-import ht from "axios";
-import { isEqual as pt, uniqueId as mt, isNull as Se, isUndefined as V, escape as gt, isEmpty as bt } from "lodash";
-import { mdiTableSearch as ft, mdiArrowUpThin as St, mdiMagnify as Tt, mdiAlert as Mt, mdiCloseCircleMultiple as Dt } from "@quasar/extras/mdi-v6";
-function $t(e) {
+import { defineComponent as m, computed as pe, openBlock as d, createBlock as g, Teleport as R, renderSlot as f, createCommentVNode as S, resolveComponent as l, withCtx as h, createVNode as p, normalizeStyle as z, normalizeClass as A, createElementVNode as T, createElementBlock as $, createTextVNode as Ue, toDisplayString as N, pushScopeId as X, popScopeId as J, mergeProps as O, withDirectives as L, vShow as q, Fragment as x, renderList as C, createSlots as P, normalizeProps as I, guardReactiveProps as _, withModifiers as We, resolveDirective as He } from "vue";
+import { QCard as qe, QBtn as Q, QIcon as E, QDrawer as Ye, QHeader as Ze, QTab as Fe, QTooltip as me, QTabs as Ge, QPageContainer as Re, QPage as Xe, QLayout as Je, QSelect as xe, QSlider as Ke, QRange as et, QSpinner as tt, QInput as ge, QTh as be, QMenu as st, QItem as nt, QItemSection as ot, QList as at, QTr as fe, QLinearProgress as it, QTable as rt, QTd as lt, QImg as dt, QCheckbox as ut, QDate as ct, QPopupProxy as ht } from "quasar";
+import pt from "axios";
+import { isEqual as mt, uniqueId as gt, isNull as Se, isUndefined as V, escape as bt, isEmpty as ft } from "lodash";
+import { mdiTableSearch as St, mdiArrowUpThin as Tt, mdiMagnify as Mt, mdiAlert as Dt, mdiCloseCircleMultiple as $t } from "@quasar/extras/mdi-v6";
+function yt(e) {
   return e !== null && typeof e == "object" && Array.isArray(e) !== !0;
 }
 function It(e, t) {
   t.components !== void 0 && Object.values(t.components).forEach((s) => {
-    $t(s) === !0 && s.name !== void 0 && e.component(s.name, s);
+    yt(s) === !0 && s.name !== void 0 && e.component(s.name, s);
   });
 }
 const oe = m({
@@ -87,7 +87,7 @@ const oe = m({
     }
   }
 });
-function yt(...e) {
+function _t(...e) {
   e.forEach(([t, s]) => {
     setTimeout(() => {
       t();
@@ -95,12 +95,12 @@ function yt(...e) {
   });
 }
 function Te(e, t, s, n, o = 50) {
-  yt(
+  _t(
     [e, o * +!s],
     [t, n * +s]
   );
 }
-const Me = (e) => `bs-menu-tab-${e}`, De = (e) => `tab-content-id-${e}`, _t = m({
+const Me = (e) => `bs-menu-tab-${e}`, De = (e) => `tab-content-id-${e}`, vt = m({
   name: "BsTabPageChildWrapper",
   inject: ["$qPageMounted", "$tabId"],
   computed: {
@@ -123,7 +123,7 @@ const Me = (e) => `bs-menu-tab-${e}`, De = (e) => `tab-content-id-${e}`, _t = m(
     s[n] = o;
   return s;
 };
-function vt(e, t, s, n, o, i) {
+function Ct(e, t, s, n, o, i) {
   return e.qPageMounted ? (d(), g(R, {
     key: 0,
     to: e.contentCSSSelector
@@ -131,13 +131,13 @@ function vt(e, t, s, n, o, i) {
     f(e.$slots, "default")
   ], 8, ["to"])) : S("", !0);
 }
-const ie = /* @__PURE__ */ b(_t, [["render", vt]]), Ct = m({
+const ie = /* @__PURE__ */ b(vt, [["render", Ct]]), wt = m({
   name: "BsContent",
   components: {
     BsTabPageChildWrapper: ie
   }
 });
-function wt(e, t, s, n, o, i) {
+function Nt(e, t, s, n, o, i) {
   const a = l("BsTabPageChildWrapper");
   return d(), g(a, null, {
     default: h(() => [
@@ -146,10 +146,10 @@ function wt(e, t, s, n, o, i) {
     _: 3
   });
 }
-const te = /* @__PURE__ */ b(Ct, [["render", wt]]), Nt = m({
+const te = /* @__PURE__ */ b(wt, [["render", Nt]]), jt = m({
   name: "BsDocumentation",
   components: {
-    QCard: He,
+    QCard: qe,
     QBtn: Q,
     BsTabPageChildWrapper: ie
   },
@@ -241,14 +241,14 @@ const te = /* @__PURE__ */ b(Ct, [["render", wt]]), Nt = m({
     this.open = this.modelValue;
   }
 }), $e = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxNCAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuNjQ2IDAuNzAzNjEzQzAuNzM2ODU3IDAuNzAzNjEzIDAgMS40MTMxOCAwIDIuMjg4NjVWNy43ODUyNEMwIDguNjYwNzEgMC43MzY4NTcgOS4zNzAyOCAxLjY0NiA5LjM3MDI4SDQuMDkwNjVDNC4wMzExMSA5LjA1ODAyIDQgOC43MzYxNyA0IDguNDA3MzJIMy43NVYxLjY2NjU4SDEwLjM1NEMxMC43MTA5IDEuNjY2NTggMTEgMS45NDUwMSAxMSAyLjI4ODY1VjMuMzEwMzFDMTEuMzQ4NiAzLjQwNTI0IDExLjY4MzIgMy41MzI0NCAxMiAzLjY4ODM1VjIuMjg4NjVDMTIgMS40MTMxOCAxMS4yNjMxIDAuNzAzNjEzIDEwLjM1NCAwLjcwMzYxM0gxLjY0NlpNMi43NSAxLjY2NjU4VjguNDA3MzJIMS42NDZDMS4yODkxNCA4LjQwNzMyIDEgOC4xMjg4OCAxIDcuNzg1MjRWMi4yODg2NUMxIDEuOTQ1MDEgMS4yODkxNCAxLjY2NjU4IDEuNjQ2IDEuNjY2NThIMi43NVoiIGZpbGw9IiMwMUIyQUEiLz4KPHBhdGggZD0iTTkuNDk5OSA3LjUxODVDOC45ODk5IDcuNTE4NSA4LjU3Njg5IDcuOTE2MjEgOC41NzY4OSA4LjQwNzMyQzguNTc2ODkgOC44OTg0MyA4Ljk4OTkgOS4yOTYxMyA5LjQ5OTkgOS4yOTYxM0MxMC4wMDk5IDkuMjk2MTMgMTAuNDIyOSA4Ljg5ODQzIDEwLjQyMjkgOC40MDczMkMxMC40MjI5IDcuOTE2MjEgMTAuMDA5OSA3LjUxODUgOS40OTk5IDcuNTE4NVoiIGZpbGw9IiMwMUIyQUEiLz4KPHBhdGggZD0iTTkuNSAxMi43NDA2QzExLjk4NSAxMi43NDA2IDE0IDEwLjgwMDMgMTQgOC40MDczMkMxNCA2LjAxNDM1IDExLjk4NSA0LjA3Mzk4IDkuNSA0LjA3Mzk4QzcuMDE1IDQuMDczOTggNSA2LjAxNDM1IDUgOC40MDczMkM1IDEwLjgwMDMgNy4wMTUgMTIuNzQwNiA5LjUgMTIuNzQwNlpNOS41MDI5IDUuNTE4NDNDOS43Mjg5IDUuNTIxMzIgOS45NTM5IDUuNTQ2MzUgMTAuMTczOSA1LjU5MzU0QzEwLjI2OTkgNS42MTM3NiAxMC4zNDE5IDUuNjkxNzYgMTAuMzUyOSA1Ljc4NjEzTDEwLjQwNDkgNi4yMzg3MkMxMC40Mjg5IDYuNDQ2NzIgMTAuNjEwOSA2LjYwMzY5IDEwLjgyNzkgNi42MDM2OUMxMC44ODU5IDYuNjAzNjkgMTAuOTQzOSA2LjU5MjEzIDEwLjk5NzkgNi41NjkwMkwxMS40Mjg5IDYuMzg3MDJDMTEuNTE4OSA2LjM0OTQ3IDExLjYyMjkgNi4zNjk2OSAxMS42ODk5IDYuNDM5MDJDMTIuMDAwOSA2Ljc1OTY5IDEyLjIzMjkgNy4xNDM5MSAxMi4zNjc5IDcuNTYyOEMxMi4zOTY5IDcuNjUzMzIgMTIuMzYzOSA3Ljc1MTU0IDEyLjI4NDkgNy44MDczOUwxMS45MDI5IDguMDc4OTVDMTEuNzkzOSA4LjE1NTk4IDExLjcyOTkgOC4yNzgyOCAxMS43Mjk5IDguNDA4MjhDMTEuNzI5OSA4LjUzODI4IDExLjc5MzkgOC42NjA1OCAxMS45MDM5IDguNzM4NThMMTIuMjg1OSA5LjAxMDEzQzEyLjM2NDkgOS4wNjU5OCAxMi4zOTg5IDkuMTY0MjEgMTIuMzY5OSA5LjI1NDcyQzEyLjIzNDkgOS42NzM2MSAxMi4wMDI5IDEwLjA1NzggMTEuNjkxOSAxMC4zNzg1QzExLjYyNDkgMTAuNDQ2OSAxMS41MTk5IDEwLjQ2ODEgMTEuNDMwOSAxMC40MzA1TDEwLjk5NzkgMTAuMjQ3NUMxMC44NzM5IDEwLjE5NTUgMTAuNzMxOSAxMC4yMDMyIDEwLjYxNDkgMTAuMjY3OEMxMC40OTc5IDEwLjMzMzIgMTAuNDE5OSAxMC40NDc4IDEwLjQwNDkgMTAuNTc2OUwxMC4zNTI5IDExLjAyOTVDMTAuMzQxOSAxMS4xMjI5IDEwLjI3MTkgMTEuMTk5OSAxMC4xNzY5IDExLjIyMTFDOS43MzA5IDExLjMyMzIgOS4yNjY5IDExLjMyMzIgOC44MjA5IDExLjIyMTFDOC43MjU5IDExLjE5ODkgOC42NTU5IDExLjEyMjkgOC42NDQ5IDExLjAyOTVMOC41OTI5IDEwLjU3NzhDOC41Nzc5IDEwLjQ0ODggOC40OTk5IDEwLjMzNDIgOC4zODI5IDEwLjI2OTdDOC4yNjU5IDEwLjIwNTIgOC4xMjM5IDEwLjE5NzUgOC4wMDA5IDEwLjI0OTVMNy41Njc4OSAxMC40MzI0QzcuNDc3OSAxMC40NyA3LjM3MzkgMTAuNDQ5OCA3LjMwNjkgMTAuMzgwNEM2Ljk5NTkgMTAuMDU5OCA2Ljc2MzkgOS42NzU1NCA2LjYyODg5IDkuMjU1NjlDNi41OTk5IDkuMTY1MTcgNi42MzM5IDkuMDY2OTUgNi43MTI5IDkuMDExMDlMNy4wOTU4OSA4LjczOTU0QzcuMjA0OSA4LjY2MjUgNy4yNjg5IDguNTQwMjEgNy4yNjg5IDguNDEwMjFDNy4yNjg5IDguMjgwMjEgNy4yMDQ5IDguMTU3OTEgNy4wOTU4OSA4LjA3OTkxTDYuNzEzODkgNy44MDkzMkM2LjYzNDkgNy43NTM0NiA2LjYwMDkgNy42NTUyNCA2LjYyOTkgNy41NjQ3MkM2Ljc2NDkgNy4xNDU4MyA2Ljk5Njg5IDYuNzYxNjEgNy4zMDc4OSA2LjQ0MDk1QzcuMzc0OSA2LjM3MjU4IDcuNDc5OSA2LjM1MTM5IDcuNTY4OSA2LjM4ODk1TDcuOTk5OSA2LjU3MDk1QzguMTIzOSA2LjYyMjk1IDguMjY1ODkgNi42MTUyNCA4LjM4Mzg5IDYuNTQ5NzZDOC41MDA5IDYuNDg0MjggOC41Nzg5IDYuMzY5NjkgOC41OTM4OSA2LjIzOTY5TDguNjQ1OSA1Ljc4ODA2QzguNjU2OSA1LjY5MzY5IDguNzI4OSA1LjYxNjY1IDguODI0OSA1LjU5NTQ2QzkuMDQ1OSA1LjU0ODI4IDkuMjcwOSA1LjUyMzI0IDkuNTAxOSA1LjUyMDM1TDkuNTAyOSA1LjUxODQzWiIgZmlsbD0iIzAxQjJBQSIvPgo8L3N2Zz4K";
-const Ie = (e) => (X("data-v-47db9d18"), e = e(), J(), e), jt = /* @__PURE__ */ Ie(() => /* @__PURE__ */ T("div", { class: "row items-center q-gutter-sm no-wrap" }, [
+const ye = (e) => (X("data-v-47db9d18"), e = e(), J(), e), Pt = /* @__PURE__ */ ye(() => /* @__PURE__ */ T("div", { class: "row items-center q-gutter-sm no-wrap" }, [
   /* @__PURE__ */ T("img", {
     src: $e,
     width: "15",
     height: "16"
   }),
   /* @__PURE__ */ T("span", { class: "btn-solution-text" }, "Dataiku Solutions")
-], -1)), Pt = { class: "flex row items-center q-gutter-sm q-mb-lg" }, Bt = ["src", "width", "height"], Ot = { class: "dku-large-title-sb" }, At = { class: "doc-body" }, kt = /* @__PURE__ */ Ie(() => /* @__PURE__ */ T("div", { class: "doc-footer flex row items-center" }, [
+], -1)), Bt = { class: "flex row items-center q-gutter-sm q-mb-lg" }, Ot = ["src", "width", "height"], At = { class: "dku-large-title-sb" }, kt = { class: "doc-body" }, zt = /* @__PURE__ */ ye(() => /* @__PURE__ */ T("div", { class: "doc-footer flex row items-center" }, [
   /* @__PURE__ */ T("span", { class: "doc-footer__icon" }, [
     /* @__PURE__ */ T("img", {
       src: $e,
@@ -258,7 +258,7 @@ const Ie = (e) => (X("data-v-47db9d18"), e = e(), J(), e), jt = /* @__PURE__ */ 
   ]),
   /* @__PURE__ */ T("span", { class: "doc-footer__text dku-tiny-text-sb" }, "Dataiku Solutions")
 ], -1));
-function zt(e, t, s, n, o, i) {
+function Vt(e, t, s, n, o, i) {
   const a = l("QBtn"), r = l("QCard"), u = l("BsTabPageChildWrapper");
   return d(), g(u, null, {
     default: h(() => [
@@ -272,7 +272,7 @@ function zt(e, t, s, n, o, i) {
         onClick: t[0] || (t[0] = (c) => e.toggleDoc())
       }, {
         default: h(() => [
-          jt
+          Pt
         ]),
         _: 1
       }),
@@ -287,22 +287,22 @@ function zt(e, t, s, n, o, i) {
         ])
       }, {
         default: h(() => [
-          T("div", Pt, [
+          T("div", Bt, [
             e.mDocsProps.docIcon ? (d(), $("img", {
               key: 0,
               src: e.mDocsProps.docIcon,
               width: e.mDocsProps.docImageDimensions.width,
               height: e.mDocsProps.docImageDimensions.height
-            }, null, 8, Bt)) : S("", !0),
-            T("span", Ot, [
+            }, null, 8, Ot)) : S("", !0),
+            T("span", At, [
               e.$slots.title ? f(e.$slots, "title", { key: 0 }, void 0, !0) : S("", !0),
-              Ee(" " + N(e.$slots.title ? "" : e.mDocsProps.docTitle), 1)
+              Ue(" " + N(e.$slots.title ? "" : e.mDocsProps.docTitle), 1)
             ])
           ]),
-          T("div", At, [
+          T("div", kt, [
             f(e.$slots, "default", {}, void 0, !0)
           ]),
-          kt
+          zt
         ]),
         _: 3
       }, 8, ["style", "class"])
@@ -310,7 +310,7 @@ function zt(e, t, s, n, o, i) {
     _: 3
   });
 }
-const se = /* @__PURE__ */ b(Nt, [["render", zt], ["__scopeId", "data-v-47db9d18"]]), Z = m({
+const se = /* @__PURE__ */ b(jt, [["render", Vt], ["__scopeId", "data-v-47db9d18"]]), Z = m({
   inject: ["$isTabSelected", "$qLayoutMounted"],
   computed: {
     showComponent() {
@@ -321,7 +321,7 @@ const se = /* @__PURE__ */ b(Nt, [["render", zt], ["__scopeId", "data-v-47db9d18
       return this.$qLayoutMounted;
     }
   }
-}), Vt = m({
+}), Lt = m({
   name: "BsTabTitle",
   extends: Z,
   inject: ["$tabName", "$defaultTabUsed"],
@@ -372,24 +372,24 @@ const se = /* @__PURE__ */ b(Nt, [["render", zt], ["__scopeId", "data-v-47db9d18
     }
   }
 });
-function Lt(e, t, s, n, o, i) {
+function Qt(e, t, s, n, o, i) {
   return e.defaultTabUsed ? S("", !0) : (d(), $("div", O({ key: 0 }, e.$attrs, { class: "text-primary bs-tab-title dku-medium-title-sb q-px-md" }), N(e.tabName), 17));
 }
-const re = /* @__PURE__ */ b(Vt, [["render", Lt], ["__scopeId", "data-v-9ace8c82"]]), Qt = m({
+const re = /* @__PURE__ */ b(Lt, [["render", Qt], ["__scopeId", "data-v-9ace8c82"]]), Et = m({
   name: "BsDrawer",
   extends: Z,
   components: {
     BsTabTitle: re
   }
 });
-const Et = { class: "bs-drawer-container" };
-function Ut(e, t, s, n, o, i) {
+const Ut = { class: "bs-drawer-container" };
+function Wt(e, t, s, n, o, i) {
   const a = l("BsTabTitle");
   return e.qLayoutMounted ? (d(), g(R, {
     key: 0,
     to: ".q-drawer"
   }, [
-    L(T("div", Et, [
+    L(T("div", Ut, [
       p(a),
       f(e.$slots, "default", {}, void 0, !0)
     ], 512), [
@@ -397,7 +397,7 @@ function Ut(e, t, s, n, o, i) {
     ])
   ])) : S("", !0);
 }
-const W = /* @__PURE__ */ b(Qt, [["render", Ut], ["__scopeId", "data-v-ef244777"]]), Wt = m({
+const W = /* @__PURE__ */ b(Et, [["render", Wt], ["__scopeId", "data-v-ef244777"]]), Ht = m({
   name: "BsHeader",
   components: {
     BsTabTitle: re
@@ -447,7 +447,7 @@ const W = /* @__PURE__ */ b(Qt, [["render", Ut], ["__scopeId", "data-v-ef244777"
     }
   }
 });
-function Ht(e, t, s, n, o, i) {
+function qt(e, t, s, n, o, i) {
   const a = l("BsTabTitle");
   return e.qLayoutMounted ? (d(), g(R, {
     key: 0,
@@ -475,7 +475,7 @@ function Ht(e, t, s, n, o, i) {
     ])
   ])) : S("", !0);
 }
-const H = /* @__PURE__ */ b(Wt, [["render", Ht], ["__scopeId", "data-v-f4a44855"]]), qt = m({
+const H = /* @__PURE__ */ b(Ht, [["render", qt], ["__scopeId", "data-v-f4a44855"]]), Yt = m({
   name: "BsTabIcon",
   inject: ["$menuTabsMounted", "$tabId"],
   components: {
@@ -502,7 +502,7 @@ const H = /* @__PURE__ */ b(Wt, [["render", Ht], ["__scopeId", "data-v-f4a44855"
     }
   }
 });
-function Yt(e, t, s, n, o, i) {
+function Zt(e, t, s, n, o, i) {
   const a = l("q-icon");
   return e.menuTabsMounted ? (d(), g(R, {
     key: 0,
@@ -512,7 +512,7 @@ function Yt(e, t, s, n, o, i) {
     f(e.$slots, "default")
   ], 8, ["to"])) : S("", !0);
 }
-const F = /* @__PURE__ */ b(qt, [["render", Yt]]), Zt = m({
+const F = /* @__PURE__ */ b(Yt, [["render", Zt]]), Ft = m({
   name: "BsDrawerBtn",
   extends: Z,
   props: {
@@ -551,26 +551,26 @@ const F = /* @__PURE__ */ b(qt, [["render", Yt]]), Zt = m({
       );
     }
   }
-}), Ft = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTYgMTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAwSDRDMTAuNjI3NCAwIDE2IDUuMzcyNTggMTYgMTJWODhDMTYgOTQuNjI3NCAxMC42Mjc0IDEwMCA0IDEwMEgwVjBaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjUiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjkiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfMV8xNjY4IiB4PSI1IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxX2RfMV8xNjY4IiB4PSI5IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=";
-const Gt = (e) => (X("data-v-9969ac6c"), e = e(), J(), e), Rt = /* @__PURE__ */ Gt(() => /* @__PURE__ */ T("img", { src: Ft }, null, -1)), Xt = [
-  Rt
+}), Gt = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTYgMTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAwSDRDMTAuNjI3NCAwIDE2IDUuMzcyNTggMTYgMTJWODhDMTYgOTQuNjI3NCAxMC42Mjc0IDEwMCA0IDEwMEgwVjBaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjUiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjkiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfMV8xNjY4IiB4PSI1IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxX2RfMV8xNjY4IiB4PSI5IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=";
+const Rt = (e) => (X("data-v-9969ac6c"), e = e(), J(), e), Xt = /* @__PURE__ */ Rt(() => /* @__PURE__ */ T("img", { src: Gt }, null, -1)), Jt = [
+  Xt
 ];
-function Jt(e, t, s, n, o, i) {
+function xt(e, t, s, n, o, i) {
   return L((d(), $("div", {
     onClick: t[0] || (t[0] = (...a) => e.toggleLeftPanel && e.toggleLeftPanel(...a)),
     class: A([e.hide && "hide", e.hidden && "hidden", "toggle-left-button"]),
     style: z({
       "--hide-transition-duration": `.${e.hideTransitionDuration}s`
     })
-  }, Xt, 6)), [
+  }, Jt, 6)), [
     [q, e.showComponent]
   ]);
 }
-const ye = /* @__PURE__ */ b(Zt, [["render", Jt], ["__scopeId", "data-v-9969ac6c"]]), xt = m({
+const Ie = /* @__PURE__ */ b(Ft, [["render", xt], ["__scopeId", "data-v-9969ac6c"]]), Kt = m({
   name: "BsLayoutDrawer",
   components: {
-    QDrawer: qe,
-    BsDrawerBtn: ye
+    QDrawer: Ye,
+    BsDrawerBtn: Ie
   },
   props: {
     collapsedWidth: {
@@ -635,7 +635,7 @@ const ye = /* @__PURE__ */ b(Zt, [["render", Jt], ["__scopeId", "data-v-9969ac6c
     this.modelValue !== void 0 && (this.expand = !0);
   }
 });
-function Kt(e, t, s, n, o, i) {
+function es(e, t, s, n, o, i) {
   const a = l("BsDrawerBtn"), r = l("QDrawer");
   return d(), g(r, O(e.drawerProps, {
     "mini-width": e.collapsedWidth,
@@ -654,23 +654,23 @@ function Kt(e, t, s, n, o, i) {
     _: 1
   }, 16, ["mini-width", "width"]);
 }
-const _e = /* @__PURE__ */ b(xt, [["render", Kt], ["__scopeId", "data-v-8f8c14f8"]]), es = m({
+const _e = /* @__PURE__ */ b(Kt, [["render", es], ["__scopeId", "data-v-8f8c14f8"]]), ts = m({
   name: "BsLayoutHeader",
   components: {
-    QHeader: Ye
+    QHeader: Ze
   }
 });
-function ts(e, t, s, n, o, i) {
+function ss(e, t, s, n, o, i) {
   const a = l("QHeader");
   return d(), g(a, {
     bordered: "",
     class: "bg-white bs-header"
   });
 }
-const ve = /* @__PURE__ */ b(es, [["render", ts], ["__scopeId", "data-v-9ba496fa"]]), ss = m({
+const ve = /* @__PURE__ */ b(ts, [["render", ss], ["__scopeId", "data-v-9ba496fa"]]), ns = m({
   name: "BsMenuTab",
   components: {
-    QTab: Ze,
+    QTab: Fe,
     QTooltip: me
   },
   props: {
@@ -693,8 +693,8 @@ const ve = /* @__PURE__ */ b(es, [["render", ts], ["__scopeId", "data-v-9ba496fa
     }
   }
 });
-const ns = { class: "tab-name-tooltip" }, os = ["id"];
-function as(e, t, s, n, o, i) {
+const os = { class: "tab-name-tooltip" }, as = ["id"];
+function is(e, t, s, n, o, i) {
   const a = l("QTooltip"), r = l("QTab");
   return d(), g(r, {
     name: e.tabIndex,
@@ -710,22 +710,22 @@ function as(e, t, s, n, o, i) {
         "transition-hide": "jump-left"
       }, {
         default: h(() => [
-          T("span", ns, N(e.name), 1)
+          T("span", os, N(e.name), 1)
         ]),
         _: 1
       }),
       e.tabId ? (d(), $("span", {
         key: 0,
         id: e.getBsMenuTabId(e.tabId)
-      }, null, 8, os)) : S("", !0)
+      }, null, 8, as)) : S("", !0)
     ]),
     _: 1
   }, 8, ["name", "icon"]);
 }
-const Ce = /* @__PURE__ */ b(ss, [["render", as], ["__scopeId", "data-v-61b2252d"]]), is = m({
+const Ce = /* @__PURE__ */ b(ns, [["render", is], ["__scopeId", "data-v-61b2252d"]]), rs = m({
   name: "BsMenuTabs",
   components: {
-    QTabs: Fe
+    QTabs: Ge
   },
   props: {
     modelValue: [Number, String]
@@ -741,10 +741,10 @@ const Ce = /* @__PURE__ */ b(ss, [["render", as], ["__scopeId", "data-v-61b2252d
     }
   }
 });
-const rs = { class: "tabs-container" };
-function ls(e, t, s, n, o, i) {
+const ls = { class: "tabs-container" };
+function ds(e, t, s, n, o, i) {
   const a = l("q-tabs");
-  return d(), $("div", rs, [
+  return d(), $("div", ls, [
     p(a, {
       "model-value": e.modelValue,
       "onUpdate:modelValue": t[0] || (t[0] = (r) => e.$emit("update:model-value", r)),
@@ -760,7 +760,7 @@ function ls(e, t, s, n, o, i) {
     }, 8, ["model-value"])
   ]);
 }
-const we = /* @__PURE__ */ b(is, [["render", ls], ["__scopeId", "data-v-0b4a6261"]]);
+const we = /* @__PURE__ */ b(rs, [["render", ds], ["__scopeId", "data-v-0b4a6261"]]);
 class Ne {
   constructor() {
     this.seen = {}, this.seen = {};
@@ -804,7 +804,7 @@ const G = class {
 };
 let je = G;
 je.instances = {};
-const ds = new je("tabs"), us = m({
+const us = new je("tabs"), cs = m({
   name: "BsTab",
   mixins: [ae, oe],
   components: {
@@ -813,13 +813,13 @@ const ds = new je("tabs"), us = m({
     BsDocumentation: se,
     BsContent: te,
     BsTabIcon: F,
-    QPageContainer: Ge,
-    QPage: Re
+    QPageContainer: Re,
+    QPage: Xe
   },
   data() {
     return {
       index: 0,
-      tabId: ds.slug(this.name),
+      tabId: us.slug(this.name),
       isActive: !1,
       openDoc: !1,
       qPageMounted: !1
@@ -954,9 +954,9 @@ const ds = new je("tabs"), us = m({
     this.unregisterTab();
   }
 });
-const cs = ["id"];
-function hs(e, t, s, n, o, i) {
-  const a = l("BsHeader"), r = l("BsDrawer"), u = l("BsDocumentation"), c = l("BsTabIcon"), I = l("BsContent"), j = l("QPage"), M = l("QPageContainer");
+const hs = ["id"];
+function ps(e, t, s, n, o, i) {
+  const a = l("BsHeader"), r = l("BsDrawer"), u = l("BsDocumentation"), c = l("BsTabIcon"), y = l("BsContent"), j = l("QPage"), M = l("QPageContainer");
   return d(), $(x, null, [
     e.usingSlotHeader || !(e.header || e.defaultTabUsed) ? (d(), g(a, { key: 0 }, {
       default: h(() => [
@@ -996,13 +996,13 @@ function hs(e, t, s, n, o, i) {
               class: "content",
               id: e.tabContentId
             }, [
-              e.usingSlotContent ? (d(), g(I, { key: 0 }, {
+              e.usingSlotContent ? (d(), g(y, { key: 0 }, {
                 default: h(() => [
                   f(e.$slots, "content", {}, void 0, !0)
                 ]),
                 _: 3
               })) : S("", !0)
-            ], 8, cs)
+            ], 8, hs)
           ]),
           _: 3
         }, 8, ["onVnodeMounted"])
@@ -1014,7 +1014,7 @@ function hs(e, t, s, n, o, i) {
     f(e.$slots, "default", {}, void 0, !0)
   ], 64);
 }
-const Pe = /* @__PURE__ */ b(us, [["render", hs], ["__scopeId", "data-v-694ef9e9"]]), ps = new Ne(), ms = m({
+const Pe = /* @__PURE__ */ b(cs, [["render", ps], ["__scopeId", "data-v-694ef9e9"]]), ms = new Ne(), gs = m({
   name: "BsLayoutDefault",
   mixins: [oe, ae],
   components: {
@@ -1023,7 +1023,7 @@ const Pe = /* @__PURE__ */ b(us, [["render", hs], ["__scopeId", "data-v-694ef9e9
     BsMenuTabs: we,
     BsLayoutDrawer: _e,
     BsLayoutHeader: ve,
-    QLayout: Xe
+    QLayout: Je
   },
   props: {
     docTitle: {
@@ -1094,7 +1094,7 @@ const Pe = /* @__PURE__ */ b(us, [["render", hs], ["__scopeId", "data-v-694ef9e9
   },
   computed: {
     tabContentId() {
-      return `tab-content-id-${ps.slug(this.defaultLayoutTabName)}`;
+      return `tab-content-id-${ms.slug(this.defaultLayoutTabName)}`;
     },
     activeTabSlots() {
       return Object.keys(this.$slots).filter((e) => this.tabSlotNames.includes(e));
@@ -1134,8 +1134,8 @@ const Pe = /* @__PURE__ */ b(us, [["render", hs], ["__scopeId", "data-v-694ef9e9
     this.mounted = !0;
   }
 });
-function gs(e, t, s, n, o, i) {
-  const a = l("BsLayoutDrawer"), r = l("BsLayoutHeader"), u = l("BsMenuTab"), c = l("BsMenuTabs"), I = l("BsTab"), j = l("QLayout");
+function bs(e, t, s, n, o, i) {
+  const a = l("BsLayoutDrawer"), r = l("BsLayoutHeader"), u = l("BsMenuTab"), c = l("BsMenuTabs"), y = l("BsTab"), j = l("QLayout");
   return d(), g(j, {
     view: "lHh LpR lFf",
     class: "bg-white",
@@ -1170,7 +1170,7 @@ function gs(e, t, s, n, o, i) {
         ]),
         _: 1
       }, 8, ["modelValue"])) : S("", !0),
-      e.mounted && e.defaultTabUsed ? (d(), g(I, {
+      e.mounted && e.defaultTabUsed ? (d(), g(y, {
         key: 1,
         "onMounted:qPage": t[5] || (t[5] = (M) => e.qPageMounted = !0),
         name: e.defaultLayoutTabName
@@ -1191,15 +1191,15 @@ function gs(e, t, s, n, o, i) {
     _: 3
   }, 8, ["style"]);
 }
-const bs = /* @__PURE__ */ b(ms, [["render", gs]]), fs = {
+const fs = /* @__PURE__ */ b(gs, [["render", bs]]), Ss = {
   xs: 18,
   sm: 22,
   md: 26,
   lg: 30,
   xl: 34
-}, Ss = function(e, t = fs) {
+}, Ts = function(e, t = Ss) {
   return e !== void 0 ? e in t ? `${t[e]}px` : e : null;
-}, Ts = {
+}, Ms = {
   size: {
     type: String,
     default: "sm"
@@ -1217,17 +1217,17 @@ const bs = /* @__PURE__ */ b(ms, [["render", gs]]), fs = {
   color: { type: String, default: "rgba(111, 125, 137, 0.8)" },
   disable: Boolean,
   tabindex: [String, Number]
-}, Ms = ["update:modelValue"];
+}, Ds = ["update:modelValue"];
 function ue(e) {
   e.cancelable !== !1 && e.preventDefault(), e.stopPropagation();
 }
-const Ds = m({
+const $s = m({
   name: "BsToggle",
   data() {
     return {};
   },
-  props: w({}, Ts),
-  emits: Ms,
+  props: w({}, Ms),
+  emits: Ds,
   computed: {
     modelIsArray() {
       return this.val !== void 0 && Array.isArray(this.modelValue);
@@ -1246,7 +1246,7 @@ const Ds = m({
       return this.disable === !0 ? -1 : this.tabindex || 0;
     },
     fontSize() {
-      return Ss(this.size);
+      return Ts(this.size);
     }
   },
   methods: {
@@ -1273,8 +1273,8 @@ const Ds = m({
       (e.keyCode === 13 || e.keyCode === 32) && this.onClick(e);
     }
   }
-}), $s = ["checked", "value"], Is = ["aria-checked", "aria-disabled", "aria-readonly", "tabindex"];
-function ys(e, t, s, n, o, i) {
+}), ys = ["checked", "value"], Is = ["aria-checked", "aria-disabled", "aria-readonly", "tabindex"];
+function _s(e, t, s, n, o, i) {
   return d(), $("div", {
     class: A([{
       "bs-toggle--is-disabled": e.disable
@@ -1290,7 +1290,7 @@ function ys(e, t, s, n, o, i) {
       checked: e.isTrue === !0,
       value: e.modelIsArray === !0 ? e.val : e.trueValue,
       class: "bs-toggle__input"
-    }, null, 8, $s),
+    }, null, 8, ys),
     T("div", {
       "aria-checked": e.isTrue === !0,
       "aria-disabled": e.disable,
@@ -1312,7 +1312,7 @@ function ys(e, t, s, n, o, i) {
     }, N(e.labelRight), 3)) : S("", !0)
   ], 6);
 }
-const _s = /* @__PURE__ */ b(Ds, [["render", ys]]), vs = m({
+const vs = /* @__PURE__ */ b($s, [["render", _s]]), Cs = m({
   name: "BsSelect",
   data() {
     return {
@@ -1328,7 +1328,7 @@ const _s = /* @__PURE__ */ b(Ds, [["render", ys]]), vs = m({
     }
   },
   components: {
-    QSelect: Je
+    QSelect: xe
   },
   methods: {
     popupShow() {
@@ -1351,14 +1351,14 @@ const _s = /* @__PURE__ */ b(Ds, [["render", ys]]), vs = m({
         return this.placeHolder;
     }
   }
-}), Cs = {
+}), ws = {
   key: 0,
   class: "bs-select__label dss-caption-400 q-mb-xs"
 };
-function ws(e, t, s, n, o, i) {
+function Ns(e, t, s, n, o, i) {
   const a = l("QSelect");
   return d(), $("div", null, [
-    e.bsLabel ? (d(), $("label", Cs, N(e.bsLabel), 1)) : S("", !0),
+    e.bsLabel ? (d(), $("label", ws, N(e.bsLabel), 1)) : S("", !0),
     p(a, O({ ref: "bsSelect" }, e.$attrs, {
       "dropdown-icon": "r_expand_more",
       class: "bs-select",
@@ -1374,50 +1374,50 @@ function ws(e, t, s, n, o, i) {
       C(e.$slots, (r, u) => ({
         name: u,
         fn: h((c) => [
-          f(e.$slots, u, y(_(c || {})))
+          f(e.$slots, u, I(_(c || {})))
         ])
       }))
     ]), 1040, ["onPopupShow", "onPopupHide", "popup-content-style", "label"])
   ]);
 }
-const Ns = /* @__PURE__ */ b(vs, [["render", ws]]), js = m({
+const js = /* @__PURE__ */ b(Cs, [["render", Ns]]), Ps = m({
   name: "BsButton",
   components: {
     QBtn: Q
   }
 });
-function Ps(e, t, s, n, o, i) {
+function Bs(e, t, s, n, o, i) {
   const a = l("QBtn");
   return d(), g(a, O(e.$attrs, { unelevated: "" }), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
 }
-const Bs = /* @__PURE__ */ b(js, [["render", Ps]]), Os = m({
+const Os = /* @__PURE__ */ b(Ps, [["render", Bs]]), As = m({
   name: "BsTooltip",
   components: {
     QTooltip: me
   }
 });
-function As(e, t, s, n, o, i) {
+function ks(e, t, s, n, o, i) {
   const a = l("QTooltip");
-  return d(), g(a, y(_(e.$attrs)), P({ _: 2 }, [
+  return d(), g(a, I(_(e.$attrs)), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
 }
-const ks = /* @__PURE__ */ b(Os, [["render", As]]), zs = m({
+const zs = /* @__PURE__ */ b(As, [["render", ks]]), Vs = m({
   name: "BsSlider",
   components: {
-    QSlider: xe
+    QSlider: Ke
   },
   props: {
     sliderWidth: {
@@ -1442,10 +1442,10 @@ const ks = /* @__PURE__ */ b(Os, [["render", As]]), zs = m({
       t < this.$attrs.min && (t = this.$attrs.min), t > this.$attrs.max && (t = this.$attrs.max), this.$emit("update:model-value", t);
     }
   }
-}), Vs = { class: "flex row bs-slider no-wrap" }, Ls = ["value", "min", "max", "step"];
-function Qs(e, t, s, n, o, i) {
+}), Ls = { class: "flex row bs-slider no-wrap" }, Qs = ["value", "min", "max", "step"];
+function Es(e, t, s, n, o, i) {
   const a = l("QSlider");
-  return d(), $("div", Vs, [
+  return d(), $("div", Ls, [
     p(a, O(e.$attrs, {
       style: { width: e.sliderWidth + "px" },
       "thumb-size": "15px",
@@ -1454,7 +1454,7 @@ function Qs(e, t, s, n, o, i) {
       C(e.$slots, (r, u) => ({
         name: u,
         fn: h((c) => [
-          f(e.$slots, u, y(_(c || {})))
+          f(e.$slots, u, I(_(c || {})))
         ])
       }))
     ]), 1040, ["style"]),
@@ -1466,44 +1466,51 @@ function Qs(e, t, s, n, o, i) {
       min: e.inputData.min,
       max: e.inputData.max,
       step: e.inputData.step
-    }, null, 40, Ls)
+    }, null, 40, Qs)
   ]);
 }
-const Es = /* @__PURE__ */ b(zs, [["render", Qs]]), Us = m({
+const Us = /* @__PURE__ */ b(Vs, [["render", Es]]), Ws = m({
   name: "BsRange",
   components: {
-    QRange: Ke
+    QRange: et
   }
 });
-function Ws(e, t, s, n, o, i) {
+function Hs(e, t, s, n, o, i) {
   const a = l("QRange");
-  return d(), g(a, y(_(e.$attrs)), P({ _: 2 }, [
+  return d(), g(a, I(_(e.$attrs)), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
 }
-const Hs = /* @__PURE__ */ b(Us, [["render", Ws]]), qs = m({
+const qs = /* @__PURE__ */ b(Ws, [["render", Hs]]), Ys = m({
   name: "BsSpinner",
   components: {
-    QSpinner: et
+    QSpinner: tt
   }
 });
-function Ys(e, t, s, n, o, i) {
+function Zs(e, t, s, n, o, i) {
   const a = l("QSpinner");
-  return d(), g(a, y(_(e.$attrs)), P({ _: 2 }, [
+  return d(), g(a, I(_(e.$attrs)), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
 }
-const Zs = /* @__PURE__ */ b(qs, [["render", Ys]]), Fs = process.env.NODE_ENV, Gs = Fs === "production", Rs = process.env.FLASK_RUN_PORT, Xs = `http://127.0.0.1:${Rs}`;
+const Fs = /* @__PURE__ */ b(Ys, [["render", Zs]]), Gs = process.env.NODE_ENV, Rs = Gs === "production";
+let Be = "5000";
+try {
+  Be = process.env.FLASK_RUN_PORT;
+} catch (e) {
+  console.error(e);
+}
+const Xs = `http://127.0.0.1:${Be}`;
 function ee(e) {
   return new Promise((t, s) => {
     e.then((n) => t(n == null ? void 0 : n.data)).catch((n) => s(n));
@@ -1511,8 +1518,8 @@ function ee(e) {
 }
 class Y {
   static initClient() {
-    const t = Gs ? parent.getWebAppBackendUrl("") : Xs;
-    this._restApiEndpoint = `${t}/bs_api/`, this.client = ht.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
+    const t = Rs ? parent.getWebAppBackendUrl("") : Xs;
+    this._restApiEndpoint = `${t}/bs_api/`, this.client = pt.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
       (s) => s,
       (s) => {
         console.error(s), this.errors.push(s.response);
@@ -1546,13 +1553,21 @@ class Y {
     });
   }
   static getDatasetChunk(t, s = 1e4, n = 0) {
-    return this.doGet(`dataset/get/dataset_name=${t}/chunksize=${s}/chunk_index=${n}`);
+    return this.doPost("dataset/get", {
+      dataset_name: t,
+      chunksize: s,
+      chunk_index: n
+    });
   }
   static getDatasetSchema(t) {
-    return this.doGet(`dataset/get_schema/dataset_name=${t}`);
+    return this.doPost("dataset/get_schema", {
+      dataset_name: t
+    });
   }
   static getDatasetGenericData(t) {
-    return this.doGet(`dataset/get_generic_data/dataset_name=${t}`);
+    return this.doPost("dataset/get_generic_data", {
+      dataset_name: t
+    });
   }
 }
 Y.errors = [];
@@ -1602,16 +1617,20 @@ const Js = m({
       return new Promise((t, s) => {
         this.setFetchingChunk(!0), Y.getDatasetChunk(...e).then((n) => {
           const o = this.transformDSSDataToQTableRow(n);
-          this.setFetchingChunk(!1), t(o);
-        }).catch(s);
+          t(o);
+        }).catch(s).finally(() => {
+          this.setFetchingChunk(!1);
+        });
       });
     },
     fetchDSSColumns(...e) {
       return this.setFetchingSchema(!0), new Promise((t, s) => {
         Y.getDatasetGenericData(...e).then(({ schema: n, columnsCount: o }) => {
           const a = n.columns.map((r) => this.createBsTableCol({ name: r.name, dataType: r.type }));
-          this.setFetchingSchema(!1), t({ columns: a, columnsCount: o });
-        }).catch(s);
+          t({ columns: a, columnsCount: o });
+        }).catch(s).finally(() => {
+          this.setFetchingSchema(!1);
+        });
       });
     },
     updateColumns(...e) {
@@ -1656,7 +1675,7 @@ const Js = m({
       this.dssTableName && e && t !== void 0 && (this.updateColumns(this.dssTableName), this.updateRows(this.dssTableName, e, t));
     },
     updateTableDataOnWatchedChanged(e, t) {
-      pt(e, t) || this.updateTableData();
+      mt(e, t) || this.updateTableData();
     }
   },
   mounted() {
@@ -1681,7 +1700,7 @@ let ne = () => {
   const t = /* @__PURE__ */ new Map(), s = /* @__PURE__ */ new Map();
   ne = e;
 }
-function Be(e, t, s, ...n) {
+function Oe(e, t, s, ...n) {
   return n ? ne(e, t, s, ...n) : ne(e, t, s);
 }
 function sn(e, t, s = !1) {
@@ -1712,8 +1731,8 @@ function an(e, { columns: t, searchVal: s }, n, o) {
   if (a.length) {
     const r = n.filter((u) => a.includes(u.name));
     i = i.filter((u) => r.every((c) => {
-      const I = t[c.name];
-      return ce(c, u, I, o);
+      const y = t[c.name];
+      return ce(c, u, y, o);
     }));
   }
   return s && (i = i.filter((r) => n.some((u) => ce(u, r, s, o)))), i;
@@ -1744,7 +1763,7 @@ const rn = m({
     return {
       inputDebouncing: !1,
       value: null,
-      id: mt("bs-input-debounce-")
+      id: gt("bs-input-debounce-")
     };
   },
   watch: {
@@ -1763,7 +1782,7 @@ const rn = m({
       this.formatInput && this.$emit("update:formatted-value", this.formatInputMethod(e));
     },
     updateValueDebounce(e) {
-      this.updateValueNoDebounce(e), this.setLoading(!0), Be(
+      this.updateValueNoDebounce(e), this.setLoading(!0), Oe(
         () => {
           this.updateSearchedValue(e), this.setLoading(!1);
         },
@@ -1792,20 +1811,20 @@ function ln(e, t, s, n, o, i) {
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040, ["model-value", "onUpdate:modelValue", "loading"]);
 }
-const Oe = /* @__PURE__ */ b(rn, [["render", ln]]), dn = m({
+const Ae = /* @__PURE__ */ b(rn, [["render", ln]]), dn = m({
   name: "BsSearchTable",
   components: {
     QIcon: E,
-    BsInputDebounce: Oe
+    BsInputDebounce: Ae
   },
   data() {
     return {
-      mdiTableSearch: ft
+      mdiTableSearch: St
     };
   }
 });
@@ -1828,8 +1847,8 @@ function cn(e, t, s, n, o, i) {
     }, [
       C(e.$slots, (u, c) => ({
         name: c,
-        fn: h((I) => [
-          f(e.$slots, c, y(_(I || {})), void 0, !0)
+        fn: h((y) => [
+          f(e.$slots, c, I(_(y || {})), void 0, !0)
         ])
       }))
     ]), 1040)
@@ -1837,7 +1856,7 @@ function cn(e, t, s, n, o, i) {
 }
 const hn = /* @__PURE__ */ b(dn, [["render", cn], ["__scopeId", "data-v-44bf8d0f"]]), pn = m({
   name: "BsSearchTableCol",
-  components: { BsInputDebounce: Oe },
+  components: { BsInputDebounce: Ae },
   props: {
     icon: String
   }
@@ -1860,8 +1879,8 @@ function mn(e, t, s, n, o, i) {
   }, [
     C(e.$slots, (u, c) => ({
       name: c,
-      fn: h((I) => [
-        f(e.$slots, c, y(_(I || {})))
+      fn: h((y) => [
+        f(e.$slots, c, I(_(y || {})))
       ])
     }))
   ]), 1040);
@@ -1871,17 +1890,17 @@ const gn = /* @__PURE__ */ b(pn, [["render", mn]]), bn = m({
   components: {
     QIcon: E,
     QTh: be,
-    QMenu: tt,
-    QItem: st,
-    QItemSection: nt,
-    QList: ot,
+    QMenu: st,
+    QItem: nt,
+    QItemSection: ot,
+    QList: at,
     BsSearchTableCol: gn
   },
   emits: ["search-col"],
   data() {
     return {
-      mdiArrowUpThin: St,
-      searchColIcon: Tt,
+      mdiArrowUpThin: Tt,
+      searchColIcon: Mt,
       searchPopupActive: !1,
       lastSearchedValue: "",
       noDebounceValue: ""
@@ -1927,7 +1946,7 @@ const fn = { class: "bs-table-col-header-title-container" }, Sn = { class: "bs-t
 }, Mn = ["onClick"];
 function Dn(e, t, s, n, o, i) {
   var M, v, k, D;
-  const a = l("q-icon"), r = l("BsSearchTableCol"), u = l("q-item-section"), c = l("q-item"), I = l("q-list"), j = l("q-menu");
+  const a = l("q-icon"), r = l("BsSearchTableCol"), u = l("q-item-section"), c = l("q-item"), y = l("q-list"), j = l("q-menu");
   return d(), $("div", {
     class: "bs-table-col-header-container",
     style: z({ "--bs-table-header-cursor-type": e.sortable ? "pointer" : "default" }),
@@ -1940,7 +1959,7 @@ function Dn(e, t, s, n, o, i) {
     T("div", {
       ref: "BsTableColHeaderActions",
       class: "bs-table-col-header-actions q-py-xs q-px-sm rounded-borders",
-      onClick: Ue((B) => 1, ["stop"])
+      onClick: We((B) => 1, ["stop"])
     }, [
       e.sortable ? (d(), g(a, {
         key: 0,
@@ -1968,7 +1987,7 @@ function Dn(e, t, s, n, o, i) {
             "onUpdate:modelValue": t[2] || (t[2] = (B) => e.searchPopupActive = B)
           }, {
             default: h(() => [
-              p(I, null, {
+              p(y, null, {
                 default: h(() => [
                   p(c, null, {
                     default: h(() => [
@@ -1999,7 +2018,7 @@ function Dn(e, t, s, n, o, i) {
     ], 8, Mn)
   ], 4);
 }
-const $n = /* @__PURE__ */ b(bn, [["render", Dn], ["__scopeId", "data-v-7bb6b8d5"]]), In = m({
+const $n = /* @__PURE__ */ b(bn, [["render", Dn], ["__scopeId", "data-v-7bb6b8d5"]]), yn = m({
   name: "BSTableHeader",
   components: {
     QTr: fe,
@@ -2015,7 +2034,7 @@ const $n = /* @__PURE__ */ b(bn, [["render", Dn], ["__scopeId", "data-v-7bb6b8d5
   },
   emits: ["search-col"]
 });
-function yn(e, t, s, n, o, i) {
+function In(e, t, s, n, o, i) {
   const a = l("BsTableColHeader"), r = l("q-th"), u = l("q-tr");
   return d(), g(u, { props: e.props }, {
     default: h(() => [
@@ -2028,7 +2047,7 @@ function yn(e, t, s, n, o, i) {
             sort: e.props.sort,
             col: c,
             "searched-cols": e.searchedCols,
-            onSearchCol: t[0] || (t[0] = (...I) => e.$emit("search-col", ...I))
+            onSearchCol: t[0] || (t[0] = (...y) => e.$emit("search-col", ...y))
           }, null, 8, ["sort", "col", "searched-cols"])
         ]),
         _: 2
@@ -2037,7 +2056,7 @@ function yn(e, t, s, n, o, i) {
     _: 1
   }, 8, ["props"]);
 }
-const _n = /* @__PURE__ */ b(In, [["render", yn], ["__scopeId", "data-v-35fc6e5f"]]), vn = m({
+const _n = /* @__PURE__ */ b(yn, [["render", In], ["__scopeId", "data-v-35fc6e5f"]]), vn = m({
   name: "BsTextHighlight",
   components: {},
   data() {
@@ -2049,7 +2068,7 @@ const _n = /* @__PURE__ */ b(In, [["render", yn], ["__scopeId", "data-v-35fc6e5f
   },
   computed: {
     highlightedText() {
-      let e = V(this.text) || Se(this.text) ? "" : gt(`${this.text}`);
+      let e = V(this.text) || Se(this.text) ? "" : bt(`${this.text}`);
       const t = (this.queries || []).filter((c) => !V(c));
       if (!(e && t.length))
         return e;
@@ -2058,25 +2077,25 @@ const _n = /* @__PURE__ */ b(In, [["render", yn], ["__scopeId", "data-v-35fc6e5f
         [e.length, { from: [], to: [] }]
       ]);
       t.forEach(
-        (c, I) => sn(c, e).forEach((j) => {
+        (c, y) => sn(c, e).forEach((j) => {
           const M = j, v = j + c.length;
           s.has(M) || s.set(M, { from: [], to: [] }), s.has(v) || s.set(v, { from: [], to: [] });
           const k = s.get(M), D = s.get(v);
-          k.from.push(I), D.to.push(I);
+          k.from.push(y), D.to.push(y);
         })
       );
-      const n = Array.from(s.keys()).sort((c, I) => c - I);
+      const n = Array.from(s.keys()).sort((c, y) => c - y);
       if (!n.length)
         return e;
-      const o = n.length - 1, i = [], a = new Array(o).fill("").map((c, I) => e.substring(n[I], n[I + 1]));
+      const o = n.length - 1, i = [], a = new Array(o).fill("").map((c, y) => e.substring(n[y], n[y + 1]));
       let r = 0;
       for (; r < o; ) {
-        const { from: c, to: I } = s.get(n[r]);
+        const { from: c, to: y } = s.get(n[r]);
         c.forEach((M) => {
           i.includes(M) || i.push(M);
-          const v = I.indexOf(M);
+          const v = y.indexOf(M);
           v !== -1 && i.splice(v, 1);
-        }), I.forEach((M) => {
+        }), y.forEach((M) => {
           const v = i.indexOf(M);
           v !== -1 && i.splice(v, 1);
         });
@@ -2201,7 +2220,7 @@ function On(e, t, s, n, o, i) {
 const An = /* @__PURE__ */ b(Nn, [["render", On], ["__scopeId", "data-v-4c15147d"]]), kn = m({
   name: "BsTableVirtualScrollIndicator",
   components: {
-    QLinearProgress: at
+    QLinearProgress: it
   },
   props: {
     qTableMiddle: Object
@@ -2220,7 +2239,7 @@ const An = /* @__PURE__ */ b(Nn, [["render", On], ["__scopeId", "data-v-4c15147d
       });
     },
     onScroll() {
-      Be(() => {
+      Oe(() => {
         if (!this.qTableMiddle)
           return;
         const e = this.qTableMiddle.scrollTop, t = this.qTableMiddle.scrollHeight - this.qTableMiddle.clientHeight;
@@ -2275,7 +2294,7 @@ const Ln = /* @__PURE__ */ b(kn, [["render", Vn], ["__scopeId", "data-v-15d38d19
   data() {
     return {
       recordsCount: 0,
-      mdiAlert: Mt
+      mdiAlert: Dt
     };
   },
   computed: {
@@ -2432,9 +2451,9 @@ function xn(e, t, s, n, o, i) {
 const Kn = /* @__PURE__ */ b(Zn, [["render", xn], ["__scopeId", "data-v-7b6fde67"]]), eo = m({
   name: "BsTable",
   components: {
-    QTable: it,
+    QTable: rt,
     QTr: fe,
-    QTd: rt,
+    QTd: lt,
     QBtn: Q,
     BsDSSTableFunctional: Ks,
     BsSearchWholeTable: hn,
@@ -2443,7 +2462,7 @@ const Kn = /* @__PURE__ */ b(Zn, [["render", xn], ["__scopeId", "data-v-7b6fde67
     BsTableBottom: Yn,
     BsTableServerSidePagination: Kn
   },
-  emits: ["update:rows", "update:columns", "update:server-side-pagination", "virtual-scroll"],
+  emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
   inheritAttrs: !1,
   props: {
     dssTableName: String,
@@ -2489,7 +2508,7 @@ const Kn = /* @__PURE__ */ b(Zn, [["render", xn], ["__scopeId", "data-v-7b6fde67
       passedRowsLength: 0,
       tableEl: void 0,
       qTableMiddle: void 0,
-      mdiCloseCircleMultiple: Dt
+      mdiCloseCircleMultiple: $t
     };
   },
   computed: {
@@ -2500,7 +2519,7 @@ const Kn = /* @__PURE__ */ b(Zn, [["render", xn], ["__scopeId", "data-v-7b6fde67
       return this.loading || this.searching || this.fetching;
     },
     anyColumnSearched() {
-      return !(!this.searchedValue && bt(this.searchedCols));
+      return !(!this.searchedValue && ft(this.searchedCols));
     },
     isServerSidePaginationObject() {
       return typeof this.serverSidePagination != "boolean";
@@ -2553,6 +2572,9 @@ const Kn = /* @__PURE__ */ b(Zn, [["render", xn], ["__scopeId", "data-v-7b6fde67
     },
     "passedRows.length"(e) {
       this.passedRowsLength = e;
+    },
+    isLoading(e) {
+      this.$emit("update:loading", e);
     }
   },
   methods: {
@@ -2645,7 +2667,7 @@ const to = { class: "bs-table-top-container" }, so = { class: "bs-table-name" },
   class: "bs-table-top-slot-container"
 };
 function io(e, t, s, n, o, i) {
-  const a = l("BsDSSTableFunctional"), r = l("BsSearchWholeTable"), u = l("q-btn"), c = l("BsTableServerSidePagination"), I = l("BsTextHighlight"), j = l("q-td"), M = l("BSTableHeader"), v = l("BsTableBottom"), k = l("QTable");
+  const a = l("BsDSSTableFunctional"), r = l("BsSearchWholeTable"), u = l("q-btn"), c = l("BsTableServerSidePagination"), y = l("BsTextHighlight"), j = l("q-td"), M = l("BSTableHeader"), v = l("BsTableBottom"), k = l("QTable");
   return d(), $(x, null, [
     e.isDSSTable ? (d(), g(a, {
       key: 0,
@@ -2705,12 +2727,12 @@ function io(e, t, s, n, o, i) {
         ])) : S("", !0)
       ]),
       "body-cell": h((D) => [
-        e.$slots.hasOwnProperty("body-cell") ? f(e.$slots, "body-cell", y(O({ key: 0 }, e.getBodyCellProps(D))), void 0, !0) : (d(), g(j, {
+        e.$slots.hasOwnProperty("body-cell") ? f(e.$slots, "body-cell", I(O({ key: 0 }, e.getBodyCellProps(D))), void 0, !0) : (d(), g(j, {
           key: 1,
           props: D
         }, {
           default: h(() => [
-            p(I, {
+            p(y, {
               queries: [e.searchedValueFormatted, e.getColSearchedValue(D.col.name)],
               text: D.value
             }, null, 8, ["queries", "text"])
@@ -2741,31 +2763,31 @@ function io(e, t, s, n, o, i) {
       C(e.colSlotsUsed, (D) => ({
         name: e.getColBodySlot(D),
         fn: h((B) => [
-          f(e.$slots, e.getColBodySlot(D), y(_(e.getBodyCellProps(B))), void 0, !0)
+          f(e.$slots, e.getColBodySlot(D), I(_(e.getBodyCellProps(B))), void 0, !0)
         ])
       })),
       C(e.filteredSlots, (D, B) => ({
         name: B,
-        fn: h((Ae) => [
-          f(e.$slots, B, y(_(Ae || {})), void 0, !0)
+        fn: h((ke) => [
+          f(e.$slots, B, I(_(ke || {})), void 0, !0)
         ])
       }))
     ]), 1040, ["rows", "columns", "filter", "filter-method", "loading", "virtual-scroll", "rows-per-page-options", "class", "onVirtualScroll"])
   ], 64);
 }
-const ro = /* @__PURE__ */ b(eo, [["render", io], ["__scopeId", "data-v-0674a6b4"]]), lo = m({
+const ro = /* @__PURE__ */ b(eo, [["render", io], ["__scopeId", "data-v-aa118edc"]]), lo = m({
   name: "BsImg",
   components: {
-    QImg: lt
+    QImg: dt
   }
 });
 function uo(e, t, s, n, o, i) {
   const a = l("QImg");
-  return d(), g(a, y(_(e.$attrs)), P({ _: 2 }, [
+  return d(), g(a, I(_(e.$attrs)), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
@@ -2778,11 +2800,11 @@ const co = /* @__PURE__ */ b(lo, [["render", uo]]), ho = m({
 });
 function po(e, t, s, n, o, i) {
   const a = l("QIcon");
-  return d(), g(a, y(_(e.$attrs)), P({ _: 2 }, [
+  return d(), g(a, I(_(e.$attrs)), P({ _: 2 }, [
     C(e.$slots, (r, u) => ({
       name: u,
       fn: h((c) => [
-        f(e.$slots, u, y(_(c || {})))
+        f(e.$slots, u, I(_(c || {})))
       ])
     }))
   ]), 1040);
@@ -2790,7 +2812,7 @@ function po(e, t, s, n, o, i) {
 const mo = /* @__PURE__ */ b(ho, [["render", po]]), go = m({
   name: "BsCheckbox",
   components: {
-    QCheckbox: dt
+    QCheckbox: ut
   },
   props: {
     hint: {
@@ -2825,7 +2847,7 @@ function fo(e, t, s, n, o, i) {
       C(e.$slots, (r, u) => ({
         name: u,
         fn: h((c) => [
-          f(e.$slots, u, y(_(c || {})))
+          f(e.$slots, u, I(_(c || {})))
         ])
       }))
     ]), 1040, ["label"]),
@@ -2836,8 +2858,8 @@ const So = /* @__PURE__ */ b(go, [["render", fo]]), To = m({
   name: "BsDateRange",
   components: {
     QInput: ge,
-    QDate: ut,
-    QPopupProxy: ct,
+    QDate: ct,
+    QPopupProxy: ht,
     QIcon: E,
     QBtn: Q
   },
@@ -2856,10 +2878,10 @@ const So = /* @__PURE__ */ b(go, [["render", fo]]), To = m({
   class: "bs-date-range__label dss-caption-400 q-mb-xs"
 }, Do = { class: "row items-center justify-end" };
 function $o(e, t, s, n, o, i) {
-  const a = l("QBtn"), r = l("QDate"), u = l("QPopupProxy"), c = l("QIcon"), I = l("QInput"), j = We("close-popup");
+  const a = l("QBtn"), r = l("QDate"), u = l("QPopupProxy"), c = l("QIcon"), y = l("QInput"), j = He("close-popup");
   return d(), $("div", null, [
     e.bsLabel ? (d(), $("label", Mo, N(e.bsLabel), 1)) : S("", !0),
-    p(I, {
+    p(y, {
       dense: "",
       outlined: "",
       readonly: "",
@@ -2903,72 +2925,72 @@ function $o(e, t, s, n, o, i) {
     }, 8, ["modelValue"])
   ]);
 }
-const Io = /* @__PURE__ */ b(To, [["render", $o]]);
-const yo = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const yo = /* @__PURE__ */ b(To, [["render", $o]]);
+const Io = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  BsButton: Bs,
+  BsButton: Os,
   BsCheckbox: So,
   BsContent: te,
-  BsDateRange: Io,
+  BsDateRange: yo,
   BsDocumentation: se,
   BsDrawer: W,
-  BsDrawerBtn: ye,
+  BsDrawerBtn: Ie,
   BsHeader: H,
   BsIcon: mo,
   BsImg: co,
-  BsLayoutDefault: bs,
+  BsLayoutDefault: fs,
   BsLayoutDrawer: _e,
   BsLayoutHeader: ve,
   BsMenuTab: Ce,
   BsMenuTabs: we,
-  BsRange: Hs,
-  BsSelect: Ns,
-  BsSlider: Es,
-  BsSpinner: Zs,
+  BsRange: qs,
+  BsSelect: js,
+  BsSlider: Us,
+  BsSpinner: Fs,
   BsTab: Pe,
   BsTabChild: Z,
   BsTabIcon: F,
   BsTabPageChildWrapper: ie,
   BsTabTitle: re,
   BsTable: ro,
-  BsToggle: _s,
-  BsTooltip: ks,
+  BsToggle: vs,
+  BsTooltip: zs,
   CheckSlotComponentsMixin: ae,
   ProvideMixin: oe
 }, Symbol.toStringTag, { value: "Module" })), Po = {
   version: "1.4.0",
   install(e) {
-    It(e, { components: yo });
+    It(e, { components: Io });
   }
 }, Bo = "1.4.0";
 export {
-  Bs as BsButton,
+  Os as BsButton,
   So as BsCheckbox,
   te as BsContent,
-  Io as BsDateRange,
+  yo as BsDateRange,
   se as BsDocumentation,
   W as BsDrawer,
-  ye as BsDrawerBtn,
+  Ie as BsDrawerBtn,
   H as BsHeader,
   mo as BsIcon,
   co as BsImg,
-  bs as BsLayoutDefault,
+  fs as BsLayoutDefault,
   _e as BsLayoutDrawer,
   ve as BsLayoutHeader,
   Ce as BsMenuTab,
   we as BsMenuTabs,
-  Hs as BsRange,
-  Ns as BsSelect,
-  Es as BsSlider,
-  Zs as BsSpinner,
+  qs as BsRange,
+  js as BsSelect,
+  Us as BsSlider,
+  Fs as BsSpinner,
   Pe as BsTab,
   Z as BsTabChild,
   F as BsTabIcon,
   ie as BsTabPageChildWrapper,
   re as BsTabTitle,
   ro as BsTable,
-  _s as BsToggle,
-  ks as BsTooltip,
+  vs as BsToggle,
+  zs as BsTooltip,
   ae as CheckSlotComponentsMixin,
   oe as ProvideMixin,
   Po as QuasarBs,

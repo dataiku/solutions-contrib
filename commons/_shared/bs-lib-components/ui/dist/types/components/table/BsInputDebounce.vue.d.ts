@@ -28,7 +28,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     updateValueDebounce(val: string | number | null): void;
     updateValueNoDebounce(val: string | number | null): void;
     syncModelValue(): void;
-}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:model-value" | "update:loading" | "update:formatted-value" | "update:no-debounce:formatted-value")[], "update:model-value" | "update:loading" | "update:formatted-value" | "update:no-debounce:formatted-value", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:loading" | "update:model-value" | "update:formatted-value" | "update:no-debounce:formatted-value")[], "update:loading" | "update:model-value" | "update:formatted-value" | "update:no-debounce:formatted-value", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     modelValue: {
         type: PropType<string | number | null>;
         default: null;
@@ -46,8 +46,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         default: typeof formatSearchVal;
     };
 }>> & {
-    "onUpdate:model-value"?: ((...args: any[]) => any) | undefined;
     "onUpdate:loading"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:model-value"?: ((...args: any[]) => any) | undefined;
     "onUpdate:formatted-value"?: ((...args: any[]) => any) | undefined;
     "onUpdate:no-debounce:formatted-value"?: ((...args: any[]) => any) | undefined;
 }, {
