@@ -24,6 +24,21 @@ function getDotenvVar(varName, relativeDotenvPath) {
     return undefined;
 }
 
+
+function getTestViews() {
+    function readFolder(dir) {
+        return fs.existsSync(dir) ? fs.readdirSync(dir) : []; 
+    }
+    function resolveDevFolderPath(relPath) {
+        return path.resolve(__dirname, relPath);
+    }
+    const isVueFile = (fileName) => fileName.slice(-4) === ".vue"; // name.vue
+
+    const testViewsFolder = resolveDevFolderPath("src/test");
+    const testViewsFiles = readFolder(testViewsFolder);
+    return testViewsFiles.filter(isVueFile);
+}
+
 module.exports = function (ctx) {
     return {
         supportTS: true,
@@ -83,7 +98,8 @@ module.exports = function (ctx) {
                 cfg.plugins.push(
                     new webpack.DefinePlugin({
                         'process.env': {
-                            FLASK_RUN_PORT: JSON.stringify(getDotenvVar("FLASK_RUN_PORT") || 5000)
+                            FLASK_RUN_PORT: JSON.stringify(getDotenvVar("FLASK_RUN_PORT") || 5000),
+                            TEST_VIEWS: JSON.stringify(getTestViews())
                         }
                     })
                     )
