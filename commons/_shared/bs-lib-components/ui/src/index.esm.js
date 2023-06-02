@@ -1,5 +1,5 @@
 import installApp from "./install-lib.js";
-import ServerApi from "./server_api";
+import ServerApi from "./server_api.ts";
 
 import * as components from "./components.js";
 
