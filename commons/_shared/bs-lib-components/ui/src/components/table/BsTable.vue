@@ -417,6 +417,7 @@ $border-color: #BBBBBB;
     }
     :deep(.q-table){
         @include borders-style();
+        border-top: 0px;
         tbody td{
             height: 36px;
         }
@@ -428,9 +429,12 @@ $border-color: #BBBBBB;
             border: solid #BBBBBB;
             border-width: 1px 0px 1px 0px;
         }
+        tr:first-child:not(:last-child) th{
+            border-bottom: 0px;
+        }
         tr:last-child th {
             /* height of all previous header rows */
-            top: 48px;
+            top: 51px;
         }
         tr:first-child th {
             top: 0;

@@ -153,7 +153,7 @@ export default defineComponent({
         flex-direction: column;
         cursor: var(--bs-table-header-cursor-type);
         user-select: text;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: flex-start;
         height: 100%;
         .bs-table-col-header-title {
