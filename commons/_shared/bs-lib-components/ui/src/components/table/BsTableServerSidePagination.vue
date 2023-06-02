@@ -22,7 +22,7 @@
         />
     </div>
     <div class="bs-table-server-side-pagination-label">
-        rows
+        sampled rows
     </div>
 </div>
 </template>
@@ -116,9 +116,6 @@ export default defineComponent({
     width: 100%;
     padding: 0px 12px;
     font-size: 10px;
-    .bs-table-server-side-pagination-label {
-        color: #666666;
-    }
 
     .bs-table-server-side-pagination-offset {
         display: inline-block;

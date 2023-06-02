@@ -52,13 +52,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .bs-table-virtual-scroll-progress-bar {
-    width: 200px;
+    width: 100px;
+    .q-linear-progress{
+        color: #444444;
+    }
 }
 
 .bs-table-virtual-scroll {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     opacity: 0;
     transition: opacity .3s;
 

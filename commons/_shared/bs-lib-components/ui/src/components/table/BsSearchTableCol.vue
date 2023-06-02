@@ -31,10 +31,11 @@
 import { PropType, defineComponent } from 'vue';
 import BsInputDebounce from "./BsInputDebounce.vue"
 import { mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import { QIcon } from "quasar";
 
 export default defineComponent({
     name: "BsSearchTableCol",
-    components: { BsInputDebounce },
+    components: { BsInputDebounce, QIcon },
     props: {
         icon: String,
         clear: Boolean,
