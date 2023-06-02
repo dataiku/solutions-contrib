@@ -16,8 +16,7 @@ export default class ServerApi {
     private static initialized = false;
 
     private static initClient(serverUrl: string) {
-        console.log({serverUrl});
-        this._restApiEndpoint = `${serverUrl}/bs_api/`
+        this._restApiEndpoint = serverUrl
         this.client = axios_.create({ baseURL: this._restApiEndpoint });
         
         this.client.interceptors.response.use(
@@ -72,7 +71,7 @@ export default class ServerApi {
     }
 
     public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
-        return this.doPost(`dataset/get`, {
+        return this.doPost(`bs_api/dataset/get`, {
             dataset_name: datasetName,
             chunksize: chunksize,
             chunk_index: chunkIndex,
@@ -80,14 +79,14 @@ export default class ServerApi {
     }
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
-        return this.doPost(`dataset/get_schema`,{
+        return this.doPost(`bs_api/dataset/get_schema`,{
             dataset_name: datasetName,
         });
     }
 
 
     public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
-        return this.doPost(`dataset/get_generic_data`,{
+        return this.doPost(`bs_api/dataset/get_generic_data`,{
             dataset_name: datasetName,
         });
     }
