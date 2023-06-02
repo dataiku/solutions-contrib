@@ -4,3 +4,5 @@ export namespace QuasarBs {
 }
 export * from "./components.js";
 export const version: string;
+export { ServerApi };
+import ServerApi from "./server_api";

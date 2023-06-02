@@ -92,16 +92,3 @@ export default class ServerApi {
         });
     }
 }
-
-if (process.env.NODE_ENV === "development") {
-    let localBackendPort = "5000"
-    
-    try {
-        localBackendPort = process.env.FLASK_RUN_PORT as string;
-    } catch (error) {
-        console.error(error);
-    }
-    
-    const backendUrl = `http://127.0.0.1:${localBackendPort}`;
-    ServerApi.init(backendUrl);
-}
