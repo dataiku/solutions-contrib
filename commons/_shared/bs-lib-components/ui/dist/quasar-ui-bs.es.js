@@ -2958,11 +2958,11 @@ const Io = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   CheckSlotComponentsMixin: ae,
   ProvideMixin: oe
 }, Symbol.toStringTag, { value: "Module" })), Po = {
-  version: "1.4.0",
+  version: "1.4.1",
   install(e) {
     It(e, { components: Io });
   }
-}, Bo = "1.4.0";
+}, Bo = "1.4.1";
 export {
   Os as BsButton,
   So as BsCheckbox,

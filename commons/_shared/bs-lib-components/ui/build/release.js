@@ -92,18 +92,18 @@ async function main() {
     console.log(`(skipped)`);
   }
 
-  step("\nPublishing documentation");
-  if (!isDryRun) {
-    await run("yarn", ["build:docs"]);
-    await runIfNotDry("rsync", [
-      "-aP",
-      "--delete",
-      docsBuildSourcePattern,
-      destDocsBuildDir,
-    ]);
-  } else {
-    console.log(`(skipped)`);
-  }
+  // step("\nPublishing documentation");
+  // if (!isDryRun) {
+  //   await run("yarn", ["build:docs"]);
+  //   await runIfNotDry("rsync", [
+  //     "-aP",
+  //     "--delete",
+  //     docsBuildSourcePattern,
+  //     destDocsBuildDir,
+  //   ]);
+  // } else {
+  //   console.log(`(skipped)`);
+  // }
 
   step("\nCreating Release Notes");
   if (!isDryRun) {

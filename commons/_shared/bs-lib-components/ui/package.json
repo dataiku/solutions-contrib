@@ -1,6 +1,6 @@
 {
   "name": "quasar-ui-bs",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "author": "anas laaroussi <anas.laaroussi@dataiku.com>",
   "description": "Shared Components library for business solutions webapps based on vue & quasar",
