@@ -38,6 +38,7 @@ export default defineComponent({
     data() {
         return {
             sortedCol: '',
+            sortedDesc: false
         }
     },
     emits: ["search-col"],
@@ -46,7 +47,9 @@ export default defineComponent({
             this.$emit('search-col', colName);
         },
         sort(col: any) {
-            this.sortedCol = col.name;
+            const prevCol = this.sortedCol;
+            this.sortedCol = (prevCol !== col.name) ? col.name : (this.sortedDesc ? '' : col.name);
+            this.sortedDesc = (prevCol !== col.name) ? false : !this.sortedDesc;
             this.props.sort(col);
         }
     },

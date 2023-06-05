@@ -10,7 +10,6 @@
                 <div class="bs-table-col-header-title-icon">
                     <q-icon :name="mdiChevronDown" size="1rem">
                         <q-menu
-                            auto-close
                             anchor="bottom middle"
                             self="top middle"
                             transition-show="scale"
@@ -40,7 +39,7 @@
                                         </div>
                                     </q-item-section>
                                 </q-item>
-                                <q-item>
+                                <q-item v-close-popup>
                                     <q-item-section>
                                         <div
                                             class="bs-table-col-header-action-section cursor-pointer"
@@ -97,10 +96,11 @@ export default defineComponent({
         return {
             mdiArrowUpThin,
             mdiSortAscending,
+            mdiSortDescending,
             mdiChevronDown,
             searchColIcon: mdiMagnify,
             noDebounceValue: "" as string | null | number | undefined,
-            sortDesc: false,
+            sortAsc: false,
             sorted: false,
         };
     },
@@ -109,10 +109,10 @@ export default defineComponent({
             return !!(this.col as any)?._sortable;
         },
         sortColIcon(): any {
-            return !this.sortDesc ? mdiSortAscending : mdiSortDescending;
+            return !this.sortAsc ? mdiSortDescending : mdiSortAscending;
         },
         sortText(): string{
-            return !this.sortDesc ? 'descending' : 'ascending' ;
+            return !this.sortAsc ? 'ascending' : 'descending' ;
         }
     },
     props: {
@@ -123,7 +123,7 @@ export default defineComponent({
     methods: {
         sortColumn() {
             if (this.sortable && this.sort) this.sort(this.col);
-            this.sortDesc = this.sorted ? !this.sortDesc : true;
+            this.sortAsc = this.sorted ? !this.sortAsc : true;
         },
         searchColumn() {
             this.$emit("search-col", this.col?.name);
@@ -132,11 +132,11 @@ export default defineComponent({
     watch: {
         sortedCol(newVal: string){
             if(newVal === this.col?.name){
-                this.sortDesc = this.sorted ? !this.sortDesc : true;
+                this.sortAsc = this.sorted ? !this.sortAsc : true;
                 this.sorted = true;
             }else{
                 this.sorted = false;
-                this.sortDesc = false;
+                this.sortAsc = false;
             }
         }
     }
