@@ -10,14 +10,16 @@
 import { timeoutExecuteOnce } from '../../utils/utils';
 import { QLinearProgress } from 'quasar';
 import { defineComponent, PropType } from 'vue';
-
+import { ServerSidePagination } from './tableHelper';
 export default defineComponent({
     name: "BsTableVirtualScrollIndicator",
     components: {
         QLinearProgress
     },
     props: {
-        qTableMiddle: Object as PropType<HTMLElement>
+        fetchedRowsLength: Number,
+        serverSidePagination: Object as PropType<ServerSidePagination>,
+        scrollDetails: Object
     },
     data() {
         return {
@@ -27,26 +29,39 @@ export default defineComponent({
     },
     computed: {},
     methods: {
-        addScrollEventListener() {
-            if (!this.qTableMiddle) return;
-            this.qTableMiddle.addEventListener("scroll", (e) => {
-                this.onScroll();
-            });
+        computeProgress(startingIndex: number): number {
+            if(this.serverSidePagination){
+               return (startingIndex + this.serverSidePagination.batchOffset * this.serverSidePagination.batchSize)/(this.serverSidePagination.recordsCount || 1); 
+            }else if(this.fetchedRowsLength){
+                return (startingIndex + 1)/this.fetchedRowsLength; 
+            }else{
+                return 1;
+            }
         },
-        onScroll() {
+        updateProgress(startingIndex: number = 0){
             timeoutExecuteOnce(() => {
-                if (!this.qTableMiddle) return;
-                const scrollTop = this.qTableMiddle.scrollTop;
-                const scrollHeight = this.qTableMiddle.scrollHeight - this.qTableMiddle.clientHeight;
-                this.showProgressBar = scrollHeight > 0;
-                this.progress = this.showProgressBar ? scrollTop / scrollHeight : 1;
+                this.showProgressBar = this.scrollDetails? this.scrollDetails.scrollHeight > 0 : false;
+                this.progress = this.showProgressBar  ? this.computeProgress(startingIndex) : 1;
             }, 250, "bs-table-scroll-update-indicator");
-        },
+        }
     },
     mounted() {
-        this.addScrollEventListener();
-        this.onScroll();
+        this.updateProgress();
     },
+    watch: {
+        "serverSidePagination.batchOffset"() {
+            this.updateProgress();
+        },
+        "serverSidePagination.batchSize"() {
+            this.updateProgress();
+        },
+        "serverSidePagination.recordsCount"() {
+            this.updateProgress();
+        },
+        scrollDetails(newVal: any){
+            this.updateProgress(newVal.index);
+        }
+    }
 });
 </script>
 

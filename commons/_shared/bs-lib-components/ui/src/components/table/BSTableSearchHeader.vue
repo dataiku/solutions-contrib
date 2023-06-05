@@ -49,7 +49,7 @@ export default defineComponent({
             required: true,
         },
         searchedCols: Object as PropType<Record<string, string>>,
-        searchedCol: String,
+        searchedCol: String || undefined,
     },
     emits: ['search-col', 'clear-all'],
     data() {
