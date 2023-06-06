@@ -770,7 +770,7 @@ packages:
     resolution: {directory: ../commons/_shared/bs-lib-components/ui, type: directory}
     id: file:../commons/_shared/bs-lib-components/ui
     name: quasar-ui-bs
-    version: 1.4.0
+    version: 1.4.1
     peerDependencies:
       axios: 1.4.0
       lodash: ^4.17.21

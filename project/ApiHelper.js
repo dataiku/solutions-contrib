@@ -3,31 +3,30 @@ const mode = process.env.NODE_ENV;
 
 let baseURLVite = import.meta.env.BASE_URL;
 
-let localBackendPort = "5000"
+let localBackendPort = "5000";
 
 try {
-    localBackendPort = process.env.FLASK_RUN_PORT;
+  localBackendPort = process.env.FLASK_RUN_PORT;
 } catch (error) {
-    console.error(error);
+  console.error(error);
 }
 
 baseURLVite = baseURLVite.replace("5173", localBackendPort);
-const baseURL = mode === "production" ?  getWebAppBackendUrl('') : baseURLVite;
-
+const baseURL = mode === "production" ? getWebAppBackendUrl("") : baseURLVite;
 
 const axios = axios_.create({ baseURL });
 
-axios.interceptors.response.use((response) => {
-    return response.data
-}, (error) => {
+axios.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
     APIErrors.push(error.response);
     return Promise.reject(error);
-})
-
-import ServerApi from "quasar-ui-bs";
-ServerApi.init(baseURL);
+  }
+);
 
 export let APIErrors = [];
 
-
 export default axios;
+export { baseURL };

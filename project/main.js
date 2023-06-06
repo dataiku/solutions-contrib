@@ -9,7 +9,10 @@ import "./fonts/fonts.scss";
 import "vite/modulepreload-polyfill";
 import { QuasarBs } from "quasar-ui-bs";
 import { myApp } from "./src/index";
+import { ServerApi } from "quasar-ui-bs";
+import { baseURL } from "./ApiHelper";
 
+ServerApi.init(baseURL);
 myApp.config.unwrapInjectedRef = true;
 
 myApp.use(Quasar, {
