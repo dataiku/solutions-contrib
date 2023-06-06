@@ -13,45 +13,41 @@
         ref="qTable"
         :rows="passedRows"
         :columns="formattedColumns"
-
         :filter="filter"
         :filter-method="searchTableFilter"
-
         :loading="isLoading"
-        
         v-bind="$attrs"
-
+        header-align="left"
         :virtual-scroll="virtualScroll"
         :rows-per-page-options="virtualScroll ? [0] : undefined"
         :class="[...classParsed, ...tableClasses]"
         @virtual-scroll="onVirtualScroll"
     >
         <template #top>
-            <div class="bs-table-top-container">
-                <div class="bs-table-name">
-                    <slot v-if="$slots.title" name="title"></slot>
-                    <span v-else>
-                        {{ title || dssTableName || "" }}
-                    </span>
-                </div>
-                <div class="bs-table-search-container">
-                    <BsSearchWholeTable
-                        v-if="globalSearch"
-                        v-model="searchedValue"
-                        @update:formatted-value="searchedValueFormatted = $event"
-                        @update:loading="searching = $event"
-                    ></BsSearchWholeTable>
-                    <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
-                        <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
-                    </div>
+            <div class="bs-table-top-container bs-table-name bordered">
+                <slot v-if="$slots.title" name="title"></slot>
+                <span v-else>
+                    {{ title || dssTableName || "" }}
+                </span>
+            </div>
+            <div class="bs-table-search-container bordered">
+                <BsSearchWholeTable
+                    v-if="globalSearch"
+                    v-model="searchedValue"
+                    @update:formatted-value="searchedValueFormatted = $event"
+                    @update:loading="searching = $event"
+                ></BsSearchWholeTable>
+                <div :class="['bs-table-clear-all-btn', anyColumnSearched && 'bs-table-clear-all-btn--active']">
+                    <q-btn flat round color="primary" :icon="mdiCloseCircleMultiple" @click="clearAllSearch"/>
                 </div>
             </div>
             <BsTableServerSidePagination
-                v-if="_serverSidePagination && serverSidePaginationControls"
+                v-if="_serverSidePagination && serverSidePaginationControls && passedColumns"
                 :server-side-pagination="_serverSidePagination"
                 @update:batch-offset="setBatchOffset($event, true)"
+                class="bordered"
             ></BsTableServerSidePagination>
-            <div v-if="$slots.top" class="bs-table-top-slot-container">
+            <div class="bs-table-top-slot-container bordered">
                 <slot name="top"></slot>
             </div>
         </template>
@@ -68,18 +64,33 @@
         <template 
             v-for="col in colSlotsUsed"
             #[getColBodySlot(col)]="props"
-        >
+            >
             <slot
                 :name="getColBodySlot(col)"
                 v-bind="getBodyCellProps(props)"
             ></slot>
         </template>
+        <template v-slot:body-cell-clearAllCol="props">
+            <q-td :props="props">
+                <div class="my-table-details">
+                </div>
+            </q-td>
+        </template>
         <template #header="props">
             <BSTableHeader
+                v-if="passedColumns"
+                :props="props"
+                @search-col="searchCol"
+            ></BSTableHeader>
+            <BSTableSearchHeader
+                v-if="passedColumns"
+                class="bordered"
                 :props="props"
                 :searched-cols="searchedCols"
+                :searched-col="searchedCol"
                 @search-col="updateSearchedCols"
-            ></BSTableHeader>
+                @clear-all="clearAllSearch"
+            ></BSTableSearchHeader>
         </template>
         <template #bottom="scope">
             <BsTableBottom
@@ -117,6 +128,7 @@ import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 import { ToBeDefined } from '../../utils/types';
+import BSTableSearchHeader from './BSTableSearchHeader.vue';
 
 
 export default defineComponent({
@@ -131,7 +143,8 @@ export default defineComponent({
     BSTableHeader,
     BsTextHighlight,
     BsTableBottom,
-    BsTableServerSidePagination
+    BsTableServerSidePagination,
+    BSTableSearchHeader
 },
     emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
     inheritAttrs: false,
@@ -169,6 +182,7 @@ export default defineComponent({
             searching: false,
             fetching: false,
             searchedCols: {} as Record<string, string>,
+            searchedCol: null as string | null,
             searchedValue: null as string | null,
             searchedValueFormatted: "",
             _serverSidePagination: undefined as unknown as ToBeDefined<ServerSidePagination>,
@@ -208,9 +222,18 @@ export default defineComponent({
         },
         formattedColumns(): any[] |undefined {
             if (this.passedColumns) {
-                return this.passedColumns.map(col => {
+                const output = this.passedColumns.map(col => {
                     return {...col, sortable: false, _sortable: col.sortable};
-                })
+                });
+                const  clearAllCol = {
+                    name: 'clearAllCol', 
+                    required: true, label: '', 
+                    field: '',
+                    sortable: false, 
+                    _sortable: false
+                };
+                output.push(clearAllCol);
+                return output;
             }
         },
         filter(): { columns: Record<string, string>, searchVal: string | number | null } {
@@ -278,16 +301,16 @@ export default defineComponent({
         searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
             return searchTableFilter(...args);
         },
-        updateSearchedCols(colName: string, searchedVal: string) {
-            if (searchedVal) {
+        updateSearchedCols(colName: string, searchedVal: string | null) {
+            if(searchedVal == null){
+                delete this.searchedCols[colName];
+                if(colName === this.searchedCol) this.searchedCol = null;
+            }else{
                 this.searchedCols[colName] = searchedVal;
             }
-            if (this.searchedCols.hasOwnProperty(colName)) {
-                if (!searchedVal) {
-                    delete this.searchedCols[colName];
-                }
-                this.searchedCols = {...this.searchedCols};
-            }
+        },
+        searchCol(colName: string){
+            this.searchedCol = colName;
         },
         colBodySlotUsed(col: QTableColumn): boolean {
             return this.$slots.hasOwnProperty(this.getColBodySlot(col));
@@ -331,6 +354,7 @@ export default defineComponent({
         },
         clearAllSearch() {
             this.searchedValue = null;
+            this.searchedCol = null;
             this.searchedCols = {};
         },
         onVirtualScroll(details: any) {
@@ -375,21 +399,42 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+
+@mixin borders-style(){
+    border: solid #BBBBBB;
+    border-width: 1px 1px 0px 1px;
+}
+$border-color: #BBBBBB;
 .bs-table-sticky {
     :deep(.q-table__top),
     :deep(.q-table__bottom),
-    :deep(thead) tr:first-child th {
+    :deep(thead) tr:first-child th, 
+    :deep(thead) tr:last-child th {
         background-color: #fff;
     }
-
+    :deep(.q-table__bottom){
+        @include borders-style();
+    }
+    :deep(.q-table){
+        @include borders-style();
+        border-top: 0px;
+        tbody td{
+            height: 36px;
+        }
+    }
     :deep(thead) {
         tr th {
             position: sticky;
             z-index: 1;
+            border: solid #BBBBBB;
+            border-width: 1px 0px 1px 0px;
+        }
+        tr:first-child:not(:last-child) th{
+            border-bottom: 0px;
         }
         tr:last-child th {
             /* height of all previous header rows */
-            top: 48px;
+            top: 51px;
         }
         tr:first-child th {
             top: 0;
@@ -399,18 +444,20 @@ export default defineComponent({
 
 .bs-table {
     max-height: 100%;
-
     :deep(.q-table__top) {
         overflow: hidden;
+        padding: 0px;
     }
 }
 
 .bs-table-top-slot-container {
     width: 100%;
+    border-top-width: 0px !important;
 }
 
 .bs-table-name {
-    font-size: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
     text-overflow: ellipsis;
     overflow: hidden;
 }
@@ -418,23 +465,30 @@ export default defineComponent({
 .bs-table-top-container {
     min-width: 0;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    justify-content: space-between;
+    height: 41px;
 }
 
+.bordered {
+    @include borders-style();
+}
 .bs-table-search-container {
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 50px;
     .bs-table-clear-all-btn {
         overflow: visible;
-        max-width: 0;
+        max-width: 30px;
         opacity: 0;
         pointer-events: none;
-
+        margin-right: 15px;
         transition: opacity .5s, max-width .5s;
 
         &.bs-table-clear-all-btn--active {
-            max-width: 30px;
             pointer-events: all;
             opacity: 1;
         }

@@ -1,154 +1,197 @@
 <template>
-    <div 
+    <div
         class="bs-table-col-header-container"
-        :style="{'--bs-table-header-cursor-type': sortable ? 'pointer' : 'default'}"
-        @click="sortColumn"
-        >
-        <div class="bs-table-col-header-title-container">
+    >
+        <div class="bs-table-col-header-title-container" ref="BsTableColHeaderTitleContainer">
             <div class="bs-table-col-header-title">
-                {{ col?.label || col?.name || "" }}
+                <div class="bs-table-col-header-title-label">
+                    {{ col?.label || col?.name || "" }}
+                </div>
+                <div class="bs-table-col-header-title-icon">
+                    <q-icon :name="mdiChevronDown" size="1rem">
+                        <q-menu
+                            anchor="bottom middle"
+                            self="top middle"
+                            transition-show="scale"
+                            transition-hide="scale"
+                            :offset="[0, 10]"
+                        >
+                            <q-list
+                                ref="BsTableColHeaderActions"
+                                class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
+                            >
+                                <q-item v-if="sortable">
+                                    <q-item-section>
+                                        <div
+                                            class="bs-table-col-header-action-section cursor-pointer"
+                                            @click="sortColumn"
+                                        >
+                                            <q-icon
+                                                :name="sortColIcon"
+                                                size="0.8rem"
+                                                class="sort-icon"
+                                                :class="{'sorted': sorted}"
+                                            >
+                                            </q-icon>
+                                            <div>
+                                                Sort {{ sortText }}
+                                            </div>
+                                        </div>
+                                    </q-item-section>
+                                </q-item>
+                                <q-item v-close-popup>
+                                    <q-item-section>
+                                        <div
+                                            class="bs-table-col-header-action-section cursor-pointer"
+                                            @click="searchColumn"
+                                        >
+                                            <q-icon
+                                                :name="searchColIcon"
+                                                size="0.8rem"
+                                            >
+                                            </q-icon>
+                                            <div>Search</div>
+                                        </div>
+                                    </q-item-section>
+                                </q-item>
+                            </q-list>
+                        </q-menu>
+                    </q-icon>
+                </div>
             </div>
-            <div v-if="(col as any)?.dataType" class="bs-table-col-header-data-type">
+            <div
+                v-if="(col as any)?.dataType"
+                class="bs-table-col-header-data-type"
+            >
                 {{ (col as any)?.dataType }}
             </div>
-        </div>
-        <div
-            ref="BsTableColHeaderActions"
-            class="bs-table-col-header-actions q-py-xs q-px-sm rounded-borders"
-            @click.stop="1"
-        >
-            <q-icon v-if="sortable"  @click="sortColumn" :name="mdiArrowUpThin" size="1rem" class="sort-icon">
-            </q-icon>
-            <q-icon
-                :class="[
-                    searchPopupActive && 'bs-table-col-header-action-interacting',
-                    searching && 'bs-table-col-header-action-active',
-                ]"
-                :name="searchColIcon"
-                size="1rem"
-            >
-                <q-menu
-                    anchor="top middle"
-                    self="bottom middle"
-                    
-                    transition-show="scale"
-                    transition-hide="scale"
-
-                    :offset="[0, 10]"
-
-                    v-model="searchPopupActive"
-                >
-                    <q-list>
-                        <q-item>
-                            <q-item-section>
-                                <BsSearchTableCol
-                                    :icon="searchColIcon"
-                                    v-model="lastSearchedValue"
-                                    @update:formatted-value="searchColumn"
-                                    @update:no-debounce:formatted-value="noDebounceValue = $event"
-                                ></BsSearchTableCol>
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-menu>
-            </q-icon> 
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType } from "vue";
 
-// import isUndefined from 'lodash/isUndefined';
-import { isUndefined } from 'lodash';
-// import isNull from 'lodash/isNull';
-import { isNull } from 'lodash';
-
-
-import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from 'quasar';
+import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from "quasar";
 import {
-        mdiArrowUpThin,
-        mdiMagnify,
-    } from '@quasar/extras/mdi-v6';
-import BsSearchTableCol from './BsSearchTableCol.vue';
+    mdiArrowUpThin,
+    mdiMagnify,
+    mdiChevronDown,
+    mdiSortAscending,
+    mdiSortDescending,
+} from "@quasar/extras/mdi-v6";
 
 export default defineComponent({
     name: "BSTableColHeader",
     components: {
-        QIcon, QTh, QMenu, QItem, QItemSection, QList
-    ,
-    BsSearchTableCol,
-},
+        QIcon,
+        QTh,
+        QMenu,
+        QItem,
+        QItemSection,
+        QList,
+    },
     emits: ["search-col"],
     data() {
         return {
             mdiArrowUpThin,
+            mdiSortAscending,
+            mdiSortDescending,
+            mdiChevronDown,
             searchColIcon: mdiMagnify,
-            searchPopupActive: false,
-            lastSearchedValue: "" as string | null | number | undefined,
             noDebounceValue: "" as string | null | number | undefined,
+            sortAsc: false,
+            sorted: false,
         };
     },
     computed: {
         sortable(): boolean {
             return !!(this.col as any)?._sortable;
         },
-        searching(): boolean {
-            const searchVal = this.lastSearchedValue;
-            return !(isNull(searchVal) || isUndefined(searchVal)) && !!(searchVal as string)?.length;
+        sortColIcon(): any {
+            return !this.sortAsc ? mdiSortDescending : mdiSortAscending;
         },
+        sortText(): string{
+            return !this.sortAsc ? 'ascending' : 'descending' ;
+        }
     },
     props: {
         sort: Function as PropType<(col: any) => void>,
-        col: Object as PropType<{label: string, name: string}>,
-        searchedCols: Object as PropType<Record<string, string>>
-    },
-    watch: {
-        searchPopupActive(newVal, lastVal) {
-            if (newVal || !lastVal) return;
-            this.searchColumn(this.noDebounceValue);
-        },
-        searchedCols(newVal: Record<string, string>) {
-            console.log(this.searchedCols);
-            if (this.col?.name && newVal.hasOwnProperty(this.col.name)) {
-                this.lastSearchedValue = newVal[this.col.name];
-            } else {
-                this.lastSearchedValue = "";
-            }
-        }
+        col: Object as PropType<{ label: string; name: string }>,
+        sortedCol: String,
     },
     methods: {
         sortColumn() {
             if (this.sortable && this.sort) this.sort(this.col);
+            this.sortAsc = this.sorted ? !this.sortAsc : true;
         },
-        searchColumn(searchVal: string | null | number | undefined) {
-            this.lastSearchedValue = searchVal;
-            this.$emit("search-col", this.col?.name, searchVal);
+        searchColumn() {
+            this.$emit("search-col", this.col?.name);
         },
     },
+    watch: {
+        sortedCol(newVal: string){
+            if(newVal === this.col?.name){
+                this.sortAsc = this.sorted ? !this.sortAsc : true;
+                this.sorted = true;
+            }else{
+                this.sorted = false;
+                this.sortAsc = false;
+            }
+        }
+    }
 });
 </script>
 
 <style scoped lang="scss">
-
 .bs-table-col-header-container {
-    display: flex;
-    align-items: center;
-
+    height: 36px;
+    display: inline-block;
+    --bs-table-header-cursor-type: pointer;
     .bs-table-col-header-title-container {
         display: flex;
         flex-direction: column;
         cursor: var(--bs-table-header-cursor-type);
         user-select: text;
-        padding-right: 1rem;
-
+        justify-content: space-evenly;
+        align-items: flex-start;
+        height: 100%;
+        .bs-table-col-header-title {
+            font-weight: 600;
+            line-height: 15px;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
         .bs-table-col-header-data-type {
-            color: var(--q-positive);
-            font-size: .65rem;
+            color: var(--q-dark);
+            font-size: 0.65rem;
             margin-top: -5px;
+            font-family: Monaco;
+            font-weight: 400;
+            line-height: 15px;
         }
     }
 }
 
+.bs-table-col-header-actions {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 
+    :deep(.q-item) {
+        min-height: auto;
+        padding: 0px;
+    }
+    .bs-table-col-header-action-section {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        font-size: 10px;
+    }
+    .sorted {
+        color: var(--q-primary);
+    }
+}
 </style>

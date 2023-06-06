@@ -1,17 +1,18 @@
 <template>
     <q-tr :props="props">
         <q-th
-            v-for="col in props.cols"
+            v-for="col in cols"
             :key="col.name"
             :props="props"
             >
                 <BsTableColHeader
-                    :sort="props.sort"
+                    :sort="sort"
                     :col="col"
-                    :searched-cols="searchedCols"
-                    @search-col="(...args) => $emit('search-col', ...args)"
+                    :sorted-col="sortedCol"
+                    @search-col="activateSearchCol"
                 ></BsTableColHeader>
         </q-th>
+        <q-th auto-width :key="'clearAllCol'"></q-th>
     </q-tr>
 </template>
 
@@ -24,16 +25,39 @@ import { QTableHeaderProps } from "./tableTypes";
 export default defineComponent({
     name: "BSTableHeader",
     components: {
-        QTr, QTh, BsTableColHeader
-    },
+    QTr,
+    QTh,
+    BsTableColHeader,
+},
     props: {
         props: {
             type: Object as PropType<QTableHeaderProps>,
             required: true,
         },
-        searchedCols: Object
+    },
+    data() {
+        return {
+            sortedCol: '',
+            sortedDesc: false
+        }
     },
     emits: ["search-col"],
+    methods: {
+        activateSearchCol(colName: string){
+            this.$emit('search-col', colName);
+        },
+        sort(col: any) {
+            const prevCol = this.sortedCol;
+            this.sortedCol = (prevCol !== col.name) ? col.name : (this.sortedDesc ? '' : col.name);
+            this.sortedDesc = (prevCol !== col.name) ? false : !this.sortedDesc;
+            this.props.sort(col);
+        }
+    },
+    computed: {
+        cols(): any[]{
+            return this.props.cols.filter((col:any) => col.name !=='clearAllCol');
+        }
+    }
 });
 </script>
 
@@ -43,41 +67,13 @@ export default defineComponent({
         flex: 0 0 none;
         display: flex;
         gap: .2rem;
-        transition: box-shadow 0.3s;
 
         box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 0px 0px;
 
         > * {
             cursor: pointer;
             transition: rotate 0.3s, opacity 0.5s, scale 0.3s, color 0.3s;
-            opacity: 0;
-            scale: 0;
-
-            &:hover {
-                opacity: .8;
-                scale: 1.1;
-            }
         }
-    }
-    &:hover .bs-table-col-header-actions {
-        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-        > * {
-            opacity: 0.5;
-            scale: 1;
-        }
-    }
-    
-    &.sorted .sort-icon, .bs-table-col-header-action-interacting, .bs-table-col-header-action-active {
-        opacity: 1 !important;
-        scale: 1 !important;
-    }
-
-    &.sorted .sort-icon, .bs-table-col-header-action-active {
-        color: var(--q-primary);
-    }
-    
-    &.sort-desc .sort-icon {
-        rotate: 180deg;
     }
 }
 </style>

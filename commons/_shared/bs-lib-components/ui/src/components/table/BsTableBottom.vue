@@ -7,17 +7,17 @@
             <q-icon :name="mdiAlert"></q-icon>
             <div class="bs-table-warning-text">the search is applied only to the sampled records!</div>
         </div>
-        <div v-if="recordsTotal && !virtualScroll || (!isFullDataset && recordsCount)" class="bs-table-records-total">records total: {{ recordsTotal }}</div>
         <BsTablePagination
-            v-if="!virtualScroll"
-            :scope="scope"
-            :server-side-pagination="serverSidePagination"
-            :start-of-the-page="startOfThePage"
+        v-if="!virtualScroll"
+        :scope="scope"
+        :server-side-pagination="serverSidePagination"
+        :start-of-the-page="startOfThePage"
         ></BsTablePagination>
         <BsTableVirtualScrollIndicator
-            v-else
-            :q-table-middle="qTableMiddle"
+        v-else
+        :q-table-middle="qTableMiddle"
         ></BsTableVirtualScrollIndicator>
+        <div v-if="recordsTotal && !virtualScroll || (!isFullDataset && recordsCount)" class="bs-table-records-total">records total: {{ recordsTotal }}</div>
     </div>
 </template>
 
@@ -96,7 +96,7 @@ export default defineComponent({
     display: flex;
     inset: 0;
     width: 100%;
-    gap: 10px;
+    gap: 16px;
 
     justify-content: flex-end;
     align-items: center;
