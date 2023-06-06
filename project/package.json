@@ -9,12 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@quasar/extras": "^1.0.0",
-    "axios": "^1.1.2",
+    "@quasar/extras": "1.16.3",
+    "axios": "1.4.0",
     "lodash": "^4.17.21",
-    "quasar": ">=2.8.0 <3.0.0",
-    "quasar-ui-bs": "file:../commons/_shared/bs-lib-components/ui",
-    "vue": ">=3.2.25 <4.0.0"
+    "quasar": "2.12.0",
+    "vue": "3.2.47",
+    "quasar-ui-bs": "file:../commons/_shared/bs-lib-components/ui"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.2.3",

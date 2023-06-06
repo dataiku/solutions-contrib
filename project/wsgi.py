@@ -1,7 +1,9 @@
 from load_utils import append_project_root_to_path
+
 append_project_root_to_path()
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from flask import Flask
@@ -13,6 +15,20 @@ from project.src.fetch_api import fetch_api
 
 app: Flask = create_app(__name__)
 app.register_blueprint(fetch_api)
+
+with app.app_context():
+    routes = []
+    for rule in app.url_map.iter_rules():
+        routes.append(
+            {
+                "Endpoint": rule.endpoint,
+                "Methods": ",".join(rule.methods),
+                "Route": str(rule),
+            }
+        )
+
+    for route in routes:
+        print(route)
 
 CORS(app=app, resources={r"/bs_api/*": {"origins": "*"}})
 

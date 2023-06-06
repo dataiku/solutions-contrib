@@ -89,7 +89,10 @@
         </p>
       </BsDocumentation>
       <BsContent>
-        <HelloWorld />
+        <DFCTable
+          dss-table-name="demand_forecast_prepared"
+          v-if="ismounted"
+        ></DFCTable>
       </BsContent>
     </BsTab>
   </BsLayoutDefault>
@@ -97,16 +100,20 @@
 
 <script>
 import docLogo from "./assets/images/doc-logo-example.svg";
-import HelloWorld from "./components/HelloWorld.vue";
+import DFCTable from "./components/DFCTable.vue";
 
 export default {
   data() {
     return {
       docLogo,
+      ismounted: false,
     };
   },
   components: {
-    HelloWorld,
+    DFCTable,
+  },
+  mounted: function () {
+    this.ismounted = true;
   },
 };
 </script>
