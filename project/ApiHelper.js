@@ -1,3 +1,8 @@
+/* 
+ ISSUE : Two axios instances will be used as HTTP client (ServerAPI & axios)
+ TODO : Extend server API and use as a global http client 
+*/
+
 import axios_ from "axios";
 const mode = process.env.NODE_ENV;
 
