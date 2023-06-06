@@ -46,7 +46,7 @@ function K(e) {
 }
 class G {
   static initClient(t) {
-    console.log({ serverUrl: t }), this._restApiEndpoint = `${t}/bs_api/`, this.client = Ee.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
+    this._restApiEndpoint = t, this.client = Ee.create({ baseURL: this._restApiEndpoint }), this.client.interceptors.response.use(
       (s) => s,
       (s) => {
         console.error(s), this.errors.push(s.response);
@@ -79,19 +79,19 @@ class G {
     });
   }
   static getDatasetChunk(t, s = 1e4, n = 0) {
-    return this.doPost("dataset/get", {
+    return this.doPost("bs_api/dataset/get", {
       dataset_name: t,
       chunksize: s,
       chunk_index: n
     });
   }
   static getDatasetSchema(t) {
-    return this.doPost("dataset/get_schema", {
+    return this.doPost("bs_api/dataset/get_schema", {
       dataset_name: t
     });
   }
   static getDatasetGenericData(t) {
-    return this.doPost("dataset/get_generic_data", {
+    return this.doPost("bs_api/dataset/get_generic_data", {
       dataset_name: t
     });
   }
