@@ -1,17 +1,7 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
 import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
 
-const mode = process.env.NODE_ENV;
-const isProd = mode === "production";
-let localBackendPort = "5000"
 
-try {
-    localBackendPort = process.env.FLASK_RUN_PORT as string;
-} catch (error) {
-    console.error(error);
-}
-
-const baseURLVite = `http://127.0.0.1:${localBackendPort}`;
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
     return new Promise((resolve, reject) => {
         request.then((res) => resolve(res?.data)).catch(reason => reject(reason));
@@ -25,9 +15,8 @@ export default class ServerApi {
     private static _restApiEndpoint: string | undefined;
     private static initialized = false;
 
-    private static initClient() {
-        const serverUrl = isProd ? (parent as any).getWebAppBackendUrl('') : baseURLVite;
-        this._restApiEndpoint = `${serverUrl}/bs_api/`
+    private static initClient(serverUrl: string) {
+        this._restApiEndpoint = serverUrl
         this.client = axios_.create({ baseURL: this._restApiEndpoint });
         
         this.client.interceptors.response.use(
@@ -40,18 +29,18 @@ export default class ServerApi {
     }
 
 
-    private static requestWrapper(method: Function) {
+    private static requestWrapper<T>(method: (...args: any[]) => Promise<T>) {
         const boundMethod = method.bind(this);
-        return async (...args: any[]) => {
-            if (!this.client) return;
-            return await boundMethod(...args);
-        };
+        return (...args: any[]) => new Promise((resolve, reject) => {
+            if (!this.client) reject("client not set, init servetApi with the backendUrl");
+            boundMethod(...args).then(resolve).catch(reject);
+        });
     }
 
 
-    public static init() {
+    public static init(serverUrl: string) {
         if (this.initialized) return;
-        this.initClient();
+        this.initClient(serverUrl);
 
         this.doDelete = this.requestWrapper(this.doDelete);
         this.doPost = this.requestWrapper(this.doPost);
@@ -82,7 +71,7 @@ export default class ServerApi {
     }
 
     public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
-        return this.doPost(`dataset/get`, {
+        return this.doPost(`bs_api/dataset/get`, {
             dataset_name: datasetName,
             chunksize: chunksize,
             chunk_index: chunkIndex,
@@ -90,17 +79,16 @@ export default class ServerApi {
     }
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
-        return this.doPost(`dataset/get_schema`,{
+        return this.doPost(`bs_api/dataset/get_schema`,{
             dataset_name: datasetName,
         });
     }
 
 
     public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
-        return this.doPost(`dataset/get_generic_data`,{
+        return this.doPost(`bs_api/dataset/get_generic_data`,{
             dataset_name: datasetName,
         });
     }
 }
 
-ServerApi.init();

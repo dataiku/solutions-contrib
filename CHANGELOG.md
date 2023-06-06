@@ -1,3 +1,13 @@
+## Release 1.4.1
+
+- Demand Forecast loading state
+
+	 - type: feature
+	 - link : [https://app.shortcut.com/dataiku/story/137691](https://app.shortcut.com/dataiku/story/137691)
+
+
+
+
 ## Release 1.4.0
 
 - Bs Tables

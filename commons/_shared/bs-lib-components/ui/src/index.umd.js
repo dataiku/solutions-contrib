@@ -4,6 +4,7 @@
 
 import installApp from "./install-lib.js";
 import * as components from "./components";
+import ServerApi from "./server_api";
 
 export default {
   version: __UI_VERSION__,
@@ -13,4 +14,5 @@ export default {
     });
   },
   ...components,
+  ServerApi
 };

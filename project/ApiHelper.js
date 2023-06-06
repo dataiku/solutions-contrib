@@ -1,5 +1,4 @@
 import axios_ from "axios";
-
 const mode = process.env.NODE_ENV;
 
 let baseURLVite = import.meta.env.BASE_URL;
@@ -13,11 +12,10 @@ try {
 }
 
 baseURLVite = baseURLVite.replace("5173", localBackendPort);
+const baseURL = mode === "production" ?  getWebAppBackendUrl('') : baseURLVite;
 
 
-const axios = axios_.create({
-    baseURL: mode === "production" ?  getWebAppBackendUrl('') : baseURLVite,
-});
+const axios = axios_.create({ baseURL });
 
 axios.interceptors.response.use((response) => {
     return response.data
@@ -26,6 +24,10 @@ axios.interceptors.response.use((response) => {
     return Promise.reject(error);
 })
 
+import ServerApi from "quasar-ui-bs";
+ServerApi.init(baseURL);
+
 export let APIErrors = [];
+
 
 export default axios;

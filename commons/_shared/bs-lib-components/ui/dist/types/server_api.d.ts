@@ -7,7 +7,7 @@ export default class ServerApi {
     private static initialized;
     private static initClient;
     private static requestWrapper;
-    static init(): void;
+    static init(serverUrl: string): void;
     private static doPost;
     private static doPut;
     private static doGet;

@@ -8,24 +8,6 @@ const __dirname = path.dirname(__filename);
 
 const precompiledBasePath = 'dev/src/precompiled';
 
-function resolveUIFolderPath(relPath) {
-    return path.resolve(__dirname, "..", relPath);
-}
-const vueFileName = (fileName) => fileName.slice(0, -4); // name.vue
-function bsLayoutDefaultBaseComponents() {
-    const baseComponentsFolder = resolveUIFolderPath("src/components/layout/base-subcomponents");
-    const baseComponentsFiles = readFolder(baseComponentsFolder);
-    const baseComponentsNames = baseComponentsFiles.map((fileName) =>
-        vueFileName(fileName)
-    );
-    return baseComponentsNames;
-}
-
-function getTestViews() {
-    const testViewsFolder = resolveUIFolderPath("dev/src/test");
-    const testViewsFiles = readFolder(testViewsFolder);
-    return testViewsFiles.map(vueFileName);
-}
 
 const VarDeclareType = {
 	Const: 'const',
@@ -63,26 +45,14 @@ function createPrecompiledFile(
 function updatePrecompileFiles() {
     const folderPath = resolveUIFolderPath(precompiledBasePath);
     createFolder(folderPath);
-
-	createPrecompiledFile(
-		createStringVarsFromObject({
-			baseComponents: {
-				data: bsLayoutDefaultBaseComponents(),
-				declareType: VarDeclareType.Const,
-			},
-		}),
-		'precompiledData.ts'
-	);
-
-    createPrecompiledFile(
-		createStringVarsFromObject({
-            testViews: {
-                data: getTestViews(),
-				declareType: VarDeclareType.Const,
-            },
-		}),
-		'localPrecompiledData.ts'
-	);
+    
+	// createPrecompiledFile(
+	// 	createStringVarsFromObject({
+	// 		baseComponents: {
+	// 			data: your_data,
+	// 			declareType: VarDeclareType.Const || VarDeclareType.Let,
+	// 		},
+	// 	}),
+	// 	'yourFileName.ts'
+	// );
 }
-
-updatePrecompileFiles();
