@@ -134,18 +134,18 @@ import BSTableSearchHeader from './BSTableSearchHeader.vue';
 export default defineComponent({
     name: "BsTable",
     components: {
-    QTable,
-    QTr,
-    QTd,
-    QBtn,
-    BsDSSTableFunctional,
-    BsSearchWholeTable,
-    BSTableHeader,
-    BsTextHighlight,
-    BsTableBottom,
-    BsTableServerSidePagination,
-    BSTableSearchHeader
-},
+        QTable,
+        QTr,
+        QTd,
+        QBtn,
+        BsDSSTableFunctional,
+        BsSearchWholeTable,
+        BSTableHeader,
+        BsTextHighlight,
+        BsTableBottom,
+        BsTableServerSidePagination,
+        BSTableSearchHeader
+    },
     emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
     inheritAttrs: false,
     props: {
@@ -343,7 +343,7 @@ export default defineComponent({
         syncServerSidePagination() {
             if (this.isServerSidePaginationObject) {
                 this.setServerSidePagination(this.serverSidePagination as ServerSidePagination);
-            }
+            }``
         },
         createServerSidePagination() {
             this._serverSidePagination = {
@@ -400,11 +400,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 
+$border-color: #BBBBBB;
+
 @mixin borders-style(){
-    border: solid #BBBBBB;
+    border: solid $border-color;
     border-width: 1px 1px 0px 1px;
 }
-$border-color: #BBBBBB;
 .bs-table-sticky {
     :deep(.q-table__top),
     :deep(.q-table__bottom),
@@ -426,7 +427,7 @@ $border-color: #BBBBBB;
         tr th {
             position: sticky;
             z-index: 1;
-            border: solid #BBBBBB;
+            border: solid $border-color;
             border-width: 1px 0px 1px 0px;
         }
         tr:first-child:not(:last-child) th{
