@@ -338,7 +338,7 @@ export default defineComponent({
                 pagination[key as keyof ServerSidePagination] = value;
                 this._serverSidePagination[key as keyof ServerSidePagination] = value;
             })
-            if (emit) this.$emit("update:server-side-pagination", pagination);
+            if (emit) this.$emit("update:server-side-pagination", {...this._serverSidePagination});
         },
         syncServerSidePagination() {
             if (this.isServerSidePaginationObject) {
