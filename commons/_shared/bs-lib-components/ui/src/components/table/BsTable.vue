@@ -10,7 +10,7 @@
         @update:columns-count="setRecordsCount($event, true)"
     ></BsDSSTableFunctional>
     <QTable
-        ref="qTable"
+        ref="QTableInstance"
         :rows="passedRows"
         :columns="formattedColumns"
         :filter="filter"
@@ -20,7 +20,7 @@
         header-align="left"
         :virtual-scroll="virtualScroll"
         :rows-per-page-options="virtualScroll ? [0] : undefined"
-        :class="[...classParsed, ...tableClasses]"
+        :class="tableClasses"
         @virtual-scroll="onVirtualScroll"
     >
         <template #top>
@@ -109,16 +109,24 @@
     </QTable>
 </template>
 
+
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { QTableColumn, QTable, QTr, QTd, QBtn } from 'quasar';
+import { defineComponent } from 'vue';
+export default defineComponent({
+    inheritAttrs: false
+});
+</script>
+
+<script lang="ts" setup>
+import { PropType, computed, ref, watch, useSlots, onMounted } from 'vue';
+import { QTableColumn, QTable, QTd, QBtn } from 'quasar';
 import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
 import BSTableHeader from "./BSTableHeader.vue";
 import BsTextHighlight from "./BsTextHighlight.vue"
 import BsTableBottom from "./BsTableBottom.vue"
 
-import { searchTableFilter } from './filterTable';
+import { searchTableFilterFunc } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
@@ -131,271 +139,263 @@ import { ToBeDefined } from '../../utils/types';
 import BSTableSearchHeader from './BSTableSearchHeader.vue';
 
 
-export default defineComponent({
-    name: "BsTable",
-    components: {
-        QTable,
-        QTr,
-        QTd,
-        QBtn,
-        BsDSSTableFunctional,
-        BsSearchWholeTable,
-        BSTableHeader,
-        BsTextHighlight,
-        BsTableBottom,
-        BsTableServerSidePagination,
-        BSTableSearchHeader
-    },
-    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
-    inheritAttrs: false,
-    props: {
-        dssTableName: String,
-        title: String,
-        serverSidePagination: [Object, Boolean] as PropType<Partial<ServerSidePagination> | boolean>,
-        loading: {
-            type: Boolean,
-            default: false
-        },
-        rows: Array as PropType<Record<string, any>[]>,
-        columns: Array as PropType<QTableColumn[]>,
-        virtualScroll: {
-            type: Boolean,
-            default: true
-        },
-        stickyHeader: {
-            type: Boolean,
-            default: true
-        },
-        globalSearch: {
-            type: Boolean,
-            default: true
-        },
-        serverSidePaginationControls: {
-            type: Boolean,
-            default: true
-        },
-        style: [Object, String],
-        class: [Array, String] as PropType<string[] | string>,
-    },
-    data() {
-        return {
-            searching: false,
-            fetching: false,
-            searchedCols: {} as Record<string, string>,
-            searchedCol: null as string | null,
-            searchedValue: null as string | null,
-            searchedValueFormatted: "",
-            _serverSidePagination: undefined as unknown as ToBeDefined<ServerSidePagination>,
-            _rows: undefined as Record<string, any>[] | undefined,
-            _columns: undefined as QTableColumn[] | undefined,
-            lastBatchIndex: -1,
-            scrollDetails: {from: 0},
-            passedRowsLength: 0,
-            tableEl: undefined as undefined | HTMLElement,
-            qTableMiddle: undefined as undefined | HTMLElement,
-            mdiCloseCircleMultiple,
-        };
-    },
-    computed: {
-        isDSSTable(): boolean {
-            return this.dssTableName !== undefined;
-        },
-        isLoading(): boolean {
-            return this.loading || this.searching || this.fetching;
-        },
-        anyColumnSearched(): boolean {
-            return !(!this.searchedValue && isEmpty(this.searchedCols));
-        },
-        isServerSidePaginationObject(): boolean {
-            return typeof this.serverSidePagination !== "boolean";
-        },
-        passedRows(): Record<string, any>[] | undefined {
-            return this.isDSSTable ? this._rows : this.rows;
-        },
-        passedColumns(): QTableColumn[] | undefined {
-            return this.isDSSTable ? this._columns : this.columns;
-        },
-        colSlotsUsed(): QTableColumn[] | undefined {
-            if (this.passedColumns) {
-                return this.passedColumns.filter(col => this.colBodySlotUsed(col));
-            }
-        },
-        formattedColumns(): any[] |undefined {
-            if (this.passedColumns) {
-                const output = this.passedColumns.map(col => {
-                    return {...col, sortable: false, _sortable: col.sortable};
-                });
-                const  clearAllCol = {
-                    name: 'clearAllCol', 
-                    required: true, label: '', 
-                    field: '',
-                    sortable: false, 
-                    _sortable: false
-                };
-                output.push(clearAllCol);
-                return output;
-            }
-        },
-        filter(): { columns: Record<string, string>, searchVal: string | number | null } {
-            return {
-                columns: this.searchedCols,
-                searchVal: this.searchedValueFormatted
-            };
-        },
-        classParsed(): string[] {
-            let passedClass = this.class || "";
-            if (typeof passedClass === "string") passedClass = [passedClass];
-            return passedClass;
-        },
-        tableClasses(): (string | boolean | undefined)[] {
-            const tableClasses = ["bs-table", this.stickyHeader && "bs-table-sticky"];
-            return tableClasses;
-        },
-        filteredSlots() {
-            const bsTableCustomSlots = ["top"];
-            return Object.fromEntries(
-                Object.entries(this.$slots).filter(
-                    ([slotKey]) => !(bsTableCustomSlots.includes(slotKey) || slotKey.includes("body-cell"))
-                )
-            );
-        },
-    },
-    watch: {
-        "serverSidePagination.batchOffset"() {
-            this.syncServerSidePagination();
-        },
-        "serverSidePagination.batchSize"() {
-            this.syncServerSidePagination();
-        },
-        "serverSidePagination.recordsCount"() {
-            this.syncServerSidePagination();
-        },
-        "passedRows.length"(newVal: number) {
-            this.passedRowsLength = newVal;
-        },
-        isLoading(newVal: boolean){
-            this.$emit("update:loading", newVal);
-        }
-    },
-    methods: {
-        updateDSSRows(rows: Record<string, any>[] | undefined) {
-            if (!rows) rows = [];
-            const { batchSize, batchOffset } = this._serverSidePagination;
-            const fetchedRowsAmount = Object.keys(rows).length;
-            if (fetchedRowsAmount < batchSize) {
-                const updateObject: Partial<ServerSidePagination> = {};
-                updateObject.recordsCount = batchOffset * batchSize + fetchedRowsAmount;
-                if (fetchedRowsAmount == 0) {
-                    updateObject.batchOffset = batchOffset - 1;
-                }
-                this.setServerSidePagination(updateObject, true);
-            }
+const emit = defineEmits<{
+    (event: "update:rows", rows: Record<string, any>[]): void,
+    (event: "update:columns", columns: QTableColumn[]): void,
+    (event: "update:loading", loading: boolean): void,
+    (event: "update:server-side-pagination", pagination: ServerSidePagination): void,
+    (event: "virtual-scroll", details: unknown): void,
+}>();
 
-            this._rows = rows;
-            this.$emit("update:rows", this._rows);
-        },
-        updateDSSColumns(columns: QTableColumn[]) {
-            this._columns = columns;
-            this.$emit("update:columns", this._columns);
-        },
-        searchTableFilter(...args: Parameters<typeof searchTableFilter>) {
-            return searchTableFilter(...args);
-        },
-        updateSearchedCols(colName: string, searchedVal: string | null) {
-            if(searchedVal == null){
-                delete this.searchedCols[colName];
-                if(colName === this.searchedCol) this.searchedCol = null;
-            }else{
-                this.searchedCols[colName] = searchedVal;
-            }
-        },
-        searchCol(colName: string){
-            this.searchedCol = colName;
-        },
-        colBodySlotUsed(col: QTableColumn): boolean {
-            return this.$slots.hasOwnProperty(this.getColBodySlot(col));
-        },
-        getColBodySlot(col: QTableColumn): string {
-            return `body-cell-${col.name}`;
-        },
-        getColSearchedValue(colName: string) {
-            return getObjectPropertyIfExists(this.searchedCols, colName);
-        },
-        setBatchOffset(batchOffset: number, emit = false) {
-            this.setServerSidePagination({batchOffset}, emit);
-            this.startOfTheTable();
-        },
-        setBatchSize(batchSize: number, emit = false) {
-            this.setServerSidePagination({batchSize}, emit);
-        },
-        setRecordsCount(recordsCount: number, emit = false) {
-            this.setServerSidePagination({recordsCount}, emit);
-        },
-        setServerSidePagination(pagination: Partial<ServerSidePagination>, emit = false) {
-            pagination = {...pagination};
-            Object.entries(pagination).forEach(([key, value]) => {
-                if (value < 0) value = 0;
-                pagination[key as keyof ServerSidePagination] = value;
-                this._serverSidePagination[key as keyof ServerSidePagination] = value;
-            })
-            if (emit) this.$emit("update:server-side-pagination", {...this._serverSidePagination});
-        },
-        syncServerSidePagination() {
-            if (this.isServerSidePaginationObject) {
-                this.setServerSidePagination(this.serverSidePagination as ServerSidePagination);
-            }``
-        },
-        createServerSidePagination() {
-            this._serverSidePagination = {
-                batchOffset: 0,
-                batchSize: 100,
-                recordsCount: undefined,
-            } as ServerSidePagination;
-        },
-        clearAllSearch() {
-            this.searchedValue = null;
-            this.searchedCol = null;
-            this.searchedCols = {};
-        },
-        onVirtualScroll(details: any) {
-            this.scrollDetails = details;
-            this.$emit("virtual-scroll", details)
-        },
-        startOfTheTable() {
-            if (!this.virtualScroll) this.firstPage();
-            this.startOfThePage();
-        },
-        startOfThePage() {
-            this.scrollTo(0);
-        },
-        firstPage() {
-            return (this.$refs.qTable as any).firstPage();
-        },
-        scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined) {
-            return (this.$refs.qTable as any).scrollTo(index, edge);
-        },
-        getBodyCellProps(props: QTableBodyCellProps): BsTableBodyCellProps {
-            return {
-                ...props,
-                cellValueComponent: BsTextHighlight,
-                cellValueComponentProps: {
-                    queries: [this.searchedValueFormatted, this.getColSearchedValue(props.col.name)],
-                    text: props.value,
-                },
-            };
-        },
-    },
+const slots = useSlots();
 
-    mounted() {
-        if (this.dssTableName || this.serverSidePagination) {
-            this.createServerSidePagination();
-            this.syncServerSidePagination();
-        }
-        this.passedRowsLength = this.passedRows?.length || 0;
-        this.tableEl = (this.$refs.qTable as any)?.$el;
-        this.qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
+const props = defineProps({
+    dssTableName: String,
+    title: String,
+    serverSidePagination: [Object, Boolean] as PropType<Partial<ServerSidePagination> | boolean>,
+    loading: {
+        type: Boolean,
+        default: false
+    },
+    rows: Array as PropType<Record<string, any>[]>,
+    columns: Array as PropType<QTableColumn[]>,
+    virtualScroll: {
+        type: Boolean,
+        default: true
+    },
+    stickyHeader: {
+        type: Boolean,
+        default: true
+    },
+    globalSearch: {
+        type: Boolean,
+        default: true
+    },
+    serverSidePaginationControls: {
+        type: Boolean,
+        default: true
+    },
+    style: [Object, String],
+});
+
+const searching = ref(false);
+const fetching = ref(false);
+
+const searchedCols = ref({} as Record<string, string>);
+const searchedCol = ref(null as string | null);
+const searchedValue = ref(null as string | null);
+const searchedValueFormatted = ref("");
+
+const _serverSidePagination = ref(undefined as unknown as ToBeDefined<ServerSidePagination>);
+const passedRowsLength = ref(0);
+
+const _rows = ref(undefined as Record<string, any>[] | undefined);
+const _columns = ref(undefined as QTableColumn[] | undefined);
+
+const scrollDetails = ref({from: 0});
+
+const tableEl = ref(undefined as undefined | HTMLElement);
+const qTableMiddle = ref(undefined as undefined | HTMLElement);
+
+const QTableInstance = ref<InstanceType<typeof QTable> | null>(null)
+
+const isDSSTable = computed((): boolean => {
+    return props.dssTableName !== undefined;
+});
+const isLoading = computed((): boolean => {
+    return props.loading || searching.value || fetching.value;
+});
+const anyColumnSearched = computed((): boolean => {
+    return !(!searchedValue.value && isEmpty(searchedCols.value));
+});
+const isServerSidePaginationObject = computed((): boolean => {
+    return typeof props.serverSidePagination !== "boolean";
+});
+const passedRows = computed((): Record<string, any>[] | undefined => {
+    return isDSSTable.value ? _rows.value : props.rows;
+});
+const passedColumns = computed((): QTableColumn[] | undefined => {
+    return isDSSTable.value ? _columns.value : props.columns;
+});
+const colSlotsUsed = computed((): QTableColumn[] | undefined => {
+    if (passedColumns.value) {
+        return passedColumns.value.filter(col => colBodySlotUsed(col));
     }
 });
+const formattedColumns = computed((): any[] |undefined => {
+    if (passedColumns.value) {
+        const output = passedColumns.value.map(col => {
+            return {...col, sortable: false, _sortable: col.sortable};
+        });
+        const  clearAllCol = {
+            name: 'clearAllCol', 
+            required: true, label: '', 
+            field: '',
+            sortable: false, 
+            _sortable: false
+        };
+        output.push(clearAllCol);
+        return output;
+    }
+});
+const filter = computed((): { columns: Record<string, string>, searchVal: string | number | null } => {
+    return {
+        columns: searchedCols.value,
+        searchVal: searchedValueFormatted.value
+    };
+});
+const tableClasses = computed((): (string | boolean | undefined)[] => {
+    const tableClasses = ["bs-table", props.stickyHeader && "bs-table-sticky"];
+    return tableClasses;
+});
+const filteredSlots = computed(() => {
+    const bsTableCustomSlots = ["top"];
+    return Object.fromEntries(
+        Object.entries(slots).filter(
+            ([slotKey]) => !(bsTableCustomSlots.includes(slotKey) || slotKey.includes("body-cell"))
+        )
+    );
+});
+
+watch(() => typeof props.serverSidePagination != "boolean" && props?.serverSidePagination?.batchOffset, (newVal) => {
+    if (typeof newVal == "number") syncServerSidePagination();
+})
+watch(() => typeof props.serverSidePagination != "boolean" && props?.serverSidePagination?.batchSize, (newVal) => {
+    if (typeof newVal == "number") syncServerSidePagination();
+})
+watch(() => typeof props.serverSidePagination != "boolean" && props?.serverSidePagination?.recordsCount, (newVal) => {
+    if (typeof newVal == "number") syncServerSidePagination();
+})
+watch(
+    () => passedRows?.value?.length, (newVal) => {
+        if (newVal !== undefined) passedRowsLength.value = newVal;
+    });
+watch(isLoading, (newVal: boolean) => {
+    emit("update:loading", newVal);
+});
+
+function updateDSSRows(rows: Record<string, any>[] | undefined) {
+    if (!rows) rows = [];
+    const { batchSize, batchOffset } = _serverSidePagination.value;
+    const fetchedRowsAmount = Object.keys(rows).length;
+    if (fetchedRowsAmount < batchSize) {
+        const updateObject: Partial<ServerSidePagination> = {};
+        updateObject.recordsCount = batchOffset * batchSize + fetchedRowsAmount;
+        if (fetchedRowsAmount == 0) {
+            updateObject.batchOffset = batchOffset - 1;
+        }
+        setServerSidePagination(updateObject, true);
+    }
+
+    _rows.value = rows;
+    emit("update:rows", _rows.value);
+}
+
+function updateDSSColumns(columns: QTableColumn[]) {
+    _columns.value = columns;
+    emit("update:columns", _columns.value);
+}
+
+function searchTableFilter(...args: Parameters<typeof searchTableFilterFunc>) {
+    return searchTableFilterFunc(...args);
+}
+
+function updateSearchedCols(colName: string, searchedVal: string | null) {
+    if(searchedVal == null){
+        delete searchedCols.value[colName];
+        if(colName === searchedCol.value) searchedCol.value = null;
+    }else{
+        searchedCols.value[colName] = searchedVal;
+    }
+}
+
+function searchCol(colName: string){
+    searchedCol.value = colName;
+}
+function colBodySlotUsed(col: QTableColumn): boolean {
+    return slots.hasOwnProperty(getColBodySlot(col));
+}
+function getColBodySlot(col: QTableColumn): string {
+    return `body-cell-${col.name}`;
+}
+function getColSearchedValue(colName: string) {
+    return getObjectPropertyIfExists(searchedCols.value, colName);
+}
+function setBatchOffset(batchOffset: number, emit = false) {
+    setServerSidePagination({batchOffset}, emit);
+    startOfTheTable();
+}
+function setBatchSize(batchSize: number, emit = false) {
+    setServerSidePagination({batchSize}, emit);
+}
+function setRecordsCount(recordsCount: number, emit = false) {
+    setServerSidePagination({recordsCount}, emit);
+}
+function setServerSidePagination(pagination: Partial<ServerSidePagination>, isEmit = false) {
+    pagination = {...pagination};
+    Object.entries(pagination).forEach(([key, value]) => {
+        if (value < 0) value = 0;
+        pagination[key as keyof ServerSidePagination] = value;
+        _serverSidePagination.value[key as keyof ServerSidePagination] = value;
+    })
+    if (isEmit) emit("update:server-side-pagination", {..._serverSidePagination.value});
+}
+function syncServerSidePagination() {
+    if (isServerSidePaginationObject.value) {
+        setServerSidePagination(props.serverSidePagination as ServerSidePagination);
+    }
+}
+function createServerSidePagination() {
+    _serverSidePagination.value = {
+        batchOffset: 0,
+        batchSize: 100,
+        recordsCount: undefined,
+    } as ServerSidePagination;
+}
+function clearAllSearch() {
+    searchedValue.value = null;
+    searchedCol.value = null;
+    searchedCols.value = {};
+}
+function onVirtualScroll(details: any) {
+    scrollDetails.value = details;
+    emit("virtual-scroll", details)
+}
+function startOfTheTable() {
+    if (!props.virtualScroll) firstPage();
+    startOfThePage();
+}
+function startOfThePage() {
+    scrollTo(0);
+}
+function firstPage() {
+    return QTableInstance.value?.firstPage();
+}
+function scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined) {
+    return QTableInstance.value?.scrollTo(index, edge);
+}
+function getBodyCellProps(QTableProps: QTableBodyCellProps): BsTableBodyCellProps {
+    return {
+        ...QTableProps,
+        cellValueComponent: BsTextHighlight,
+        cellValueComponentProps: {
+            queries: [searchedValueFormatted.value, getColSearchedValue(QTableProps.col.name)],
+            text: QTableProps.value,
+        },
+    };
+}
+
+
+onMounted(() => {
+    if (props.dssTableName || props.serverSidePagination) {
+        createServerSidePagination();
+        syncServerSidePagination();
+    }
+    passedRowsLength.value = passedRows.value?.length || 0;
+    tableEl.value = QTableInstance.value?.$el;
+    qTableMiddle.value = tableEl.value?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
+});
+
 </script>
 
 <style lang="scss" scoped>

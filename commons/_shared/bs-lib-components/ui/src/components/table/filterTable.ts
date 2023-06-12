@@ -20,7 +20,7 @@ export function formatSearchVal(searchVal: string | number | null): string {
 }
 
 
-export function searchTableFilter(
+export function searchTableFilterFunc(
     rows: readonly Record<string, any>[],
     {columns, searchVal}: { columns: Record<string, string>, searchVal: string },
     cols: readonly QTableColumn[],
