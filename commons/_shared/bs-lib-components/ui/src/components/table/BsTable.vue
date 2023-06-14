@@ -1,5 +1,5 @@
 <template>
-    <BsDSSTableFunctional
+    <BsFetchedTableFunctional
         v-if="isDSSTable"
         :dss-table-name="dssTableName"
         :server-side-pagination="_serverSidePagination"
@@ -8,7 +8,7 @@
         @update:rows="updateDSSRows"
         @update:columns="updateDSSColumns"
         @update:columns-count="setRecordsCount($event, true)"
-    ></BsDSSTableFunctional>
+    ></BsFetchedTableFunctional>
     <QTable
         ref="QTableInstance"
         :rows="passedRows"
@@ -113,7 +113,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 export default defineComponent({
-    inheritAttrs: false
+    inheritAttrs: false,
 });
 </script>
 
@@ -121,7 +121,7 @@ export default defineComponent({
 import { PropType, computed, ref, watch, useSlots, onMounted } from 'vue';
 import { QTableColumn, QTable, QTd, QBtn } from 'quasar';
 
-import BsDSSTableFunctional from "./BsDSSTableFunctional.vue";
+import BsFetchedTableFunctional from "./BsFetchedTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
 import BSTableHeader from "./BSTableHeader.vue";
 import BsTextHighlight from "./BsTextHighlight.vue"
@@ -177,9 +177,6 @@ const props = defineProps({
     style: [Object, String],
 });
 
-const isLoading = computed((): boolean => {
-    return props.loading || searching.value || fetching.value;
-});
 
 const isDSSTable = computed((): boolean => {
     return props.dssTableName !== undefined;
@@ -220,10 +217,6 @@ const passedRowsLength = ref(0);
 
 watch(() => passedRows?.value?.length, (newVal) => {
     if (newVal !== undefined) passedRowsLength.value = newVal;
-});
-
-watch(isLoading, (newVal: boolean) => {
-    emit("update:loading", newVal);
 });
 /*
 ========================
@@ -411,6 +404,13 @@ const filteredSlots = computed(() => {
 });
 
 
+const isLoading = computed((): boolean => {
+    return props.loading || searching.value || fetching.value;
+});
+
+watch(isLoading, (newVal: boolean) => {
+    emit("update:loading", newVal);
+});
 
 onMounted(() => {
     if (props.dssTableName || props.serverSidePagination) {
