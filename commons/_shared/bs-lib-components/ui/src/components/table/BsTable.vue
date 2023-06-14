@@ -118,12 +118,6 @@ export default defineComponent({
 </script>
 
 <script lang="ts" setup>
-/*
-========================
----------general--------
-========================
-*/
-
 import { PropType, computed, ref, watch, useSlots, onMounted } from 'vue';
 import { QTableColumn, QTable, QTd, QBtn } from 'quasar';
 
