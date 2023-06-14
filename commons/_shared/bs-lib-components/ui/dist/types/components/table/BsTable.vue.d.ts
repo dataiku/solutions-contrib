@@ -34,6 +34,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searching: boolean;
     fetching: boolean;
     searchedCols: Record<string, string>;
+    searchedCol: string | null;
     searchedValue: string | null;
     searchedValueFormatted: string;
     _serverSidePagination: ServerSidePagination;
@@ -72,7 +73,8 @@ declare const _sfc_main: import("vue").DefineComponent<{
         columns: Record<string, string>;
         searchVal: string;
     }, args_2: readonly QTableColumn[], args_3: (col: QTableColumn, row: Record<string, any>) => any): readonly Record<string, any>[];
-    updateSearchedCols(colName: string, searchedVal: string): void;
+    updateSearchedCols(colName: string, searchedVal: string | null): void;
+    searchCol(colName: string): void;
     colBodySlotUsed(col: QTableColumn): boolean;
     getColBodySlot(col: QTableColumn): string;
     getColSearchedValue(colName: string): string | undefined;
