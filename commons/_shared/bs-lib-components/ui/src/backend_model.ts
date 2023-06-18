@@ -3,7 +3,9 @@ export interface DSSColumnSchema {
     type: string;
 }
 
-export interface DSSColumnData extends Record<`${number}`, any> {}
+type JSONPrimitives = string | number | boolean | null
+
+export interface PandasDataframeCol extends Record<`${number}`, JSONPrimitives> {}
 
 export interface DSSDatasetSchema {
     columns: DSSColumnSchema[];
@@ -15,4 +17,9 @@ export interface DSSDatasetGenericData {
     columnsCount: number
 }
 
-export interface DSSDatasetData extends Record<string, DSSColumnData> {}
+export interface PandasDataframe extends Record<string, PandasDataframeCol> {}
+
+export type FetchChunk = (chunkSize?: number, chunkIndex?: number) => Promise<PandasDataframe>;
+export type FetchDatasetChunk = (datasetName: string, ...args: Parameters<FetchChunk>) => Promise<PandasDataframe>;
+export type FetchDatasetSchema = (datasetName: string) => Promise<DSSDatasetSchema>;
+export type FetchDatasetGenericData = (datasetName: string) => Promise<DSSDatasetGenericData>;

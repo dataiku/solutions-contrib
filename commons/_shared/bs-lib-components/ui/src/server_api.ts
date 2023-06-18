@@ -1,5 +1,5 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
-import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
+import { PandasDataframe, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
 
 const mode = process.env.NODE_ENV;
 const isProd = mode === "production";
@@ -81,13 +81,13 @@ export default class ServerApi {
         });
     }
 
-    public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<DSSDatasetData> {
+    public static getDatasetChunk(datasetName: string, chunksize = 10000, chunkIndex = 0): Promise<PandasDataframe> {
         return this.doPost(`dataset/get`, {
             dataset_name: datasetName,
             chunksize: chunksize,
             chunk_index: chunkIndex,
         });
-    }
+    } 
 
     public static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema> {
         return this.doPost(`dataset/get_schema`,{
