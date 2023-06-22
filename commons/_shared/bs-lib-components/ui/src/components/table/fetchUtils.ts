@@ -2,7 +2,7 @@
 import { computed, ref, Ref } from 'vue';
 import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
-import { PandasDataframe, FetchDatasetChunk, FetchChunk, FetchDatasetSchema, FetchDatasetGenericData,DSSColumnSchema, DSSDatasetGenericData, DSSDatasetSchema } from "../../backend_model"
+import { PandasDataframe, FetchDatasetChunk, FetchDatasetSchema, FetchDatasetGenericData,DSSColumnSchema, DSSDatasetGenericData, DSSDatasetSchema, FetchDataframeChunk, QTableData } from "../../backend_model"
 // import isEqual from 'lodash/isEqual';
 
 interface BsTableCol extends QTableColumn {
@@ -46,14 +46,27 @@ function createBsTableColFromName(name: string) {
     return createBsTableCol({ name })
 }
 
-function createBsTableColFromSchema(schema: DSSColumnSchema) {
+function createBsTableColFromSchemaCol(schema: DSSColumnSchema) {
     return createBsTableCol({ name: schema.name, dataType: schema.type });
 }
 
-function transformDataframeToQTableRow(dataframe: PandasDataframe | "None"): Record<string, any>[] | undefined {
-    if (dataframe === "None") return;
+function extractBsTableColFromSchemaOrGenericData(res: DSSDatasetGenericData | DSSDatasetSchema) {
+    const isDatasetGenericData = res.hasOwnProperty("schema");
+    const schemaCols = isDatasetGenericData ?
+        (res as DSSDatasetGenericData).schema.columns :
+        (res as DSSDatasetSchema).columns;
+    const columnsCount = isDatasetGenericData ? (res as DSSDatasetGenericData).columnsCount : undefined;
+    
+    return {
+        columns: schemaCols.map(createBsTableColFromSchemaCol),
+        columnsCount
+    };
+}
+
+function transformDataframeToQTableRow(dataframe: PandasDataframe | "None"): Record<string, any>[] {
+    if (dataframe === "None") return [];
     const entries = Object.entries(dataframe)
-    if (!entries?.length) return;
+    if (!entries?.length) return [];
 
     const rowsAmount = Object.entries(entries[0][1]).length;
     const rows: any[] = Array(rowsAmount).fill(undefined).map(() => ({}));
@@ -78,39 +91,69 @@ function createQColsFromDataframe(dataframe: PandasDataframe | "None") {
 }
 
 
-export class DataframeFetcher {
-    protected _fetchChunk: FetchChunk;
-    protected fetchingChunk = ref(false);
 
-    public fetching = computed(() => this.fetchingChunk.value);
-    // public datasetName: Ref<string | undefined> = ref(undefined);
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-    constructor(options: {fetchChunk: FetchChunk}) {
-        this._fetchChunk = options.fetchChunk;
+interface DataframeData extends PartialBy<QTableData, "columns"> {};
+
+type DataFormatter = ((dataframe: PandasDataframe) => DataframeData) | ((...args: any[]) => DataframeData);
+
+function extractQTableDataFromDataframe(dataframe: PandasDataframe): DataframeData {
+    const rows = transformDataframeToQTableRow(dataframe);
+    const columns = createQColsFromDataframe(dataframe);
+    return { rows, columns };
+}
+
+export class DataFetcher {
+    protected _fetchData: (...args: any) => Promise<any>;
+    protected dataFormatter?: (...args: any) => any;
+    protected fetchingData = ref(false);
+
+    public fetching = computed(() => this.fetchingData.value);
+
+    constructor(options: {fetchData: (...args: any) => Promise<any>, dataFormatter?: DataFormatter }) {
+        this._fetchData = options.fetchData;
+        if (options.dataFormatter) {
+            this.dataFormatter = options.dataFormatter;
+        }
     }
 
-    public fetchChunk(
-        ...args: Parameters<FetchChunk>
+    public fetchDataFormatted(
+        ...args: Parameters<FetchDataframeChunk>
     ): Promise<{
         rows: Record<string, any>[] | undefined;
         columns?: BsTableCol[] | undefined;
-    }> {
-        const promise = this._fetchChunk(...args).then((res) => {
-            const rows = transformDataframeToQTableRow(res);
-            const columns = createQColsFromDataframe(res);
-            return { rows, columns };
-        });
-        return PromiseWithPendingFlag(promise, this.fetchingChunk)
+    } | unknown> {
+        let promise = this.fetchDataRaw(...args)
+        if (this.dataFormatter) promise = promise.then(this.dataFormatter as any);
+        return promise;
     }
 
-    public fetchChunkRaw(
-        ...args: Parameters<FetchChunk>
+    public fetchDataRaw(
+        ...args: Parameters<FetchDataframeChunk>
     ) {
-        return PromiseWithPendingFlag(this._fetchChunk(...args), this.fetchingChunk)
+        return PromiseWithPendingFlag(this._fetchData(...args), this.fetchingData);
+    }
+}
+type DataBatchFetcherType = "DATAFRAME" | "CUSTOM";
+export class DataBatchFetcher extends DataFetcher {
+    protected override _fetchData: (batchSize?: number, batchOffset?: number) => Promise<PandasDataframe>;
+    protected override dataFormatter?: DataFormatter;
+    constructor(options: {
+        fetchData: DataBatchFetcher["_fetchData"],
+        dataFormatter?: DataFormatter,
+        type?: DataBatchFetcherType
+    }) {
+        if (options.type === "DATAFRAME" && !options.dataFormatter) {
+            options.dataFormatter = extractQTableDataFromDataframe;
+        }
+        super(options)
+        this._fetchData = options.fetchData;
+        this.dataFormatter = options.dataFormatter;
     }
 }
 
-export class DatasetFetcher extends DataframeFetcher{
+export class DatasetFetcher extends DataBatchFetcher {
     
     private datasetName!: string;
 
@@ -120,64 +163,47 @@ export class DatasetFetcher extends DataframeFetcher{
 
     private _fetchSchema?: () => ReturnType<FetchDatasetSchema> | ReturnType<FetchDatasetGenericData>;
     private fetchingSchema = ref(false);
+    private schemaFormatter;
+    public override fetching = computed(() => this.fetchingData.value && this.fetchingSchema.value); 
 
-    public override fetching = computed(() => this.fetchingChunk.value && this.fetchingSchema.value); 
-
-    constructor(options: {datasetName: string, fetchChunk?: FetchDatasetChunk, fetchSchema?: FetchDatasetSchema | FetchDatasetGenericData, withoutSchema?: boolean}) {
-        if (!options.fetchChunk) options.fetchChunk = (...args) => ServerApi.getDatasetChunk(...args);
-        if (!options.fetchSchema) options.fetchSchema = (...args) => ServerApi.getDatasetGenericData(...args);
-        super({fetchChunk: options.fetchChunk as unknown as FetchChunk});
+    constructor(options: {
+            datasetName: string,
+            fetchData?: FetchDatasetChunk,
+            fetchSchema?: FetchDatasetSchema | FetchDatasetGenericData,
+            dataFormatter?: DataFormatter,
+            schemaFormatter?: (value: DSSDatasetGenericData | DSSDatasetSchema) => {
+                columns: BsTableCol[],
+                columnsCount?: number | undefined,
+            },
+            withoutSchema?: boolean
+        }) {
+        if (!options.fetchData) options.fetchData = ServerApi.getDatasetChunk.bind(ServerApi);
+        if (!options.fetchSchema) options.fetchSchema = ServerApi.getDatasetGenericData.bind(ServerApi);
+        if (!(options.dataFormatter || options.withoutSchema)) {
+            options.dataFormatter = (dataframe: PandasDataframe): DataframeData => ({rows: transformDataframeToQTableRow(dataframe)});
+        }
+        super(options as any);
         this.setDataset(options.datasetName);
-        this._fetchChunk = (...args) => options.fetchChunk!(this.datasetName, ...args);
+        this._fetchData = ((...args: Parameters<FetchDataframeChunk>) => options.fetchData!(this.datasetName, ...args));
+
+        if (!options.schemaFormatter) options.schemaFormatter = extractBsTableColFromSchemaOrGenericData;
+
+        this.schemaFormatter = options.schemaFormatter;
         if (!options.withoutSchema) {
             this._fetchSchema = () => options.fetchSchema!(this.datasetName);
         }
     }
-
-    override fetchChunk(
-        ...args: Parameters<FetchChunk>
-    ) {
-        if (!this._fetchSchema) {
-            return super.fetchChunk(...args);
-        }
-        const promise = this._fetchChunk(...args).then((res) => {
-            if (res) {
-                const rows = transformDataframeToQTableRow(res);
-                // const columns = createQColsFromDataframe(res);
-                return { rows };
-            } else {
-                return { rows: undefined };
-            }
-        });
-        return PromiseWithPendingFlag(promise, this.fetchingChunk)
-    }
-
-    public fetchSchema() {
-        if (!this._fetchSchema) {
-            console.error("withoutSchema option was supplied, you can't call DatasetFetcher.fetchSchema method");
-            return [];
-        }
-        const promise = this._fetchSchema().then(res => {
-            const isDatasetGenericData = res.hasOwnProperty("schema");
-            let schemaCols = isDatasetGenericData ?
-                (res as DSSDatasetGenericData).schema.columns :
-                (res as DSSDatasetSchema).columns;
-            let columnsCount = isDatasetGenericData ? (res as DSSDatasetGenericData).columnsCount : undefined;
-            
-            return {
-                columns: schemaCols.map(createBsTableColFromSchema),
-                columnsCount
-            };
-        })
-        return PromiseWithPendingFlag(promise, this.fetchingChunk)
+    public fetchSchemaFormatted() {
+        const promise = this.fetchSchemaRaw();
+        if (this.schemaFormatter) promise.then(this.schemaFormatter);
+        return promise;
     }
 
     public fetchSchemaRaw() {
         if (!this._fetchSchema) {
-            console.error("withoutSchema option was supplied, you can't call DatasetFetcher.fetchSchema method");
-            return [];
+            return Promise.reject("withoutSchema option was supplied, you can't call DatasetFetcher.fetchSchema method");
         }
         const promise: Promise<DSSDatasetSchema | DSSDatasetGenericData> = this._fetchSchema();
-        return PromiseWithPendingFlag(promise, this.fetchingChunk);
+        return PromiseWithPendingFlag(promise, this.fetchingData);
     }
 }

@@ -1,3 +1,5 @@
+import { QTableColumn } from "quasar";
+
 export interface DSSColumnSchema {
     name: string;
     type: string;
@@ -19,7 +21,13 @@ export interface DSSDatasetGenericData {
 
 export interface PandasDataframe extends Record<string, PandasDataframeCol> {}
 
-export type FetchChunk = (chunkSize?: number, chunkIndex?: number) => Promise<PandasDataframe>;
-export type FetchDatasetChunk = (datasetName: string, ...args: Parameters<FetchChunk>) => Promise<PandasDataframe>;
+export type FetchDataframeChunk = (chunkSize?: number, chunkIndex?: number) => Promise<PandasDataframe>;
+export type FetchDatasetChunk = (datasetName: string, ...args: Parameters<FetchDataframeChunk>) => Promise<PandasDataframe>;
+export type FetchChunk = (...args: Parameters<FetchDataframeChunk> | Parameters<FetchDatasetChunk>) => Promise<PandasDataframe>;
 export type FetchDatasetSchema = (datasetName: string) => Promise<DSSDatasetSchema>;
 export type FetchDatasetGenericData = (datasetName: string) => Promise<DSSDatasetGenericData>;
+
+export type QTableData = {
+    rows: Record<string, any>[],
+    columns: QTableColumn[],
+}
