@@ -123,7 +123,7 @@ export class DataFetcher {
     ): Promise<{
         rows: Record<string, any>[] | undefined;
         columns?: BsTableCol[] | undefined;
-    } | unknown> {
+    }> {
         let promise = this.fetchDataRaw(...args)
         if (this.dataFormatter) promise = promise.then(this.dataFormatter as any);
         return promise;
@@ -187,15 +187,14 @@ export class DatasetFetcher extends DataBatchFetcher {
         this._fetchData = ((...args: Parameters<FetchDataframeChunk>) => options.fetchData!(this.datasetName, ...args));
 
         if (!options.schemaFormatter) options.schemaFormatter = extractBsTableColFromSchemaOrGenericData;
-
         this.schemaFormatter = options.schemaFormatter;
         if (!options.withoutSchema) {
             this._fetchSchema = () => options.fetchSchema!(this.datasetName);
         }
     }
-    public fetchSchemaFormatted() {
-        const promise = this.fetchSchemaRaw();
-        if (this.schemaFormatter) promise.then(this.schemaFormatter);
+    public fetchSchemaFormatted(): Promise<ReturnType<DatasetFetcher["schemaFormatter"]>> {
+        let promise: Promise<any> = this.fetchSchemaRaw();
+        if (this.schemaFormatter) promise = promise.then(this.schemaFormatter);
         return promise;
     }
 

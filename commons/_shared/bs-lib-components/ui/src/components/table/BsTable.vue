@@ -1,14 +1,4 @@
 <template>
-    <BsFetchedTableFunctional
-        v-if="isDSSTable"
-        :dss-table-name="dssTableName"
-        :server-side-pagination="_serverSidePagination"
-
-        @update:fetching="fetching = $event"
-        @update:rows="updateDSSRows"
-        @update:columns="updateDSSColumns"
-        @update:columns-count="setRecordsCount($event, true)"
-    ></BsFetchedTableFunctional>
     <QTable
         ref="QTableInstance"
         :rows="passedRows"
@@ -118,10 +108,9 @@ export default defineComponent({
 </script>
 
 <script lang="ts" setup>
-import { PropType, computed, ref, watch, useSlots, onMounted } from 'vue';
+import { PropType, computed, ref, watch, useSlots, onMounted, Ref } from 'vue';
 import { QTableColumn, QTable, QTd, QBtn } from 'quasar';
 
-import BsFetchedTableFunctional from "./BsFetchedTableFunctional.vue";
 import BsSearchWholeTable from "./BsSearchWholeTable.vue";
 import BSTableHeader from "./BSTableHeader.vue";
 import BsTextHighlight from "./BsTextHighlight.vue"
@@ -139,6 +128,8 @@ import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 import { ToBeDefined } from '../../utils/types';
 import BSTableSearchHeader from './BSTableSearchHeader.vue';
+import { DatasetFetcher, DataBatchFetcher } from './fetchUtils';
+import { FetchChunk, FetchDatasetSchema } from "../../backend_model";
 
 const  slots = useSlots();
 const emit = defineEmits<{
@@ -158,6 +149,15 @@ const props = defineProps({
     },
     rows: Array as PropType<Record<string, any>[]>,
     columns: Array as PropType<QTableColumn[]>,
+    "request:data": Object as PropType<
+        FetchChunk |
+        ((...args: Parameters<FetchChunk>) => Promise<{columns: QTableColumn[], rows: Record<string, any>}>)
+    >,
+    "request:schema": Object as PropType<FetchDatasetSchema>,
+    "is-dataframe": {
+        type: Boolean,
+        default: true
+    },
     virtualScroll: {
         type: Boolean,
         default: true
@@ -275,32 +275,24 @@ function clearAllSearch() {
 ================================================
 */
 
-const fetching = ref(false);
 
-function setBatchOffset(batchOffset: number, emit = false) {
-    setServerSidePagination({batchOffset}, emit);
-    startOfTheTable();
-}
-function setBatchSize(batchSize: number, emit = false) {
-    setServerSidePagination({batchSize}, emit);
-}
-function setRecordsCount(recordsCount: number, emit = false) {
-    setServerSidePagination({recordsCount}, emit);
-}
-function setServerSidePagination(pagination: Partial<ServerSidePagination>, isEmit = false) {
-    pagination = {...pagination};
-    Object.entries(pagination).forEach(([key, value]) => {
-        if (value < 0) value = 0;
-        pagination[key as keyof ServerSidePagination] = value;
-        _serverSidePagination.value[key as keyof ServerSidePagination] = value;
-    })
-    if (isEmit) emit("update:server-side-pagination", {..._serverSidePagination.value});
-}
-function syncServerSidePagination() {
-    if (isServerSidePaginationObject.value) {
-        setServerSidePagination(props.serverSidePagination as ServerSidePagination);
+
+const dataFetcher = computed(() => {
+    const options: any = {
+        fetchData: props['request:data'],
     }
-}
+    if (isDSSTable) {
+        options.datasetName = props.dssTableName!;
+        options.fetchSchema = props["request:schema"];
+        return new DatasetFetcher(options);
+    } else if (props['request:data']) {
+        options.type = props['is-dataframe'] ? "DATAFRAME" : "CUSTOM";
+        return new DataBatchFetcher(options);
+    }
+})
+const fetching = computed(() => dataFetcher.value?.fetching.value);
+const _serverSidePagination = ref(undefined as unknown as ToBeDefined<ServerSidePagination>);
+
 function createServerSidePagination() {
     _serverSidePagination.value = {
         batchOffset: 0,
@@ -309,10 +301,86 @@ function createServerSidePagination() {
     } as ServerSidePagination;
 }
 
+function setServerSidePagination(pagination: Partial<ServerSidePagination>, isEmit = false, updateData = true) {
+    const changes: Record<string, number> = {};
+    
+    (Object.entries(pagination)).forEach(([key, value]) => {
+        if (value < 0) value = 0;
+        if (value !== (_serverSidePagination as Ref<Record<string, number>>).value[key]) {
+            changes[key] = value;
+            (_serverSidePagination as Ref<Record<string, number>>).value[key] = value;
+        }
+    })
+    
+    if (updateData && (changes.hasOwnProperty("batchOffset") || changes.hasOwnProperty("batchSize"))) {
+        updateTableData();
+    }
+    if (isEmit && Object.keys(changes).length) emit("update:server-side-pagination", {..._serverSidePagination.value});
+}
+
+
+function setRows(rows: Record<string, any>[] | undefined) {
+    if (!rows) rows = [];
+    const { batchSize, batchOffset } = _serverSidePagination.value;
+    
+    const fetchedRowsAmount = Object.keys(rows).length;
+    const updateObject: Partial<ServerSidePagination> = {};
+    if (fetchedRowsAmount < batchSize) {
+        updateObject.recordsCount = batchOffset * batchSize + fetchedRowsAmount;
+        if (fetchedRowsAmount === 0) updateObject.batchOffset = batchOffset - 1;
+        setServerSidePagination(updateObject, true, false);
+    } 
+    if (fetchedRowsAmount) {
+        _rows.value = rows;
+        emit("update:rows", _rows.value);
+    }
+}
+
+
+function setColumns(columns: QTableColumn[]) {
+    _columns.value = columns;
+    emit("update:columns", _columns.value);
+}
+
+function updateTableData() {
+    if (_serverSidePagination.value) {
+        const {batchOffset, batchSize} = _serverSidePagination.value!;
+        dataFetcher.value?.fetchDataFormatted(batchSize, batchOffset).then(res => {
+            setRows(res.rows);
+            if (!isDSSTable && res.columns) {
+                setColumns(res.columns);
+            }
+        });
+        if (isDSSTable) (dataFetcher.value as DatasetFetcher).fetchSchemaFormatted().then(res => {
+            console.log(res);
+            setColumns(res.columns);
+            if (res.columnsCount) setRecordsCount(res.columnsCount!, true, false);
+        })
+    };
+}
+
+function syncServerSidePagination() {
+if (isServerSidePaginationObject.value) {
+    setServerSidePagination(props.serverSidePagination as ServerSidePagination);
+}
+}
+
+function setBatchOffset(batchOffset: number, emit = false, updateData = true) {
+    setServerSidePagination({batchOffset}, emit, updateData);
+    startOfTheTable();
+}
+function setBatchSize(batchSize: number, emit = false, updateData = true) {
+    setServerSidePagination({batchSize}, emit, updateData);
+}
+function setRecordsCount(recordsCount: number, emit = false, updateData = true) {
+    setServerSidePagination({recordsCount}, emit, updateData);
+}
+
+
 const isServerSidePaginationObject = computed((): boolean => {
     return isObject(props.serverSidePagination);
 });
-const _serverSidePagination = ref(undefined as unknown as ToBeDefined<ServerSidePagination>);
+
 
 watch(() => isServerSidePaginationObject && (props.serverSidePagination as ServerSidePagination).batchOffset, (newVal) => {
     if (typeof newVal == "number") syncServerSidePagination();
@@ -324,28 +392,6 @@ watch(() => isServerSidePaginationObject && (props.serverSidePagination as Serve
     syncServerSidePagination();
 })
 
-function updateDSSRows(rows: Record<string, any>[] | undefined) {
-    if (!rows) rows = [];
-    const { batchSize, batchOffset } = _serverSidePagination.value;
-    const fetchedRowsAmount = Object.keys(rows).length;
-    if (fetchedRowsAmount < batchSize) {
-        const updateObject: Partial<ServerSidePagination> = {};
-        updateObject.recordsCount = batchOffset * batchSize + fetchedRowsAmount;
-        if (fetchedRowsAmount == 0) {
-            updateObject.batchOffset = batchOffset - 1;
-        }
-        setServerSidePagination(updateObject, true);
-    }
-
-    _rows.value = rows;
-    emit("update:rows", _rows.value);
-}
-
-
-function updateDSSColumns(columns: QTableColumn[]) {
-    _columns.value = columns;
-    emit("update:columns", _columns.value);
-}
 
 /*
 ========================
@@ -405,7 +451,7 @@ const filteredSlots = computed(() => {
 
 
 const isLoading = computed((): boolean => {
-    return props.loading || searching.value || fetching.value;
+    return fetching.value || props.loading || searching.value;
 });
 
 watch(isLoading, (newVal: boolean) => {
@@ -416,6 +462,7 @@ onMounted(() => {
     if (props.dssTableName || props.serverSidePagination) {
         createServerSidePagination();
         syncServerSidePagination();
+        updateTableData();
     }
     passedRowsLength.value = passedRows.value?.length || 0;
     tableEl.value = QTableInstance.value?.$el;
