@@ -275,8 +275,6 @@ function clearAllSearch() {
 ================================================
 */
 
-
-
 const dataFetcher = computed(() => {
     const options: any = {
         fetchData: props['request:data'],
@@ -391,6 +389,7 @@ watch(() => isServerSidePaginationObject && (props.serverSidePagination as Serve
 watch(() => isServerSidePaginationObject && (props.serverSidePagination as ServerSidePagination).recordsCount, () => {
     syncServerSidePagination();
 })
+
 
 
 /*
