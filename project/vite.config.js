@@ -79,6 +79,9 @@ let defaultConfig = defineConfig({
         alias: {
             '@' : resolve("..","./")
         },
+        dedupe: [
+            'vue'
+        ]
     },
     define: {
         'process.env': {
