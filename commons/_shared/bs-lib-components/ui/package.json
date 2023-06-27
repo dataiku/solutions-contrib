@@ -81,5 +81,10 @@
     "last 4 ChromeAndroid versions",
     "last 4 FirefoxAndroid versions",
     "last 4 iOS versions"
-  ]
+  ],
+  "dependencies": {
+    "@ag-grid-community/vue3": "^30.0.2",
+    "ag-grid-community": "^30.0.2",
+    "ag-grid-vue3": "^30.0.2"
+  }
 }
