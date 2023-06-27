@@ -99,7 +99,7 @@
                 :start-of-the-page="startOfThePage"
                 :searching="anyColumnSearched"
                 :virtual-scroll="virtualScroll"
-                :q-table-middle="(qTableMiddle as HTMLElement)"
+                :scroll-details="scrollDetails"
                 :fetched-rows-length="passedRowsLength"
             ></BsTableBottom>
         </template>
@@ -182,7 +182,7 @@ export default defineComponent({
             searching: false,
             fetching: false,
             searchedCols: {} as Record<string, string>,
-            searchedCol: null as string | null,
+            searchedCol: undefined as string | undefined,
             searchedValue: null as string | null,
             searchedValueFormatted: "",
             _serverSidePagination: undefined as unknown as ToBeDefined<ServerSidePagination>,
@@ -192,7 +192,6 @@ export default defineComponent({
             scrollDetails: {from: 0},
             passedRowsLength: 0,
             tableEl: undefined as undefined | HTMLElement,
-            qTableMiddle: undefined as undefined | HTMLElement,
             mdiCloseCircleMultiple,
         };
     },
@@ -304,7 +303,7 @@ export default defineComponent({
         updateSearchedCols(colName: string, searchedVal: string | null) {
             if(searchedVal == null){
                 delete this.searchedCols[colName];
-                if(colName === this.searchedCol) this.searchedCol = null;
+                if(colName === this.searchedCol) this.searchedCol = undefined;
             }else{
                 this.searchedCols[colName] = searchedVal;
             }
@@ -354,12 +353,13 @@ export default defineComponent({
         },
         clearAllSearch() {
             this.searchedValue = null;
-            this.searchedCol = null;
+            this.searchedCol = undefined;
             this.searchedCols = {};
         },
         onVirtualScroll(details: any) {
-            this.scrollDetails = details;
-            this.$emit("virtual-scroll", details)
+            const qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
+            this.scrollDetails = {...details, scrollHeight: qTableMiddle.scrollHeight - qTableMiddle.clientHeight};
+            this.$emit("virtual-scroll", this.scrollDetails);
         },
         startOfTheTable() {
             if (!this.virtualScroll) this.firstPage();
@@ -393,7 +393,6 @@ export default defineComponent({
         }
         this.passedRowsLength = this.passedRows?.length || 0;
         this.tableEl = (this.$refs.qTable as any)?.$el;
-        this.qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
     }
 });
 </script>
