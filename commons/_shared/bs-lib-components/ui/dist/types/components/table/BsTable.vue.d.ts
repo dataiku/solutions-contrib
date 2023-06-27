@@ -34,7 +34,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     searching: boolean;
     fetching: boolean;
     searchedCols: Record<string, string>;
-    searchedCol: string | null;
+    searchedCol: string | undefined;
     searchedValue: string | null;
     searchedValueFormatted: string;
     _serverSidePagination: ServerSidePagination;
@@ -46,7 +46,6 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     passedRowsLength: number;
     tableEl: HTMLElement | undefined;
-    qTableMiddle: HTMLElement | undefined;
     mdiCloseCircleMultiple: string;
 }, {
     isDSSTable(): boolean;

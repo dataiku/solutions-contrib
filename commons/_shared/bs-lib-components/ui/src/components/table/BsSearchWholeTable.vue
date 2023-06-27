@@ -3,8 +3,8 @@
     <BsInputDebounce
             width="190"
             label="Search items"
-            dense
             filled
+            dense
             format-input
             v-bind="$attrs"
     >
@@ -63,9 +63,16 @@ export default defineComponent({
             height: 100%;
             max-height: 100%;
         }
+        .q-field__control:before{
+            border: none;
+            transition: none;
+        }
         .q-field__label{
             top: 4px;
             font-size: 13px;
+        }
+        .q-field__native{
+            padding-bottom: 4px;
         }
     }  
     :deep(.q-field__control-container){
