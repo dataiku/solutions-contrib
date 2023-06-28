@@ -73,7 +73,8 @@ module.exports = function (ctx) {
       config: {},
 
       // Quasar plugins
-      plugins: ["Notify"],
+      plugins: ["Notify"]
+      
     },
 
     // animations: 'all', // --- includes all animations

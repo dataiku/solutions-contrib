@@ -17,16 +17,19 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: FunctionConstructor;
         required: true;
     };
-    qTableMiddle: PropType<HTMLElement>;
+    scrollDetails: ObjectConstructor;
 }, unknown, {
     recordsCount: number;
     mdiAlert: string;
+    recordsNumber: number;
+    virtualScrollOn: boolean;
 }, {
     pagination(): QTablePagination;
     isFullDataset(): boolean;
     recordsTotal(): number | undefined;
 }, {
     syncServerSidePagination(): void;
+    updateRecordNumber(num: number): void;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     scope: {
         type: PropType<QTableBottomScope>;
@@ -43,7 +46,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: FunctionConstructor;
         required: true;
     };
-    qTableMiddle: PropType<HTMLElement>;
+    scrollDetails: ObjectConstructor;
 }>>, {
     searching: boolean;
 }>;

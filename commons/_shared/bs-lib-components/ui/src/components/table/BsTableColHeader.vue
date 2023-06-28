@@ -72,7 +72,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 
-import { QIcon, QTh, QMenu, QItem, QItemSection, QList } from "quasar";
+import { QIcon, QTh, QMenu, QItem, QItemSection, QList, ClosePopup } from "quasar";
 import {
     mdiArrowUpThin,
     mdiMagnify,
@@ -89,7 +89,10 @@ export default defineComponent({
         QMenu,
         QItem,
         QItemSection,
-        QList,
+        QList
+    },
+    directives:{
+        ClosePopup
     },
     emits: ["search-col"],
     data() {
