@@ -1904,7 +1904,7 @@ const ho = /* @__PURE__ */ S(lo, [["render", co], ["__scopeId", "data-v-02144179
     }
   }
 });
-const mo = (e) => (U("data-v-d791dbd5"), e = e(), H(), e), go = { class: "bs-table-col-header-container" }, bo = {
+const mo = (e) => (U("data-v-24b689ca"), e = e(), H(), e), go = { class: "bs-table-col-header-container" }, bo = {
   class: "bs-table-col-header-title-container",
   ref: "BsTableColHeaderTitleContainer"
 }, fo = { class: "bs-table-col-header-title" }, So = { class: "bs-table-col-header-title-label" }, To = { class: "bs-table-col-header-title-icon" }, _o = /* @__PURE__ */ mo(() => /* @__PURE__ */ g("div", null, "Search", -1)), Do = {
@@ -1995,7 +1995,7 @@ function $o(e, t, s, o, n, i) {
     ], 512)
   ]);
 }
-const yo = /* @__PURE__ */ S(po, [["render", $o], ["__scopeId", "data-v-d791dbd5"]]), Io = b({
+const yo = /* @__PURE__ */ S(po, [["render", $o], ["__scopeId", "data-v-24b689ca"]]), Io = b({
   name: "BSTableHeader",
   components: {
     QTr: ae,
@@ -2235,12 +2235,9 @@ const ko = /* @__PURE__ */ S(Po, [["render", Ao], ["__scopeId", "data-v-4c15147d
   },
   computed: {},
   methods: {
-    computeProgress(e) {
-      return this.serverSidePagination ? (e + this.serverSidePagination.batchOffset * this.serverSidePagination.batchSize) / (this.serverSidePagination.recordsCount || 1) : this.fetchedRowsLength ? (e + 1) / this.fetchedRowsLength : 1;
-    },
-    updateProgress(e = 0) {
+    updateProgress() {
       Ve(() => {
-        this.showProgressBar = this.scrollDetails ? this.scrollDetails.scrollHeight > 0 : !1, this.progress = this.showProgressBar ? this.computeProgress(e) : 1;
+        this.showProgressBar = this.scrollDetails ? this.scrollDetails.scrollHeight > 0 : !1, this.progress = this.showProgressBar && this.scrollDetails ? this.scrollDetails.scrollTop / this.scrollDetails.scrollHeight : 1;
       }, 250, "bs-table-scroll-update-indicator");
     }
   },
@@ -2258,7 +2255,7 @@ const ko = /* @__PURE__ */ S(Po, [["render", Ao], ["__scopeId", "data-v-4c15147d
       this.updateProgress();
     },
     scrollDetails(e) {
-      this.updateProgress(e.index);
+      this.updateProgress();
     }
   }
 });
@@ -2277,7 +2274,7 @@ function Vo(e, t, s, o, n, i) {
     ])
   ], 2);
 }
-const Qo = /* @__PURE__ */ S(zo, [["render", Vo], ["__scopeId", "data-v-486d2c38"]]), Eo = b({
+const Qo = /* @__PURE__ */ S(zo, [["render", Vo], ["__scopeId", "data-v-195a0692"]]), Eo = b({
   name: "BsTableBottom",
   components: {
     BsTablePagination: ko,
@@ -2838,7 +2835,7 @@ const un = /* @__PURE__ */ S(rn, [["render", dn], ["__scopeId", "data-v-431163c8
     onVirtualScroll(e) {
       var s;
       const t = (s = this.tableEl) == null ? void 0 : s.getElementsByClassName("q-table__middle")[0];
-      this.scrollDetails = Q(P({}, e), { scrollHeight: t.scrollHeight - t.clientHeight }), this.$emit("virtual-scroll", this.scrollDetails);
+      this.scrollDetails = Q(P({}, e), { scrollHeight: t.scrollHeight - t.clientHeight, scrollTop: t.scrollTop }), console.log(this.scrollDetails), this.$emit("virtual-scroll", this.scrollDetails);
     },
     startOfTheTable() {
       this.virtualScroll || this.firstPage(), this.startOfThePage();
@@ -2867,7 +2864,7 @@ const un = /* @__PURE__ */ S(rn, [["render", dn], ["__scopeId", "data-v-431163c8
     (this.dssTableName || this.serverSidePagination) && (this.createServerSidePagination(), this.syncServerSidePagination()), this.passedRowsLength = ((e = this.passedRows) == null ? void 0 : e.length) || 0, this.tableEl = (t = this.$refs.qTable) == null ? void 0 : t.$el;
   }
 });
-const hn = (e) => (U("data-v-7f64d6e0"), e = e(), H(), e), pn = { class: "bs-table-top-container bs-table-name bordered" }, mn = { key: 1 }, gn = { class: "bs-table-search-container bordered" }, bn = { class: "bs-table-top-slot-container bordered" }, fn = /* @__PURE__ */ hn(() => /* @__PURE__ */ g("div", { class: "my-table-details" }, null, -1));
+const hn = (e) => (U("data-v-e7e3aea6"), e = e(), H(), e), pn = { class: "bs-table-top-container bs-table-name bordered" }, mn = { key: 1 }, gn = { class: "bs-table-search-container bordered" }, bn = { class: "bs-table-top-slot-container bordered" }, fn = /* @__PURE__ */ hn(() => /* @__PURE__ */ g("div", { class: "my-table-details" }, null, -1));
 function Sn(e, t, s, o, n, i) {
   const a = d("BsDSSTableFunctional"), l = d("BsSearchWholeTable"), u = d("q-btn"), c = d("BsTableServerSidePagination"), y = d("BsTextHighlight"), I = d("q-td"), D = d("BSTableHeader"), C = d("BSTableSearchHeader"), A = d("BsTableBottom"), k = d("QTable");
   return r(), _(F, null, [
@@ -2994,7 +2991,7 @@ function Sn(e, t, s, o, n, i) {
     ]), 1040, ["rows", "columns", "filter", "filter-method", "loading", "virtual-scroll", "rows-per-page-options", "class", "onVirtualScroll"])
   ], 64);
 }
-const Tn = /* @__PURE__ */ S(cn, [["render", Sn], ["__scopeId", "data-v-7f64d6e0"]]), _n = b({
+const Tn = /* @__PURE__ */ S(cn, [["render", Sn], ["__scopeId", "data-v-e7e3aea6"]]), _n = b({
   name: "BsImg",
   components: {
     QImg: pt
