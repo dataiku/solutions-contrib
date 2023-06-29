@@ -1,4 +1,4 @@
-import { Quasar, Notify } from "quasar";
+import { Quasar, Notify, ClosePopup } from "quasar";
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/material-icons-outlined/material-icons-outlined.css";
 import "@quasar/extras/material-icons-round/material-icons-round.css";
@@ -19,6 +19,9 @@ myApp.use(Quasar, {
   plugins: {
     Notify,
   },
+  directives: {
+    ClosePopup
+  }
 });
 
 myApp.use(QuasarBs);

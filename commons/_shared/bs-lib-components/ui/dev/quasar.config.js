@@ -73,8 +73,8 @@ module.exports = function (ctx) {
       config: {},
 
       // Quasar plugins
-      plugins: ["Notify"]
-      
+      plugins: ["Notify"],
+      directives:["ClosePopup"]
     },
 
     // animations: 'all', // --- includes all animations
