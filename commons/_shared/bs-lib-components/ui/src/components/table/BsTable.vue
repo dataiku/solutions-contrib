@@ -358,7 +358,8 @@ export default defineComponent({
         },
         onVirtualScroll(details: any) {
             const qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
-            this.scrollDetails = {...details, scrollHeight: qTableMiddle.scrollHeight - qTableMiddle.clientHeight};
+            this.scrollDetails = {...details, scrollHeight: qTableMiddle.scrollHeight - qTableMiddle.clientHeight, scrollTop: qTableMiddle.scrollTop};
+            console.log(this.scrollDetails);
             this.$emit("virtual-scroll", this.scrollDetails);
         },
         startOfTheTable() {

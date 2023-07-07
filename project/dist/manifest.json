@@ -1,4 +1,8 @@
 {
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.4a4dbc62.woff2",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
+  },
   "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2": {
     "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.35dca8a7.woff2",
     "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2"
@@ -6,18 +10,6 @@
   "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2": {
     "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.c948f126.woff2",
     "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2"
-  },
-  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2": {
-    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.4a4dbc62.woff2",
-    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
-  },
-  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff": {
-    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.fd84f88b.woff",
-    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff"
-  },
-  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff": {
-    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.1c135b15.woff",
-    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff"
   },
   "node_modules/@quasar/extras/mdi-v6/materialdesignicons-webfont.woff2": {
     "file": "assets/materialdesignicons-webfont.633d596f.woff2",
@@ -27,32 +19,40 @@
     "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.8e94758c.woff",
     "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.woff"
   },
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.fd84f88b.woff",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff"
+  },
+  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff": {
+    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.1c135b15.woff",
+    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff"
+  },
+  "fonts/SourceSansPro-Regular.woff": {
+    "file": "assets/SourceSansPro-Regular.b8c5465c.woff",
+    "src": "fonts/SourceSansPro-Regular.woff"
+  },
   "../commons/_shared/resources/images/dataiku-logo.svg": {
     "file": "assets/dataiku-logo.647faba4.svg",
     "src": "../commons/_shared/resources/images/dataiku-logo.svg"
-  },
-  "fonts/SourceSansPro-Bold.woff": {
-    "file": "assets/SourceSansPro-Bold.a0b6aeb8.woff",
-    "src": "fonts/SourceSansPro-Bold.woff"
   },
   "fonts/SourceSansPro-Semibold.woff": {
     "file": "assets/SourceSansPro-Semibold.b838d5de.woff",
     "src": "fonts/SourceSansPro-Semibold.woff"
   },
-  "fonts/SourceSansPro-Regular.woff": {
-    "file": "assets/SourceSansPro-Regular.b8c5465c.woff",
-    "src": "fonts/SourceSansPro-Regular.woff"
+  "fonts/SourceSansPro-Bold.woff": {
+    "file": "assets/SourceSansPro-Bold.a0b6aeb8.woff",
+    "src": "fonts/SourceSansPro-Bold.woff"
   },
   "node_modules/@quasar/extras/mdi-v6/materialdesignicons-webfont.woff": {
     "file": "assets/materialdesignicons-webfont.7f3afe9b.woff",
     "src": "node_modules/@quasar/extras/mdi-v6/materialdesignicons-webfont.woff"
   },
   "main.js": {
-    "file": "assets/main.d3a23989.js",
+    "file": "assets/main.2267423c.js",
     "src": "main.js",
     "isEntry": true,
     "css": [
-      "assets/main.714d9c03.css"
+      "assets/main.7abcb600.css"
     ],
     "assets": [
       "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.4a4dbc62.woff2",
@@ -70,7 +70,7 @@
     ]
   },
   "main.css": {
-    "file": "assets/main.714d9c03.css",
+    "file": "assets/main.7abcb600.css",
     "src": "main.css"
   }
 }

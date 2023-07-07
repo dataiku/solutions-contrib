@@ -182,7 +182,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 4px;
-
+    
     :deep(.q-item) {
         min-height: auto;
         padding: 0px;
@@ -192,6 +192,10 @@ export default defineComponent({
         flex-direction: row;
         gap: 4px;
         font-size: 10px;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none;
     }
     .sorted {
         color: var(--q-primary);

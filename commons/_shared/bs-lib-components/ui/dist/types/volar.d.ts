@@ -2,6 +2,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
+    BsToggle: typeof import('quasar-ui-bs')['BsToggle']
     BsTextHighlight: typeof import('quasar-ui-bs')['BsTextHighlight']
     BsTableVirtualScrollIndicator: typeof import('quasar-ui-bs')['BsTableVirtualScrollIndicator']
     BsTableServerSidePagination: typeof import('quasar-ui-bs')['BsTableServerSidePagination']
@@ -14,7 +15,6 @@ declare module 'vue' {
     BsSearchTableCol: typeof import('quasar-ui-bs')['BsSearchTableCol']
     BsInputDebounce: typeof import('quasar-ui-bs')['BsInputDebounce']
     BsDSSTableFunctional: typeof import('quasar-ui-bs')['BsDSSTableFunctional']
-    BsToggle: typeof import('quasar-ui-bs')['BsToggle']
     BsSpinner: typeof import('quasar-ui-bs')['BsSpinner']
     BsSlider: typeof import('quasar-ui-bs')['BsSlider']
     BsSelect: typeof import('quasar-ui-bs')['BsSelect']
@@ -29,9 +29,9 @@ declare module 'vue' {
     BsLayoutDrawer: typeof import('quasar-ui-bs')['BsLayoutDrawer']
     BsLayoutDefault: typeof import('quasar-ui-bs')['BsLayoutDefault']
     BsDrawerBtn: typeof import('quasar-ui-bs')['BsDrawerBtn']
-    BsDateRange: typeof import('quasar-ui-bs')['BsDateRange']
-    BsImg: typeof import('quasar-ui-bs')['BsImg']
     BsIcon: typeof import('quasar-ui-bs')['BsIcon']
+    BsImg: typeof import('quasar-ui-bs')['BsImg']
+    BsDateRange: typeof import('quasar-ui-bs')['BsDateRange']
     BsButton: typeof import('quasar-ui-bs')['BsButton']
     BsCheckbox: typeof import('quasar-ui-bs')['BsCheckbox']
     BsTabIcon: typeof import('quasar-ui-bs')['BsTabIcon']

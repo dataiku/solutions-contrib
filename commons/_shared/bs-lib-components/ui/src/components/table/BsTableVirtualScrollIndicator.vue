@@ -29,19 +29,10 @@ export default defineComponent({
     },
     computed: {},
     methods: {
-        computeProgress(startingIndex: number): number {
-            if(this.serverSidePagination){
-               return (startingIndex + this.serverSidePagination.batchOffset * this.serverSidePagination.batchSize)/(this.serverSidePagination.recordsCount || 1); 
-            }else if(this.fetchedRowsLength){
-                return (startingIndex + 1)/this.fetchedRowsLength; 
-            }else{
-                return 1;
-            }
-        },
-        updateProgress(startingIndex: number = 0){
+        updateProgress(){
             timeoutExecuteOnce(() => {
                 this.showProgressBar = this.scrollDetails? this.scrollDetails.scrollHeight > 0 : false;
-                this.progress = this.showProgressBar  ? this.computeProgress(startingIndex) : 1;
+                this.progress = this.showProgressBar  && this.scrollDetails ? this.scrollDetails.scrollTop/this.scrollDetails.scrollHeight : 1;
             }, 250, "bs-table-scroll-update-indicator");
         }
     },
@@ -59,7 +50,7 @@ export default defineComponent({
             this.updateProgress();
         },
         scrollDetails(newVal: any){
-            this.updateProgress(newVal.index);
+            this.updateProgress();
         }
     }
 });
