@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ServerApi } from "../../dist/quasar-ui-bs.es";
+import ServerApi  from "../../src/server_api";
 
 export default defineComponent({
   name: "App",

@@ -3,7 +3,7 @@
         v-if="isDSSTable"
         :dss-table-name="dssTableName"
         :server-side-pagination="_serverSidePagination"
-
+        :filters="filters"
         @update:fetching="fetching = $event"
         @update:rows="updateDSSRows"
         @update:columns="updateDSSColumns"
@@ -176,6 +176,7 @@ export default defineComponent({
         },
         style: [Object, String],
         class: [Array, String] as PropType<string[] | string>,
+        filters: Object as PropType<Record<string, any[]>>,
     },
     data() {
         return {

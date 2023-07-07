@@ -84,6 +84,19 @@ export default class ServerApi {
         });
     }
 
+    public static getFilteredDataset(
+        datasetName: string,
+        chunksize: number,
+        chunk_index: number,
+        filters?: Record<string, any[]>,
+    ) {
+        return this.doPost(`bs_api/dataset/get_filtered_dataset`,{
+            dataset_name: datasetName,
+            chunksize,
+            chunk_index,
+            filters : filters || {}
+        });
+    }
 
     public static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData> {
         return this.doPost(`bs_api/dataset/get_generic_data`,{
