@@ -84,12 +84,15 @@ class DataikuApi:
 
     @using_dataset
     def get_dataset_records_count(self, dataset: DSSDataset, project: DSSProject):
-        # info: Dict = dataset.get_info().info
-        # try:
-        #     return info["status"]["records"]["totalValue"]
-        # except Exception:
-        #     return None
-        return None
+        info: Dict = dataset.get_info().info
+        try:
+            return info["status"]["records"]["totalValue"]
+        except Exception:
+            try:
+                return dataset.get_last_metric_values() \
+                .get_metric_by_id("records:COUNT_RECORDS")["lastValues"][0]['value']
+            except Exception:
+                return None
 
     @using_dataset
     def get_dataset_generic_data(self, dataset: DSSDataset, project: DSSProject):
