@@ -32,17 +32,17 @@ export default defineComponent({
         };
     },
     watch: {
-        dssTableName(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        dssTableName(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
-        "serverSidePagination.batchSize"(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        "serverSidePagination.batchSize"(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
-        "serverSidePagination.batchOffset"(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        "serverSidePagination.batchOffset"(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
-        filters(...args){
-            this.updateTableDataOnWatchedChanged(...args);
+        filters(newVal: any, oldVal: any){
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         }
     },
     methods: {
