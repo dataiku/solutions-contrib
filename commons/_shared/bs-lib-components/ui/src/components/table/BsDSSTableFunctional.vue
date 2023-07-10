@@ -20,6 +20,7 @@ export default defineComponent({
             type: String,
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
+        filters:  Object as PropType<Record<string, any[]>>,
     },
     emits: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
@@ -31,15 +32,18 @@ export default defineComponent({
         };
     },
     watch: {
-        dssTableName(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        dssTableName(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
-        "serverSidePagination.batchSize"(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        "serverSidePagination.batchSize"(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
-        "serverSidePagination.batchOffset"(...args: any[]) {
-            this.updateTableDataOnWatchedChanged(...args);
+        "serverSidePagination.batchOffset"(newVal: any, oldVal: any) {
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
         },
+        filters(newVal: any, oldVal: any){
+            this.updateTableDataOnWatchedChanged(newVal, oldVal);
+        }
     },
     methods: {
         setFetching({fetchingChunk, fetchingSchema}: {fetchingChunk?: boolean, fetchingSchema?: boolean}) {
@@ -65,6 +69,19 @@ export default defineComponent({
                 });
             })
         },
+        fetchFilteredDSSDataset(...args: Parameters<typeof ServerApi.getFilteredDataset>): Promise<Record<string, any>[] | undefined> {
+            return new Promise((resolve, reject) => {
+                this.setFetchingChunk(true);
+                ServerApi.getFilteredDataset(
+                    ...args
+                ).then((val) => {
+                    const data = this.transformDSSDataToQTableRow(val);
+                    resolve(data);
+                }).catch(reject).finally(() => {
+                    this.setFetchingChunk(false);
+                });
+            })
+        },
         fetchDSSColumns(...args: Parameters<typeof ServerApi.getDatasetGenericData>): Promise<{columns: BsTableCol[], columnsCount: number}> {
             this.setFetchingSchema(true);
             return new Promise((resolve, reject) => {
@@ -83,8 +100,8 @@ export default defineComponent({
                 this.$emit("update:columns-count", columnsCount);
             });
         },
-        updateRows(...args: Parameters<typeof ServerApi.getDatasetChunk>) {
-            this.fetchDSSData(...args).then(rows => {
+        updateRows(...args: Parameters<typeof ServerApi.getFilteredDataset>) {
+            this.fetchFilteredDSSDataset(...args).then(rows => {
                 this.$emit("update:rows", rows);
             })
         },
@@ -127,7 +144,7 @@ export default defineComponent({
             const {batchSize, batchOffset} = this.serverSidePagination || {}
             if (this.dssTableName && batchSize && (batchOffset !== undefined)) {
                 this.updateColumns(this.dssTableName);
-                this.updateRows(this.dssTableName, batchSize, batchOffset);
+                this.updateRows(this.dssTableName, batchSize, batchOffset, this.filters);
             }
         },
 

@@ -30,6 +30,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     style: (StringConstructor | ObjectConstructor)[];
     class: PropType<string | string[]>;
+    filters: PropType<Record<string, any[]>>;
 }, unknown, {
     searching: boolean;
     fetching: boolean;
@@ -118,6 +119,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     style: (StringConstructor | ObjectConstructor)[];
     class: PropType<string | string[]>;
+    filters: PropType<Record<string, any[]>>;
 }>> & {
     "onUpdate:rows"?: ((...args: any[]) => any) | undefined;
     "onUpdate:columns"?: ((...args: any[]) => any) | undefined;

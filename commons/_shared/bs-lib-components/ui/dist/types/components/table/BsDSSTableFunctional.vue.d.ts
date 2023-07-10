@@ -10,6 +10,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
     };
     serverSidePagination: PropType<ServerSidePagination>;
+    filters: PropType<Record<string, any[]>>;
 }, unknown, {
     DSSColumns: DSSColumnSchema[];
     DSSData: DSSDatasetData;
@@ -23,12 +24,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
     setFetchingSchema(fetchingSchema: boolean): void;
     setFetchingChunk(fetchingChunk: boolean): void;
     fetchDSSData(datasetName: string, chunksize?: number | undefined, chunkIndex?: number | undefined): Promise<Record<string, any>[] | undefined>;
+    fetchFilteredDSSDataset(datasetName: string, chunksize: number, chunk_index: number, filters?: Record<string, any[]> | undefined): Promise<Record<string, any>[] | undefined>;
     fetchDSSColumns(datasetName: string): Promise<{
         columns: BsTableCol[];
         columnsCount: number;
     }>;
     updateColumns(datasetName: string): void;
-    updateRows(datasetName: string, chunksize?: number | undefined, chunkIndex?: number | undefined): void;
+    updateRows(datasetName: string, chunksize: number, chunk_index: number, filters?: Record<string, any[]> | undefined): void;
     parseDSSColumn(columnName: string): string;
     createBsTableCol(options: Partial<BsTableCol>): BsTableCol;
     transformDSSDataToQTableRow(DSSData: DSSDatasetData | string): Record<string, any>[] | undefined;
@@ -39,6 +41,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: StringConstructor;
     };
     serverSidePagination: PropType<ServerSidePagination>;
+    filters: PropType<Record<string, any[]>>;
 }>> & {
     "onUpdate:rows"?: ((...args: any[]) => any) | undefined;
     "onUpdate:columns"?: ((...args: any[]) => any) | undefined;
