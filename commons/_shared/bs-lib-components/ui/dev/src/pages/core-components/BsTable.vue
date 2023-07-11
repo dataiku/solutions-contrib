@@ -6,8 +6,9 @@
             You can specify the chunking of the data with the <b><code>server-side-pagination</code></b>.<br>
             If using without <b><code>dss-table-name</code></b>
             use it in combination with <b><code>@update:server-side-pagination</code></b> event for custom your custom logic. <br>
-            You can filter DSS Table data displayed on server side before it is displayed in the table by specifying filters object. 
-            Filers Object keys are the columns names and its values are the filter values you want to apply
+            You can <b><code>filter DSS Table data</code> </b> displayed on server side before it is displayed in the table by specifying filters object. 
+            Filers Object keys are the columns names and its values are the filter values you want to apply<br>
+            If you want to use <b><code>selection</code> </b>on the table with DSS Table, use <b><code>index as row-key</code> </b> so it is guaranteed to be unique if you don't have a unique ID.<br>
         </p>
         <code-prism lang="js" :code="serverSidePaginationPropType"></code-prism><br>
         To use <b>body-cell, body-cell-[column]</b> slots with searched text highlighting feature use <b>cellValueComponent, cellValueComponentProps</b> scoped slot's props.<br>

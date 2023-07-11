@@ -1,5 +1,10 @@
 <template>
     <q-tr :props="props">
+        <q-th auto-width key="selectAll" v-if="selection === 'multiple'">
+            <q-checkbox v-model="isChecked" @update:model-value="toggleCheckbox"></q-checkbox>
+        </q-th>
+        <q-th auto-width key="select" v-if="selection === 'single'">
+        </q-th>
         <q-th
             v-for="col in cols"
             :key="col.name"
@@ -18,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { QTr, QTh } from 'quasar';
+import { QTr, QTh, QCheckbox } from 'quasar';
 import BsTableColHeader from "./BsTableColHeader.vue";
 import { QTableHeaderProps } from "./tableTypes";
 
@@ -28,20 +33,24 @@ export default defineComponent({
     QTr,
     QTh,
     BsTableColHeader,
+    QCheckbox
 },
     props: {
         props: {
             type: Object as PropType<QTableHeaderProps>,
             required: true,
         },
+        selection: String,
+        allSelected: Boolean
     },
     data() {
         return {
             sortedCol: '',
-            sortedDesc: false
+            sortedDesc: false,
+            isChecked: false
         }
     },
-    emits: ["search-col"],
+    emits: ["search-col", "select-all"],
     methods: {
         activateSearchCol(colName: string){
             this.$emit('search-col', colName);
@@ -51,11 +60,19 @@ export default defineComponent({
             this.sortedCol = (prevCol !== col.name) ? col.name : (this.sortedDesc ? '' : col.name);
             this.sortedDesc = (prevCol !== col.name) ? false : !this.sortedDesc;
             this.props.sort(col);
+        },
+        toggleCheckbox() {
+            this.$emit('select-all', this.isChecked);
         }
     },
     computed: {
         cols(): any[]{
             return this.props.cols.filter((col:any) => col.name !=='clearAllCol');
+        }
+    },
+    watch: {
+        allSelected(newVal: boolean){
+            this.isChecked = newVal;
         }
     }
 });

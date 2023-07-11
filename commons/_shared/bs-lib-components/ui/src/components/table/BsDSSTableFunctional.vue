@@ -133,9 +133,11 @@ export default defineComponent({
             entries.forEach(([colName, colData]) => {
                 colName = this.parseDSSColumn(colName);
                 const colValues = Object.values(colData);
+                const {batchSize, batchOffset} = this.serverSidePagination || { batchSize :0, batchOffset: 0}
                 colValues.forEach((val: any, val_index: number) => {
                     const row = rows[val_index];
                     row[colName] = val;
+                    row['index'] = batchSize*batchOffset + val_index;
                 });
             });
             return rows;
