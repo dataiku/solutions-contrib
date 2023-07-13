@@ -2,6 +2,7 @@ import { PropType } from 'vue';
 import { QTableColumn } from 'quasar';
 import { ServerSidePagination } from './tableHelper';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
+import { RangeFilter } from '../../backend_model';
 declare const _sfc_main: import("vue").DefineComponent<{
     dssTableName: StringConstructor;
     title: StringConstructor;
@@ -30,7 +31,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     style: (StringConstructor | ObjectConstructor)[];
     class: PropType<string | string[]>;
-    filters: PropType<Record<string, any[]>>;
+    filters: PropType<Record<string, RangeFilter | string[]>>;
 }, unknown, {
     searching: boolean;
     fetching: boolean;
@@ -119,7 +120,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     style: (StringConstructor | ObjectConstructor)[];
     class: PropType<string | string[]>;
-    filters: PropType<Record<string, any[]>>;
+    filters: PropType<Record<string, RangeFilter | string[]>>;
 }>> & {
     "onUpdate:rows"?: ((...args: any[]) => any) | undefined;
     "onUpdate:columns"?: ((...args: any[]) => any) | undefined;

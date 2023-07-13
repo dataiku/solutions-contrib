@@ -129,6 +129,7 @@ import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
 import { ToBeDefined } from '../../utils/types';
 import BSTableSearchHeader from './BSTableSearchHeader.vue';
+import { RangeFilter } from '../../backend_model';
 
 
 export default defineComponent({
@@ -176,7 +177,7 @@ export default defineComponent({
         },
         style: [Object, String],
         class: [Array, String] as PropType<string[] | string>,
-        filters: Object as PropType<Record<string, any[]>>,
+        filters: Object as PropType<Record<string, string[] | RangeFilter>>,
     },
     data() {
         return {

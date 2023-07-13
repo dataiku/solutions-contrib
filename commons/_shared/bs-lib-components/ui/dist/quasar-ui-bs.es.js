@@ -1589,17 +1589,17 @@ const Js = /* @__PURE__ */ S(Gs, [["render", Xs]]), xs = b({
     };
   },
   watch: {
-    dssTableName(...e) {
-      this.updateTableDataOnWatchedChanged(...e);
+    dssTableName(e, t) {
+      this.updateTableDataOnWatchedChanged(e, t);
     },
-    "serverSidePagination.batchSize"(...e) {
-      this.updateTableDataOnWatchedChanged(...e);
+    "serverSidePagination.batchSize"(e, t) {
+      this.updateTableDataOnWatchedChanged(e, t);
     },
-    "serverSidePagination.batchOffset"(...e) {
-      this.updateTableDataOnWatchedChanged(...e);
+    "serverSidePagination.batchOffset"(e, t) {
+      this.updateTableDataOnWatchedChanged(e, t);
     },
-    filters(...e) {
-      this.updateTableDataOnWatchedChanged(...e);
+    filters(e, t) {
+      this.updateTableDataOnWatchedChanged(e, t);
     }
   },
   methods: {
@@ -2889,7 +2889,7 @@ const cn = /* @__PURE__ */ S(ln, [["render", un], ["__scopeId", "data-v-431163c8
     (this.dssTableName || this.serverSidePagination) && (this.createServerSidePagination(), this.syncServerSidePagination()), this.passedRowsLength = ((e = this.passedRows) == null ? void 0 : e.length) || 0, this.tableEl = (t = this.$refs.qTable) == null ? void 0 : t.$el;
   }
 });
-const pn = (e) => (H("data-v-9ddccf95"), e = e(), W(), e), mn = { class: "bs-table-top-container bs-table-name bordered" }, gn = { key: 1 }, bn = { class: "bs-table-search-container bordered" }, fn = { class: "bs-table-top-slot-container bordered" }, Sn = /* @__PURE__ */ pn(() => /* @__PURE__ */ g("div", { class: "my-table-details" }, null, -1));
+const pn = (e) => (H("data-v-9336a775"), e = e(), W(), e), mn = { class: "bs-table-top-container bs-table-name bordered" }, gn = { key: 1 }, bn = { class: "bs-table-search-container bordered" }, fn = { class: "bs-table-top-slot-container bordered" }, Sn = /* @__PURE__ */ pn(() => /* @__PURE__ */ g("div", { class: "my-table-details" }, null, -1));
 function Tn(e, t, s, o, n, i) {
   const a = d("BsDSSTableFunctional"), l = d("BsSearchWholeTable"), u = d("q-btn"), c = d("BsTableServerSidePagination"), y = d("BsTextHighlight"), I = d("q-td"), _ = d("BSTableHeader"), C = d("BSTableSearchHeader"), A = d("BsTableBottom"), k = d("QTable");
   return r(), D(G, null, [
@@ -3017,7 +3017,7 @@ function Tn(e, t, s, o, n, i) {
     ]), 1040, ["rows", "columns", "filter", "filter-method", "loading", "virtual-scroll", "rows-per-page-options", "class", "onVirtualScroll"])
   ], 64);
 }
-const Dn = /* @__PURE__ */ S(hn, [["render", Tn], ["__scopeId", "data-v-9ddccf95"]]), _n = b({
+const Dn = /* @__PURE__ */ S(hn, [["render", Tn], ["__scopeId", "data-v-9336a775"]]), _n = b({
   name: "BsImg",
   components: {
     QImg: mt

@@ -1,5 +1,5 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
-import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
+import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData, RangeFilter } from "./backend_model";
 
 
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
@@ -88,7 +88,7 @@ export default class ServerApi {
         datasetName: string,
         chunksize: number,
         chunk_index: number,
-        filters?: Record<string, any[]>,
+        filters?: Record<string, string[] | RangeFilter>,
     ) {
         return this.doPost(`bs_api/dataset/get_filtered_dataset`,{
             dataset_name: datasetName,

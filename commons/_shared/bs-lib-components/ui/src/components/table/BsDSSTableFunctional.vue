@@ -4,7 +4,7 @@
 import { defineComponent, PropType } from 'vue';
 import { QTableColumn } from 'quasar';
 import ServerApi from "../../server_api";
-import { DSSColumnSchema, DSSDatasetData } from "../../backend_model"
+import { DSSColumnSchema, DSSDatasetData, RangeFilter } from "../../backend_model"
 import { ServerSidePagination } from "./tableHelper";
 // import isEqual from 'lodash/isEqual';
 import {isEqual} from 'lodash';
@@ -20,7 +20,7 @@ export default defineComponent({
             type: String,
         },
         serverSidePagination: Object as PropType<ServerSidePagination>,
-        filters:  Object as PropType<Record<string, any[]>>,
+        filters:  Object as PropType<Record<string, string[] | RangeFilter>>,
     },
     emits: ["update:fetching", "update:rows", "update:columns", "update:columns-count"],
     data() {
