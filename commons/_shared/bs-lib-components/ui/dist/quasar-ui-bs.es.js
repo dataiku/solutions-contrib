@@ -10,7 +10,7 @@ var me = (e, t, s) => t in e ? We(e, t, { enumerable: !0, configurable: !0, writ
       Fe.call(t, s) && me(e, s, t[s]);
   return e;
 }, Q = (e, t) => Ye(e, qe(t));
-var ge = (e, t, s) => new Promise((o, n) => {
+var be = (e, t, s) => new Promise((o, n) => {
   var r = (u) => {
     try {
       l(s.next(u));
@@ -27,10 +27,10 @@ var ge = (e, t, s) => new Promise((o, n) => {
   l((s = s.apply(e, t)).next());
 });
 import Re from "axios";
-import { defineComponent as f, computed as ye, openBlock as i, createBlock as p, Teleport as ee, renderSlot as D, createCommentVNode as g, resolveComponent as d, withCtx as h, createVNode as m, normalizeStyle as z, normalizeClass as O, createElementVNode as b, createElementBlock as $, createTextVNode as $e, toDisplayString as N, pushScopeId as H, popScopeId as W, mergeProps as j, withDirectives as L, vShow as R, Fragment as G, renderList as w, createSlots as P, normalizeProps as M, guardReactiveProps as C, resolveDirective as Ie } from "vue";
-import { QCard as Ge, QBtn as Y, QIcon as V, QDrawer as Xe, QHeader as Je, QTab as xe, QTooltip as _e, QTabs as Ke, QPageContainer as et, QPage as tt, QLayout as st, QSelect as ot, QSlider as nt, QRange as at, QSpinner as it, QInput as Me, QTh as ie, QMenu as rt, QItem as lt, QItemSection as dt, QList as ut, ClosePopup as ct, QTr as re, QCheckbox as Ce, QLinearProgress as ht, QTable as pt, QTd as mt, QImg as gt, QDate as bt, QPopupProxy as ft } from "quasar";
+import { defineComponent as f, computed as ye, openBlock as i, createBlock as p, Teleport as ee, renderSlot as D, createCommentVNode as b, resolveComponent as d, withCtx as h, createVNode as m, normalizeStyle as z, normalizeClass as O, createElementVNode as g, createElementBlock as $, createTextVNode as $e, toDisplayString as N, pushScopeId as H, popScopeId as W, mergeProps as j, withDirectives as L, vShow as R, Fragment as G, renderList as w, createSlots as P, normalizeProps as M, guardReactiveProps as C, resolveDirective as Ie } from "vue";
+import { QCard as Ge, QBtn as Y, QIcon as V, QDrawer as Xe, QHeader as Je, QTab as xe, QTooltip as _e, QTabs as Ke, QPageContainer as et, QPage as tt, QLayout as st, QSelect as ot, QSlider as nt, QRange as at, QSpinner as it, QInput as Me, QTh as ie, QMenu as rt, QItem as lt, QItemSection as dt, QList as ut, ClosePopup as ct, QTr as re, QCheckbox as Ce, QLinearProgress as ht, QTable as pt, QTd as mt, QImg as bt, QDate as gt, QPopupProxy as ft } from "quasar";
 import { isEqual as St, uniqueId as Tt, isUndefined as U, isNull as Dt, escape as yt, isEmpty as ve } from "lodash";
-import { mdiMagnify as le, mdiArrowUpThin as $t, mdiSortAscending as be, mdiSortDescending as fe, mdiChevronDown as It, mdiAlert as _t, mdiTrashCanOutline as Mt, mdiCloseCircleMultiple as Ct } from "@quasar/extras/mdi-v6";
+import { mdiMagnify as le, mdiArrowUpThin as $t, mdiSortAscending as ge, mdiSortDescending as fe, mdiChevronDown as It, mdiAlert as _t, mdiTrashCanOutline as Mt, mdiCloseCircleMultiple as Ct } from "@quasar/extras/mdi-v6";
 function vt(e) {
   return e !== null && typeof e == "object" && Array.isArray(e) !== !0;
 }
@@ -72,7 +72,7 @@ const K = class K {
     return te(this.client.get(t));
   }
   static doDelete(t) {
-    return ge(this, null, function* () {
+    return be(this, null, function* () {
       return new Promise((s, o) => {
         this.client.delete(t).then((n) => s(!!n)).catch((n) => o(n));
       });
@@ -196,7 +196,7 @@ function Pt(e, t, s, o, n, r) {
     to: e.contentCSSSelector
   }, [
     D(e.$slots, "default")
-  ], 8, ["to"])) : g("", !0);
+  ], 8, ["to"])) : b("", !0);
 }
 const ce = /* @__PURE__ */ S(Bt, [["render", Pt]]), jt = f({
   name: "BsContent",
@@ -308,22 +308,22 @@ const se = /* @__PURE__ */ S(jt, [["render", Ot]]), At = f({
     this.open = this.modelValue;
   }
 }), Pe = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAxNCAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuNjQ2IDAuNzAzNjEzQzAuNzM2ODU3IDAuNzAzNjEzIDAgMS40MTMxOCAwIDIuMjg4NjVWNy43ODUyNEMwIDguNjYwNzEgMC43MzY4NTcgOS4zNzAyOCAxLjY0NiA5LjM3MDI4SDQuMDkwNjVDNC4wMzExMSA5LjA1ODAyIDQgOC43MzYxNyA0IDguNDA3MzJIMy43NVYxLjY2NjU4SDEwLjM1NEMxMC43MTA5IDEuNjY2NTggMTEgMS45NDUwMSAxMSAyLjI4ODY1VjMuMzEwMzFDMTEuMzQ4NiAzLjQwNTI0IDExLjY4MzIgMy41MzI0NCAxMiAzLjY4ODM1VjIuMjg4NjVDMTIgMS40MTMxOCAxMS4yNjMxIDAuNzAzNjEzIDEwLjM1NCAwLjcwMzYxM0gxLjY0NlpNMi43NSAxLjY2NjU4VjguNDA3MzJIMS42NDZDMS4yODkxNCA4LjQwNzMyIDEgOC4xMjg4OCAxIDcuNzg1MjRWMi4yODg2NUMxIDEuOTQ1MDEgMS4yODkxNCAxLjY2NjU4IDEuNjQ2IDEuNjY2NThIMi43NVoiIGZpbGw9IiMwMUIyQUEiLz4KPHBhdGggZD0iTTkuNDk5OSA3LjUxODVDOC45ODk5IDcuNTE4NSA4LjU3Njg5IDcuOTE2MjEgOC41NzY4OSA4LjQwNzMyQzguNTc2ODkgOC44OTg0MyA4Ljk4OTkgOS4yOTYxMyA5LjQ5OTkgOS4yOTYxM0MxMC4wMDk5IDkuMjk2MTMgMTAuNDIyOSA4Ljg5ODQzIDEwLjQyMjkgOC40MDczMkMxMC40MjI5IDcuOTE2MjEgMTAuMDA5OSA3LjUxODUgOS40OTk5IDcuNTE4NVoiIGZpbGw9IiMwMUIyQUEiLz4KPHBhdGggZD0iTTkuNSAxMi43NDA2QzExLjk4NSAxMi43NDA2IDE0IDEwLjgwMDMgMTQgOC40MDczMkMxNCA2LjAxNDM1IDExLjk4NSA0LjA3Mzk4IDkuNSA0LjA3Mzk4QzcuMDE1IDQuMDczOTggNSA2LjAxNDM1IDUgOC40MDczMkM1IDEwLjgwMDMgNy4wMTUgMTIuNzQwNiA5LjUgMTIuNzQwNlpNOS41MDI5IDUuNTE4NDNDOS43Mjg5IDUuNTIxMzIgOS45NTM5IDUuNTQ2MzUgMTAuMTczOSA1LjU5MzU0QzEwLjI2OTkgNS42MTM3NiAxMC4zNDE5IDUuNjkxNzYgMTAuMzUyOSA1Ljc4NjEzTDEwLjQwNDkgNi4yMzg3MkMxMC40Mjg5IDYuNDQ2NzIgMTAuNjEwOSA2LjYwMzY5IDEwLjgyNzkgNi42MDM2OUMxMC44ODU5IDYuNjAzNjkgMTAuOTQzOSA2LjU5MjEzIDEwLjk5NzkgNi41NjkwMkwxMS40Mjg5IDYuMzg3MDJDMTEuNTE4OSA2LjM0OTQ3IDExLjYyMjkgNi4zNjk2OSAxMS42ODk5IDYuNDM5MDJDMTIuMDAwOSA2Ljc1OTY5IDEyLjIzMjkgNy4xNDM5MSAxMi4zNjc5IDcuNTYyOEMxMi4zOTY5IDcuNjUzMzIgMTIuMzYzOSA3Ljc1MTU0IDEyLjI4NDkgNy44MDczOUwxMS45MDI5IDguMDc4OTVDMTEuNzkzOSA4LjE1NTk4IDExLjcyOTkgOC4yNzgyOCAxMS43Mjk5IDguNDA4MjhDMTEuNzI5OSA4LjUzODI4IDExLjc5MzkgOC42NjA1OCAxMS45MDM5IDguNzM4NThMMTIuMjg1OSA5LjAxMDEzQzEyLjM2NDkgOS4wNjU5OCAxMi4zOTg5IDkuMTY0MjEgMTIuMzY5OSA5LjI1NDcyQzEyLjIzNDkgOS42NzM2MSAxMi4wMDI5IDEwLjA1NzggMTEuNjkxOSAxMC4zNzg1QzExLjYyNDkgMTAuNDQ2OSAxMS41MTk5IDEwLjQ2ODEgMTEuNDMwOSAxMC40MzA1TDEwLjk5NzkgMTAuMjQ3NUMxMC44NzM5IDEwLjE5NTUgMTAuNzMxOSAxMC4yMDMyIDEwLjYxNDkgMTAuMjY3OEMxMC40OTc5IDEwLjMzMzIgMTAuNDE5OSAxMC40NDc4IDEwLjQwNDkgMTAuNTc2OUwxMC4zNTI5IDExLjAyOTVDMTAuMzQxOSAxMS4xMjI5IDEwLjI3MTkgMTEuMTk5OSAxMC4xNzY5IDExLjIyMTFDOS43MzA5IDExLjMyMzIgOS4yNjY5IDExLjMyMzIgOC44MjA5IDExLjIyMTFDOC43MjU5IDExLjE5ODkgOC42NTU5IDExLjEyMjkgOC42NDQ5IDExLjAyOTVMOC41OTI5IDEwLjU3NzhDOC41Nzc5IDEwLjQ0ODggOC40OTk5IDEwLjMzNDIgOC4zODI5IDEwLjI2OTdDOC4yNjU5IDEwLjIwNTIgOC4xMjM5IDEwLjE5NzUgOC4wMDA5IDEwLjI0OTVMNy41Njc4OSAxMC40MzI0QzcuNDc3OSAxMC40NyA3LjM3MzkgMTAuNDQ5OCA3LjMwNjkgMTAuMzgwNEM2Ljk5NTkgMTAuMDU5OCA2Ljc2MzkgOS42NzU1NCA2LjYyODg5IDkuMjU1NjlDNi41OTk5IDkuMTY1MTcgNi42MzM5IDkuMDY2OTUgNi43MTI5IDkuMDExMDlMNy4wOTU4OSA4LjczOTU0QzcuMjA0OSA4LjY2MjUgNy4yNjg5IDguNTQwMjEgNy4yNjg5IDguNDEwMjFDNy4yNjg5IDguMjgwMjEgNy4yMDQ5IDguMTU3OTEgNy4wOTU4OSA4LjA3OTkxTDYuNzEzODkgNy44MDkzMkM2LjYzNDkgNy43NTM0NiA2LjYwMDkgNy42NTUyNCA2LjYyOTkgNy41NjQ3MkM2Ljc2NDkgNy4xNDU4MyA2Ljk5Njg5IDYuNzYxNjEgNy4zMDc4OSA2LjQ0MDk1QzcuMzc0OSA2LjM3MjU4IDcuNDc5OSA2LjM1MTM5IDcuNTY4OSA2LjM4ODk1TDcuOTk5OSA2LjU3MDk1QzguMTIzOSA2LjYyMjk1IDguMjY1ODkgNi42MTUyNCA4LjM4Mzg5IDYuNTQ5NzZDOC41MDA5IDYuNDg0MjggOC41Nzg5IDYuMzY5NjkgOC41OTM4OSA2LjIzOTY5TDguNjQ1OSA1Ljc4ODA2QzguNjU2OSA1LjY5MzY5IDguNzI4OSA1LjYxNjY1IDguODI0OSA1LjU5NTQ2QzkuMDQ1OSA1LjU0ODI4IDkuMjcwOSA1LjUyMzI0IDkuNTAxOSA1LjUyMDM1TDkuNTAyOSA1LjUxODQzWiIgZmlsbD0iIzAxQjJBQSIvPgo8L3N2Zz4K";
-const je = (e) => (H("data-v-47db9d18"), e = e(), W(), e), kt = /* @__PURE__ */ je(() => /* @__PURE__ */ b("div", { class: "row items-center q-gutter-sm no-wrap" }, [
-  /* @__PURE__ */ b("img", {
+const je = (e) => (H("data-v-47db9d18"), e = e(), W(), e), kt = /* @__PURE__ */ je(() => /* @__PURE__ */ g("div", { class: "row items-center q-gutter-sm no-wrap" }, [
+  /* @__PURE__ */ g("img", {
     src: Pe,
     width: "15",
     height: "16"
   }),
-  /* @__PURE__ */ b("span", { class: "btn-solution-text" }, "Dataiku Solutions")
-], -1)), zt = { class: "flex row items-center q-gutter-sm q-mb-lg" }, Lt = ["src", "width", "height"], Vt = { class: "dku-large-title-sb" }, Qt = { class: "doc-body" }, Et = /* @__PURE__ */ je(() => /* @__PURE__ */ b("div", { class: "doc-footer flex row items-center" }, [
-  /* @__PURE__ */ b("span", { class: "doc-footer__icon" }, [
-    /* @__PURE__ */ b("img", {
+  /* @__PURE__ */ g("span", { class: "btn-solution-text" }, "Dataiku Solutions")
+], -1)), zt = { class: "flex row items-center q-gutter-sm q-mb-lg" }, Lt = ["src", "width", "height"], Vt = { class: "dku-large-title-sb" }, Qt = { class: "doc-body" }, Et = /* @__PURE__ */ je(() => /* @__PURE__ */ g("div", { class: "doc-footer flex row items-center" }, [
+  /* @__PURE__ */ g("span", { class: "doc-footer__icon" }, [
+    /* @__PURE__ */ g("img", {
       src: Pe,
       width: "14",
       height: "12.5"
     })
   ]),
-  /* @__PURE__ */ b("span", { class: "doc-footer__text dku-tiny-text-sb" }, "Dataiku Solutions")
+  /* @__PURE__ */ g("span", { class: "doc-footer__text dku-tiny-text-sb" }, "Dataiku Solutions")
 ], -1));
 function Ut(e, t, s, o, n, r) {
   const a = d("QBtn"), l = d("QCard"), u = d("BsTabPageChildWrapper");
@@ -354,19 +354,19 @@ function Ut(e, t, s, o, n, r) {
         ])
       }, {
         default: h(() => [
-          b("div", zt, [
+          g("div", zt, [
             e.mDocsProps.docIcon ? (i(), $("img", {
               key: 0,
               src: e.mDocsProps.docIcon,
               width: e.mDocsProps.docImageDimensions.width,
               height: e.mDocsProps.docImageDimensions.height
-            }, null, 8, Lt)) : g("", !0),
-            b("span", Vt, [
-              e.$slots.title ? D(e.$slots, "title", { key: 0 }, void 0, !0) : g("", !0),
+            }, null, 8, Lt)) : b("", !0),
+            g("span", Vt, [
+              e.$slots.title ? D(e.$slots, "title", { key: 0 }, void 0, !0) : b("", !0),
               $e(" " + N(e.$slots.title ? "" : e.mDocsProps.docTitle), 1)
             ])
           ]),
-          b("div", Qt, [
+          g("div", Qt, [
             D(e.$slots, "default", {}, void 0, !0)
           ]),
           Et
@@ -440,7 +440,7 @@ const oe = /* @__PURE__ */ S(At, [["render", Ut], ["__scopeId", "data-v-47db9d18
   }
 });
 function Wt(e, t, s, o, n, r) {
-  return e.defaultTabUsed ? g("", !0) : (i(), $("div", j({ key: 0 }, e.$attrs, { class: "text-primary bs-tab-title dku-medium-title-sb q-px-md" }), N(e.tabName), 17));
+  return e.defaultTabUsed ? b("", !0) : (i(), $("div", j({ key: 0 }, e.$attrs, { class: "text-primary bs-tab-title dku-medium-title-sb q-px-md" }), N(e.tabName), 17));
 }
 const he = /* @__PURE__ */ S(Ht, [["render", Wt], ["__scopeId", "data-v-9ace8c82"]]), Yt = f({
   name: "BsDrawer",
@@ -456,13 +456,13 @@ function Zt(e, t, s, o, n, r) {
     key: 0,
     to: ".q-drawer"
   }, [
-    L(b("div", qt, [
+    L(g("div", qt, [
       m(a),
       D(e.$slots, "default", {}, void 0, !0)
     ], 512), [
       [R, e.showComponent]
     ])
-  ])) : g("", !0);
+  ])) : b("", !0);
 }
 const Z = /* @__PURE__ */ S(Yt, [["render", Zt], ["__scopeId", "data-v-ef244777"]]), Ft = f({
   name: "BsHeader",
@@ -520,7 +520,7 @@ function Rt(e, t, s, o, n, r) {
     key: 0,
     to: ".bs-header"
   }, [
-    L(b("div", {
+    L(g("div", {
       onVnodeMounted: t[0] || (t[0] = (l) => e.calculateHeaderTabTitleWidth = !0),
       style: z(e.tabHeaderStyles),
       class: O([
@@ -540,7 +540,7 @@ function Rt(e, t, s, o, n, r) {
     ], 6), [
       [R, e.showComponent]
     ])
-  ])) : g("", !0);
+  ])) : b("", !0);
 }
 const F = /* @__PURE__ */ S(Ft, [["render", Rt], ["__scopeId", "data-v-f4a44855"]]), Gt = f({
   name: "BsTabIcon",
@@ -575,9 +575,9 @@ function Xt(e, t, s, o, n, r) {
     key: 0,
     to: e.bsMenuTabCSSSelector
   }, [
-    e.iconName ? (i(), p(a, j({ key: 0 }, e.$attrs, { name: e.iconName }), null, 16, ["name"])) : g("", !0),
+    e.iconName ? (i(), p(a, j({ key: 0 }, e.$attrs, { name: e.iconName }), null, 16, ["name"])) : b("", !0),
     D(e.$slots, "default")
-  ], 8, ["to"])) : g("", !0);
+  ], 8, ["to"])) : b("", !0);
 }
 const x = /* @__PURE__ */ S(Gt, [["render", Xt]]), Jt = f({
   name: "BsDrawerBtn",
@@ -619,7 +619,7 @@ const x = /* @__PURE__ */ S(Gt, [["render", Xt]]), Jt = f({
     }
   }
 }), xt = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTYgMTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAwSDRDMTAuNjI3NCAwIDE2IDUuMzcyNTggMTYgMTJWODhDMTYgOTQuNjI3NCAxMC42Mjc0IDEwMCA0IDEwMEgwVjBaIiBmaWxsPSIjQ0NDQ0NDIi8+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjUiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2RfMV8xNjY4KSI+CjxyZWN0IHg9IjkiIHk9IjIwIiB3aWR0aD0iMSIgaGVpZ2h0PSI2MCIgZmlsbD0iI0Y1RjVGNSIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfMV8xNjY4IiB4PSI1IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxX2RfMV8xNjY4IiB4PSI5IiB5PSIyMCIgd2lkdGg9IjIiIGhlaWdodD0iNjAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMTEgMCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd18xXzE2NjgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMV8xNjY4IiByZXN1bHQ9InNoYXBlIi8+CjwvZmlsdGVyPgo8L2RlZnM+Cjwvc3ZnPgo=";
-const Kt = (e) => (H("data-v-9969ac6c"), e = e(), W(), e), es = /* @__PURE__ */ Kt(() => /* @__PURE__ */ b("img", { src: xt }, null, -1)), ts = [
+const Kt = (e) => (H("data-v-9969ac6c"), e = e(), W(), e), es = /* @__PURE__ */ Kt(() => /* @__PURE__ */ g("img", { src: xt }, null, -1)), ts = [
   es
 ];
 function ss(e, t, s, o, n, r) {
@@ -777,14 +777,14 @@ function us(e, t, s, o, n, r) {
         "transition-hide": "jump-left"
       }, {
         default: h(() => [
-          b("span", ls, N(e.name), 1)
+          g("span", ls, N(e.name), 1)
         ]),
         _: 1
       }),
       e.tabId ? (i(), $("span", {
         key: 0,
         id: e.getBsMenuTabId(e.tabId)
-      }, null, 8, ds)) : g("", !0)
+      }, null, 8, ds)) : b("", !0)
     ]),
     _: 1
   }, 8, ["name", "icon"]);
@@ -871,7 +871,7 @@ const E = class E {
 };
 E.instances = {};
 let ne = E;
-const ms = new ne("tabs"), gs = f({
+const ms = new ne("tabs"), bs = f({
   name: "BsTab",
   mixins: [ue, de],
   components: {
@@ -1021,24 +1021,24 @@ const ms = new ne("tabs"), gs = f({
     this.unregisterTab();
   }
 });
-const bs = ["id"];
+const gs = ["id"];
 function fs(e, t, s, o, n, r) {
   const a = d("BsHeader"), l = d("BsDrawer"), u = d("BsDocumentation"), c = d("BsTabIcon"), T = d("BsContent"), _ = d("QPage"), I = d("QPageContainer");
   return i(), $(G, null, [
     e.usingSlotHeader || !(e.header || e.defaultTabUsed) ? (i(), p(a, { key: 0 }, {
       default: h(() => [
-        e.$slots.header ? g("", !0) : D(e.$slots, "head", { key: 0 }, void 0, !0),
+        e.$slots.header ? b("", !0) : D(e.$slots, "head", { key: 0 }, void 0, !0),
         D(e.$slots, "header", {}, void 0, !0)
       ]),
       _: 3
-    })) : g("", !0),
+    })) : b("", !0),
     e.usingSlotDrawer ? (i(), p(l, { key: 1 }, {
       default: h(() => [
-        e.$slots.drawer ? g("", !0) : D(e.$slots, "leftpanel", { key: 0 }, void 0, !0),
+        e.$slots.drawer ? b("", !0) : D(e.$slots, "leftpanel", { key: 0 }, void 0, !0),
         D(e.$slots, "drawer", {}, void 0, !0)
       ]),
       _: 3
-    })) : g("", !0),
+    })) : b("", !0),
     e.usingSlotDocumentation ? (i(), p(u, {
       key: 2,
       modelValue: e.openDoc,
@@ -1048,18 +1048,18 @@ function fs(e, t, s, o, n, r) {
         D(e.$slots, "documentation", {}, void 0, !0)
       ]),
       _: 3
-    }, 8, ["modelValue"])) : g("", !0),
+    }, 8, ["modelValue"])) : b("", !0),
     !e.defaultTabUsed && e.usingSlotTabIcon ? (i(), p(c, { key: 3 }, {
       default: h(() => [
         D(e.$slots, "tabicon", {}, void 0, !0)
       ]),
       _: 3
-    })) : g("", !0),
+    })) : b("", !0),
     L(m(I, null, {
       default: h(() => [
         m(_, { onVnodeMounted: e.onQPageMounted }, {
           default: h(() => [
-            b("div", {
+            g("div", {
               class: "content",
               id: e.tabContentId
             }, [
@@ -1068,8 +1068,8 @@ function fs(e, t, s, o, n, r) {
                   D(e.$slots, "content", {}, void 0, !0)
                 ]),
                 _: 3
-              })) : g("", !0)
-            ], 8, bs)
+              })) : b("", !0)
+            ], 8, gs)
           ]),
           _: 3
         }, 8, ["onVnodeMounted"])
@@ -1081,7 +1081,7 @@ function fs(e, t, s, o, n, r) {
     D(e.$slots, "default", {}, void 0, !0)
   ], 64);
 }
-const Qe = /* @__PURE__ */ S(gs, [["render", fs], ["__scopeId", "data-v-694ef9e9"]]), Ss = new Ve(), Ts = f({
+const Qe = /* @__PURE__ */ S(bs, [["render", fs], ["__scopeId", "data-v-694ef9e9"]]), Ss = new Ve(), Ts = f({
   name: "BsLayoutDefault",
   mixins: [de, ue],
   components: {
@@ -1236,7 +1236,7 @@ function Ds(e, t, s, o, n, r) {
           }, null, 8, ["name", "tab-id", "icon", "tab-index"]))), 256))
         ]),
         _: 1
-      }, 8, ["modelValue"])) : g("", !0),
+      }, 8, ["modelValue"])) : b("", !0),
       e.mounted && e.defaultTabUsed ? (i(), p(T, {
         key: 1,
         "onMounted:qPage": t[5] || (t[5] = (I) => e.qPageMounted = !0),
@@ -1351,14 +1351,14 @@ function Ns(e, t, s, o, n, r) {
     e.labelLeft ? (i(), $("label", {
       key: 0,
       class: O(["bs-toggle__label", [e.labelClass]])
-    }, N(e.labelLeft), 3)) : g("", !0),
-    b("input", {
+    }, N(e.labelLeft), 3)) : b("", !0),
+    g("input", {
       type: "checkbox",
       checked: e.isTrue === !0,
       value: e.modelIsArray === !0 ? e.val : e.trueValue,
       class: "bs-toggle__input"
     }, null, 8, vs),
-    b("div", {
+    g("div", {
       "aria-checked": e.isTrue === !0,
       "aria-disabled": e.disable,
       "aria-readonly": e.disable,
@@ -1376,7 +1376,7 @@ function Ns(e, t, s, o, n, r) {
     e.labelRight ? (i(), $("label", {
       key: 1,
       class: O(["bs-toggle__label", [e.labelClass]])
-    }, N(e.labelRight), 3)) : g("", !0)
+    }, N(e.labelRight), 3)) : b("", !0)
   ], 6);
 }
 const Bs = /* @__PURE__ */ S(Cs, [["render", Ns]]), Ps = f({
@@ -1425,7 +1425,7 @@ const Bs = /* @__PURE__ */ S(Cs, [["render", Ns]]), Ps = f({
 function Os(e, t, s, o, n, r) {
   const a = d("QSelect");
   return i(), $("div", null, [
-    e.bsLabel ? (i(), $("label", js, N(e.bsLabel), 1)) : g("", !0),
+    e.bsLabel ? (i(), $("label", js, N(e.bsLabel), 1)) : b("", !0),
     m(a, j({ ref: "bsSelect" }, e.$attrs, {
       "dropdown-icon": "r_expand_more",
       class: "bs-select",
@@ -1525,7 +1525,7 @@ function Ys(e, t, s, o, n, r) {
         ])
       }))
     ]), 1040, ["style"]),
-    b("input", {
+    g("input", {
       class: "bs-slider__input dku-text",
       type: "number",
       value: e.inputData.value,
@@ -1888,7 +1888,7 @@ const po = /* @__PURE__ */ S(uo, [["render", ho], ["__scopeId", "data-v-02144179
   data() {
     return {
       mdiArrowUpThin: $t,
-      mdiSortAscending: be,
+      mdiSortAscending: ge,
       mdiSortDescending: fe,
       mdiChevronDown: It,
       searchColIcon: le,
@@ -1903,7 +1903,7 @@ const po = /* @__PURE__ */ S(uo, [["render", ho], ["__scopeId", "data-v-02144179
       return !!((e = this.col) != null && e._sortable);
     },
     sortColIcon() {
-      return this.sortAsc ? be : fe;
+      return this.sortAsc ? ge : fe;
     },
     sortText() {
       return this.sortAsc ? "descending" : "ascending";
@@ -1930,21 +1930,21 @@ const po = /* @__PURE__ */ S(uo, [["render", ho], ["__scopeId", "data-v-02144179
     }
   }
 });
-const go = (e) => (H("data-v-24b689ca"), e = e(), W(), e), bo = { class: "bs-table-col-header-container" }, fo = {
+const bo = (e) => (H("data-v-24b689ca"), e = e(), W(), e), go = { class: "bs-table-col-header-container" }, fo = {
   class: "bs-table-col-header-title-container",
   ref: "BsTableColHeaderTitleContainer"
-}, So = { class: "bs-table-col-header-title" }, To = { class: "bs-table-col-header-title-label" }, Do = { class: "bs-table-col-header-title-icon" }, yo = /* @__PURE__ */ go(() => /* @__PURE__ */ b("div", null, "Search", -1)), $o = {
+}, So = { class: "bs-table-col-header-title" }, To = { class: "bs-table-col-header-title-label" }, Do = { class: "bs-table-col-header-title-icon" }, yo = /* @__PURE__ */ bo(() => /* @__PURE__ */ g("div", null, "Search", -1)), $o = {
   key: 0,
   class: "bs-table-col-header-data-type"
 };
 function Io(e, t, s, o, n, r) {
   var I, v, A, k;
   const a = d("q-icon"), l = d("q-item-section"), u = d("q-item"), c = d("q-list"), T = d("q-menu"), _ = Ie("close-popup");
-  return i(), $("div", bo, [
-    b("div", fo, [
-      b("div", So, [
-        b("div", To, N(((I = e.col) == null ? void 0 : I.label) || ((v = e.col) == null ? void 0 : v.name) || ""), 1),
-        b("div", Do, [
+  return i(), $("div", go, [
+    g("div", fo, [
+      g("div", So, [
+        g("div", To, N(((I = e.col) == null ? void 0 : I.label) || ((v = e.col) == null ? void 0 : v.name) || ""), 1),
+        g("div", Do, [
           m(a, {
             name: e.mdiChevronDown,
             size: "1rem"
@@ -1967,7 +1967,7 @@ function Io(e, t, s, o, n, r) {
                         default: h(() => [
                           m(l, null, {
                             default: h(() => [
-                              b("div", {
+                              g("div", {
                                 class: "bs-table-col-header-action-section cursor-pointer",
                                 onClick: t[0] || (t[0] = (...y) => e.sortColumn && e.sortColumn(...y))
                               }, [
@@ -1976,19 +1976,19 @@ function Io(e, t, s, o, n, r) {
                                   size: "0.8rem",
                                   class: O(["sort-icon", { sorted: e.sorted }])
                                 }, null, 8, ["name", "class"]),
-                                b("div", null, " Sort " + N(e.sortText), 1)
+                                g("div", null, " Sort " + N(e.sortText), 1)
                               ])
                             ]),
                             _: 1
                           })
                         ]),
                         _: 1
-                      })) : g("", !0),
+                      })) : b("", !0),
                       L((i(), p(u, null, {
                         default: h(() => [
                           m(l, null, {
                             default: h(() => [
-                              b("div", {
+                              g("div", {
                                 class: "bs-table-col-header-action-section cursor-pointer",
                                 onClick: t[1] || (t[1] = (...y) => e.searchColumn && e.searchColumn(...y))
                               }, [
@@ -2017,7 +2017,7 @@ function Io(e, t, s, o, n, r) {
           }, 8, ["name"])
         ])
       ]),
-      (A = e.col) != null && A.dataType ? (i(), $("div", $o, N((k = e.col) == null ? void 0 : k.dataType), 1)) : g("", !0)
+      (A = e.col) != null && A.dataType ? (i(), $("div", $o, N((k = e.col) == null ? void 0 : k.dataType), 1)) : b("", !0)
     ], 512)
   ]);
 }
@@ -2035,7 +2035,8 @@ const _o = /* @__PURE__ */ S(mo, [["render", Io], ["__scopeId", "data-v-24b689ca
       required: !0
     },
     selection: String,
-    allSelected: Boolean
+    allSelected: Boolean,
+    loading: Boolean
   },
   data() {
     return {
@@ -2082,15 +2083,16 @@ function Co(e, t, s, o, n, r) {
             "onUpdate:modelValue": [
               t[0] || (t[0] = (T) => e.isChecked = T),
               e.toggleCheckbox
-            ]
-          }, null, 8, ["modelValue", "onUpdate:modelValue"])
+            ],
+            disable: e.loading
+          }, null, 8, ["modelValue", "onUpdate:modelValue", "disable"])
         ]),
         _: 1
-      })) : g("", !0),
+      })) : b("", !0),
       e.selection === "single" ? (i(), p(l, {
         "auto-width": "",
         key: "select"
-      })) : g("", !0),
+      })) : b("", !0),
       (i(!0), $(G, null, w(e.cols, (T) => (i(), p(l, {
         key: T.name,
         props: e.props
@@ -2113,7 +2115,7 @@ function Co(e, t, s, o, n, r) {
     _: 1
   }, 8, ["props"]);
 }
-const vo = /* @__PURE__ */ S(Mo, [["render", Co], ["__scopeId", "data-v-7c496c2a"]]), wo = f({
+const vo = /* @__PURE__ */ S(Mo, [["render", Co], ["__scopeId", "data-v-e60cbebc"]]), wo = f({
   name: "BsTextHighlight",
   components: {},
   data() {
@@ -2231,7 +2233,7 @@ const jo = { class: "bs-table-pagination" }, Oo = { class: "bs-table-pagination-
 function ko(e, t, s, o, n, r) {
   const a = d("q-btn");
   return i(), $("div", jo, [
-    b("div", Oo, [
+    g("div", Oo, [
       e.scope.pagesNumber > 2 ? (i(), p(a, {
         key: 0,
         icon: "first_page",
@@ -2241,7 +2243,7 @@ function ko(e, t, s, o, n, r) {
         flat: "",
         disable: e.scope.isFirstPage,
         onClick: t[0] || (t[0] = (l) => e.executeAndGoToTop(e.scope.firstPage))
-      }, null, 8, ["disable"])) : g("", !0),
+      }, null, 8, ["disable"])) : b("", !0),
       m(a, {
         icon: "chevron_left",
         color: "grey-8",
@@ -2251,7 +2253,7 @@ function ko(e, t, s, o, n, r) {
         disable: e.scope.isFirstPage,
         onClick: t[1] || (t[1] = (l) => e.executeAndGoToTop(e.scope.prevPage))
       }, null, 8, ["disable"]),
-      b("div", Ao, N(e.recordsShown), 1),
+      g("div", Ao, N(e.recordsShown), 1),
       m(a, {
         icon: "chevron_right",
         color: "grey-8",
@@ -2270,7 +2272,7 @@ function ko(e, t, s, o, n, r) {
         flat: "",
         disable: e.scope.isLastPage,
         onClick: t[3] || (t[3] = (l) => e.executeAndGoToTop(e.scope.lastPage))
-      }, null, 8, ["disable"])) : g("", !0)
+      }, null, 8, ["disable"])) : b("", !0)
     ])
   ]);
 }
@@ -2322,7 +2324,7 @@ function Qo(e, t, s, o, n, r) {
   return i(), $("div", {
     class: O(["bs-table-virtual-scroll", e.showProgressBar && "bs-table-virtual-scroll--active"])
   }, [
-    b("div", Vo, [
+    g("div", Vo, [
       m(a, {
         value: e.progress,
         rounded: "",
@@ -2402,14 +2404,14 @@ const Eo = /* @__PURE__ */ S(Lo, [["render", Qo], ["__scopeId", "data-v-195a0692
     this.syncServerSidePagination();
   }
 });
-const Ho = (e) => (H("data-v-79b28020"), e = e(), W(), e), Wo = { class: "bs-table-bottom-container" }, Yo = /* @__PURE__ */ Ho(() => /* @__PURE__ */ b("div", { class: "bs-table-warning-text" }, "the search is applied only to the sampled records!", -1)), qo = {
+const Ho = (e) => (H("data-v-79b28020"), e = e(), W(), e), Wo = { class: "bs-table-bottom-container" }, Yo = /* @__PURE__ */ Ho(() => /* @__PURE__ */ g("div", { class: "bs-table-warning-text" }, "the search is applied only to the sampled records!", -1)), qo = {
   key: 3,
   class: "bs-table-records-total"
 }, Zo = { key: 0 };
 function Fo(e, t, s, o, n, r) {
   const a = d("q-icon"), l = d("BsTablePagination"), u = d("BsTableVirtualScrollIndicator");
   return i(), $("div", Wo, [
-    e.isFullDataset ? g("", !0) : (i(), $("div", {
+    e.isFullDataset ? b("", !0) : (i(), $("div", {
       key: 0,
       class: O(["bs-table-warning", e.searching && "bs-table-warning-active"])
     }, [
@@ -2421,16 +2423,16 @@ function Fo(e, t, s, o, n, r) {
       "server-side-pagination": e.serverSidePagination,
       "scroll-details": e.scrollDetails,
       "fetched-rows-length": e.fetchedRowsLength
-    }, null, 8, ["server-side-pagination", "scroll-details", "fetched-rows-length"])) : g("", !0) : (i(), p(l, {
+    }, null, 8, ["server-side-pagination", "scroll-details", "fetched-rows-length"])) : b("", !0) : (i(), p(l, {
       key: 1,
       scope: e.scope,
       "server-side-pagination": e.serverSidePagination,
       "start-of-the-page": e.startOfThePage
     }, null, 8, ["scope", "server-side-pagination", "start-of-the-page"])),
     e.recordsTotal && e.virtualScroll ? (i(), $("div", qo, [
-      e.virtualScrollOn ? (i(), $("span", Zo, N(e.recordsNumber) + " on  ", 1)) : g("", !0),
+      e.virtualScrollOn ? (i(), $("span", Zo, N(e.recordsNumber) + " on  ", 1)) : b("", !0),
       $e(N(e.recordsTotal) + " rows", 1)
-    ])) : g("", !0)
+    ])) : b("", !0)
   ]);
 }
 const Ro = /* @__PURE__ */ S(Uo, [["render", Fo], ["__scopeId", "data-v-79b28020"]]), Go = f({
@@ -2501,11 +2503,11 @@ const Ro = /* @__PURE__ */ S(Uo, [["render", Fo], ["__scopeId", "data-v-79b28020
 const Xo = (e) => (H("data-v-b7be3388"), e = e(), W(), e), Jo = {
   key: 0,
   class: "bs-table-server-side-pagination"
-}, xo = { class: "bs-table-server-side-pagination-controls" }, Ko = { class: "bs-table-server-side-pagination-offset" }, en = /* @__PURE__ */ Xo(() => /* @__PURE__ */ b("div", { class: "bs-table-server-side-pagination-label" }, " sampled rows ", -1));
+}, xo = { class: "bs-table-server-side-pagination-controls" }, Ko = { class: "bs-table-server-side-pagination-offset" }, en = /* @__PURE__ */ Xo(() => /* @__PURE__ */ g("div", { class: "bs-table-server-side-pagination-label" }, " sampled rows ", -1));
 function tn(e, t, s, o, n, r) {
   const a = d("q-btn");
   return e.lastBatchIndex !== 0 ? (i(), $("div", Jo, [
-    b("div", xo, [
+    g("div", xo, [
       m(a, {
         icon: "chevron_left",
         color: "grey-8",
@@ -2515,7 +2517,7 @@ function tn(e, t, s, o, n, r) {
         disable: e.isFirstBatch,
         onClick: e.prevBatch
       }, null, 8, ["disable", "onClick"]),
-      b("div", Ko, N(e.sampleFrom) + " - " + N(e.sampleTo), 1),
+      g("div", Ko, N(e.sampleFrom) + " - " + N(e.sampleTo), 1),
       m(a, {
         icon: "chevron_right",
         color: "grey-8",
@@ -2527,7 +2529,7 @@ function tn(e, t, s, o, n, r) {
       }, null, 8, ["disable", "onClick"])
     ]),
     en
-  ])) : g("", !0);
+  ])) : b("", !0);
 }
 const sn = /* @__PURE__ */ S(Go, [["render", tn], ["__scopeId", "data-v-b7be3388"]]), on = f({
   name: "BsSearchTableCol",
@@ -2591,7 +2593,7 @@ function an(e, t, s, o, n, r) {
         ])
       }))
     ]), 1040, ["modelValue"]),
-    b("div", null, [
+    g("div", null, [
       m(a, {
         name: e.mdiTrashCanOutline,
         onClick: e.clearField,
@@ -2653,7 +2655,7 @@ const rn = /* @__PURE__ */ S(on, [["render", an], ["__scopeId", "data-v-79755b04
 const dn = { class: "bs-table-search-header" };
 function un(e, t, s, o, n, r) {
   const a = d("q-th"), l = d("BsSearchTableCol"), u = d("q-tr");
-  return e.noSearches ? g("", !0) : (i(), p(u, {
+  return e.noSearches ? b("", !0) : (i(), p(u, {
     key: 0,
     props: e.props
   }, {
@@ -2661,7 +2663,7 @@ function un(e, t, s, o, n, r) {
       e.selectionOn ? (i(), p(a, {
         key: 0,
         "auto-width": ""
-      })) : g("", !0),
+      })) : b("", !0),
       (i(!0), $(G, null, w(e.cols, (c) => (i(), p(a, {
         key: c.name,
         style: z({ "text-align": c.align ? c.align : "left" })
@@ -2669,7 +2671,7 @@ function un(e, t, s, o, n, r) {
         default: h(() => {
           var T;
           return [
-            b("div", dn, [
+            g("div", dn, [
               (T = e.searchedCols) != null && T.hasOwnProperty(c.name) ? (i(), p(l, {
                 key: 0,
                 icon: e.searchColIcon,
@@ -2678,15 +2680,15 @@ function un(e, t, s, o, n, r) {
                 "onUpdate:formattedValue": (_) => e.searchColumn(c.name, _),
                 "onUpdate:noDebounce:formattedValue": t[0] || (t[0] = (_) => e.noDebounceValue = _),
                 onClearSearch: (_) => e.searchColumn(c.name, null)
-              }, null, 8, ["icon", "searchedCols", "col-name", "onUpdate:formattedValue", "onClearSearch"])) : g("", !0)
+              }, null, 8, ["icon", "searchedCols", "col-name", "onUpdate:formattedValue", "onClearSearch"])) : b("", !0)
             ])
           ];
         }),
         _: 2
       }, 1032, ["style"]))), 128)),
-      e.noSearches ? g("", !0) : (i(), p(a, { key: "clearAllCol" }, {
+      e.noSearches ? b("", !0) : (i(), p(a, { key: "clearAllCol" }, {
         default: h(() => [
-          b("span", {
+          g("span", {
             onClick: t[1] || (t[1] = (...c) => e.clearAll && e.clearAll(...c)),
             class: "bs-table-header-clear-all-btn"
           }, " Clear all ")
@@ -2957,7 +2959,7 @@ const cn = /* @__PURE__ */ S(ln, [["render", un], ["__scopeId", "data-v-7f9a0bde
     (this.dssTableName || this.serverSidePagination) && (this.createServerSidePagination(), this.syncServerSidePagination()), this.passedRowsLength = ((e = this.passedRows) == null ? void 0 : e.length) || 0, this.tableEl = (t = this.$refs.qTable) == null ? void 0 : t.$el;
   }
 });
-const pn = (e) => (H("data-v-157ea154"), e = e(), W(), e), mn = { class: "bs-table-top-container bs-table-name bordered" }, gn = { key: 1 }, bn = { class: "bs-table-search-container bordered" }, fn = { class: "bs-table-top-slot-container bordered" }, Sn = /* @__PURE__ */ pn(() => /* @__PURE__ */ b("div", { class: "my-table-details" }, null, -1));
+const pn = (e) => (H("data-v-af20f951"), e = e(), W(), e), mn = { class: "bs-table-top-container bs-table-name bordered" }, bn = { key: 1 }, gn = { class: "bs-table-search-container bordered" }, fn = { class: "bs-table-top-slot-container bordered" }, Sn = /* @__PURE__ */ pn(() => /* @__PURE__ */ g("div", { class: "my-table-details" }, null, -1));
 function Tn(e, t, s, o, n, r) {
   const a = d("BsDSSTableFunctional"), l = d("BsSearchWholeTable"), u = d("q-btn"), c = d("BsTableServerSidePagination"), T = d("BsTextHighlight"), _ = d("q-td"), I = d("BSTableHeader"), v = d("BSTableSearchHeader"), A = d("BsTableBottom"), k = d("QTable");
   return i(), $(G, null, [
@@ -2970,7 +2972,7 @@ function Tn(e, t, s, o, n, r) {
       "onUpdate:rows": e.updateDSSRows,
       "onUpdate:columns": e.updateDSSColumns,
       "onUpdate:columnsCount": t[1] || (t[1] = (y) => e.setRecordsCount(y, !0))
-    }, null, 8, ["dss-table-name", "server-side-pagination", "filters", "onUpdate:rows", "onUpdate:columns"])) : g("", !0),
+    }, null, 8, ["dss-table-name", "server-side-pagination", "filters", "onUpdate:rows", "onUpdate:columns"])) : b("", !0),
     m(k, j({
       ref: "qTable",
       rows: e.passedRows,
@@ -2989,18 +2991,18 @@ function Tn(e, t, s, o, n, r) {
       selection: e.selection
     }), P({
       top: h(() => [
-        b("div", mn, [
-          e.$slots.title ? D(e.$slots, "title", { key: 0 }, void 0, !0) : (i(), $("span", gn, N(e.title || e.dssTableName || ""), 1))
+        g("div", mn, [
+          e.$slots.title ? D(e.$slots, "title", { key: 0 }, void 0, !0) : (i(), $("span", bn, N(e.title || e.dssTableName || ""), 1))
         ]),
-        b("div", bn, [
+        g("div", gn, [
           e.globalSearch ? (i(), p(l, {
             key: 0,
             modelValue: e.searchedValue,
             "onUpdate:modelValue": t[2] || (t[2] = (y) => e.searchedValue = y),
             "onUpdate:formattedValue": t[3] || (t[3] = (y) => e.searchedValueFormatted = y),
             "onUpdate:loading": t[4] || (t[4] = (y) => e.searching = y)
-          }, null, 8, ["modelValue"])) : g("", !0),
-          b("div", {
+          }, null, 8, ["modelValue"])) : b("", !0),
+          g("div", {
             class: O(["bs-table-clear-all-btn", e.anyColumnSearched && "bs-table-clear-all-btn--active"])
           }, [
             m(u, {
@@ -3017,8 +3019,8 @@ function Tn(e, t, s, o, n, r) {
           "server-side-pagination": e._serverSidePagination,
           "onUpdate:batchOffset": t[5] || (t[5] = (y) => e.setBatchOffset(y, !0)),
           class: "bordered"
-        }, null, 8, ["server-side-pagination"])) : g("", !0),
-        b("div", fn, [
+        }, null, 8, ["server-side-pagination"])) : b("", !0),
+        g("div", fn, [
           D(e.$slots, "top", {}, void 0, !0)
         ])
       ]),
@@ -3050,9 +3052,10 @@ function Tn(e, t, s, o, n, r) {
           props: y,
           onSearchCol: e.searchCol,
           onSelectAll: e.selectAllHandler,
+          loading: e.isLoading,
           selection: e.selection,
           "all-selected": e.allSelectedBatch
-        }, null, 8, ["props", "onSearchCol", "onSelectAll", "selection", "all-selected"])) : g("", !0),
+        }, null, 8, ["props", "onSearchCol", "onSelectAll", "loading", "selection", "all-selected"])) : b("", !0),
         e.passedColumns ? (i(), p(v, {
           key: 1,
           class: "bordered",
@@ -3062,7 +3065,7 @@ function Tn(e, t, s, o, n, r) {
           "selection-on": e.selectionOn,
           onSearchCol: e.updateSearchedCols,
           onClearAll: e.clearAllSearch
-        }, null, 8, ["props", "searched-cols", "searched-col", "selection-on", "onSearchCol", "onClearAll"])) : g("", !0)
+        }, null, 8, ["props", "searched-cols", "searched-col", "selection-on", "onSearchCol", "onClearAll"])) : b("", !0)
       ]),
       bottom: h((y) => [
         m(A, {
@@ -3092,10 +3095,10 @@ function Tn(e, t, s, o, n, r) {
     ]), 1040, ["rows", "columns", "filter", "filter-method", "loading", "virtual-scroll", "rows-per-page-options", "class", "onVirtualScroll", "selected", "selection"])
   ], 64);
 }
-const Dn = /* @__PURE__ */ S(hn, [["render", Tn], ["__scopeId", "data-v-157ea154"]]), yn = f({
+const Dn = /* @__PURE__ */ S(hn, [["render", Tn], ["__scopeId", "data-v-af20f951"]]), yn = f({
   name: "BsImg",
   components: {
-    QImg: gt
+    QImg: bt
   }
 });
 function $n(e, t, s, o, n, r) {
@@ -3168,14 +3171,14 @@ function Nn(e, t, s, o, n, r) {
         ])
       }))
     ]), 1040, ["label"]),
-    e.hint && e.$attrs.label ? (i(), $("div", wn, N(e.hint), 1)) : g("", !0)
+    e.hint && e.$attrs.label ? (i(), $("div", wn, N(e.hint), 1)) : b("", !0)
   ], 2);
 }
 const Bn = /* @__PURE__ */ S(vn, [["render", Nn]]), Pn = f({
   name: "BsDateRange",
   components: {
     QInput: Me,
-    QDate: bt,
+    QDate: gt,
     QPopupProxy: ft,
     QIcon: V,
     QBtn: Y
@@ -3197,7 +3200,7 @@ const Bn = /* @__PURE__ */ S(vn, [["render", Nn]]), Pn = f({
 function An(e, t, s, o, n, r) {
   const a = d("QBtn"), l = d("QDate"), u = d("QPopupProxy"), c = d("QIcon"), T = d("QInput"), _ = Ie("close-popup");
   return i(), $("div", null, [
-    e.bsLabel ? (i(), $("label", jn, N(e.bsLabel), 1)) : g("", !0),
+    e.bsLabel ? (i(), $("label", jn, N(e.bsLabel), 1)) : b("", !0),
     m(T, {
       dense: "",
       outlined: "",
@@ -3219,7 +3222,7 @@ function An(e, t, s, o, n, r) {
               default: h(() => [
                 m(l, j({ range: "" }, e.$attrs), {
                   default: h(() => [
-                    b("div", On, [
+                    g("div", On, [
                       L(m(a, {
                         label: "Close",
                         color: "primary",

@@ -7,6 +7,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     selection: StringConstructor;
     allSelected: BooleanConstructor;
+    loading: BooleanConstructor;
 }, unknown, {
     sortedCol: string;
     sortedDesc: boolean;
@@ -24,10 +25,12 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     selection: StringConstructor;
     allSelected: BooleanConstructor;
+    loading: BooleanConstructor;
 }>> & {
     "onSearch-col"?: ((...args: any[]) => any) | undefined;
     "onSelect-all"?: ((...args: any[]) => any) | undefined;
 }, {
+    loading: boolean;
     allSelected: boolean;
 }>;
 export default _sfc_main;

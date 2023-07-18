@@ -84,6 +84,7 @@
                 :props="props"
                 @search-col="searchCol"
                 @select-all="selectAllHandler"
+                :loading="isLoading"
                 :selection="selection"
                 :all-selected="allSelectedBatch"
             ></BSTableHeader>
@@ -295,6 +296,7 @@ export default defineComponent({
             this.passedRowsLength = newVal;
         },
         isLoading(newVal: boolean){
+
             this.$emit("update:loading", newVal);
         },
         selected(newVal: Record<string,any>[]){

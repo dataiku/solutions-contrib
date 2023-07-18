@@ -1,7 +1,7 @@
 <template>
     <q-tr :props="props">
         <q-th auto-width key="selectAll" v-if="selection === 'multiple'">
-            <q-checkbox v-model="isChecked" @update:model-value="toggleCheckbox"></q-checkbox>
+            <q-checkbox v-model="isChecked" @update:model-value="toggleCheckbox" :disable="loading"></q-checkbox>
         </q-th>
         <q-th auto-width key="select" v-if="selection === 'single'">
         </q-th>
@@ -41,7 +41,8 @@ export default defineComponent({
             required: true,
         },
         selection: String,
-        allSelected: Boolean
+        allSelected: Boolean,
+        loading: Boolean
     },
     data() {
         return {
@@ -73,7 +74,7 @@ export default defineComponent({
     watch: {
         allSelected(newVal: boolean){
             this.isChecked = newVal;
-        }
+        },
     }
 });
 </script>

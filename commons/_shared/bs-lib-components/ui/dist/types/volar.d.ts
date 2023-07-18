@@ -1,9 +1,9 @@
 // Auto generated component declarations
 declare module 'vue' {
   export interface GlobalComponents {
+    BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
     BsToggle: typeof import('quasar-ui-bs')['BsToggle']
     BsSpinner: typeof import('quasar-ui-bs')['BsSpinner']
-    BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
     BsTextHighlight: typeof import('quasar-ui-bs')['BsTextHighlight']
     BsTableVirtualScrollIndicator: typeof import('quasar-ui-bs')['BsTableVirtualScrollIndicator']
     BsTableServerSidePagination: typeof import('quasar-ui-bs')['BsTableServerSidePagination']
@@ -16,9 +16,9 @@ declare module 'vue' {
     BsSearchTableCol: typeof import('quasar-ui-bs')['BsSearchTableCol']
     BsInputDebounce: typeof import('quasar-ui-bs')['BsInputDebounce']
     BsDSSTableFunctional: typeof import('quasar-ui-bs')['BsDSSTableFunctional']
-    BsSlider: typeof import('quasar-ui-bs')['BsSlider']
-    BsRange: typeof import('quasar-ui-bs')['BsRange']
     BsSelect: typeof import('quasar-ui-bs')['BsSelect']
+    BsRange: typeof import('quasar-ui-bs')['BsRange']
+    BsSlider: typeof import('quasar-ui-bs')['BsSlider']
     BsTabTitle: typeof import('quasar-ui-bs')['BsTabTitle']
     BsTabPageChildWrapper: typeof import('quasar-ui-bs')['BsTabPageChildWrapper']
     BsTabChild: typeof import('quasar-ui-bs')['BsTabChild']
@@ -29,8 +29,8 @@ declare module 'vue' {
     BsLayoutDrawer: typeof import('quasar-ui-bs')['BsLayoutDrawer']
     BsLayoutDefault: typeof import('quasar-ui-bs')['BsLayoutDefault']
     BsDrawerBtn: typeof import('quasar-ui-bs')['BsDrawerBtn']
-    BsImg: typeof import('quasar-ui-bs')['BsImg']
     BsIcon: typeof import('quasar-ui-bs')['BsIcon']
+    BsImg: typeof import('quasar-ui-bs')['BsImg']
     BsDateRange: typeof import('quasar-ui-bs')['BsDateRange']
     BsCheckbox: typeof import('quasar-ui-bs')['BsCheckbox']
     BsButton: typeof import('quasar-ui-bs')['BsButton']
