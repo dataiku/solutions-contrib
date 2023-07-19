@@ -41,14 +41,17 @@ export default defineComponent({
             required: true,
         },
         selection: String,
-        allSelected: Boolean,
+        allSelected: {
+            type: Boolean as PropType<boolean | null>,
+            default: false,
+        },
         loading: Boolean
     },
     data() {
         return {
             sortedCol: '',
             sortedDesc: false,
-            isChecked: false
+            isChecked: false as boolean | null
         }
     },
     emits: ["search-col", "select-all"],
@@ -72,7 +75,7 @@ export default defineComponent({
         }
     },
     watch: {
-        allSelected(newVal: boolean){
+        allSelected(newVal: boolean | null){
             this.isChecked = newVal;
         },
     }

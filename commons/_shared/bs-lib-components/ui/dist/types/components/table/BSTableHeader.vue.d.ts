@@ -6,12 +6,15 @@ declare const _sfc_main: import("vue").DefineComponent<{
         required: true;
     };
     selection: StringConstructor;
-    allSelected: BooleanConstructor;
+    allSelected: {
+        type: PropType<boolean | null>;
+        default: boolean;
+    };
     loading: BooleanConstructor;
 }, unknown, {
     sortedCol: string;
     sortedDesc: boolean;
-    isChecked: boolean;
+    isChecked: boolean | null;
 }, {
     cols(): any[];
 }, {
@@ -24,13 +27,16 @@ declare const _sfc_main: import("vue").DefineComponent<{
         required: true;
     };
     selection: StringConstructor;
-    allSelected: BooleanConstructor;
+    allSelected: {
+        type: PropType<boolean | null>;
+        default: boolean;
+    };
     loading: BooleanConstructor;
 }>> & {
     "onSearch-col"?: ((...args: any[]) => any) | undefined;
     "onSelect-all"?: ((...args: any[]) => any) | undefined;
 }, {
     loading: boolean;
-    allSelected: boolean;
+    allSelected: boolean | null;
 }>;
 export default _sfc_main;

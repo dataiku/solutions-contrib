@@ -54,7 +54,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     mdiCloseCircleMultiple: string;
     selectedRowsByBatch: Record<number, Record<string, any>[]>;
     selected: Record<string, any>[];
-    allSelected: Record<number, boolean>;
+    allSelected: Record<number, boolean | null>;
 }, {
     isDSSTable(): boolean;
     isLoading(): boolean;
@@ -74,7 +74,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         [k: string]: import("vue").Slot | undefined;
     };
     selectionOn(): boolean;
-    allSelectedBatch(): boolean;
+    allSelectedBatch(): boolean | null;
     currentBatchIndex(): number;
 }, {
     updateDSSRows(rows: Record<string, any>[] | undefined): void;

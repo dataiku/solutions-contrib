@@ -129,7 +129,7 @@ import { searchTableFilter } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
-import { isEmpty } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
@@ -206,7 +206,7 @@ export default defineComponent({
             mdiCloseCircleMultiple,
             selectedRowsByBatch: {} as Record<number,Record<string, any>[]>,
             selected: [] as Record<string, any>[],
-            allSelected: {} as Record<number, boolean>,
+            allSelected: {} as Record<number, boolean| null>,
         };
     },
     computed: {
@@ -275,8 +275,8 @@ export default defineComponent({
         selectionOn(): boolean{
             return this.selection === 'multiple' || this.selection === 'single';
         },
-        allSelectedBatch(): boolean {
-            return this.allSelected[this.currentBatchIndex] || false;
+        allSelectedBatch(): boolean | null{
+            return isUndefined(this.allSelected[this.currentBatchIndex]) ? false : this.allSelected[this.currentBatchIndex];
         },
         currentBatchIndex(): number {
             return this._serverSidePagination?.batchOffset || 0;
@@ -300,8 +300,12 @@ export default defineComponent({
             this.$emit("update:loading", newVal);
         },
         selected(newVal: Record<string,any>[]){
-            this.selectedRowsByBatch[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex] ? this.selectedRowsByBatch[this.currentBatchIndex].filter(row => newVal.indexOf(row) >= 0) : [];
-            this.allSelected[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex]?.length === this.passedRows?.length;
+            this.selectedRowsByBatch[this.currentBatchIndex] = this.passedRows ? this.passedRows.filter(row => newVal.indexOf(row) >= 0) : [];
+            if(this.allSelectedBatch || this.allSelectedBatch == null){
+                this.allSelected[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex]?.length === 0 ? false : null;
+            }else{
+                this.allSelected[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex]?.length === this.passedRows?.length;
+            }
         },
     },
     methods: {
@@ -412,7 +416,7 @@ export default defineComponent({
             };
         },
         selectAllHandler(checked: boolean) {
-            if(checked && this.passedRows) {
+            if(checked && this.passedRows && this.allSelectedBatch != null) {
                 this.selectedRowsByBatch[this.currentBatchIndex] =  [...this.passedRows];
                 this.selected = [...this.selected, ...this.passedRows];
             }else{
