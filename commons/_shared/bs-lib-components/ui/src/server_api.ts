@@ -86,8 +86,8 @@ export default class ServerApi {
 
     public static getFilteredDataset(
         datasetName: string,
-        chunksize: number,
-        chunk_index: number,
+        chunksize: number = 10000,
+        chunk_index: number = 0,
         filters?: Record<string, any[]>,
     ) {
         return this.doPost(`bs_api/dataset/get_filtered_dataset`,{

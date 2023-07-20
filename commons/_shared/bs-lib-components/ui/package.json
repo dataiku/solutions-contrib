@@ -85,6 +85,7 @@
   "dependencies": {
     "@ag-grid-community/vue3": "^30.0.2",
     "ag-grid-community": "^30.0.2",
+    "ag-grid-enterprise": "^30.0.2",
     "ag-grid-vue3": "^30.0.2"
   }
 }

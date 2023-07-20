@@ -1,59 +1,67 @@
 <template>
-    <div class="bs-grid-header-container" :style="{}">
-        <div class="customHeaderLabel">{{ params.displayName }}</div>
-        <div class="bs-grid-col-header-title-icon" v-if="params.enableMenu">
-            <q-icon :name="mdiChevronDown" size="1rem" ref="menuButton">
-                <q-menu
-                    anchor="bottom middle"
-                    self="top middle"
-                    transition-show="scale"
-                    transition-hide="scale"
-                    :offset="[0, 10]"
-                >
-                    <q-list
-                        ref="BsGridColHeaderActions"
-                        class="bs-grid-col-header-actions q-py-xs q-px-sm rounded-borders"
+    <div class="bs-grid-header-container">
+        <div class="bs-grid-col-header-title-container">
+            <div class="bs-grid-col-header-title">{{ params.displayName }}</div>
+            <div class="bs-grid-col-header-title-icon" v-if="params.enableMenu" ref="menuButton">
+                <q-icon :name="mdiChevronDown" size="1rem">
+                    <q-menu
+                        anchor="bottom middle"
+                        self="top middle"
+                        transition-show="scale"
+                        transition-hide="scale"
+                        :offset="[0, 10]"
                     >
-                        <q-item v-if="params.enableSorting">
-                            <q-item-section>
-                                <div
-                                    class="bs-grid-col-header-action-section cursor-pointer"
-                                    @click="onSortRequested"
-                                >
-                                    <q-icon
-                                        :name="sortColIcon"
-                                        size="0.8rem"
-                                        class="sort-icon"
-                                        :class="{
-                                            sorted: noSort === 'inactive',
-                                        }"
+                        <q-list
+                            ref="BsGridColHeaderActions"
+                            class="bs-grid-col-header-actions q-py-xs q-px-sm rounded-borders"
+                        >
+                            <q-item v-if="params.enableSorting">
+                                <q-item-section>
+                                    <div
+                                        class="bs-grid-col-header-action-section cursor-pointer"
+                                        @click="onSortRequested"
                                     >
-                                    </q-icon>
-                                    <div>Sort {{ sortText }}</div>
-                                </div>
-                            </q-item-section>
-                        </q-item>
-                        <q-item v-close-popup>
-                            <q-item-section>
-                                <div
-                                    class="bs-grid-col-header-action-section cursor-pointer"
-                                    @click="searchColumn"
-                                >
-                                    <q-icon :name="mdiMagnify" size="0.8rem">
-                                    </q-icon>
-                                    <div>Search</div>
-                                </div>
-                            </q-item-section>
-                        </q-item>
-                    </q-list>
-                </q-menu>
-            </q-icon>
+                                        <q-icon
+                                            :name="sortColIcon"
+                                            size="0.8rem"
+                                            class="sort-icon"
+                                            :class="{
+                                                sorted: noSort === 'inactive',
+                                            }"
+                                        >
+                                        </q-icon>
+                                        <div>Sort {{ sortText }}</div>
+                                    </div>
+                                </q-item-section>
+                            </q-item>
+                            <q-item v-close-popup>
+                                <q-item-section>
+                                    <div
+                                        class="bs-grid-col-header-action-section cursor-pointer"
+                                        @click="searchColumn"
+                                    >
+                                        <q-icon :name="mdiMagnify" size="0.8rem">
+                                        </q-icon>
+                                        <div>Search</div>
+                                    </div>
+                                </q-item-section>
+                            </q-item>
+                        </q-list>
+                    </q-menu>
+                </q-icon>
+            </div>
         </div>
+        <div
+                v-if="params.column.colDef.dataType"
+                class="bs-grid-col-header-data-type"
+            >
+                {{ params.column.colDef.dataType }}
+            </div>
     </div>
 </template>
 
 <script>
-import { QIcon } from "quasar";
+import { QIcon, QItem, QMenu, QList, QItemSection, ClosePopup } from "quasar";
 
 import {
     mdiMagnify,
@@ -65,6 +73,8 @@ export default {
     data() {
         return {
             QIcon,
+            QItem, QMenu, QList,
+            QItemSection, ClosePopup,
             mdiSortAscending,
             mdiSortDescending,
             mdiChevronDown,
@@ -74,13 +84,7 @@ export default {
             noSort: "active",
         };
     },
-    created() {
-        console.log("created");
-        this.params.column.addEventListener("sortChanged", this.onSortChanged);
-        this.onSortChanged();
-    },
     beforeUnmount() {
-        console.log("unmounted");
         this.params.column.removeEventListener(
             "sortChanged",
             this.onSortChanged
@@ -102,14 +106,7 @@ export default {
     },
     methods: {
         searchColumn() {
-            console.log("search clicked");
-            console.log(this.params.api.refreshHeader);
-            // debugger;
-            this.params.column.colDef.floatingFilter = true;
-            setTimeout(() => {
-                // refresh header after value of floating filter has changed
-                this.params.columnApi.resetColumnState();
-            }, 0);
+            this.params.showColumnMenu(this.$refs.menuButton);
         },
         onSortChanged() {
             this.ascSort = this.descSort = this.noSort = "inactive";
@@ -132,7 +129,8 @@ export default {
         },
     },
     mounted() {
-        // console.log("header params:", this.params);
+        this.params.column.addEventListener("sortChanged", this.onSortChanged);
+        this.onSortChanged();
     },
 };
 </script>
@@ -141,30 +139,29 @@ export default {
 .bs-grid-header-container {
     display: flex;
     height: 36px;
-    .bs-grid-col-header-title-container {
-        display: flex;
-        flex-direction: column;
-        cursor: var(--bs-grid-header-cursor-type);
-        user-select: text;
-        justify-content: space-evenly;
-        align-items: flex-start;
-        height: 100%;
-        .bs-grid-col-header-title {
-            font-weight: 600;
-            line-height: 15px;
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-        }
-        .bs-grid-col-header-data-type {
-            color: var(--q-dark);
-            font-size: 0.65rem;
-            margin-top: -5px;
-            font-family: Monaco;
-            font-weight: 400;
-            line-height: 15px;
-        }
-    }
+    flex-direction: column;
+    cursor: var(--bs-grid-header-cursor-type);
+    user-select: text;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.bs-grid-col-header-title-container {
+    display: flex;
+    font-weight: 600;
+    line-height: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.bs-grid-col-header-data-type {
+    color: var(--q-dark);
+    font-size: 0.65rem;
+    margin-top: -5px;
+    font-family: Monaco;
+    font-weight: 400;
+    line-height: 15px;
 }
 
 .bs-grid-col-header-actions {
@@ -182,11 +179,13 @@ export default {
         flex-direction: row;
         gap: 4px;
         font-size: 10px;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
     }
     .sorted {
         color: var(--q-primary);
     }
 }
 
-/* Add your component-specific styles here */
 </style>
