@@ -35,6 +35,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<"single" | "multiple" | "none">;
         default: undefined;
     };
+    rowKey: StringConstructor;
 }, unknown, {
     searching: boolean;
     fetching: boolean;
@@ -55,6 +56,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     selectedRowsByBatch: Record<number, Record<string, any>[]>;
     selected: Record<string, any>[];
     allSelected: Record<number, boolean | null>;
+    prevBatchIndex: number;
 }, {
     isDSSTable(): boolean;
     isLoading(): boolean;
@@ -102,7 +104,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     scrollTo(index: string | number, edge?: "center" | "start" | "end" | "start-force" | "center-force" | "end-force" | undefined): any;
     getBodyCellProps(props: QTableBodyCellProps): BsTableBodyCellProps;
     selectAllHandler(checked: boolean): void;
-}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:loading" | "update:server-side-pagination" | "virtual-scroll")[], "update:rows" | "update:columns" | "update:loading" | "update:server-side-pagination" | "virtual-scroll", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("update:rows" | "update:columns" | "update:loading" | "update:server-side-pagination" | "virtual-scroll" | "update:selection")[], "update:rows" | "update:columns" | "update:loading" | "update:server-side-pagination" | "virtual-scroll" | "update:selection", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     dssTableName: StringConstructor;
     title: StringConstructor;
     serverSidePagination: PropType<boolean | Partial<ServerSidePagination>>;
@@ -135,12 +137,14 @@ declare const _sfc_main: import("vue").DefineComponent<{
         type: PropType<"single" | "multiple" | "none">;
         default: undefined;
     };
+    rowKey: StringConstructor;
 }>> & {
     "onUpdate:rows"?: ((...args: any[]) => any) | undefined;
     "onUpdate:columns"?: ((...args: any[]) => any) | undefined;
     "onUpdate:loading"?: ((...args: any[]) => any) | undefined;
     "onUpdate:server-side-pagination"?: ((...args: any[]) => any) | undefined;
     "onVirtual-scroll"?: ((...args: any[]) => any) | undefined;
+    "onUpdate:selection"?: ((...args: any[]) => any) | undefined;
 }, {
     loading: boolean;
     virtualScroll: boolean;

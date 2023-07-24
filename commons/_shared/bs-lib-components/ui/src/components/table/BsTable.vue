@@ -24,6 +24,7 @@
         @virtual-scroll="onVirtualScroll"
         v-model:selected="selected"
         :selection="selection"
+        :row-key="rowKey"
     >
         <template #top>
             <div class="bs-table-top-container bs-table-name bordered">
@@ -152,7 +153,7 @@ export default defineComponent({
     BsTableServerSidePagination,
     BSTableSearchHeader
 },
-    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
+    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll", "update:selection"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -186,7 +187,8 @@ export default defineComponent({
         selection: {
             type: String as PropType<'single' | 'multiple' | 'none'>,
             default: undefined
-        }
+        },
+        rowKey: String
     },
     data() {
         return {
@@ -207,6 +209,7 @@ export default defineComponent({
             selectedRowsByBatch: {} as Record<number,Record<string, any>[]>,
             selected: [] as Record<string, any>[],
             allSelected: {} as Record<number, boolean| null>,
+            prevBatchIndex: 0 as number
         };
     },
     computed: {
@@ -279,7 +282,11 @@ export default defineComponent({
             return isUndefined(this.allSelected[this.currentBatchIndex]) ? false : this.allSelected[this.currentBatchIndex];
         },
         currentBatchIndex(): number {
-            return this._serverSidePagination?.batchOffset || 0;
+            if(this.isLoading) {
+                return this.prevBatchIndex;
+            }else{
+                return this._serverSidePagination?.batchOffset || 0;
+            };
         }
     },
     watch: {
@@ -296,16 +303,19 @@ export default defineComponent({
             this.passedRowsLength = newVal;
         },
         isLoading(newVal: boolean){
-
             this.$emit("update:loading", newVal);
         },
         selected(newVal: Record<string,any>[]){
-            this.selectedRowsByBatch[this.currentBatchIndex] = this.passedRows ? this.passedRows.filter(row => newVal.indexOf(row) >= 0) : [];
-            if(this.allSelectedBatch || this.allSelectedBatch == null){
-                this.allSelected[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex]?.length === 0 ? false : null;
+            this.selectedRowsByBatch[this.currentBatchIndex] = this.passedRows ? this.passedRows.filter(row => newVal.findIndex(el => el[this.rowKey!] === row[this.rowKey!]) >= 0) : [];
+            const allSelected = this.selectedRowsByBatch[this.currentBatchIndex]?.length === this.passedRows?.length;
+            if(allSelected){
+                this.allSelected[this.currentBatchIndex] = true;
+            }else if(this.selectedRowsByBatch[this.currentBatchIndex]?.length === 0){
+                this.allSelected[this.currentBatchIndex] = false;
             }else{
-                this.allSelected[this.currentBatchIndex] = this.selectedRowsByBatch[this.currentBatchIndex]?.length === this.passedRows?.length;
+                this.allSelected[this.currentBatchIndex] = null;
             }
+            this.$emit('update:selection', this.selected);
         },
     },
     methods: {
@@ -362,6 +372,7 @@ export default defineComponent({
             this.setServerSidePagination({recordsCount}, emit);
         },
         setServerSidePagination(pagination: Partial<ServerSidePagination>, emit = false) {
+            this.prevBatchIndex = this.currentBatchIndex;
             pagination = {...pagination};
             Object.entries(pagination).forEach(([key, value]) => {
                 if (value < 0) value = 0;
