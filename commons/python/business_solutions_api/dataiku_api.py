@@ -112,11 +112,13 @@ class DataikuApi:
         chunk_index: int,
         chunksize=10000,
         filter=None,
+        group_key=None,
+        group_rows=None
     ):
         dataset_iterator = DatasetIterator(
             dataset=dataset, chunksize=chunksize, filter=filter
         )
-        return dataset_iterator.get_chunk(index=chunk_index)
+        return dataset_iterator.get_chunk(index=chunk_index, group_key=group_key, group_rows=group_rows)
 
     @using_dataset
     def get_dataset_last_build_start_time(

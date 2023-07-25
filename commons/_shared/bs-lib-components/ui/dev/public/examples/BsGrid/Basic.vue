@@ -1,30 +1,10 @@
 <template>
   <div class="q-pa-sm" style="height: 700px">
-    <div style="display: inline-flex; flex-direction: row">
-      <BsToggle
-        v-model="dssDatasetOn"
-        labelLeft="Dss Dataset On"
-        :disable="dssDatasetOn"
-        color="blue"
-      >
-      </BsToggle>
-      <BsToggle
-        v-model="filtersOn"
-        v-if="dssDatasetOn"
-        labelLeft="Filters On"
-        color="blue"
-      ></BsToggle>
-    </div>
     <BsGrid
       title="Treats"
       :rows="rows"
       :columns="columns"
-      row-key="field"
-      :dss-table-name="dssTableName"
-      :filters="filtersOn ? filters : {}"
-      group-keye="date"
       :row-selection="selection"
-      @update:loading="loading"
     />
   </div>
 </template>
@@ -213,26 +193,8 @@ export default {
     return {
       rows: rows,
       columns: columns,
-      dssTableName: null,
-      dssDatasetOn: false,
-      filtersOn: false,
-      filters: {
-        granularity: ["store_california_2"],
-        product_id: ["FOODS_3_107", "FOODS_3_086", "FOODS_3_080"],
-      },
-      multiSelection: false,
-      selection: "multiple",
+      selection: "single",
     };
-  },
-  methods: {
-    loading(newVal) {
-      console.log("isLoading", newVal);
-    },
-  },
-  watch: {
-    dssDatasetOn(newVal) {
-      if (newVal) this.dssTableName = "webapp_data";
-    },
   },
 };
 </script>

@@ -1,5 +1,6 @@
 from typing import Generator, Optional
 from pandas import DataFrame
+import pandas as pd
 from dataikuapi.dss.dataset import DSSDataset
 from commons.python.business_solutions_api.improved_dataset import Dataset
 
@@ -11,14 +12,23 @@ class DatasetIterator:
 
         self._dataset = Dataset("%s.%s" % (dataset.project_key, dataset.dataset_name))
 
-    def _create_generator(self) -> Generator[DataFrame, None, None]:
-        return self._dataset.iter_dataframes(chunksize=self.chunksize, **self._kwargs)
+    def _create_generator(self, group_key=None) -> Generator[DataFrame, None, None]:
+        #if we are using grouping we group on the whole data
+        # TODO review this
+        chunkSize = None if group_key else self.chunksize
+        return self._dataset.iter_dataframes(chunksize=chunkSize, **self._kwargs)
 
-    def get_chunk(self, index: int) -> Optional[DataFrame]:
-        generator = self._create_generator()
+    def get_chunk(self, index: int, group_key=None, group_rows=None) -> Optional[DataFrame]:
+        generator = self._create_generator(group_key)
         try:
             for _ in range(index):
                 next(generator)
+            if group_key:
+                if group_rows:
+                    result = next(generator).groupby(group_key, as_index=False).get_group(group_rows)
+                else:
+                    result = next(generator).groupby(group_key, as_index=False).count()
+                return result
             return next(generator)
         except StopIteration:
             return None

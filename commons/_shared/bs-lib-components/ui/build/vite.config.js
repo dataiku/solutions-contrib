@@ -17,7 +17,12 @@ let indexPath =
     : "../src/index.umd.js";
 
 let rollupOutput = {
-  globals: { vue: "Vue", quasar: "Quasar", lodash: "_", axios: "axios" },
+  globals: {
+    vue: "Vue",
+    quasar: "Quasar",
+    lodash: "_",
+    axios: "axios",
+  },
 };
 
 const plugins = [vue()];
@@ -26,6 +31,7 @@ if (format === "es") {
   plugins.push(
     dts({
       root: "../src",
+      // Change the output directory for the declaration files
       outputDir: "../dist/types",
     })
   );

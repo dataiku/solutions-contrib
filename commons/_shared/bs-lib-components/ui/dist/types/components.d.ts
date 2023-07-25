@@ -27,4 +27,5 @@ import BsImg from "./components/img/BsImg.vue";
 import BsIcon from "./components/icon/BsIcon.vue";
 import BsCheckbox from "./components/checkbox/BsCheckbox.vue";
 import BsDateRange from "./components/daterange/BsDateRange.vue";
-export { ProvideMixin, CheckSlotComponentsMixin, BsTabPageChildWrapper, BsContent, BsDocumentation, BsTabChild, BsTabTitle, BsDrawer, BsHeader, BsTabIcon, BsDrawerBtn, BsLayoutDrawer, BsLayoutHeader, BsMenuTab, BsMenuTabs, BsTab, BsLayoutDefault, BsToggle, BsSelect, BsButton, BsTooltip, BsSlider, BsRange, BsSpinner, BsTable, BsImg, BsIcon, BsCheckbox, BsDateRange };
+import BsGrid from "./components/grid/BsGrid.vue";
+export { ProvideMixin, CheckSlotComponentsMixin, BsTabPageChildWrapper, BsContent, BsDocumentation, BsTabChild, BsTabTitle, BsDrawer, BsHeader, BsTabIcon, BsDrawerBtn, BsLayoutDrawer, BsLayoutHeader, BsMenuTab, BsMenuTabs, BsTab, BsLayoutDefault, BsToggle, BsSelect, BsButton, BsTooltip, BsSlider, BsRange, BsSpinner, BsTable, BsImg, BsIcon, BsCheckbox, BsDateRange, BsGrid };

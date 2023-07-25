@@ -15,7 +15,7 @@ def json_response(payload: Any):
 def fetch_dataiku_dataset():
     data = parse_req(
         request=request,
-        required_fields=["dataset_name", "chunksize", "chunk_index"]
+        required_fields=["dataset_name", "chunksize", "chunk_index"],
     )
     # last_build_start = dataiku_api.get_dataset_last_build_start_time(dataset=dataset_name)
     # timestamp = "None" if last_build_start is None else str(last_build_start.timestamp())
@@ -24,7 +24,7 @@ def fetch_dataiku_dataset():
         dataset_name=data["dataset_name"], chunksize=data["chunksize"], chunk_index=data["chunk_index"]
     )
 
-def _fetch_dataiku_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter=None):
+def _fetch_dataiku_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str):
     try:
         parsed_chunksize = int(chunksize)
         parsed_chunk_index = int(chunk_index)
@@ -35,7 +35,6 @@ def _fetch_dataiku_dataset_chunk(dataset_name: str, chunksize: str, chunk_index:
         dataset=dataset_name,
         chunk_index=parsed_chunk_index,
         chunksize=parsed_chunksize,
-        filter=filter
     )
     payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"
     response = json_response(payload)
@@ -69,8 +68,8 @@ def fetch_filtered_dataiku_dataset():
             "dataset_name",
             "chunksize",
             "chunk_index",
-            "filters"
-        ]
+        ],
+        optional_fields=["filters","group_key","group_rows"]
     )
 
     if not data['filters']:
@@ -86,10 +85,12 @@ def fetch_filtered_dataiku_dataset():
         dataset_name=data["dataset_name"],
         chunksize=data["chunksize"],
         chunk_index=data["chunk_index"],
-        filter=dataset_filter
+        filter=dataset_filter,
+        group_key=data["group_key"],
+        group_rows=data["group_rows"],
     )
 
-def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter: "None | str"=None):
+def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter=None, group_key=None, group_rows=None):
     try:
         parsed_chunksize = int(chunksize)
         parsed_chunk_index = int(chunk_index)
@@ -100,7 +101,9 @@ def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, fi
         dataset=dataset_name,
         chunk_index=parsed_chunk_index,
         chunksize=parsed_chunksize,
-        filter=filter
+        filter=filter,
+        group_key=group_key,
+        group_rows=group_rows
     )
 
     payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"
