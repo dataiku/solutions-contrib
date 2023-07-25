@@ -7,6 +7,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     searchedCols: PropType<Record<string, string>>;
     searchedCol: StringConstructor;
+    selectionOn: BooleanConstructor;
 }, unknown, {
     noDebounceValue: string | number | null | undefined;
     searchColIcon: string;
@@ -24,8 +25,11 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     searchedCols: PropType<Record<string, string>>;
     searchedCol: StringConstructor;
+    selectionOn: BooleanConstructor;
 }>> & {
     "onSearch-col"?: ((...args: any[]) => any) | undefined;
     "onClear-all"?: ((...args: any[]) => any) | undefined;
-}, {}>;
+}, {
+    selectionOn: boolean;
+}>;
 export default _sfc_main;

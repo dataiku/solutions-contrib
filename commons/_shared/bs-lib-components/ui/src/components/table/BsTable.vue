@@ -22,6 +22,9 @@
         :rows-per-page-options="virtualScroll ? [0] : undefined"
         :class="[...classParsed, ...tableClasses]"
         @virtual-scroll="onVirtualScroll"
+        v-model:selected="selected"
+        :selection="selection"
+        :row-key="rowKey"
     >
         <template #top>
             <div class="bs-table-top-container bs-table-name bordered">
@@ -81,6 +84,10 @@
                 v-if="passedColumns"
                 :props="props"
                 @search-col="searchCol"
+                @select-all="selectAllHandler"
+                :loading="isLoading"
+                :selection="selection"
+                :all-selected="allSelectedBatch"
             ></BSTableHeader>
             <BSTableSearchHeader
                 v-if="passedColumns"
@@ -88,6 +95,7 @@
                 :props="props"
                 :searched-cols="searchedCols"
                 :searched-col="searchedCol"
+                :selection-on="selectionOn"
                 @search-col="updateSearchedCols"
                 @clear-all="clearAllSearch"
             ></BSTableSearchHeader>
@@ -122,8 +130,7 @@ import { searchTableFilter } from './filterTable';
 
 import { getObjectPropertyIfExists } from "../../utils/utils"
 import { ServerSidePagination } from './tableHelper';
-// import isEmpty from 'lodash/isEmpty';
-import { isEmpty } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 import { mdiCloseCircleMultiple } from '@quasar/extras/mdi-v6';
 import BsTableServerSidePagination from './BsTableServerSidePagination.vue';
 import { BsTableBodyCellProps, QTableBodyCellProps } from './tableTypes';
@@ -146,7 +153,7 @@ export default defineComponent({
     BsTableServerSidePagination,
     BSTableSearchHeader
 },
-    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll"],
+    emits: ["update:rows", "update:columns", "update:loading", "update:server-side-pagination", "virtual-scroll", "update:selection"],
     inheritAttrs: false,
     props: {
         dssTableName: String,
@@ -177,6 +184,11 @@ export default defineComponent({
         style: [Object, String],
         class: [Array, String] as PropType<string[] | string>,
         filters: Object as PropType<Record<string, any[]>>,
+        selection: {
+            type: String as PropType<'single' | 'multiple' | 'none'>,
+            default: undefined
+        },
+        rowKey: String
     },
     data() {
         return {
@@ -194,6 +206,10 @@ export default defineComponent({
             passedRowsLength: 0,
             tableEl: undefined as undefined | HTMLElement,
             mdiCloseCircleMultiple,
+            selectedRowsByBatch: {} as Record<number,Record<string, any>[]>,
+            selected: [] as Record<string, any>[],
+            allSelected: {} as Record<number, boolean| null>,
+            prevBatchIndex: 0 as number
         };
     },
     computed: {
@@ -259,6 +275,19 @@ export default defineComponent({
                 )
             );
         },
+        selectionOn(): boolean{
+            return this.selection === 'multiple' || this.selection === 'single';
+        },
+        allSelectedBatch(): boolean | null{
+            return isUndefined(this.allSelected[this.currentBatchIndex]) ? false : this.allSelected[this.currentBatchIndex];
+        },
+        currentBatchIndex(): number {
+            if(this.isLoading) {
+                return this.prevBatchIndex;
+            }else{
+                return this._serverSidePagination?.batchOffset || 0;
+            };
+        }
     },
     watch: {
         "serverSidePagination.batchOffset"() {
@@ -275,7 +304,19 @@ export default defineComponent({
         },
         isLoading(newVal: boolean){
             this.$emit("update:loading", newVal);
-        }
+        },
+        selected(newVal: Record<string,any>[]){
+            this.selectedRowsByBatch[this.currentBatchIndex] = this.passedRows ? this.passedRows.filter(row => newVal.findIndex(el => el[this.rowKey!] === row[this.rowKey!]) >= 0) : [];
+            const allSelected = this.selectedRowsByBatch[this.currentBatchIndex]?.length === this.passedRows?.length;
+            if(allSelected){
+                this.allSelected[this.currentBatchIndex] = true;
+            }else if(this.selectedRowsByBatch[this.currentBatchIndex]?.length === 0){
+                this.allSelected[this.currentBatchIndex] = false;
+            }else{
+                this.allSelected[this.currentBatchIndex] = null;
+            }
+            this.$emit('update:selection', this.selected);
+        },
     },
     methods: {
         updateDSSRows(rows: Record<string, any>[] | undefined) {
@@ -290,7 +331,6 @@ export default defineComponent({
                 }
                 this.setServerSidePagination(updateObject, true);
             }
-
             this._rows = rows;
             this.$emit("update:rows", this._rows);
         },
@@ -332,6 +372,7 @@ export default defineComponent({
             this.setServerSidePagination({recordsCount}, emit);
         },
         setServerSidePagination(pagination: Partial<ServerSidePagination>, emit = false) {
+            this.prevBatchIndex = this.currentBatchIndex;
             pagination = {...pagination};
             Object.entries(pagination).forEach(([key, value]) => {
                 if (value < 0) value = 0;
@@ -360,7 +401,6 @@ export default defineComponent({
         onVirtualScroll(details: any) {
             const qTableMiddle = this.tableEl?.getElementsByClassName("q-table__middle")[0] as HTMLElement;
             this.scrollDetails = {...details, scrollHeight: qTableMiddle.scrollHeight - qTableMiddle.clientHeight, scrollTop: qTableMiddle.scrollTop};
-            console.log(this.scrollDetails);
             this.$emit("virtual-scroll", this.scrollDetails);
         },
         startOfTheTable() {
@@ -386,6 +426,17 @@ export default defineComponent({
                 },
             };
         },
+        selectAllHandler(checked: boolean) {
+            if(checked && this.passedRows && this.allSelectedBatch != null) {
+                this.selectedRowsByBatch[this.currentBatchIndex] =  [...this.passedRows];
+                this.selected = [...this.selected, ...this.passedRows];
+            }else{
+                this.selectedRowsByBatch[this.currentBatchIndex] =  [];
+                const selected = [] as Record<string, any>[];
+                Object.values(this.selectedRowsByBatch).forEach((row: any) => selected.push(...row));
+                this.selected = selected;
+            };
+        }
     },
 
     mounted() {

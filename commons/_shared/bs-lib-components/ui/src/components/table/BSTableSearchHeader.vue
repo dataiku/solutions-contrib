@@ -2,6 +2,7 @@
      <q-tr
         :props="props" 
         v-if="!noSearches">
+        <q-th auto-width v-if="selectionOn"></q-th>
         <q-th 
             v-for="col in cols" 
             :key="col.name"
@@ -50,6 +51,7 @@ export default defineComponent({
         },
         searchedCols: Object as PropType<Record<string, string>>,
         searchedCol: String || undefined,
+        selectionOn: Boolean
     },
     emits: ['search-col', 'clear-all'],
     data() {
