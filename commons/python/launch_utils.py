@@ -2,25 +2,20 @@ from flask import Flask
 import os
 
 from commons.python.fetch.fetch_project import fetch_route
-from commons.python.business_solutions_api import business_solutions_api
-# from commons.python.caching import cache
+from commons.python.business_solutions_api import (
+    business_solutions_api,
+    register_child_blueprints,
+    dataset_api,
+)
 
-from dotenv import load_dotenv
-load_dotenv()
-
-if os.environ.get("FLASK_RUN_PORT") == None: os.environ["FLASK_RUN_PORT"] = "5000"
 
 def get_local_development_port():
-    lcport = os.environ.get("FLASK_RUN_PORT")
-    if lcport != None:
-        return int(lcport)
-    return 5000
+    lcport = os.environ.get("FLASK_RUN_PORT", 5000)
+    return int(lcport)
 
-def create_app(app_name: str):
-    app = Flask(app_name)
 
-    # cache.init_app(app=app)
-
+def create_app(app: Flask):
     app.register_blueprint(fetch_route)
     app.register_blueprint(business_solutions_api)
+    register_child_blueprints(app, children=[dataset_api])
     return app
