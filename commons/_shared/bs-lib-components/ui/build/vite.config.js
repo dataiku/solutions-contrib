@@ -31,7 +31,6 @@ if (format === "es") {
   plugins.push(
     dts({
       root: "../src",
-      // Change the output directory for the declaration files
       outputDir: "../dist/types",
     })
   );

@@ -84,7 +84,10 @@ declare const _sfc_main: import("vue").DefineComponent<{
     onGridReady(params: GridReadyEvent): void;
     autoSizeColumns(): void;
     isGroupKey(name: string): boolean;
-    createBsGridCol(col: any): BsColDef;
+    createBsGridCol(col: {
+        name: string;
+        dataType: string;
+    }): BsColDef;
     fetchDatasetColumns(): void;
     transformDatasetRowsToGridRows(datasetData: any | string, isGroupRow: boolean): Record<string, any>[];
     handleError(err: string): void;

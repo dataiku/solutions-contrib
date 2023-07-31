@@ -4,40 +4,46 @@
             {{ title || dssTableName }}
         </div>
         <div class="ag-root-wrapper bs-grid-header">
-            <div class="bs-grid-search-grid-row" v-if="isDataClientSide">
+            <div 
+                v-if="isDataClientSide"
+                class="bs-grid-search-grid-row"
+            >
                 <QInput
+                    v-model="filterGridText"
                     class="bs-grid-search"
                     type="text"
-                    v-model="filterGridText"
                     placeholder="Search Items..."
                     clearable
                 >
                     <template #prepend>
-                        <q-icon name="search" size="1rem"> </q-icon>
+                        <q-icon 
+                            name="search" 
+                            size="1rem"
+                        />
                     </template>
                 </QInput>
             </div>
         </div>
         <ag-grid-vue
-            style="height: 85%; max-height: 100%; width: 100%"
             ref="agGrid"
-            :columnDefs="columnDefs"
-            :rowData="!dssTableName ? rowData : null"
-            :quickFilterText="isDataClientSide ? filterGridText : null"
-            :rowHeight="rowHeight"
-            :rowSelection="rowSelection"
-            :rowModelType="rowModelType"
-            :getRowId="getRowId"
+            style="height: 85%; max-height: 100%; width: 100%"
+            :column-defs="columnDefs"
+            :row-data="!dssTableName ? rowData : null"
+            :quick-filter-text="isDataClientSide ? filterGridText : null"
+            :row-height="rowHeight"
+            :row-selection="rowSelection"
+            :row-model-type="rowModelType"
+            :get-row-id="getRowId"
             :pagination="virtualScroll ? false : true"
-            :paginationPageSize="pageSize"
-            :cacheBlockSize="cacheBlockSize"
-            :headerHeight="headerHeight"
-            :groupSelectsChildren="rowSelection === 'multiple'"
-            :autoGroupColumnDef="autoGroupColumnDef"
-            :onGridReady="onGridReady"
-            :serverSideDatasource="dataSource"
-            paginateChildRows="true"
-        ></ag-grid-vue>
+            :pagination-page-size="pageSize"
+            :cache-block-size="cacheBlockSize"
+            :header-height="headerHeight"
+            :group-selects-children="rowSelection === 'multiple'"
+            :auto-group-column-def="autoGroupColumnDef"
+            :on-grid-ready="onGridReady"
+            :server-side-datasource="dataSource"
+            paginate-child-rows="true"
+        />
     </div>
 </template>
 
@@ -145,6 +151,48 @@ export default defineComponent({
             } as IServerSideGroupSelectionState,
         };
     },
+    computed: {
+        isDataClientSide(): boolean {
+            return this.rowModelType === RowModelType.clientSide;
+        },
+    },
+    watch: {
+        datasetColumns(newVal: BsColDef[]) {
+            this.$emit("update:columns", newVal);
+        },
+        datasetRows(newVal: any[]) {
+            this.$emit("update:rows", newVal);
+        },
+        loading(newVal: boolean) {
+            this.$emit("update:loading", newVal);
+        },
+        dssTableName() {
+            this.fetchDatasetColumns();
+            this.rowModelType = RowModelType.serverSide;
+        },
+        filters() {
+            if (this.dssTableName) this.refreshData();
+        },
+        saveSelectionState() {
+            this.selectionState =
+                this.gridApi?.getServerSideSelectionState() as IServerSideGroupSelectionState;
+            this.$emit("update:selection-state", this.selectionState);
+        },
+    },
+    mounted() {
+        if (this.dssTableName) {
+            this.fetchDatasetColumns();
+            this.dataSource = this.createDataSource();
+        } else {
+            this.columnDefs = this.columns!;
+            this.rowData = this.rows?.map(
+                (row: Record<string, any>, index: number) => {
+                    return { ...row, [DSS_ROW_INDEX]: index };
+                }
+            );
+        }
+        this.prepareGridColStyle();
+    },
     methods: {
         onGridReady(params: GridReadyEvent) {
             this.params = params;
@@ -153,7 +201,7 @@ export default defineComponent({
             this.loading = false;
         },
         autoSizeColumns() {
-            const allColumnIds: any[] = [];
+            const allColumnIds: string[] = [];
             this.params!.columnApi!.getColumns()?.forEach((column: any) => {
                 allColumnIds.push(column.getId());
             });
@@ -162,7 +210,7 @@ export default defineComponent({
         isGroupKey(name: string): boolean {
             return (this.groupKeys || []).indexOf(name) >= 0;
         },
-        createBsGridCol(col: any): BsColDef {
+        createBsGridCol(col: {name: string, dataType: string}): BsColDef {
             const cellDataType =
                 MAP_DSS_COL_TYPE_TO_CELL_TYPE.get(col.dataType) ||
                 MAP_DSS_COL_TYPE_TO_CELL_TYPE.get("default");
@@ -311,48 +359,6 @@ export default defineComponent({
                 };
             }
         },
-    },
-    watch: {
-        datasetColumns(newVal: BsColDef[]) {
-            this.$emit("update:columns", newVal);
-        },
-        datasetRows(newVal: any[]) {
-            this.$emit("update:rows", newVal);
-        },
-        loading(newVal: boolean) {
-            this.$emit("update:loading", newVal);
-        },
-        dssTableName() {
-            this.fetchDatasetColumns();
-            this.rowModelType = RowModelType.serverSide;
-        },
-        filters() {
-            if (this.dssTableName) this.refreshData();
-        },
-        saveSelectionState() {
-            this.selectionState =
-                this.gridApi?.getServerSideSelectionState() as IServerSideGroupSelectionState;
-            this.$emit("update:selection-state", this.selectionState);
-        },
-    },
-    computed: {
-        isDataClientSide(): boolean {
-            return this.rowModelType === RowModelType.clientSide;
-        },
-    },
-    mounted() {
-        if (this.dssTableName) {
-            this.fetchDatasetColumns();
-            this.dataSource = this.createDataSource();
-        } else {
-            this.columnDefs = this.columns!;
-            this.rowData = this.rows?.map(
-                (row: Record<string, any>, index: number) => {
-                    return { ...row, [DSS_ROW_INDEX]: index };
-                }
-            );
-        }
-        this.prepareGridColStyle();
     },
 });
 </script>
