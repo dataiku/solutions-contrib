@@ -18,14 +18,14 @@ class DatasetIterator:
         chunkSize = None if group_key else self.chunksize
         return self._dataset.iter_dataframes(chunksize=chunkSize, **self._kwargs)
 
-    def get_chunk(self, index: int, group_key=None, group_rows=None) -> Optional[DataFrame]:
+    def get_chunk(self, index: int, group_key=None, group_row=None) -> Optional[DataFrame]:
         generator = self._create_generator(group_key)
         try:
             for _ in range(index):
                 next(generator)
             if group_key:
-                if group_rows:
-                    result = next(generator).groupby(group_key, as_index=False).get_group(group_rows)
+                if group_row:
+                    result = next(generator).groupby(group_key, as_index=False).get_group(group_row)
                 else:
                     result = next(generator).groupby(group_key, as_index=False).count()
                 return result

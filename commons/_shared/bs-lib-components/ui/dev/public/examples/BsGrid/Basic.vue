@@ -198,8 +198,3 @@ export default {
   },
 };
 </script>
-<style>
-.bs-toggle--is-disabled .bs-toggle__content {
-  background-color: rgba(0, 0, 255, 0.4) !important;
-}
-</style>

@@ -89,15 +89,15 @@ export default class ServerApi {
         chunksize: number = 10000,
         chunk_index: number = 0,
         filters?: Record<string, any[]>,
-        group_key?: string,
-        group_rows?: string
+        group_keys?: string[],
+        group_rows?: string[]
     ) {
         return this.doPost(`bs_api/dataset/get_filtered_dataset`,{
             dataset_name: datasetName,
             chunksize,
             chunk_index,
             filters : filters || {},
-            group_key,
+            group_keys,
             group_rows
         });
     }

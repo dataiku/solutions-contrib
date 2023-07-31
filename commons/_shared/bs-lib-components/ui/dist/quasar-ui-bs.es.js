@@ -96,7 +96,7 @@ const xv = class xv {
       chunksize: t,
       chunk_index: i,
       filters: r || {},
-      group_key: n,
+      group_keys: n,
       group_rows: s
     });
   }
@@ -81022,7 +81022,8 @@ const cC = "dss-index", AK = Fe({
     title: String,
     filters: Object,
     rowSelection: String,
-    groupKey: String,
+    groupKeys: Array,
+    groupName: String,
     saveSelectionState: Boolean
   },
   emits: [
@@ -81064,6 +81065,9 @@ const cC = "dss-index", AK = Fe({
         o.push(t.getId());
       }), this.params.columnApi.autoSizeColumns(o, !1);
     },
+    isGroupKey(o) {
+      return (this.groupKeys || []).indexOf(o) >= 0;
+    },
     createBsGridCol(o) {
       const e = cR.get(o.dataType) || cR.get("default"), t = PK.get(e) || [], i = dR.get(e) || dR.get("default");
       return {
@@ -81073,8 +81077,8 @@ const cC = "dss-index", AK = Fe({
         type: t,
         filter: i,
         dataType: o.dataType,
-        rowGroup: o.name === this.groupKey,
-        hide: o.name === this.groupKey
+        rowGroup: this.isGroupKey(o.name),
+        hide: this.isGroupKey(o.name)
       };
     },
     fetchDatasetColumns() {
@@ -81103,8 +81107,7 @@ const cC = "dss-index", AK = Fe({
       for (let s of r) {
         let a = {};
         (n = this.datasetColumns) == null || n.forEach((l) => {
-          const c = e && l.field === this.groupKey;
-          a[l.field] = c ? o[l.field][s] : null, a[cC] = s;
+          e && this.isGroupKey(l.field) || !e ? a[l.field] = o[l.field][s] : a[l.field] = null, a[cC] = s;
         }), t.push(a);
       }
       return t;
@@ -81127,13 +81130,13 @@ const cC = "dss-index", AK = Fe({
         getRows: (o) => {
           this.loading = !0;
           const e = o.request, t = this.currentPageIndex(e);
-          console.log("request:", e), xl.getFilteredDataset(
+          xl.getFilteredDataset(
             this.dssTableName,
             this.pageSize,
             t,
             this.filters,
-            this.groupKey,
-            e.groupKeys[0]
+            this.groupKeys,
+            e.groupKeys
           ).then((i) => {
             this.datasetRows = this.transformDatasetRowsToGridRows(
               i,
@@ -81157,10 +81160,10 @@ const cC = "dss-index", AK = Fe({
         flex: 1,
         headerComponentParams: { enableMenu: !0 },
         menuTabs: ["filterMenuTab"]
-        //if not specified default is : ['generalMenuTab', 'filterMenuTab', 'columnsMenuTab']
-      }, this.autoGroupColumnDef = {
-        headerName: this.groupKey,
-        field: this.groupKey,
+      }, this.groupKeys && this.groupKeys.length >= 1 && (this.autoGroupColumnDef = {
+        flex: 1,
+        headerName: this.groupName || "Group",
+        field: "group",
         hide: !0,
         minWidth: 250,
         cellRenderer: "agGroupCellRenderer",
@@ -81169,7 +81172,7 @@ const cC = "dss-index", AK = Fe({
         },
         headerCheckboxSelection: this.rowSelection === "multiple",
         headerCheckboxSelectionCurrentPageOnly: !0
-      };
+      });
     }
   },
   watch: {
@@ -81258,7 +81261,7 @@ function LK(o, e, t, i, r, n) {
     }, null, 8, ["columnDefs", "rowData", "quickFilterText", "rowHeight", "rowSelection", "rowModelType", "getRowId", "pagination", "paginationPageSize", "cacheBlockSize", "headerHeight", "groupSelectsChildren", "autoGroupColumnDef", "onGridReady", "serverSideDatasource"])
   ]);
 }
-const NK = /* @__PURE__ */ He(AK, [["render", LK], ["__scopeId", "data-v-0c0b0c0a"]]);
+const NK = /* @__PURE__ */ He(AK, [["render", LK], ["__scopeId", "data-v-f113ce5b"]]);
 const GK = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BsButton: wM,

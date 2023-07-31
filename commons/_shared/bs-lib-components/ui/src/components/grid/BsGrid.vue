@@ -111,7 +111,8 @@ export default defineComponent({
         title: String,
         filters: Object as PropType<Record<string, any[]>>,
         rowSelection: String,
-        groupKey: String,
+        groupKeys: Array<string>,
+        groupName: String,
         saveSelectionState: Boolean,
     },
     emits: [
@@ -158,6 +159,9 @@ export default defineComponent({
             });
             this.params!.columnApi!.autoSizeColumns(allColumnIds, false);
         },
+        isGroupKey(name: string): boolean {
+            return (this.groupKeys || []).indexOf(name) >= 0;
+        },
         createBsGridCol(col: any): BsColDef {
             const cellDataType =
                 MAP_DSS_COL_TYPE_TO_CELL_TYPE.get(col.dataType) ||
@@ -173,8 +177,8 @@ export default defineComponent({
                 type,
                 filter: filter,
                 dataType: col.dataType,
-                rowGroup: col.name === this.groupKey,
-                hide: col.name === this.groupKey,
+                rowGroup: this.isGroupKey(col.name),
+                hide: this.isGroupKey(col.name),
             };
         },
         fetchDatasetColumns() {
@@ -211,10 +215,12 @@ export default defineComponent({
                 let row: Record<string, any> = {};
                 this.datasetColumns?.forEach((col: any) => {
                     const isGroupHeaderCol =
-                        isGroupRow && col.field === this.groupKey;
-                    row[col.field!] = isGroupHeaderCol
-                        ? datasetData[col.field][key]
-                        : null;
+                        isGroupRow && this.isGroupKey(col.field);
+                    if (isGroupHeaderCol || !isGroupRow) {
+                        row[col.field!] = datasetData[col.field][key];
+                    } else {
+                        row[col.field!] = null;
+                    }
                     row[DSS_ROW_INDEX] = key;
                 });
                 rows.push(row);
@@ -245,14 +251,13 @@ export default defineComponent({
                     this.loading = true;
                     const req = params.request;
                     const pageIndex = this.currentPageIndex(req);
-                    console.log("request:", req);
                     ServerApi.getFilteredDataset(
                         this.dssTableName!,
                         this.pageSize,
                         pageIndex,
                         this.filters,
-                        this.groupKey,
-                        req.groupKeys[0]
+                        this.groupKeys,
+                        req.groupKeys
                     )
                         .then((val: any) => {
                             this.datasetRows =
@@ -288,20 +293,23 @@ export default defineComponent({
             (this.$refs.agGrid as any).gridOptions.defaultColDef = {
                 flex: 1,
                 headerComponentParams: { enableMenu: true },
-                menuTabs: ["filterMenuTab"], //if not specified default is : ['generalMenuTab', 'filterMenuTab', 'columnsMenuTab']
+                menuTabs: ["filterMenuTab"],
             };
-            this.autoGroupColumnDef = {
-                headerName: this.groupKey,
-                field: this.groupKey,
-                hide: true,
-                minWidth: 250,
-                cellRenderer: "agGroupCellRenderer",
-                cellRendererParams: {
-                    checkbox: true,
-                },
-                headerCheckboxSelection: this.rowSelection === "multiple",
-                headerCheckboxSelectionCurrentPageOnly: true,
-            };
+            if (this.groupKeys && this.groupKeys.length >= 1) {
+                this.autoGroupColumnDef = {
+                    flex: 1,
+                    headerName: this.groupName || "Group",
+                    field: "group",
+                    hide: true,
+                    minWidth: 250,
+                    cellRenderer: "agGroupCellRenderer",
+                    cellRendererParams: {
+                        checkbox: true,
+                    },
+                    headerCheckboxSelection: this.rowSelection === "multiple",
+                    headerCheckboxSelectionCurrentPageOnly: true,
+                };
+            }
         },
     },
     watch: {

@@ -60,6 +60,33 @@ def get_generic_data():
     response = jsonify(params)
     return response
 
+def _isGrouping(group_keys=None, group_rows=None):
+    print('is grouping :', len(group_keys) > len(group_rows))
+    return len(group_keys) > len(group_rows)
+
+def _handle_grouping_from_request(data):
+    group_keys = data["group_keys"] or []
+    group_rows = data["group_rows"] or []
+    filters = data["filters"] or {}
+    group_key = None
+    group_row = None
+    if len(group_keys) >= 1: 
+        if _isGrouping(group_keys, group_rows):
+            group_key = group_keys[len(group_rows)]
+            _build_filters_from_grouping(len(group_rows), group_keys, group_rows, filters)
+        else:
+            _build_filters_from_grouping(len(group_keys) - 1, group_keys, group_rows, filters)
+            group_key = group_keys[-1]
+            group_row = group_rows[-1]
+
+    return group_key, group_row, filters
+
+def _build_filters_from_grouping(max_range, group_keys, group_rows, filters):
+    for i in range(max_range):
+        filter_key = group_keys[i]
+        filter_val = group_rows[i]
+        filters[filter_key] = [filter_val]
+
 @dataset_api.route("/get_filtered_dataset", methods=["POST"])
 def fetch_filtered_dataiku_dataset():
     data = parse_req(
@@ -69,14 +96,16 @@ def fetch_filtered_dataiku_dataset():
             "chunksize",
             "chunk_index",
         ],
-        optional_fields=["filters","group_key","group_rows"]
+        optional_fields=["filters","group_keys","group_rows"]
     )
-
-    if not data['filters']:
+    
+    group_key, group_row, req_filters = _handle_grouping_from_request(data)
+   
+    if not req_filters:
         dataset_filter = None
     else:
         formula = DataikuFormula()
-        for key, values in data["filters"].items():
+        for key, values in req_filters.items():
             formula.filter_column_by_values(key, values)
             
         dataset_filter = formula.execute()
@@ -86,11 +115,11 @@ def fetch_filtered_dataiku_dataset():
         chunksize=data["chunksize"],
         chunk_index=data["chunk_index"],
         filter=dataset_filter,
-        group_key=data["group_key"],
-        group_rows=data["group_rows"],
+        group_key=group_key,
+        group_row=group_row,
     )
 
-def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter=None, group_key=None, group_rows=None):
+def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter=None, group_key=None, group_row=None):
     try:
         parsed_chunksize = int(chunksize)
         parsed_chunk_index = int(chunk_index)
@@ -103,7 +132,7 @@ def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, fi
         chunksize=parsed_chunksize,
         filter=filter,
         group_key=group_key,
-        group_rows=group_rows
+        group_row=group_row
     )
 
     payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"

@@ -9,11 +9,11 @@
     </div>
     <BsGrid
       title="Demand Forecast Data"
-      row-key="field"
       dss-table-name="webapp_data"
       :filters="filtersOn ? filters : {}"
       :rowSelection="selection"
-      groupKey="date"
+      :groupKeys="groupKeys"
+      groupName="Group"
     />
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
         product_id: ["FOODS_3_107", "FOODS_3_086", "FOODS_3_080"],
       },
       selection: "multiple",
+      groupKeys: ['date']//,'granularity','main_category']
     };
   },
 };

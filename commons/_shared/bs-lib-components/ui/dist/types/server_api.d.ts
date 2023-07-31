@@ -14,6 +14,6 @@ export default class ServerApi {
     private static doDelete;
     static getDatasetChunk(datasetName: string, chunksize?: number, chunkIndex?: number): Promise<DSSDatasetData>;
     static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema>;
-    static getFilteredDataset(datasetName: string, chunksize?: number, chunk_index?: number, filters?: Record<string, any[]>, group_key?: string, group_rows?: string): Promise<any>;
+    static getFilteredDataset(datasetName: string, chunksize?: number, chunk_index?: number, filters?: Record<string, any[]>, group_keys?: string[], group_rows?: string[]): Promise<any>;
     static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData>;
 }
