@@ -18,17 +18,34 @@ class DatasetIterator:
         chunkSize = None if group_key else self.chunksize
         return self._dataset.iter_dataframes(chunksize=chunkSize, **self._kwargs)
 
-    def get_chunk(self, index: int, group_key=None, group_row=None) -> Optional[DataFrame]:
+    def _sort_chunk(self, df:Optional[DataFrame], sort_model=None) -> Optional[DataFrame]:
+        result = df
+        if sort_model:
+            sort_columns = []
+            sort_orders = []
+            for sort_info in sort_model:
+                    sort_order = sort_info.get('sort', 'asc')
+                    col_id = sort_info.get('colId')
+                    if col_id:
+                        sort_columns.append(col_id)
+                        sort_orders.append(sort_order == 'asc')
+            if sort_columns:
+                result = result.sort_values(by=sort_columns, ascending=sort_orders).reset_index(drop=True)
+                print('result:', result)
+        return result
+
+    def get_chunk(self, index: int, group_key=None, group_row=None, sort_model=None) -> Optional[DataFrame]:
         generator = self._create_generator(group_key)
         try:
             for _ in range(index):
                 next(generator)
+            result = next(generator)
             if group_key:
                 if group_row:
-                    result = next(generator).groupby(group_key, as_index=False).get_group(group_row)
+                    result = result.groupby(group_key, as_index=False).get_group(group_row)
                 else:
-                    result = next(generator).groupby(group_key, as_index=False).count()
-                return result
-            return next(generator)
+                    result = result.groupby(group_key, as_index=False).count()
+            result = self._sort_chunk(result, sort_model)
+            return result
         except StopIteration:
             return None

@@ -90,14 +90,15 @@ class Xa {
       dataset_name: t
     });
   }
-  static getFilteredDataset(t, e = 1e4, r = 0, n, i, a) {
+  static getFilteredDataset(t, e = 1e4, r = 0, n, i, a, s) {
     return this.doPost("bs_api/dataset/get_filtered_dataset", {
       dataset_name: t,
       chunksize: e,
       chunk_index: r,
       filters: n || {},
       group_keys: i,
-      group_rows: a
+      group_rows: a,
+      sort_model: s
     });
   }
   static getDatasetGenericData(t) {
@@ -87093,7 +87094,7 @@ const zg = "dss-index", aZ = Ae({
       return {
         headerName: o.name,
         field: o.name,
-        sortable: !0,
+        // sortable: true,
         type: e,
         filter: r,
         dataType: o.dataType,
@@ -87108,11 +87109,11 @@ const zg = "dss-index", aZ = Ae({
             name: t.name,
             dataType: t.type
           })
-        ), this.columnDefs = this.datasetColumns, this.autoSizeColumns();
+        ), this.columnDefs = this.datasetColumns;
       }).catch(
         (o) => this.handleError("Failed to fetch columns :" + o)
       ).finally(() => {
-        this.loading = !1;
+        this.loading = !1, this.autoSizeColumns();
       });
     },
     transformDatasetRowsToGridRows(o, t) {
@@ -87156,18 +87157,19 @@ const zg = "dss-index", aZ = Ae({
             e,
             this.filters,
             this.groupKeys,
-            t.groupKeys
+            t.groupKeys,
+            t.sortModel
           ).then((r) => {
             this.datasetRows = this.transformDatasetRowsToGridRows(
               r,
               this.isDoingGrouping(t)
             ), o.success({
               rowData: this.datasetRows
-            }), this.autoSizeColumns();
+            });
           }).catch((r) => {
             this.handleError("Failed to fetch rows :" + r), o.fail();
           }).finally(() => {
-            this.loading = !1;
+            this.loading = !1, this.autoSizeColumns();
           });
         }
       };
@@ -87179,6 +87181,7 @@ const zg = "dss-index", aZ = Ae({
       this.$refs.agGrid.gridOptions.defaultColDef = {
         flex: 1,
         headerComponentParams: { enableMenu: !0 },
+        sortable: !0,
         menuTabs: ["filterMenuTab"]
       }, this.groupKeys && this.groupKeys.length >= 1 && (this.autoGroupColumnDef = {
         flex: 1,
@@ -87249,7 +87252,7 @@ function dZ(o, t, e, r, n, i) {
     }, null, 8, ["column-defs", "row-data", "quick-filter-text", "row-height", "row-selection", "row-model-type", "get-row-id", "pagination", "pagination-page-size", "cache-block-size", "header-height", "group-selects-children", "auto-group-column-def", "on-grid-ready", "server-side-datasource"])
   ]);
 }
-const pZ = /* @__PURE__ */ Le(aZ, [["render", dZ], ["__scopeId", "data-v-5d5ac963"]]);
+const pZ = /* @__PURE__ */ Le(aZ, [["render", dZ], ["__scopeId", "data-v-21e90df2"]]);
 const hZ = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BsButton: sD,

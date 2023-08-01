@@ -24,13 +24,13 @@ declare const _sfc_main: import("vue").DefineComponent<{
     setFetchingSchema(fetchingSchema: boolean): void;
     setFetchingChunk(fetchingChunk: boolean): void;
     fetchDSSData(datasetName: string, chunksize?: number | undefined, chunkIndex?: number | undefined): Promise<Record<string, any>[] | undefined>;
-    fetchFilteredDSSDataset(datasetName: string, chunksize?: number | undefined, chunk_index?: number | undefined, filters?: Record<string, any[]> | undefined, group_keys?: string[] | undefined, group_rows?: string[] | undefined): Promise<Record<string, any>[] | undefined>;
+    fetchFilteredDSSDataset(datasetName: string, chunksize?: number | undefined, chunk_index?: number | undefined, filters?: Record<string, any[]> | undefined, group_keys?: string[] | undefined, group_rows?: string[] | undefined, sort_model?: import("../../backend_model").SortCol[] | undefined): Promise<Record<string, any>[] | undefined>;
     fetchDSSColumns(datasetName: string): Promise<{
         columns: BsTableCol[];
         columnsCount: number;
     }>;
     updateColumns(datasetName: string): void;
-    updateRows(datasetName: string, chunksize?: number | undefined, chunk_index?: number | undefined, filters?: Record<string, any[]> | undefined, group_keys?: string[] | undefined, group_rows?: string[] | undefined): void;
+    updateRows(datasetName: string, chunksize?: number | undefined, chunk_index?: number | undefined, filters?: Record<string, any[]> | undefined, group_keys?: string[] | undefined, group_rows?: string[] | undefined, sort_model?: import("../../backend_model").SortCol[] | undefined): void;
     parseDSSColumn(columnName: string): string;
     createBsTableCol(options: Partial<BsTableCol>): BsTableCol;
     transformDSSDataToQTableRow(DSSData: DSSDatasetData | string): Record<string, any>[] | undefined;

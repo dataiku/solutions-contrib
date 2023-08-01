@@ -4,10 +4,7 @@
             {{ title || dssTableName }}
         </div>
         <div class="ag-root-wrapper bs-grid-header">
-            <div 
-                v-if="isDataClientSide"
-                class="bs-grid-search-grid-row"
-            >
+            <div v-if="isDataClientSide" class="bs-grid-search-grid-row">
                 <QInput
                     v-model="filterGridText"
                     class="bs-grid-search"
@@ -16,10 +13,7 @@
                     clearable
                 >
                     <template #prepend>
-                        <q-icon 
-                            name="search" 
-                            size="1rem"
-                        />
+                        <q-icon name="search" size="1rem" />
                     </template>
                 </QInput>
             </div>
@@ -210,7 +204,7 @@ export default defineComponent({
         isGroupKey(name: string): boolean {
             return (this.groupKeys || []).indexOf(name) >= 0;
         },
-        createBsGridCol(col: {name: string, dataType: string}): BsColDef {
+        createBsGridCol(col: { name: string; dataType: string }): BsColDef {
             const cellDataType =
                 MAP_DSS_COL_TYPE_TO_CELL_TYPE.get(col.dataType) ||
                 MAP_DSS_COL_TYPE_TO_CELL_TYPE.get("default");
@@ -221,7 +215,6 @@ export default defineComponent({
             return {
                 headerName: col.name,
                 field: col.name,
-                sortable: true,
                 type,
                 filter: filter,
                 dataType: col.dataType,
@@ -241,13 +234,13 @@ export default defineComponent({
                             })
                     );
                     this.columnDefs = this.datasetColumns;
-                    this.autoSizeColumns();
                 })
                 .catch((err) =>
                     this.handleError("Failed to fetch columns :" + err)
                 )
                 .finally(() => {
                     this.loading = false;
+                    this.autoSizeColumns();
                 });
         },
         transformDatasetRowsToGridRows(
@@ -305,7 +298,8 @@ export default defineComponent({
                         pageIndex,
                         this.filters,
                         this.groupKeys,
-                        req.groupKeys
+                        req.groupKeys,
+                        req.sortModel
                     )
                         .then((val: any) => {
                             this.datasetRows =
@@ -316,7 +310,6 @@ export default defineComponent({
                             params.success({
                                 rowData: this.datasetRows,
                             });
-                            this.autoSizeColumns();
                         })
                         .catch((err: any) => {
                             // inform grid request failed
@@ -325,6 +318,7 @@ export default defineComponent({
                         })
                         .finally(() => {
                             this.loading = false;
+                            this.autoSizeColumns();
                         });
                 },
             };
@@ -341,13 +335,14 @@ export default defineComponent({
             (this.$refs.agGrid as any).gridOptions.defaultColDef = {
                 flex: 1,
                 headerComponentParams: { enableMenu: true },
+                sortable: true,
                 menuTabs: ["filterMenuTab"],
             };
             if (this.groupKeys && this.groupKeys.length >= 1) {
                 this.autoGroupColumnDef = {
                     flex: 1,
                     headerName: this.groupName || "Group",
-                    field: this.groupKeys[this.groupKeys.length-1],
+                    field: this.groupKeys[this.groupKeys.length - 1],
                     hide: true,
                     minWidth: 250,
                     cellRenderer: "agGroupCellRenderer",

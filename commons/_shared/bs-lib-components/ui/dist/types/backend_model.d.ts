@@ -8,6 +8,10 @@ export interface DSSDatasetSchema {
     columns: DSSColumnSchema[];
     userModified: boolean;
 }
+export interface SortCol {
+    colId: string;
+    sort: 'asc' | 'desc';
+}
 export interface DSSDatasetGenericData {
     schema: DSSDatasetSchema;
     columnsCount: number;

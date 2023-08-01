@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model";
+import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData, SortCol } from "./backend_model";
 export default class ServerApi {
     static client: AxiosInstance;
     static errors: any[];
@@ -14,6 +14,6 @@ export default class ServerApi {
     private static doDelete;
     static getDatasetChunk(datasetName: string, chunksize?: number, chunkIndex?: number): Promise<DSSDatasetData>;
     static getDatasetSchema(datasetName: string): Promise<DSSDatasetSchema>;
-    static getFilteredDataset(datasetName: string, chunksize?: number, chunk_index?: number, filters?: Record<string, any[]>, group_keys?: string[], group_rows?: string[]): Promise<any>;
+    static getFilteredDataset(datasetName: string, chunksize?: number, chunk_index?: number, filters?: Record<string, any[]>, group_keys?: string[], group_rows?: string[], sort_model?: SortCol[]): Promise<any>;
     static getDatasetGenericData(datasetName: string): Promise<DSSDatasetGenericData>;
 }

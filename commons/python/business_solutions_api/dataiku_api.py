@@ -84,15 +84,16 @@ class DataikuApi:
 
     @using_dataset
     def get_dataset_records_count(self, dataset: DSSDataset, project: DSSProject):
-        info: Dict = dataset.get_info().info
-        try:
-            return info["status"]["records"]["totalValue"]
-        except Exception:
-            try:
-                return dataset.get_last_metric_values() \
-                .get_metric_by_id("records:COUNT_RECORDS")["lastValues"][0]['value']
-            except Exception:
-                return None
+        # info: Dict = dataset.get_info().info
+        # try:
+        #     return info["status"]["records"]["totalValue"]
+        # except Exception:
+        #     try:
+        #         return dataset.get_last_metric_values() \
+        #         .get_metric_by_id("records:COUNT_RECORDS")["lastValues"][0]['value']
+        #     except Exception:
+        #         return None
+        return None
 
     @using_dataset
     def get_dataset_generic_data(self, dataset: DSSDataset, project: DSSProject):
@@ -112,12 +113,14 @@ class DataikuApi:
         chunksize=10000,
         filter=None,
         group_key=None,
-        group_row=None
+        group_row=None,
+        sort_model=None,
     ):
         dataset_iterator = DatasetIterator(
             dataset=dataset, chunksize=chunksize, filter=filter
         )
-        return dataset_iterator.get_chunk(index=chunk_index, group_key=group_key, group_row=group_row)
+        return dataset_iterator.get_chunk(index=chunk_index, group_key=group_key, 
+                                          group_row=group_row, sort_model=sort_model)
 
     @using_dataset
     def get_dataset_last_build_start_time(

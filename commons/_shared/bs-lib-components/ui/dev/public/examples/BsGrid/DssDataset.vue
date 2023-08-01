@@ -3,17 +3,17 @@
     <div style="display: inline-flex; flex-direction: row">
       <BsToggle
         v-model="filtersOn"
-        labelLeft="Filters On"
+        label-left="Filters On"
         color="blue"
-      ></BsToggle>
+      />
     </div>
     <BsGrid
       title="Demand Forecast Data"
       dss-table-name="webapp_data"
       :filters="filtersOn ? filters : {}"
-      :rowSelection="selection"
-      :groupKeys="groupKeys"
-      groupName="Group"
+      :row-selection="selection"
+      :group-keys="groupKeys"
+      group-name="Group"
     />
   </div>
 </template>
@@ -23,8 +23,8 @@ export default {
     return {
       filtersOn: false,
       filters: {
-        granularity: ["store_california_2"],
-        product_id: ["FOODS_3_107", "FOODS_3_086", "FOODS_3_080"],
+        granularity: ["store_california_1","store_california_2"],
+        product_id: ["FOODS_3_107", "FOODS_3_086"],
       },
       selection: "multiple",
       groupKeys: ['date','granularity','main_category']
@@ -32,8 +32,3 @@ export default {
   },
 };
 </script>
-<style>
-.bs-toggle--is-disabled .bs-toggle__content {
-  background-color: rgba(0, 0, 255, 0.4) !important;
-}
-</style>

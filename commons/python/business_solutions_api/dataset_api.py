@@ -3,6 +3,7 @@ from flask import Blueprint, Response, jsonify, request
 from commons.python.business_solutions_api.dataiku_api import dataiku_api
 from commons.python.utils import parse_req
 from pandas import DataFrame
+import json
 from .dataiku_formula import DataikuFormula
 # from commons.python.caching import cache
 
@@ -96,7 +97,7 @@ def fetch_filtered_dataiku_dataset():
             "chunksize",
             "chunk_index",
         ],
-        optional_fields=["filters","group_keys","group_rows"]
+        optional_fields=["filters","group_keys","group_rows", "sort_model"]
     )
     
     group_key, group_row, req_filters = _handle_grouping_from_request(data)
@@ -117,9 +118,12 @@ def fetch_filtered_dataiku_dataset():
         filter=dataset_filter,
         group_key=group_key,
         group_row=group_row,
+        sort_model=data["sort_model"],
     )
 
-def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, filter=None, group_key=None, group_row=None):
+def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, 
+                        filter=None, group_key=None, group_row=None, 
+                        sort_model=None):
     try:
         parsed_chunksize = int(chunksize)
         parsed_chunk_index = int(chunk_index)
@@ -132,9 +136,9 @@ def _fetch_dataset_chunk(dataset_name: str, chunksize: str, chunk_index: str, fi
         chunksize=parsed_chunksize,
         filter=filter,
         group_key=group_key,
-        group_row=group_row
+        group_row=group_row,
+        sort_model=sort_model,
     )
-
     payload = chunk.to_json() if isinstance(chunk, DataFrame) else "None"
     response = json_response(payload)
     return response

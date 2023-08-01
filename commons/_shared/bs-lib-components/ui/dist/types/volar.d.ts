@@ -1,8 +1,9 @@
 // Auto generated component declarations
 declare module 'vue' {
   export interface GlobalComponents {
-    BsSpinner: typeof import('quasar-ui-bs')['BsSpinner']
     BsToggle: typeof import('quasar-ui-bs')['BsToggle']
+    BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
+    BsSpinner: typeof import('quasar-ui-bs')['BsSpinner']
     BsTextHighlight: typeof import('quasar-ui-bs')['BsTextHighlight']
     BsTableVirtualScrollIndicator: typeof import('quasar-ui-bs')['BsTableVirtualScrollIndicator']
     BsTableServerSidePagination: typeof import('quasar-ui-bs')['BsTableServerSidePagination']
@@ -15,9 +16,13 @@ declare module 'vue' {
     BsSearchTableCol: typeof import('quasar-ui-bs')['BsSearchTableCol']
     BsInputDebounce: typeof import('quasar-ui-bs')['BsInputDebounce']
     BsDSSTableFunctional: typeof import('quasar-ui-bs')['BsDSSTableFunctional']
-    BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
     BsSlider: typeof import('quasar-ui-bs')['BsSlider']
+    BsSelect: typeof import('quasar-ui-bs')['BsSelect']
     BsRange: typeof import('quasar-ui-bs')['BsRange']
+    BsGridSearchCol: typeof import('quasar-ui-bs')['BsGridSearchCol']
+    BsGrid: typeof import('quasar-ui-bs')['BsGrid']
+    BsImg: typeof import('quasar-ui-bs')['BsImg']
+    BsIcon: typeof import('quasar-ui-bs')['BsIcon']
     BsTabTitle: typeof import('quasar-ui-bs')['BsTabTitle']
     BsTabPageChildWrapper: typeof import('quasar-ui-bs')['BsTabPageChildWrapper']
     BsTabChild: typeof import('quasar-ui-bs')['BsTabChild']
@@ -28,19 +33,14 @@ declare module 'vue' {
     BsLayoutDrawer: typeof import('quasar-ui-bs')['BsLayoutDrawer']
     BsLayoutDefault: typeof import('quasar-ui-bs')['BsLayoutDefault']
     BsDrawerBtn: typeof import('quasar-ui-bs')['BsDrawerBtn']
-    BsImg: typeof import('quasar-ui-bs')['BsImg']
     BsDateRange: typeof import('quasar-ui-bs')['BsDateRange']
-    BsGridSearchCol: typeof import('quasar-ui-bs')['BsGridSearchCol']
-    BsGrid: typeof import('quasar-ui-bs')['BsGrid']
-    BsIcon: typeof import('quasar-ui-bs')['BsIcon']
-    BsSelect: typeof import('quasar-ui-bs')['BsSelect']
+    BsCheckbox: typeof import('quasar-ui-bs')['BsCheckbox']
+    BsButton: typeof import('quasar-ui-bs')['BsButton']
     BsTabIcon: typeof import('quasar-ui-bs')['BsTabIcon']
     BsHeader: typeof import('quasar-ui-bs')['BsHeader']
     BsDrawer: typeof import('quasar-ui-bs')['BsDrawer']
     BsDocumentation: typeof import('quasar-ui-bs')['BsDocumentation']
     BsContent: typeof import('quasar-ui-bs')['BsContent']
-    BsCheckbox: typeof import('quasar-ui-bs')['BsCheckbox']
-    BsButton: typeof import('quasar-ui-bs')['BsButton']
   }
 }
 export {}
