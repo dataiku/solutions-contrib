@@ -347,7 +347,7 @@ export default defineComponent({
                 this.autoGroupColumnDef = {
                     flex: 1,
                     headerName: this.groupName || "Group",
-                    field: "group",
+                    field: this.groupKeys[this.groupKeys.length-1],
                     hide: true,
                     minWidth: 250,
                     cellRenderer: "agGroupCellRenderer",

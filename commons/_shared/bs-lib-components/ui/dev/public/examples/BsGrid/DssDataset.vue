@@ -27,7 +27,7 @@ export default {
         product_id: ["FOODS_3_107", "FOODS_3_086", "FOODS_3_080"],
       },
       selection: "multiple",
-      groupKeys: ['date']//,'granularity','main_category']
+      groupKeys: ['date','granularity','main_category']
     };
   },
 };
