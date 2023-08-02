@@ -10,12 +10,37 @@ export interface DSSDatasetSchema {
     userModified: boolean;
 }
 export interface SortCol {
-    colId: string,
-    sort: 'asc' | 'desc'
+    colId: string;
+    sort: 'asc' | 'desc';
 }
 export interface DSSDatasetGenericData {
-    schema: DSSDatasetSchema,
-    columnsCount: number
+    schema: DSSDatasetSchema;
+    columnsCount: number;
+}
+export enum FilterType {
+    Equals = 'equals',
+    NotEqual = 'notEqual',
+    Contains = 'contains',
+    NotContains = 'notContains',
+    StartsWith = 'startsWith',
+    EndsWith = 'endsWith',
+    Blank = 'blank',
+    NotBlank = 'notBlank',
+    LessThan = 'lessThan',
+    LessThanOrEqual = 'lessThanOrEqual',
+    GreaterThan = 'greaterThan',
+    GreaterThanOrEqual = 'greaterThanOrEqual',
+    InRange = 'inRange',
+}
+export interface CustomFilter {
+    type: FilterType;
+    value: string;
+    toValue?: string;
+    operator?: 'and' | 'or';
+}
+export interface MultiCustomFilter {
+    type: 'MultiCustomFilter',
+    filters: CustomFilter[],
 }
 
 export interface DSSDatasetData extends Record<string, DSSColumnData> {}

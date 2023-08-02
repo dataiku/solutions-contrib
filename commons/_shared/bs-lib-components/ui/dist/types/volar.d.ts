@@ -1,8 +1,8 @@
 // Auto generated component declarations
 declare module 'vue' {
   export interface GlobalComponents {
-    BsToggle: typeof import('quasar-ui-bs')['BsToggle']
     BsTooltip: typeof import('quasar-ui-bs')['BsTooltip']
+    BsToggle: typeof import('quasar-ui-bs')['BsToggle']
     BsSpinner: typeof import('quasar-ui-bs')['BsSpinner']
     BsTextHighlight: typeof import('quasar-ui-bs')['BsTextHighlight']
     BsTableVirtualScrollIndicator: typeof import('quasar-ui-bs')['BsTableVirtualScrollIndicator']
@@ -19,10 +19,7 @@ declare module 'vue' {
     BsSlider: typeof import('quasar-ui-bs')['BsSlider']
     BsSelect: typeof import('quasar-ui-bs')['BsSelect']
     BsRange: typeof import('quasar-ui-bs')['BsRange']
-    BsGridSearchCol: typeof import('quasar-ui-bs')['BsGridSearchCol']
-    BsGrid: typeof import('quasar-ui-bs')['BsGrid']
     BsImg: typeof import('quasar-ui-bs')['BsImg']
-    BsIcon: typeof import('quasar-ui-bs')['BsIcon']
     BsTabTitle: typeof import('quasar-ui-bs')['BsTabTitle']
     BsTabPageChildWrapper: typeof import('quasar-ui-bs')['BsTabPageChildWrapper']
     BsTabChild: typeof import('quasar-ui-bs')['BsTabChild']
@@ -33,6 +30,9 @@ declare module 'vue' {
     BsLayoutDrawer: typeof import('quasar-ui-bs')['BsLayoutDrawer']
     BsLayoutDefault: typeof import('quasar-ui-bs')['BsLayoutDefault']
     BsDrawerBtn: typeof import('quasar-ui-bs')['BsDrawerBtn']
+    BsIcon: typeof import('quasar-ui-bs')['BsIcon']
+    BsGridSearchCol: typeof import('quasar-ui-bs')['BsGridSearchCol']
+    BsGrid: typeof import('quasar-ui-bs')['BsGrid']
     BsDateRange: typeof import('quasar-ui-bs')['BsDateRange']
     BsCheckbox: typeof import('quasar-ui-bs')['BsCheckbox']
     BsButton: typeof import('quasar-ui-bs')['BsButton']

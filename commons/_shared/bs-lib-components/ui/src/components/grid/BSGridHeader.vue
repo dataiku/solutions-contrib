@@ -130,6 +130,10 @@ export default {
     },
     mounted() {
         this.params.column.addEventListener("sortChanged", this.onSortChanged);
+        // this.params.column.addEventListener('filterChanged', function(params) {
+        //     // when filter changes on the col, this will print one of [true,false]
+        //     console.log('filter of column is ' + params.columns[0].isFilterActive());
+        // });
         this.onSortChanged();
     },
 };
