@@ -97,7 +97,7 @@ def fetch_filtered_dataiku_dataset():
             "chunksize",
             "chunk_index",
         ],
-        optional_fields=["filters","group_keys","group_rows", "sort_model"]
+        optional_fields=["filters","group_keys","group_rows", "sort_model", "custom_filters"]
     )
     
     group_key, group_row, req_filters = _handle_grouping_from_request(data)
@@ -108,7 +108,15 @@ def fetch_filtered_dataiku_dataset():
         formula = DataikuFormula()
         for key, values in req_filters.items():
             formula.filter_column_by_values(key, values)
+
+    if data["custom_filters"]:
+        if not req_filters:
+            formula = DataikuFormula()
+        for key, filters in data["custom_filters"].items():
+            print('key, filter in custom filters', key, filters)
+            formula.filter_column_by_custom_filters(key, filters)
             
+    if data["custom_filters"] or req_filters:
         dataset_filter = formula.execute()
 
     return _fetch_dataset_chunk(

@@ -14,7 +14,6 @@ class DatasetIterator:
 
     def _create_generator(self, group_key=None) -> Generator[DataFrame, None, None]:
         #if we are using grouping we group on the whole data
-        # TODO review this
         chunkSize = None if group_key else self.chunksize
         return self._dataset.iter_dataframes(chunksize=chunkSize, **self._kwargs)
 

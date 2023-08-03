@@ -46,7 +46,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     dssTableName: StringConstructor;
     title: StringConstructor;
-    filters: PropType<Record<string, any[] | CustomFilter>>;
+    filters: PropType<Record<string, any[]>>;
     rowSelection: StringConstructor;
     groupKeys: {
         (arrayLength: number): string[];
@@ -96,7 +96,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     isDoingGrouping(request: any): boolean;
     currentPageIndex(request: any): number | undefined;
     buildCustomFilter(agGridFilterModel: any): CustomFilter;
-    concatFilters(filterModel: Record<string, any>): Record<string, any[] | CustomFilter | CustomFilter[]>;
+    createCustomFilters(filterModel: Record<string, any>): Record<string, CustomFilter | CustomFilter[]>;
     createDataSource(): {
         getRows: (params: any) => void;
     };
@@ -146,7 +146,7 @@ declare const _sfc_main: import("vue").DefineComponent<{
     };
     dssTableName: StringConstructor;
     title: StringConstructor;
-    filters: PropType<Record<string, any[] | CustomFilter>>;
+    filters: PropType<Record<string, any[]>>;
     rowSelection: StringConstructor;
     groupKeys: {
         (arrayLength: number): string[];

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, Union
+from typing import TypedDict, Union, Literal
 
 def _escape_double_quotes(text: str):
     return text.replace('"', '\\"')
@@ -37,17 +37,20 @@ class FilterType(str, Enum):
             FilterType.InRange: f"{sanitized_val} <= {sanitized_column} <= {sanitized_to_val}", 
         }
         return filter_map.get(filter_type, f"Unknown filter type: {filter_type}")
+OperatorType = Union[None, Literal['and'], Literal['or']]
 
 class CustomFilter(TypedDict):
-    filter_type: FilterType
+    filterType: FilterType
     value: str
+    toValue: Union[None,str]
+    operator: OperatorType
 
 class DataikuFormula:
     def __init__(self):
         self._expressions = []
 
     @staticmethod
-    def _create_multiple_custom_filter(column: "str", filters:list):
+    def _create_multiple_custom_filter(column: "str", filters:"list[CustomFilter]"):
         combined_filter = DataikuFormula._create_custom_filter(column, filters[0])
         operator = filters[0].get('operator','and')
         for filter in filters[1:]:
@@ -56,12 +59,12 @@ class DataikuFormula:
         return 'and(' +combined_filter+ ')'
 
     @staticmethod
-    def _create_custom_filter(column: "str", filter:dict):
+    def _create_custom_filter(column: "str", filter: CustomFilter):
         sanitized_column = _escape_double_quotes(column)
         filter_value = filter.get('value','')
         # filter_operator = filter.get('operator', 'and')
         try:
-            filter_type = FilterType(filter.get('type'))
+            filter_type = FilterType(filter.get('filterType'))
             filter_value_to = None
             if filter_type == FilterType.InRange:
                 filter_value_to = filter.get('toValue','')
@@ -83,11 +86,13 @@ class DataikuFormula:
         return f"{operator}({a}, {b})"
 
 
-    def filter_column_by_values(self, column: str, vals: Union["list[str]", dict]):
-        # todo improve
-        if isinstance(vals, list) and all(isinstance(val, str) for val in vals):
-            col_filter = DataikuFormula._create_filter_by_column_vals(column=column, vals=vals)
-        elif isinstance(vals, list) and all(isinstance(val, dict) for val in vals):
+    def filter_column_by_values(self, column: str, vals: "list[str]"):
+        col_filter = DataikuFormula._create_filter_by_column_vals(column=column, vals=vals)
+        self._expressions.append(col_filter)
+        return self
+    
+    def filter_column_by_custom_filters(self, column: str, vals:  Union["list[CustomFilter]", CustomFilter]):
+        if isinstance(vals, list):
             col_filter = DataikuFormula._create_multiple_custom_filter(column=column, filters=vals)
         else:
             col_filter = DataikuFormula._create_custom_filter(column=column, filter=vals)

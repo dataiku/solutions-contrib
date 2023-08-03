@@ -33,7 +33,7 @@ export enum FilterType {
     InRange = 'inRange',
 }
 export interface CustomFilter {
-    type: FilterType;
+    filterType: FilterType;
     value: string;
     toValue?: string;
     operator?: 'and' | 'or';

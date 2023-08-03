@@ -55,7 +55,7 @@ import {
     GetRowIdParams,
     IServerSideGroupSelectionState,
 } from "ag-grid-community";
-import { CustomFilter, DSSColumnSchema, MultiCustomFilter } from "../../backend_model";
+import { CustomFilter, DSSColumnSchema } from "../../backend_model";
 import BSGridHeaderVue from "./BSGridHeader.vue";
 import BsGridSearchColVue from "./BsGridSearchCol.vue";
 import ServerApi from "../../server_api";
@@ -68,8 +68,6 @@ import {
     MAP_CELL_TYPE_TO_TYPE,
     BsColDef,
 } from "./bsGridTypes";
-import { IMultiFilterModel, TextFilter, TextFilterModel } from "ag-grid-enterprise";
-import { NumberFilterModelFormatter } from "ag-grid-community/dist/lib/filter/provided/number/numberFilter";
 import { FilterType } from "../../backend_model";
 const DSS_ROW_INDEX = "dss-index";
 export default defineComponent({
@@ -112,7 +110,7 @@ export default defineComponent({
         },
         dssTableName: String,
         title: String,
-        filters: Object as PropType<Record<string, any[]| CustomFilter>>,
+        filters: Object as PropType<Record<string, any[]>>,
         rowSelection: String,
         groupKeys: Array<string>,
         groupName: String,
@@ -290,17 +288,16 @@ export default defineComponent({
         buildCustomFilter(agGridFilterModel: any): CustomFilter{
             let customFilter: CustomFilter;
             if(agGridFilterModel.type === FilterType.InRange){
-                customFilter= { value: agGridFilterModel.filter.toString(), type: agGridFilterModel.type, toValue: agGridFilterModel.filterTo.toString()};
+                customFilter= { value: agGridFilterModel.filter.toString(), filterType: agGridFilterModel.type, toValue: agGridFilterModel.filterTo.toString()};
             }else{
-                customFilter = { value: agGridFilterModel.filter.toString(), type: agGridFilterModel.type};
+                customFilter = { value: agGridFilterModel.filter.toString(), filterType: agGridFilterModel.type};
             }
             return customFilter;
         },
-        concatFilters(filterModel: Record<string, any>) : Record<string, any[] | CustomFilter | CustomFilter[]>{
-            let concatedFilters = {...this.filters} || {};
+        createCustomFilters(filterModel: Record<string, any>) : Record<string, CustomFilter | CustomFilter[]>{
+            let concatedFilters = {} as Record<string, CustomFilter | CustomFilter[]>;
             for(const [colName, colFilter] of Object.entries(filterModel)){
                 console.log('col filter:', colFilter);
-                //TODO in case filters already exist on the same col in this.filters
                 if(colFilter.conditions){
                     let filters : CustomFilter[] = [];
                     colFilter.conditions.forEach((filter: any) => { 
@@ -313,7 +310,6 @@ export default defineComponent({
                     concatedFilters[colName] = this.buildCustomFilter(colFilter);
                 }
             }
-            console.log('new filters:', concatedFilters, 'old filters:', this.filters);
             return concatedFilters;
         },
         createDataSource() {
@@ -324,15 +320,16 @@ export default defineComponent({
                     this.loading = true;
                     const req = params.request;
                     const pageIndex = this.currentPageIndex(req);
-                    let filters = this.concatFilters(req.filterModel);
+                    let customFilters = this.createCustomFilters(req.filterModel);
                     ServerApi.getFilteredDataset(
                         this.dssTableName!,
                         this.pageSize,
                         pageIndex,
-                        filters,
+                        this.filters,
                         this.groupKeys,
                         req.groupKeys,
-                        req.sortModel
+                        req.sortModel,
+                        customFilters
                     )
                         .then((val: any) => {
                             this.datasetRows =

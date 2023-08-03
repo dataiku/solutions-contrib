@@ -88,10 +88,11 @@ export default class ServerApi {
         datasetName: string,
         chunksize: number = 10000,
         chunk_index: number = 0,
-        filters?: Record<string, any[]|CustomFilter>,
+        filters?: Record<string, any[]>,
         groupKeys?: string[],
         groupRows?: string[],
         sortModel?: SortCol[],
+        customFilters?: Record<string, CustomFilter| CustomFilter[]>
     ) {
         return this.doPost(`bs_api/dataset/get_filtered_dataset`,{
             dataset_name: datasetName,
@@ -101,6 +102,7 @@ export default class ServerApi {
             group_keys: groupKeys,
             group_rows: groupRows,
             sort_model: sortModel,
+            custom_filters: customFilters,
         });
     }
 
