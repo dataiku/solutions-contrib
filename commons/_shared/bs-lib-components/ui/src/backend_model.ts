@@ -44,3 +44,9 @@ export interface MultiCustomFilter {
 }
 
 export interface DSSDatasetData extends Record<string, DSSColumnData> {}
+
+export interface RangeFilter {
+    from: string,
+    to: string,
+    type: 'string' | 'number'
+}
