@@ -55,7 +55,7 @@ import {
     GetRowIdParams,
     IServerSideGroupSelectionState,
 } from "ag-grid-community";
-import { CustomFilter, DSSColumnSchema } from "../../backend_model";
+import { CustomFilter, DSSColumnSchema, RangeFilter } from "../../backend_model";
 import BSGridHeaderVue from "./BSGridHeader.vue";
 import BsGridSearchColVue from "./BsGridSearchCol.vue";
 import ServerApi from "../../server_api";
@@ -288,7 +288,7 @@ export default defineComponent({
         buildCustomFilter(agGridFilterModel: any): CustomFilter{
             let customFilter: CustomFilter;
             if(agGridFilterModel.type === FilterType.InRange){
-                customFilter= { value: agGridFilterModel.filter.toString(), filterType: agGridFilterModel.type, toValue: agGridFilterModel.filterTo.toString()};
+                customFilter = { value: agGridFilterModel.filter.toString(), toValue: agGridFilterModel.filterTo.toString(), valueType: agGridFilterModel.filterType} as RangeFilter;
             }else{
                 customFilter = { value: agGridFilterModel.filter.toString(), filterType: agGridFilterModel.type};
             }
