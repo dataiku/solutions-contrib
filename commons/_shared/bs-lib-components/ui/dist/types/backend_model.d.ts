@@ -34,7 +34,6 @@ export declare enum FilterType {
 export interface CustomFilter {
     filterType: FilterType;
     value: string;
-    toValue?: string;
     operator?: 'and' | 'or';
 }
 export interface MultiCustomFilter {
@@ -43,8 +42,10 @@ export interface MultiCustomFilter {
 }
 export interface DSSDatasetData extends Record<string, DSSColumnData> {
 }
-export interface RangeFilter {
-    from: string;
-    to: string;
-    type: 'string' | 'number';
+export interface RangeFilter extends CustomFilter {
+    filterType: FilterType.InRange;
+    toValue?: string;
+    valueType: 'string' | 'number';
 }
+export type Filters = Record<string, string[] | RangeFilter[]>;
+export type GridRow = Record<string, any>;

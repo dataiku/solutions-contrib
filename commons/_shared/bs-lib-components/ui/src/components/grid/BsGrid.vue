@@ -3,8 +3,8 @@
         <div class="ag-root-wrapper bs-grid-title">
             {{ title || dssTableName }}
         </div>
-        <div class="ag-root-wrapper bs-grid-header">
-            <div v-if="isDataClientSide" class="bs-grid-search-grid-row">
+        <div v-if="isDataClientSide" class="ag-root-wrapper bs-grid-header">
+            <div class="bs-grid-search-grid-row">
                 <QInput
                     v-model="filterGridText"
                     class="bs-grid-search"
@@ -18,6 +18,17 @@
                 </QInput>
             </div>
         </div>
+        <div class="ag-root-wrapper bs-grid-header" v-if="hasFilters">
+            <div class="bs-grid-search-grid-row">
+                <QBtn
+                    flat
+                    no-caps
+                    label="Clear Filters"
+                    :icon="mdiTrashCanOutline"
+                    @click="clearFilters"
+                />
+                </div>
+                </div>
         <ag-grid-vue
             ref="agGrid"
             style="height: 85%; max-height: 100%; width: 100%"
@@ -55,21 +66,24 @@ import {
     GetRowIdParams,
     IServerSideGroupSelectionState,
 } from "ag-grid-community";
-import { CustomFilter, DSSColumnSchema, RangeFilter } from "../../backend_model";
-import BSGridHeaderVue from "./BSGridHeader.vue";
+import { DSSColumnSchema, DSSDatasetGenericData } from "../../backend_model";
+import BSGridHeaderVue from "./BsGridHeader.vue";
 import BsGridSearchColVue from "./BsGridSearchCol.vue";
 import ServerApi from "../../server_api";
 import { defineComponent, PropType } from "vue";
-import { QIcon, QInput } from "quasar";
+import { QIcon, QInput, QBtn } from "quasar";
+import { mdiTrashCanOutline } from "@quasar/extras/mdi-v6";
+
+import { RowModelType, BsColDef, DSS_ROW_INDEX } from "./bsGridTypes";
+import type { Filters, GridRow } from "../../backend_model";
+import { CustomFilterBuilder } from "./CustomFilterBuilder";
+import { GridTransformations } from "./GridTransformations";
 import {
-    RowModelType,
-    MAP_DSS_COL_TYPE_TO_CELL_TYPE,
-    MAP_TYPE_TO_FILTER,
-    MAP_CELL_TYPE_TO_TYPE,
-    BsColDef,
-} from "./bsGridTypes";
-import { FilterType } from "../../backend_model";
-const DSS_ROW_INDEX = "dss-index";
+    Column,
+    IServerSideGetRowsParams,
+    IServerSideGetRowsRequest,
+} from "ag-grid-enterprise";
+const LEAF_PREFIX = "leaf";
 export default defineComponent({
     name: "BsGrid",
     components: {
@@ -78,14 +92,15 @@ export default defineComponent({
         BsGridSearchColVue,
         QInput,
         QIcon,
+        QBtn,
     },
     props: {
         columns: {
-            type: Array<any>,
+            type: Array<BsColDef>,
             required: false,
         },
         rows: {
-            type: Array as PropType<Record<string, any>>,
+            type: Array as PropType<GridRow[]>,
             required: false,
         },
         isLoading: {
@@ -108,13 +123,34 @@ export default defineComponent({
             type: String,
             default: DSS_ROW_INDEX,
         },
-        dssTableName: String,
-        title: String,
-        filters: Object as PropType<Record<string, any[]>>,
-        rowSelection: String,
-        groupKeys: Array<string>,
-        groupName: String,
-        saveSelectionState: Boolean,
+        dssTableName: {
+            type: String,
+            default: null,
+        },
+        filters: {
+            type: Object as PropType<Filters>,
+            default: () => ({}),
+        },
+        title: {
+            type: String,
+            default: null,
+        },
+        rowSelection: {
+            type: String,
+            default: null,
+        },
+        groupKeys: {
+            type: Array<string>,
+            default: () => [],
+        },
+        groupName: {
+            type: String,
+            default: null,
+        },
+        saveSelectionState: {
+            type: Boolean,
+            default: false,
+        },
     },
     emits: [
         "update:rows",
@@ -125,12 +161,13 @@ export default defineComponent({
     ],
     data() {
         return {
+            mdiTrashCanOutline,
             rowHeight: 36,
             headerHeight: 51,
             columnDefs: [] as BsColDef[],
             filterGridText: "",
-            datasetColumns: undefined as undefined | Array<BsColDef>,
-            datasetRows: undefined as undefined | Array<any>,
+            datasetColumns: undefined as undefined | BsColDef[],
+            datasetRows: undefined as undefined | GridRow[],
             params: undefined as undefined | GridOptions,
             gridApi: undefined as undefined | GridApi,
             autoGroupColumnDef: undefined as undefined | ColDef,
@@ -138,12 +175,14 @@ export default defineComponent({
             rowModelType: this.dssTableName
                 ? RowModelType.serverSide
                 : RowModelType.clientSide,
-            rowData: undefined as undefined | Array<Record<string, any>>,
+            rowData: undefined as undefined | GridRow[],
             dataSource: undefined as undefined | IServerSideDatasource,
             selectionState: {
                 selectAllChildren: false,
                 toggledNodes: [],
             } as IServerSideGroupSelectionState,
+            isComponentAlive: true,
+            hasFilters: false,
         };
     },
     computed: {
@@ -155,11 +194,8 @@ export default defineComponent({
         datasetColumns(newVal: BsColDef[]) {
             this.$emit("update:columns", newVal);
         },
-        datasetRows(newVal: any[]) {
+        datasetRows(newVal: GridRow[]) {
             this.$emit("update:rows", newVal);
-        },
-        loading(newVal: boolean) {
-            this.$emit("update:loading", newVal);
         },
         dssTableName() {
             this.fetchDatasetColumns();
@@ -180,189 +216,137 @@ export default defineComponent({
             this.dataSource = this.createDataSource();
         } else {
             this.columnDefs = this.columns!;
-            this.rowData = this.rows?.map(
-                (row: Record<string, any>, index: number) => {
-                    return { ...row, [DSS_ROW_INDEX]: index };
-                }
-            );
+            this.rowData = this.rows?.map((row: GridRow, index: number) => {
+                return { ...row, [DSS_ROW_INDEX]: index };
+            });
         }
         this.prepareGridColStyle();
     },
+    beforeUnmount() {
+        this.isComponentAlive = false;
+        this.params?.api?.removeEventListener('filterChanged', this.onFilterChanged);
+
+    },
     methods: {
+        onFilterChanged() {
+            this.hasFilters = this.params?.api?.isAnyFilterPresent() || false;
+        },
+        updateLoadingState(val: boolean) {
+            this.loading = val;
+            this.$emit("update:loading", val);
+        },
         onGridReady(params: GridReadyEvent) {
             this.params = params;
             this.gridApi = params.api;
+            this.params?.api?.addEventListener('filterChanged', this.onFilterChanged);
             this.autoSizeColumns();
-            this.loading = false;
+            this.updateLoadingState(false);
         },
         autoSizeColumns() {
             const allColumnIds: string[] = [];
-            this.params!.columnApi!.getColumns()?.forEach((column: any) => {
+            this.params?.columnApi?.getColumns()?.forEach((column: Column) => {
                 allColumnIds.push(column.getId());
             });
             this.params!.columnApi!.autoSizeColumns(allColumnIds, false);
         },
-        isGroupKey(name: string): boolean {
-            return (this.groupKeys || []).indexOf(name) >= 0;
-        },
-        createBsGridCol(col: { name: string; dataType: string }): BsColDef {
-            const cellDataType =
-                MAP_DSS_COL_TYPE_TO_CELL_TYPE.get(col.dataType) ||
-                MAP_DSS_COL_TYPE_TO_CELL_TYPE.get("default");
-            const type = MAP_CELL_TYPE_TO_TYPE.get(cellDataType!) || [];
-            const filter =
-                MAP_TYPE_TO_FILTER.get(cellDataType!) ||
-                MAP_TYPE_TO_FILTER.get("default");
-            return {
-                headerName: col.name,
-                field: col.name,
-                type,
-                filter: filter,
-                dataType: col.dataType,
-                rowGroup: this.isGroupKey(col.name),
-                hide: this.isGroupKey(col.name),
-            };
-        },
-        fetchDatasetColumns() {
-            this.loading = true;
-            ServerApi.getDatasetGenericData(this.dssTableName!)
-                .then(({ schema }) => {
+        async fetchDatasetColumns() {
+            this.updateLoadingState(true);
+            try {
+                const { schema }: DSSDatasetGenericData =
+                    await ServerApi.getDatasetGenericData(this.dssTableName!);
+                if (this.isComponentAlive) {
                     this.datasetColumns = schema.columns.map(
                         (col: DSSColumnSchema) =>
-                            this.createBsGridCol({
-                                name: col.name,
-                                dataType: col.type,
-                            })
+                            GridTransformations.createBsGridCol(
+                                {
+                                    name: col.name,
+                                    dataType: col.type,
+                                },
+                                this.groupKeys
+                            )
                     );
                     this.columnDefs = this.datasetColumns;
-                })
-                .catch((err) =>
-                    this.handleError("Failed to fetch columns :" + err)
-                )
-                .finally(() => {
-                    this.loading = false;
+                }
+            } catch (err) {
+                this.handleError("Failed to fetch columns: " + err);
+            } finally {
+                if (this.isComponentAlive) {
+                    this.updateLoadingState(false);
                     this.autoSizeColumns();
-                });
-        },
-        transformDatasetRowsToGridRows(
-            datasetData: any | string,
-            isGroupRow: boolean
-        ) {
-            let rows: Record<string, any>[] = [];
-            if (datasetData === "None") return rows;
-            const entries = Object.entries(datasetData);
-            if (!entries?.length) return rows;
-            const dataKeys = Object.keys(datasetData[(entries as any)[0][0]]);
-            for (let key of dataKeys) {
-                let row: Record<string, any> = {};
-                this.datasetColumns?.forEach((col: any) => {
-                    const isGroupHeaderCol =
-                        isGroupRow && this.isGroupKey(col.field);
-                    if (isGroupHeaderCol || !isGroupRow) {
-                        row[col.field!] = datasetData[col.field][key];
-                    } else {
-                        row[col.field!] = null;
-                    }
-                    row[DSS_ROW_INDEX] = key;
-                });
-                rows.push(row);
+                }
             }
-            return rows;
         },
         handleError(err: string) {
             console.log("got error:", err);
             this.$emit("error", err);
         },
         refreshData() {
-            this.gridApi!.refreshServerSide({ route: undefined, purge: true });
+            this.gridApi?.refreshServerSide({ route: undefined, purge: true });
         },
-        isDoingGrouping(request: any) {
+        isDoingGrouping(request: IServerSideGetRowsRequest) {
             // we are not doing grouping if at the lowest level
             return request.rowGroupCols.length > request.groupKeys.length;
         },
-        currentPageIndex(request: any): number | undefined {
+        currentPageIndex(
+            request: IServerSideGetRowsRequest
+        ): number | undefined {
             return request.startRow && this.pageSize > 0
                 ? request.startRow / this.pageSize
                 : undefined;
         },
-        buildCustomFilter(agGridFilterModel: any): CustomFilter{
-            let customFilter: CustomFilter;
-            if(agGridFilterModel.type === FilterType.InRange){
-                customFilter = { value: agGridFilterModel.filter.toString(), toValue: agGridFilterModel.filterTo.toString(), valueType: agGridFilterModel.filterType} as RangeFilter;
-            }else{
-                customFilter = { value: agGridFilterModel.filter.toString(), filterType: agGridFilterModel.type};
-            }
-            return customFilter;
-        },
-        createCustomFilters(filterModel: Record<string, any>) : Record<string, CustomFilter | CustomFilter[]>{
-            let concatedFilters = {} as Record<string, CustomFilter | CustomFilter[]>;
-            for(const [colName, colFilter] of Object.entries(filterModel)){
-                console.log('col filter:', colFilter);
-                if(colFilter.conditions){
-                    let filters : CustomFilter[] = [];
-                    colFilter.conditions.forEach((filter: any) => { 
-                        let customFilter: CustomFilter = this.buildCustomFilter(filter);
-                        customFilter.operator = colFilter.operator.toLowerCase();
-                        filters.push(customFilter);
-                    });
-                    concatedFilters[colName] = filters;
-                }else{
-                    concatedFilters[colName] = this.buildCustomFilter(colFilter);
-                }
-            }
-            return concatedFilters;
-        },
         createDataSource() {
             return {
-                // called by the grid when more rows are required
-                getRows: (params: any) => {
-                    // get data for request from server
-                    this.loading = true;
-                    const req = params.request;
-                    const pageIndex = this.currentPageIndex(req);
-                    let customFilters = this.createCustomFilters(req.filterModel);
-                    ServerApi.getFilteredDataset(
-                        this.dssTableName!,
-                        this.pageSize,
-                        pageIndex,
-                        this.filters,
-                        this.groupKeys,
-                        req.groupKeys,
-                        req.sortModel,
-                        customFilters
-                    )
-                        .then((val: any) => {
-                            this.datasetRows =
-                                this.transformDatasetRowsToGridRows(
-                                    val,
-                                    this.isDoingGrouping(req)
-                                );
-                            params.success({
-                                rowData: this.datasetRows,
-                            });
-                        })
-                        .catch((err: any) => {
-                            // inform grid request failed
-                            this.handleError("Failed to fetch rows :" + err);
-                            params.fail();
-                        })
-                        .finally(() => {
-                            this.loading = false;
-                            this.autoSizeColumns();
-                        });
+                getRows: async (params: IServerSideGetRowsParams) => {
+                    this.updateLoadingState(true);
+                    try {
+                        const req: IServerSideGetRowsRequest = params.request;
+                        const customFilters = CustomFilterBuilder.createFilters(
+                            req.filterModel
+                        );
+                        const dssDataset = await ServerApi.getFilteredDataset(
+                            this.dssTableName!,
+                            this.pageSize,
+                            this.currentPageIndex(req),
+                            this.filters,
+                            this.groupKeys,
+                            req.groupKeys,
+                            req.sortModel,
+                            customFilters
+                        );
+
+                        this.datasetRows =
+                            GridTransformations.transformDatasetRowsToGridRows(
+                                dssDataset,
+                                this.datasetColumns!,
+                                this.isDoingGrouping(req),
+                                this.groupKeys
+                            );
+                        params.success({ rowData: this.datasetRows });
+                    } catch (err) {
+                        this.handleError(`Failed to fetch rows: ${err}`);
+                        params.fail();
+                    } finally {
+                        this.updateLoadingState(false);
+                        this.autoSizeColumns();
+                    }
                 },
             };
         },
         getRowId(params: GetRowIdParams): string {
-            //Return unique Id mandatory for multiple selection
+            // Using constant for magic string
             if (params.level > 0) {
-                return "leaf" + params.level + "-" + params.data[this.rowId!];
+                return (
+                    LEAF_PREFIX + params.level + "-" + params.data[this.rowId!]
+                );
             } else {
                 return params.data[this.rowId!];
             }
         },
         prepareGridColStyle() {
-            (this.$refs.agGrid as any).gridOptions.defaultColDef = {
+            const agGridRef = this.$refs.agGrid as InstanceType<
+                typeof AgGridVue
+            >;
+            agGridRef.gridOptions.defaultColDef = {
                 flex: 1,
                 headerComponentParams: { enableMenu: true },
                 sortable: true,
@@ -383,6 +367,9 @@ export default defineComponent({
                     headerCheckboxSelectionCurrentPageOnly: true,
                 };
             }
+        },
+        clearFilters() {
+            this.params?.api?.setFilterModel(null);
         },
     },
 });

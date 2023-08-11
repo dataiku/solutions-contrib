@@ -2,6 +2,7 @@
     <div class="bs-grid-header-container">
         <div class="bs-grid-col-header-title-container">
             <div class="bs-grid-col-header-title">{{ params.displayName }}</div>
+            <q-icon v-if="filterActive" :name="mdiFilterOutline" size="1rem"></q-icon>
             <div class="bs-grid-col-header-title-icon" v-if="params.enableMenu" ref="menuButton">
                 <q-icon :name="mdiChevronDown" size="1rem">
                     <q-menu
@@ -42,7 +43,7 @@
                                     >
                                         <q-icon :name="mdiMagnify" size="0.8rem">
                                         </q-icon>
-                                        <div>Search</div>
+                                        <div>Filter</div>
                                     </div>
                                 </q-item-section>
                             </q-item>
@@ -62,12 +63,12 @@
 
 <script>
 import { QIcon, QItem, QMenu, QList, QItemSection, ClosePopup } from "quasar";
-
 import {
     mdiMagnify,
     mdiChevronDown,
     mdiSortAscending,
     mdiSortDescending,
+    mdiFilterOutline
 } from "@quasar/extras/mdi-v6";
 export default {
     data() {
@@ -79,16 +80,21 @@ export default {
             mdiSortDescending,
             mdiChevronDown,
             mdiMagnify,
+            mdiFilterOutline,
             ascSort: null,
             descSort: null,
             noSort: "active",
+            filterActive: false,
         };
     },
+    mounted() {
+        this.params.column.addEventListener("sortChanged", this.onSortChanged);
+        this.params.column.addEventListener("filterChanged", this.onFilterChanged);
+        this.onSortChanged();
+    },
     beforeUnmount() {
-        this.params.column.removeEventListener(
-            "sortChanged",
-            this.onSortChanged
-        );
+        this.params.column.removeEventListener("sortChanged", this.onSortChanged);
+        this.params.column.removeEventListener("filterChanged", this.onFilterChanged);
     },
     computed: {
         sortColIcon() {
@@ -127,14 +133,9 @@ export default {
                     : "";
             this.params.setSort(order, event.shiftKey);
         },
-    },
-    mounted() {
-        this.params.column.addEventListener("sortChanged", this.onSortChanged);
-        // this.params.column.addEventListener('filterChanged', function(params) {
-        //     // when filter changes on the col, this will print one of [true,false]
-        //     console.log('filter of column is ' + params.columns[0].isFilterActive());
-        // });
-        this.onSortChanged();
+        onFilterChanged() {
+            this.filterActive = this.params.column.filterActive;
+        },
     },
 };
 </script>
@@ -142,7 +143,6 @@ export default {
 <style lang="scss" scoped>
 .bs-grid-header-container {
     display: flex;
-    height: 36px;
     flex-direction: column;
     cursor: var(--bs-grid-header-cursor-type);
     user-select: text;

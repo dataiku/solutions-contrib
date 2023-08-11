@@ -30,7 +30,6 @@ class DatasetIterator:
                         sort_orders.append(sort_order == 'asc')
             if sort_columns:
                 result = result.sort_values(by=sort_columns, ascending=sort_orders).reset_index(drop=True)
-                print('result:', result)
         return result
 
     def get_chunk(self, index: int, group_key=None, group_row=None, sort_model=None) -> Optional[DataFrame]:

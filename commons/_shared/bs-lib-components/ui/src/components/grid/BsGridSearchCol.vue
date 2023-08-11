@@ -41,9 +41,6 @@ export default defineComponent({
             mdiTrashCanOutline,
         };
     },
-    mounted(){
-        console.log('hello i am filter mounted', this.params);
-    },
     methods: {
         onInputBoxChanged(newVal: string | number | null) {
             this.currentValue = newVal;
@@ -74,13 +71,12 @@ export default defineComponent({
                 // refresh header after value of floating filter has changed
                 this.params.columnApi.resetColumnState();
             }, 0);
-            console.log(this.params.column)
+            console.log(this.params.column);
         },
     },
 });
 </script>
 <style lang="scss">
-
 .bs-search-grid-col-search-box {
     display: flex;
     flex-direction: row;

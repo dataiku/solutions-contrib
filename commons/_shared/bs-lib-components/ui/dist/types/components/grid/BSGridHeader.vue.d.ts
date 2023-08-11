@@ -11,10 +11,13 @@ declare namespace _sfc_main {
         mdiSortDescending: string;
         mdiChevronDown: string;
         mdiMagnify: string;
+        mdiFilterOutline: string;
         ascSort: null;
         descSort: null;
         noSort: string;
+        filterActive: boolean;
     };
+    function mounted(): void;
     function beforeUnmount(): void;
     namespace computed {
         function sortColIcon(): string;
@@ -24,8 +27,8 @@ declare namespace _sfc_main {
         function searchColumn(): void;
         function onSortChanged(): void;
         function onSortRequested(event: any): void;
+        function onFilterChanged(): void;
     }
-    function mounted(): void;
 }
 import { QIcon } from "quasar";
 import { QItem } from "quasar";

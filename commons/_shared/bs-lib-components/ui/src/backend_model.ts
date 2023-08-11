@@ -49,3 +49,7 @@ export interface RangeFilter extends CustomFilter{
     toValue?: string;
     valueType: 'string' | 'number';
 }
+
+export type Filters = Record<string, string[] | RangeFilter[]>;
+
+export type GridRow = Record<string, any>;

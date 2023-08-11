@@ -9,3 +9,4 @@ export declare enum RowModelType {
 export interface BsColDef extends ColDef {
     dataType?: string;
 }
+export declare const DSS_ROW_INDEX = "dss-index";

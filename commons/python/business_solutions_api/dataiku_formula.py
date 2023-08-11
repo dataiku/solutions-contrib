@@ -1,61 +1,10 @@
 from enum import Enum
-from typing import TypedDict, Union, Literal
+from typing import Union
+from .filters import FilterType, CustomFilter, RangeFilter
 
 
 def _escape_double_quotes(text: str):
     return text.replace('"', '\\"')
-
-
-class FilterType(str, Enum):
-    Equals = 'equals'
-    NotEqual = 'notEqual'
-    Contains = 'contains'
-    NotContains = 'notContains'
-    StartsWith = 'startsWith'
-    EndsWith = 'endsWith'
-    Blank = 'blank'
-    NotBlank = 'notBlank'
-    LessThan = 'lessThan'
-    LessThanOrEqual = 'lessThanOrEqual'
-    GreaterThan = 'greaterThan'
-    GreaterThanOrEqual = 'greaterThanOrEqual'
-    InRange = 'inRange'
-
-    @staticmethod
-    def generate_filter_expression(filter_type, sanitized_column: str, sanitized_val: str, sanitized_to_val: str = None, value_type: str = None):
-        filter_map = {
-            FilterType.Equals: f"strval('{sanitized_column}') == '{sanitized_val}'",
-            FilterType.NotEqual: f"strval('{sanitized_column}') != ('{sanitized_val}')",
-            FilterType.Contains: f"strval('{sanitized_column}').contains('{sanitized_val}')",
-            FilterType.NotContains: f"not (strval('{sanitized_column}').contains('{sanitized_val}'))",
-            FilterType.StartsWith: f"strval('{sanitized_column}').startsWith('{sanitized_val}')",
-            FilterType.EndsWith: f"strval('{sanitized_column}').endsWith('{sanitized_val}')",
-            FilterType.Blank: f"strval('{sanitized_column}') == ''",
-            FilterType.NotBlank: f"strval('{sanitized_column}') != ''",
-            FilterType.LessThan: f"{sanitized_column} < {sanitized_val}",
-            FilterType.LessThanOrEqual: f"{sanitized_column} <= {sanitized_val}",
-            FilterType.GreaterThan: f"{sanitized_column} > {sanitized_val}",
-            FilterType.GreaterThanOrEqual: f"{sanitized_column} >= {sanitized_val}",
-            FilterType.InRange: DataikuFormula._create_range_filter_from_values(sanitized_column, sanitized_val, sanitized_to_val, value_type == 'string'),
-        }
-        return filter_map.get(filter_type, f"Unknown filter type: {filter_type}")
-
-
-OperatorType = Union[None, Literal['and'], Literal['or']]
-
-
-class CustomFilter(TypedDict):
-    filterType: FilterType
-    value: str
-    toValue: Union[None, str]
-    operator: OperatorType
-
-
-class RangeFilter(CustomFilter, TypedDict):
-    filterType: Literal[FilterType.InRange]
-    toValue: Union[None, str]
-    valueType: Literal["string", "number"]
-
 
 class DataikuFormula:
     def __init__(self):
@@ -102,18 +51,6 @@ class DataikuFormula:
         return f"{operator}({a}, {b})"
 
     @staticmethod
-    def _create_range_filter_from_values(sanitized_column: str, sanitized_val: str, sanitized_to_val: str, isString: bool):
-        expressions = []
-        if sanitized_val:
-            sanitized_val = f'"{sanitized_val}"' if isString else f'{sanitized_val}'
-            expressions.append(f'({sanitized_column} >= {sanitized_val})')
-        if sanitized_to_val:
-            sanitized_to_val = f'"{sanitized_to_val}"' if isString else f'{sanitized_to_val}'
-            expressions.append(f'({sanitized_column} <= {sanitized_to_val})')
-        expression = ', '.join(expressions)
-        return 'and(' + expression + ')'
-
-    @staticmethod
     def _create_range_filter(sanitized_column: str, filter: RangeFilter):
         from_val = filter.get('value', '')
         from_val = _escape_double_quotes(from_val)
@@ -121,7 +58,7 @@ class DataikuFormula:
         to_val = _escape_double_quotes(to_val)
         filter_type = filter.get('typeValue', '')
         isString = filter_type == 'string'
-        return DataikuFormula._create_range_filter_from_values(sanitized_column, from_val, to_val, isString)
+        return FilterType._create_range_filter_from_values(sanitized_column, from_val, to_val, isString)
 
     @staticmethod
     def _create_filter_by_column_vals(column: str, vals: Union["list[str]", RangeFilter]):
@@ -131,10 +68,6 @@ class DataikuFormula:
         elif isinstance(vals, RangeFilter):
             return DataikuFormula._create_range_filter(sanitized_column, vals)
         return ''
-
-    @staticmethod
-    def _combine_filter_expressions(a: str, b: str):
-        return f"and({a}, {b})"
 
     def filter_column_by_values(self, column: str,  vals: Union["list[str]", RangeFilter]):
         """
