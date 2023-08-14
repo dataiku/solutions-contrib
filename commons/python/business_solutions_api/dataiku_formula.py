@@ -56,8 +56,7 @@ class DataikuFormula:
         from_val = _escape_double_quotes(from_val)
         to_val = filter.get('toValue', '')
         to_val = _escape_double_quotes(to_val)
-        filter_type = filter.get('typeValue', '')
-        isString = filter_type == 'string'
+        isString = filter.get('valueType', '') == 'string'
         return FilterType._create_range_filter_from_values(sanitized_column, from_val, to_val, isString)
 
     @staticmethod
@@ -65,7 +64,7 @@ class DataikuFormula:
         sanitized_column = _escape_double_quotes(column)
         if isinstance(vals, list):
             return DataikuFormula._create_list_filter(sanitized_column, vals)
-        elif isinstance(vals, RangeFilter):
+        elif vals.get('filterType','') == 'inRange':
             return DataikuFormula._create_range_filter(sanitized_column, vals)
         return ''
 

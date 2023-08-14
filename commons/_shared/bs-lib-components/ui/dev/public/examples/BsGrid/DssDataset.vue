@@ -12,7 +12,7 @@
       dss-table-name="webapp_data"
       :filters="filtersOn ? filters : {}"
       :row-selection="selection"
-      :groupe-keys="groupKeys"
+      :group-keys="groupKeys"
       group-name="Group"
     />
   </div>

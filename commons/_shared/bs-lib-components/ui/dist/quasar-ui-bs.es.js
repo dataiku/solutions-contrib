@@ -87010,7 +87010,7 @@ class nd {
     const a = Object.values(t)[0], s = Object.keys(a);
     for (let l of s) {
       let u = {};
-      e == null || e.forEach((c) => {
+      e.forEach((c) => {
         r && nd.isGroupKey(c.field, n) || !r ? u[c.field] = t[c.field][l] : u[c.field] = null, u[Zy] = l;
       }), i.push(u);
     }
@@ -87252,11 +87252,13 @@ const cZ = "leaf", dZ = Ae({
         flex: 1,
         headerComponentParams: { enableMenu: !0 },
         sortable: !0,
+        filter: !0,
         menuTabs: ["filterMenuTab"]
       }, this.groupKeys && this.groupKeys.length >= 1 && (this.autoGroupColumnDef = {
         flex: 1,
         headerName: this.groupName || "Group",
         field: this.groupKeys[this.groupKeys.length - 1],
+        filter: "agGroupColumnFilter",
         hide: !0,
         minWidth: 250,
         cellRenderer: "agGroupCellRenderer",
@@ -87340,7 +87342,7 @@ function mZ(o, t, e, r, n, i) {
     }, null, 8, ["column-defs", "row-data", "quick-filter-text", "row-height", "row-selection", "row-model-type", "get-row-id", "pagination", "pagination-page-size", "cache-block-size", "header-height", "group-selects-children", "auto-group-column-def", "on-grid-ready", "server-side-datasource"])
   ]);
 }
-const CZ = /* @__PURE__ */ Le(dZ, [["render", mZ], ["__scopeId", "data-v-f44f01b0"]]);
+const CZ = /* @__PURE__ */ Le(dZ, [["render", mZ], ["__scopeId", "data-v-7a7d518b"]]);
 const SZ = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   BsButton: cD,

@@ -317,7 +317,7 @@ export default defineComponent({
                         this.datasetRows =
                             GridTransformations.transformDatasetRowsToGridRows(
                                 dssDataset,
-                                this.datasetColumns!,
+                                this.datasetColumns as BsColDef[],
                                 this.isDoingGrouping(req),
                                 this.groupKeys
                             );
@@ -350,6 +350,7 @@ export default defineComponent({
                 flex: 1,
                 headerComponentParams: { enableMenu: true },
                 sortable: true,
+                filter: true,
                 menuTabs: ["filterMenuTab"],
             };
             if (this.groupKeys && this.groupKeys.length >= 1) {
@@ -357,6 +358,7 @@ export default defineComponent({
                     flex: 1,
                     headerName: this.groupName || "Group",
                     field: this.groupKeys[this.groupKeys.length - 1],
+                    filter: 'agGroupColumnFilter',
                     hide: true,
                     minWidth: 250,
                     cellRenderer: "agGroupCellRenderer",

@@ -1,6 +1,5 @@
-import { GridRow, DSSDatasetData, FilterType } from "../../backend_model";
+import { GridRow, DSSDatasetData, DSSColumnData } from "../../backend_model";
 import {
-    RowModelType,
     MAP_DSS_COL_TYPE_TO_CELL_TYPE,
     MAP_TYPE_TO_FILTER,
     MAP_CELL_TYPE_TO_TYPE,
@@ -29,10 +28,11 @@ export class GridTransformations {
 
         for (let key of dataKeys) {
             let row: GridRow = {};
-            datasetColumns?.forEach((col: any) => {
+            datasetColumns.forEach((col: any) => {
                 const isGroupHeaderCol = isGroupRow && GridTransformations.isGroupKey(col.field, groupKeys);
                 if (isGroupHeaderCol || !isGroupRow) {
-                    row[col.field!] = datasetData[col.field][key];
+                    row[col.field!] = datasetData[col.field][key  as keyof DSSColumnData];
+
                 } else {
                     row[col.field!] = null;
                 }

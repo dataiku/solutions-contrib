@@ -45,11 +45,11 @@ class FilterType(str, Enum):
     def _create_range_filter_from_values(sanitized_column: str, sanitized_val: str, sanitized_to_val: str, isString: bool):
         expressions = []
         if sanitized_val:
-            sanitized_val = f'"{sanitized_val}"' if isString else f'{sanitized_val}'
-            expressions.append(f'({sanitized_column} >= {sanitized_val})')
+            from_val = f'"{sanitized_val}"' if isString else f'{sanitized_val}'
+            expressions.append(f'({sanitized_column} >= {from_val})')
         if sanitized_to_val:
-            sanitized_to_val = f'"{sanitized_to_val}"' if isString else f'{sanitized_to_val}'
-            expressions.append(f'({sanitized_column} <= {sanitized_to_val})')
+            to_val = f'"{sanitized_to_val}"' if isString else f'{sanitized_to_val}'
+            expressions.append(f'({sanitized_column} <= {to_val})')
         expression = ', '.join(expressions)
         return 'and(' + expression + ')'
     
