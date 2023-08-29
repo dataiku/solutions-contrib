@@ -27,6 +27,7 @@ import BsImg from "./components/img/BsImg.vue";
 import BsIcon from "./components/icon/BsIcon.vue";
 import BsCheckbox from "./components/checkbox/BsCheckbox.vue";
 import BsDateRange from "./components/daterange/BsDateRange.vue";
+import BsGrid from "./components/grid/BsGrid.vue";
 
 import "./index.sass";
 
@@ -60,4 +61,5 @@ export {
   BsIcon,
   BsCheckbox,
   BsDateRange,
+  BsGrid,
 };

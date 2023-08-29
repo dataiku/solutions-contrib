@@ -1,4 +1,4 @@
-import { Quasar, Notify, ClosePopup } from "quasar";
+import { Quasar, Notify, ClosePopup, QIcon, QMenu, QList, QItemSection, QItem  } from "quasar";
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/material-icons-outlined/material-icons-outlined.css";
 import "@quasar/extras/material-icons-round/material-icons-round.css";
@@ -18,6 +18,9 @@ myApp.config.unwrapInjectedRef = true;
 myApp.use(Quasar, {
   plugins: {
     Notify,
+  },
+  components: {
+     QIcon, QMenu, QList, QItemSection, QItem
   },
   directives: {
     ClosePopup

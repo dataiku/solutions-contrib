@@ -9,7 +9,7 @@
         </section>
         
         <section class="column q-mb-xl" v-if="quasarUrl">
-            <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
+            <span class="text-primary dku-huge-title-sb q-mb-sm">{{ sectionTitle }}</span>
             <span class="dku-small-title quasar-ref-card q-pa-md">The {{ title }} is a components that wraps the quasar {{ title.replace("Bs","Q")}} component.
                 <slot name="quasar-ref" v-if="$slots.hasOwnProperty('quasar-ref')" :quasar-url="quasarUrl"></slot>
                 <span v-else>
@@ -20,7 +20,7 @@
         </section>
 
         <section class="column q-mb-xl" v-else>
-            <span class="text-primary dku-huge-title-sb q-mb-sm">Quasar reference</span>
+            <span class="text-primary dku-huge-title-sb q-mb-sm">{{ sectionTitle }}</span>
             <span class="dku-small-title bs-native-card q-pa-md">
                 The {{ title }} is a native business solutions component. It does not wrap a specific quasar component, the examples below give more details
                 on how to use it
@@ -43,6 +43,10 @@
             title: String,
             description: String,
             quasarUrl: String,
+            sectionTitle: {
+                type: String,
+                default: 'Quasar reference'
+            }
         }
     }
 </script>

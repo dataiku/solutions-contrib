@@ -17,7 +17,12 @@ let indexPath =
     : "../src/index.umd.js";
 
 let rollupOutput = {
-  globals: { vue: "Vue", quasar: "Quasar", lodash: "_", axios: "axios" },
+  globals: {
+    vue: "Vue",
+    quasar: "Quasar",
+    lodash: "_",
+    axios: "axios",
+  },
 };
 
 const plugins = [vue()];
