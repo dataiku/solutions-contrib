@@ -18,4 +18,4 @@ class WEBAIKU(object):
 
     def init_flask_app(self, app: Flask):
         serve_blueprint = ServeBlueprint(self.exec)
-        app.register_blueprint(serve_blueprint)
+        app.register_blueprint(serve_blueprint.blueprint)
