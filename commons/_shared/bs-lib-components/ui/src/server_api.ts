@@ -1,5 +1,5 @@
 import axios_, { AxiosInstance, AxiosResponse } from 'axios';
-import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData } from "./backend_model"
+import { DSSDatasetData, DSSDatasetSchema, DSSDatasetGenericData, SortCol, CustomFilter, RangeFilter } from "./backend_model"
 
 
 function responseDataPromise(request: Promise<AxiosResponse<any, any>>) {
@@ -86,15 +86,23 @@ export default class ServerApi {
 
     public static getFilteredDataset(
         datasetName: string,
-        chunksize: number,
-        chunk_index: number,
-        filters?: Record<string, any[]>,
-    ) {
+        chunksize: number = 10000,
+        chunk_index: number = 0,
+        filters?: Record<string, any[]| RangeFilter>,
+        groupKeys?: string[],
+        groupRows?: string[],
+        sortModel?: SortCol[],
+        customFilters?: Record<string, CustomFilter| CustomFilter[]>
+    ): Promise<DSSDatasetData>{
         return this.doPost(`bs_api/dataset/get_filtered_dataset`,{
             dataset_name: datasetName,
             chunksize,
             chunk_index,
-            filters : filters || {}
+            filters : filters || {},
+            group_keys: groupKeys,
+            group_rows: groupRows,
+            sort_model: sortModel,
+            custom_filters: customFilters,
         });
     }
 

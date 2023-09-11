@@ -13,8 +13,8 @@
     "axios": "1.4.0",
     "lodash": "^4.17.21",
     "quasar": "2.12.0",
-    "vue": "3.2.47",
-    "quasar-ui-bs": "file:../commons/_shared/bs-lib-components/ui"
+    "quasar-ui-bs": "file:../commons/_shared/bs-lib-components/ui",
+    "vue": "3.2.47"
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.2.3",

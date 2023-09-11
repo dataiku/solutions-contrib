@@ -200,7 +200,6 @@ class Dataset:
                 "readSessionId": read_session_id,
                 "filter": filter
             }
-
             return intercom.jek_or_backend_stream_call("datasets/read-data/", data=data, err_msg="Failed to read dataset stream data")
 
     def _verify_read(self, read_session_id):
