@@ -1,11 +1,15 @@
 from .dss_instance import DSSInstance
-from typing import Optional, Callable
+from dataikuapi.dss.dataset import DSSDataset
+from typing import TypeVar, Optional, Callable, Union
+from functools import wraps
 import os
 from webaiku.errors import WebaikuError
 import logging
 
 
 logger = logging.getLogger("webaiku")
+
+T = TypeVar("T", bound="DataikuApi")
 
 
 class DataikuApi:
@@ -25,6 +29,18 @@ class DataikuApi:
         self.init(project_key=project_key)
 
     @property
+    def project_key(self):
+        if not self.initialized:
+            raise WebaikuError(
+                "You need to initialize the project key before getting the project."
+            )
+
+        if self._project_key is None:
+            raise WebaikuError("No project set for this api")
+
+        return self._project_key
+
+    @property
     def project(self):
         if not self.initialized:
             raise WebaikuError(
@@ -35,6 +51,21 @@ class DataikuApi:
             raise WebaikuError("No project set for this api")
 
         return self._client.get_project(project_key=self._project_key)
+
+    @staticmethod
+    def using_dataset(func: Callable):
+        @wraps(func)
+        def inner(self: T, dataset: Union[str, DSSDataset], *args, **kwargs):
+            dataset_: Optional[DSSDataset] = None
+            if isinstance(dataset, DSSDataset):
+                dataset_ = dataset
+            elif isinstance(dataset, str):
+                dataset_ = self.project.get_dataset(dataset_name=dataset)
+            else:
+                raise WebaikuError("Unknow dataset argument")
+            return func(self, *args, dataset=dataset_, **kwargs)
+
+        return inner
 
     def assign_project_key(self, project_key: Optional[str] = None):
         self._project_key = project_key
@@ -66,3 +97,32 @@ class DataikuApi:
                 f"Dataiku Api initialized with project key : {self._project_key}"
             )
             self.initialized = True
+
+    @using_dataset
+    def get_dataset_schema(self, dataset: Union[DSSDataset, str]):
+        return dataset.get_schema()
+
+    @using_dataset
+    def get_dataset_records_count(self, dataset: Union[DSSDataset, str]):
+        ## Not implemented
+        return None
+
+    @using_dataset
+    def get_dataset_generic_data(self, dataset: Union[DSSDataset, str]):
+        return {
+            "schema": self.get_dataset_schema(dataset=dataset),
+            "columnsCount": self.get_dataset_records_count(dataset=dataset),
+        }
+
+    @using_dataset
+    def get_dataset_chunk(
+        self,
+        dataset: Union[DSSDataset, str],
+        chunk_index: int,
+        chunksize=10000,
+        filter=None,
+        group_key=None,
+        group_row=None,
+        sort_model=None,
+    ):
+        return
