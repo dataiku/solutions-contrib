@@ -1,7 +1,4 @@
-from webaiku.apis.dataiku.dss_instance import DSSInstance
+from webaiku.apis.dataiku.api import DataikuApi
 
 
-instance = DSSInstance()
-
-print(instance.name)
-print(instance.host)
+api = DataikuApi(project_key="AMLVGE")

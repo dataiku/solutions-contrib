@@ -32,9 +32,7 @@ class DSSInstance:
             )
 
         if self._client is None:
-            raise WebaikuError(
-                "No client set for this instance. Run in verbose mode for more information."
-            )
+            raise WebaikuError("No client set for this instance.")
         return self._client
 
     @cached_property
@@ -82,9 +80,9 @@ class DSSInstance:
 
     def assign_from_config(self):
         config_path = os.path.expanduser("~/.dataiku/config.json")
-        logger.debug(f"Assigning credentials from config file in {config_path}")
+        logger.info(f"Assigning credentials from config file in {config_path}")
         if not os.path.exists(config_path):
-            logger.debug(
+            logger.info(
                 f"Config file does not exist in {config_path}. Please see documentation to know more https://doc.dataiku.com/dss/latest/python-api/outside-usage.html#setting-up-the-connection-with-dss"
             )
             return
@@ -102,7 +100,7 @@ class DSSInstance:
                 self.name = default_instance_name
 
             if instance_creds is None:
-                logger.debug(
+                logger.info(
                     f"Could not retrieve config as it is empty or not formatted properly. See here how to format {config_path}: https://doc.dataiku.com/dss/latest/python-api/outside-usage.html#setting-up-the-connection-with-dss"
                 )
                 return
@@ -118,13 +116,13 @@ class DSSInstance:
     def assign_client(self):
         if self.is_ready:
             self._client = DSSClient(host=self.host, api_key=self.api_key)
-            logger.debug(f"✔ DSS Client assigned successfully")
+            logger.info(f"✔ DSS Client assigned successfully")
 
         elif self.in_dataiku:
             import dataiku  # type: ignore
 
             self._client = dataiku.api_client()
-            logger.debug("Running inside Dataiku.")
+            logger.info("Running inside Dataiku.")
             return
         else:
             raise WebaikuError(
@@ -145,5 +143,5 @@ class DSSInstance:
         self.assign_client()
         self.check_instance_availability()
         if self._client:
-            logger.debug(f"Instance host {self.host} initialized.")
+            logger.info(f"Instance host {self.host} initialized.")
             self.initialized = True
