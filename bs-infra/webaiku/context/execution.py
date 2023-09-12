@@ -4,6 +4,7 @@ from typing import Optional, Dict
 import inspect
 from webaiku.utils import find_relative_path
 import logging
+from webaiku.errors import WebaikuError
 
 ## TODO : Add custom exception classes, and better handle errors
 
@@ -29,7 +30,7 @@ class Execution(object):
         self.relative_path = relative_path.lstrip(" /").rstrip(" /")
         self.__exec_path = self.__get_execution_main_path()
         if not self.__verify_exec_path():
-            raise Exception("Path for web application folder is not found")
+            raise WebaikuError("Path for web application folder is not found")
         logger.info(
             f"Web application execution context initilized with path {self.__exec_path}"
         )
@@ -63,7 +64,7 @@ class Execution(object):
             if not os.environ.get(self.dss_code_studio_project_lib_env_var) is None:
                 return os.environ.get(self.dss_code_studio_project_lib_env_var)
             else:
-                raise Exception(
+                raise WebaikuError(
                     "Synchronization of project lib versionned is necessary for the code studio template"
                 )
         elif self.context == ExecutionContext.DATAIKU_DSS:
@@ -93,7 +94,7 @@ class Execution(object):
                 if os.path.exists(exec_path):
                     return exec_path
                 else:
-                    raise Exception(f"{exec_path} does not exist")
+                    raise WebaikuError(f"{exec_path} does not exist")
             except Exception as e:
                 raise e from None
 
@@ -106,7 +107,7 @@ class Execution(object):
             else:
                 ## can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
                 ## TODO : Should it be auto-fixed
-                raise Exception(
+                raise WebaikuError(
                     f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
                 )
         else:
@@ -124,7 +125,7 @@ class Execution(object):
             if caller_frame is not None:
                 calling_file_path = os.path.abspath(caller_frame.filename)
             else:
-                raise Exception("Execution path was not found")
+                raise WebaikuError("Execution path was not found")
 
             if calling_file_path:
                 return find_relative_path(calling_file_path, self.relative_path)

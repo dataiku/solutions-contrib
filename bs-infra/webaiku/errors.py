@@ -1,0 +1,2 @@
+class WebaikuError(Exception):
+    pass
