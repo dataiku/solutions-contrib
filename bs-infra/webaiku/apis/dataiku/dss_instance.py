@@ -3,7 +3,6 @@ from dataikuapi import DSSClient
 import logging
 import os
 import json
-from functools import cached_property
 from webaiku.errors import WebaikuError
 
 
@@ -35,7 +34,7 @@ class DSSInstance:
             raise WebaikuError("No client set for this instance.")
         return self._client
 
-    @cached_property
+    @property
     def in_dataiku(self):
         try:
             import dataiku  # type: ignore
