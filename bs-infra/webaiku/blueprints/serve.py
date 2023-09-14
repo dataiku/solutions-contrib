@@ -67,7 +67,10 @@ class ServeBlueprint(object):
         backend_url = self.__get_lib_backend_url(request=request)
         static_folder_basename = self.__get_root_static_folder_name()
         if backend_url and static_folder_basename:
-            return os.path.join(backend_url, static_folder_basename)
+            path = os.path.join(backend_url, static_folder_basename)
+            if not path.startswith("/"):
+                path = "/" + path
+            return path
         return None
 
     def __get_root_static_folder_name(self):
