@@ -104,7 +104,7 @@ class ServeBlueprint(object):
             html_content = f"<head>{base_tag}</head>\n" + html_content
         else:
             # If <head> tag exists, add or replace <base> tag inside it
-            html_content = re.sub(r"(<base[^>]*>|</head>)", "", html_content)
-            html_content = re.sub(head_pattern, f"\\g<0>\n{base_tag}", html_content)
+            html_content = re.sub(r"<base[^>]*>", "", html_content)
+            html_content = re.sub(head_pattern, f"\\g<0>{base_tag}", html_content)
 
         return html_content.encode("utf-8")
