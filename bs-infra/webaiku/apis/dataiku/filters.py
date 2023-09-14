@@ -1,6 +1,11 @@
 from enum import Enum
 from typing import Union
 
+try:
+    from typing import Literal, TypedDict
+except ImportError:
+    from typing_extensions import Literal, TypedDict
+
 
 class FilterType(str, Enum):
     Equals = "equals"
@@ -68,15 +73,17 @@ class FilterType(str, Enum):
         return "and(" + expression + ")"
 
 
-class CustomFilter(dict):
-    def __init__(
-        self, filterType: str, value: str, toValue: Union[None, str], operator: str
-    ):
-        super().__init__(
-            filterType=filterType, value=value, toValue=toValue, operator=operator
-        )
+OperatorType = Union[None, Literal["and"], Literal["or"]]
 
 
-class RangeFilter(CustomFilter):
-    def __init__(self, filterType: str, toValue: Union[None, str], valueType: str):
-        super().__init__(filterType=filterType, toValue=toValue, valueType=valueType)
+class CustomFilter(TypedDict):
+    filterType: FilterType
+    value: str
+    toValue: Union[None, str]
+    operator: OperatorType
+
+
+class RangeFilter(CustomFilter, TypedDict):
+    filterType: Literal[FilterType.InRange]
+    toValue: Union[None, str]
+    valueType: Literal["string", "number"]
