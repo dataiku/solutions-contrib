@@ -18,7 +18,7 @@ setuptools.setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=install_requires,
-    packages=["webaiku"],
+    packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
