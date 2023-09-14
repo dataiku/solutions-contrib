@@ -1,0 +1,7 @@
+{
+    "template": [
+        "Angular (./angular)",
+        "Business solutions (Vue) (./bs-vue)",
+        "Vue (./vue)"
+    ]
+}
