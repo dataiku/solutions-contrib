@@ -1,6 +1,6 @@
-from webaiku.apis.dataiku.api import DataikuApi
+from webaiku.extension import WEBAIKU
+from flask import Flask
 
 
-api = DataikuApi(project_key="AMLVGE")
-
-print(api.get_dataset_schema(dataset="Graphs_Meta"))
+app = Flask(__name__)
+WEBAIKU(app=app)
