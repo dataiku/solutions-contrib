@@ -15,6 +15,21 @@ T = TypeVar("T", bound="DataikuApi")
 DKU_INSTANCE_NAME_ENV = "DKU_INSTANCE_NAME"
 
 
+def using_dataset(func: Callable):
+    @wraps(func)
+    def inner(self: T, dataset: Union[str, DSSDataset], *args, **kwargs):
+        dataset_: Optional[DSSDataset] = None
+        if isinstance(dataset, DSSDataset):
+            dataset_ = dataset
+        elif isinstance(dataset, str):
+            dataset_ = self.project.get_dataset(dataset_name=dataset)
+        else:
+            raise WebaikuError("Unknow dataset argument")
+        return func(self, *args, dataset=dataset_, **kwargs)
+
+    return inner
+
+
 class DataikuApi:
     env_project_key = "DKU_CURRENT_PROJECT_KEY"
 
@@ -54,21 +69,6 @@ class DataikuApi:
             raise WebaikuError("No project set for this api")
 
         return self._client.get_project(project_key=self._project_key)
-
-    @staticmethod
-    def using_dataset(func: Callable):
-        @wraps(func)
-        def inner(self: T, dataset: Union[str, DSSDataset], *args, **kwargs):
-            dataset_: Optional[DSSDataset] = None
-            if isinstance(dataset, DSSDataset):
-                dataset_ = dataset
-            elif isinstance(dataset, str):
-                dataset_ = self.project.get_dataset(dataset_name=dataset)
-            else:
-                raise WebaikuError("Unknow dataset argument")
-            return func(self, *args, dataset=dataset_, **kwargs)
-
-        return inner
 
     def assign_project_key(self, project_key: Optional[str] = None):
         self._project_key = project_key
