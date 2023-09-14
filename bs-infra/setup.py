@@ -16,7 +16,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     include_package_data=True,
-    python_requires=">=3.8",
+    python_requires=">=3.7",
     install_requires=install_requires,
     packages=setuptools.find_packages(),
     classifiers=[
