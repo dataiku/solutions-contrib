@@ -58,7 +58,7 @@ class DSSInstance:
 
     @property
     def env_host_key(self):
-        return self.prefix_with_name("DKU_HOST")
+        return self.prefix_with_name("DKU_DSS_URL")
 
     def assign_credentials(
         self, host: Optional[str] = None, api_key: Optional[str] = None

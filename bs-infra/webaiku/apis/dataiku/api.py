@@ -5,11 +5,14 @@ from functools import wraps
 import os
 from webaiku.errors import WebaikuError
 import logging
+from .dataset_iterator import DatasetIterator
 
 
 logger = logging.getLogger("webaiku")
 
 T = TypeVar("T", bound="DataikuApi")
+
+DKU_INSTANCE_NAME_ENV = "DKU_INSTANCE_NAME"
 
 
 class DataikuApi:
@@ -125,4 +128,15 @@ class DataikuApi:
         group_row=None,
         sort_model=None,
     ):
-        return
+        dataset_iterator = DatasetIterator(
+            dataset=dataset, chunksize=chunksize, filter=filter
+        )
+        return dataset_iterator.get_chunk(
+            index=chunk_index,
+            group_key=group_key,
+            group_row=group_row,
+            sort_model=sort_model,
+        )
+
+
+dataiku_api = DataikuApi(name=DKU_INSTANCE_NAME_ENV)

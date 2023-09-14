@@ -5,7 +5,7 @@ import logging
 from flask import Flask, Blueprint
 from typing import Optional
 from webaiku.context import Execution, ExecutionContext
-from webaiku.blueprints import ServeBlueprint
+from webaiku.blueprints import ServeBlueprint, DataikuDatasetBlueprint
 
 logger = logging.getLogger("webaiku")
 
@@ -18,4 +18,6 @@ class WEBAIKU(object):
 
     def init_flask_app(self, app: Flask):
         serve_blueprint = ServeBlueprint(self.exec)
+        dataiku_dataset_blueprint = DataikuDatasetBlueprint()
         app.register_blueprint(serve_blueprint.blueprint)
+        app.register_blueprint(dataiku_dataset_blueprint.blueprint)
