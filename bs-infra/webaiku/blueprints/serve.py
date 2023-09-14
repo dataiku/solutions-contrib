@@ -33,7 +33,7 @@ class ServeBlueprint(object):
         @self._blueprint.route("/")
         @self._blueprint.route("/fetch/bs_init")  ## backward compatibility
         def init():
-            lib_url = self.__get_static_assets_path()
+            lib_url = self.__get_static_assets_path(request=request)
             status, content = self.__read_html_file()
             expiry_time = datetime.utcnow() + timedelta(days=self.CACHE_DAYS)
             modified_content: Optional[bytes] = None
@@ -64,7 +64,7 @@ class ServeBlueprint(object):
         """
         Static assets root server path
         """
-        backend_url = self.__get_lib_backend_url()
+        backend_url = self.__get_lib_backend_url(request=request)
         static_folder_basename = self.__get_root_static_folder_name()
         if backend_url and static_folder_basename:
             return os.path.join(backend_url, static_folder_basename)
