@@ -1,0 +1,17 @@
+{
+    "project_name": "Vue project",
+    "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
+    "version": "0.0.1",
+    "port": "4200",
+    "api_port": "5000",
+    "__code_studio_href_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.port }}",
+    "__code_studio_backend_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.api_port }}",
+    "__prompts__": {
+        "project_name": "Choose your Angular project name",
+        "port": "Choose your client serve port (default 4200)",
+        "api_port": "Choose your flask backend port (default 5000)"
+    },
+    "_copy_without_render": [
+        "src/*"
+    ]
+}
