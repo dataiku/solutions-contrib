@@ -12,6 +12,9 @@
         "api_port": "Choose your flask backend port (default 5000)"
     },
     "_copy_without_render": [
-        "src/*"
+        "src/components/*",
+        "src/assrts/*",
+        "src/main.ts",
+        "src/App.vue"
     ]
 }
