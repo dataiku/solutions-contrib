@@ -16,7 +16,7 @@
         "lodash": "4.17.21",
         "quasar": "2.12.0",
         "vue": "3.2.47",
-        "quasar-ui-bs": "{{ cookiecutter.components_lib_version}}"
+        "quasar-ui-bs": "{{ cookiecutter.__quasar_ui_bs_url }}"
     },
     "devDependencies": {
         "@quasar/vite-plugin": "^1.2.3",

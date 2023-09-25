@@ -4,5 +4,6 @@
     "version": "0.0.1",
     "port": "4200",
     "api_port": "5000",
-    "components_lib_version": "{{ cookiecutter.ui_choices }}"
+    "components_lib_version": [ "v1.4.2-beta.4", "v1.4.2-beta.3"],
+    "__quasar_ui_bs_url": "https://gitpkg.now.sh/dataiku/solutions-contrib/commons/_shared/bs-lib-components/ui?{{ cookiecutter.components_lib_version }}"
 }
