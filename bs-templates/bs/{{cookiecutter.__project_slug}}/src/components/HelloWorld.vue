@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import image from "@/commons/_shared/resources/images/bs-logo.png";
+import image from "@/assets/images/bs-logo.png";
 export default {
   name: "HelloWorld",
   data: function () {
@@ -20,7 +20,7 @@ export default {
 </script>
 <style scoped>
 #dataiku-logo {
-  background-image: url("@/commons/_shared/resources/images/dataiku-logo.svg");
+  background-image: url("@/assets/images/bs-logo.png");
   background-size: cover;
   width: 50px;
   height: 50px;

@@ -1,4 +1,13 @@
-import { Quasar, Notify, ClosePopup, QIcon, QMenu, QList, QItemSection, QItem  } from "quasar";
+import {
+  Quasar,
+  Notify,
+  ClosePopup,
+  QIcon,
+  QMenu,
+  QList,
+  QItemSection,
+  QItem,
+} from "quasar";
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/material-icons-outlined/material-icons-outlined.css";
 import "@quasar/extras/material-icons-round/material-icons-round.css";
@@ -10,7 +19,7 @@ import "vite/modulepreload-polyfill";
 import { QuasarBs } from "quasar-ui-bs";
 import { myApp } from "./src/index";
 import { ServerApi } from "quasar-ui-bs";
-import { baseURL } from "./ApiHelper";
+import { baseURL } from "./src/api/index";
 
 ServerApi.init(baseURL);
 myApp.config.unwrapInjectedRef = true;
@@ -20,11 +29,15 @@ myApp.use(Quasar, {
     Notify,
   },
   components: {
-     QIcon, QMenu, QList, QItemSection, QItem
+    QIcon,
+    QMenu,
+    QList,
+    QItemSection,
+    QItem,
   },
   directives: {
-    ClosePopup
-  }
+    ClosePopup,
+  },
 });
 
 myApp.use(QuasarBs);

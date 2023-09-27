@@ -12,7 +12,7 @@
     "strict": true,
     "target": "es6",
     "jsx": "preserve",
-    "types": ["quasar-ui-bs/dist/types/volar"]
+    "types": ["quasar-ui-bs/dist/types/volar","vite/client"]
     
   },
   "exclude": ["dist", ".quasar", "node_modules"],
