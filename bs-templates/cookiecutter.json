@@ -1,7 +1,7 @@
 {
     "template": [
-        "Angular (./angular)",
-        "BS (./bs)",
-        "Vue (./vue)"
+        "Angular (angular)",
+        "BS (bs)",
+        "Vue (vue)"
     ]
 }
