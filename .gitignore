@@ -1,7 +1,6 @@
 *.DS_Store
 *__pycache__*
 .venv
-.env
 node_modules
 package-lock.json
 project/venv
