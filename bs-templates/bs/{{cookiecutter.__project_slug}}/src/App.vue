@@ -98,6 +98,7 @@
 <script>
 import docLogo from "./assets/images/doc-logo-example.svg";
 import HelloWorld from "./components/HelloWorld.vue";
+import { API } from "./Api";
 export default {
   data() {
     return {
@@ -108,8 +109,9 @@ export default {
   components: {
     HelloWorld,
   },
-  mounted: function () {
-    this.ismounted = true;
+  mounted: async function () {
+    const response = await API.getHello();
+    console.log(response.data);
   },
 };
 </script>

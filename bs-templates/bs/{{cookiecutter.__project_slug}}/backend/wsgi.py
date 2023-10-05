@@ -13,4 +13,4 @@ WEBAIKU(app, "{{ cookiecutter.__project_slug }}")
 WEBAIKU.extend(app, [fetch_api])
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=int(os.getenv("VITE_API_PORT")))
+    app.run(host="127.0.0.1", port=int(os.getenv("VITE_API_PORT")), debug=True)
