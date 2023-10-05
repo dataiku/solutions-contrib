@@ -1,4 +1,4 @@
-import axios from "./api";
+import axios from "./api/index";
 
 interface HelloResponse {
     key: string;

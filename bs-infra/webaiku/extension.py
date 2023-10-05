@@ -37,5 +37,4 @@ class WEBAIKU(object):
     @staticmethod
     def extend(app: Flask, children: List[Blueprint]):
         for blueprint in children:
-            blueprint.url_prefix = WEBAIKU.API_PREFIX + blueprint.url_prefix
             app.register_blueprint(blueprint=blueprint)

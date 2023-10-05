@@ -5,8 +5,12 @@ import os
 
 load_dotenv()
 
+from webaiku.extension import WEBAIKU
+
+
 app = Flask(__name__)
-app.register_blueprint(fetch_api)
+WEBAIKU(app, "{{ cookiecutter.__project_slug }}")
+WEBAIKU.extend(app, [fetch_api])
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=os.getenv("VITE_API_PORT"))
+    app.run(host="127.0.0.1", port=int(os.getenv("VITE_API_PORT")))

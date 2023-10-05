@@ -19,7 +19,8 @@ def read_dss_instance_config():
 
         with open("requirements.local.txt", "a") as file:
             file.write(
-                os.path.join(
+                "\n"
+                + os.path.join(
                     instance_host, "public/packages/dataiku-internal-client.tar.gz"
                 )
             )
