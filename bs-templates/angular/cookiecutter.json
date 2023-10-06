@@ -4,6 +4,8 @@
     "version": "0.0.1",
     "port": "4200",
     "api_port": "5000",
+    "dss_instance": "default",
+    "dku_project": "",
     "__code_studio_href_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.port }}",
     "__code_studio_backend_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.api_port }}",
     "__prompts__": {

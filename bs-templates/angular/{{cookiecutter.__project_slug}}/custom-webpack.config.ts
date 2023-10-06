@@ -1,10 +1,18 @@
 import * as webpack from 'webpack';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default (
     config: webpack.Configuration,
 ) => {
-    const codeStudioHref = process.env["{{ cookiecutter.__code_studio_href_env }}"] || null;
-    const backendBaseUrl = process.env["{{ cookiecutter.__code_studio_backend_env }}"] || null;
+    const apiPort = JSON.stringify(process.env["ANGULAR_API_PORT"] ? process.env["ANGULAR_API_PORT"]: "");
+    const clientPort = JSON.stringify(process.env["ANGULAR_CLIENT_PORT"] ? process.env["ANGULAR_CLIENT_PORT"]: "");
+    const codeStudioHrefEnv =  `DKU_CODE_STUDIO_BROWSER_PATH_${clientPort}`;
+    const backendBaseHrefEnv = `DKU_CODE_STUDIO_BROWSER_PATH_${apiPort}`;
+
+    const codeStudioHref = process.env[codeStudioHrefEnv] || null;
+    const backendBaseUrl = process.env[backendBaseHrefEnv] || null;
     const baseHref =  JSON.stringify(codeStudioHref ? `${codeStudioHref}/` : "/");
     const backendAPIURL = JSON.stringify(backendBaseUrl ? `${backendBaseUrl}/` : "/");
     config.plugins?.push(
