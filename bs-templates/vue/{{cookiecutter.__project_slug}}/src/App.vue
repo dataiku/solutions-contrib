@@ -2,11 +2,11 @@
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import { onMounted } from "vue";
-import axios from "@/api"
+import { API } from './Api';
 
 onMounted(async () => {
   try {
-    const response = await axios.get("/api/hello");
+    const response = await API.getHello();
     console.log(response.data);
   } catch(e) {
     console.log(e);

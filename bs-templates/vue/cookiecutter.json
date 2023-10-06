@@ -4,16 +4,16 @@
     "version": "0.0.1",
     "port": "4200",
     "api_port": "5000",
-    "__code_studio_href_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.port }}",
-    "__code_studio_backend_env": "DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.api_port }}",
+    "dss_instance": "default",
+    "dku_project": "",
     "__prompts__": {
-        "project_name": "Choose your Angular project name",
+        "project_name": "Choose your Vue project name",
         "port": "Choose your client serve port (default 4200)",
         "api_port": "Choose your flask backend port (default 5000)"
     },
     "_copy_without_render": [
         "src/components/*",
-        "src/assrts/*",
+        "src/assets/*",
         "src/main.ts",
         "src/App.vue"
     ]

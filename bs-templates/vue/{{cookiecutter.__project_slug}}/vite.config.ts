@@ -1,25 +1,21 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import dotenv from 'dotenv';
 
-const basePath = process.env["DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.__code_studio_href_env }}"]
-? process.env["DKU_CODE_STUDIO_BROWSER_PATH_{{ cookiecutter.__code_studio_href_env }}"] + "/"
+dotenv.config();
+
+const clientPort = String(process.env['VITE_CLIENT_PORT']);
+
+const basePath = process.env[`DKU_CODE_STUDIO_BROWSER_PATH_${clientPort}`]
+? String(process.env[`DKU_CODE_STUDIO_BROWSER_PATH_${clientPort}`]) + "/"
 : "";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     host: "127.0.0.1",
-    port: Number("{{ cookiecutter.port }}"),
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:{{ cookiecutter.api_port }}",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, "/api"),
-      }
-    }
+    port: Number(clientPort),
   },
   plugins: [
     vue(),

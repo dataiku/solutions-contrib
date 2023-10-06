@@ -14,8 +14,8 @@ function getBackendProdUrl() {
 let baseURLVite = import.meta.env.BASE_URL;
 
 const backendProdBase = getBackendProdUrl();
-const localBackendPort = "{{ cookiecutter.api_port }}"
-const localClientPort = "{{ cookiecutter.port }}"
+const localBackendPort =  import.meta.env.VITE_API_PORT;
+const localClientPort = import.meta.env.VITE_CLIENT_PORT;
 
 baseURLVite = baseURLVite.replace(localClientPort, localBackendPort);
 
