@@ -13,27 +13,10 @@ const basePath = process.env[`DKU_CODE_STUDIO_BROWSER_PATH_${clientPort}`]
 ? String(process.env[`DKU_CODE_STUDIO_BROWSER_PATH_${clientPort}`]) + "/"
 : "";
 
-const apiPort = String(process.env['VITE_API_PORT']);
-
-
 export default defineConfig({
     server: {
         host: "127.0.0.1",
         port: Number(clientPort),
-        proxy: {
-          "^/api": {
-            target: `http://127.0.0.1:${apiPort}`,
-            changeOrigin: true,
-            secure: false,
-            rewrite: (path: string) => path.replace(/^\/api/, "/api"),
-          },
-          "^/bs_api": {
-            target: `http://127.0.0.1:${apiPort}`,
-            changeOrigin: true,
-            secure: false,
-            rewrite: (path: string) => path.replace(/^\/bs_api/, "/bs_api"),
-          }
-        }
     },
     plugins: [
         vue({
