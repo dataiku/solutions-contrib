@@ -1,5 +1,5 @@
 import * as webpack from 'webpack';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
