@@ -10,9 +10,9 @@ if is_code_studio:
     with open("angular.json", "r") as file:
         angular_json = json.load(file)
 
-    angular_json["projects"]["project"]["architect"]["build"]["options"][
-        "baseHref"
-    ] = os.getenv("{{ cookiecutter.__code_studio_href_env }}")
+    angular_json["projects"]["{{ cookiecutter.__project_slug }}"]["architect"]["build"][
+        "options"
+    ]["baseHref"] = os.getenv("{{ cookiecutter.__code_studio_href_env }}")
 
     with open("angular.json", "w") as file:
         json.dump(angular_json, file, indent=2)
