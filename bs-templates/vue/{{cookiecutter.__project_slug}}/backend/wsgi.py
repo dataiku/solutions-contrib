@@ -1,10 +1,14 @@
 from flask import Flask
 from .fetch_api import fetch_api
-from webaiku.extension import WEBAIKU
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
+
+from webaiku.extension import WEBAIKU
+
+
+
 
 
 app = Flask(__name__)
