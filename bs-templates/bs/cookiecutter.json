@@ -1,6 +1,6 @@
 {
     "project_name": "Dataiku Bs Project",
-    "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '-') }}",
+    "__project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_') }}",
     "version": "0.0.1",
     "port": "4200",
     "api_port": "5000",

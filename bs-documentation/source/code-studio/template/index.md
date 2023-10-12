@@ -93,3 +93,9 @@ This section provides instructions for manually configuring the Code Studio temp
 - **[Add code environments](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-a-code-environment)**: Add the two code environments you created for cookiecutter and Flask backend development.
 
 ## Using the template
+
+- In the top navigation bar, go to </> -> Code Studios.
+- Click on + New Code Studio on the top right, then select the newly created template > Create.
+- Start the code studio
+
+![Create New Code Studio](assets/06-add-new-code-studio.png)
