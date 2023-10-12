@@ -166,7 +166,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 - Run the frontend server
 
   ```
-  npm start
+  npm run start
   ```
 
 - View the web application on the Dev panel
