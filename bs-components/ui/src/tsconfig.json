@@ -1,8 +1,0 @@
-{
-  "extends": "@quasar/app-webpack/tsconfig-preset",
-  "compilerOptions": {
-      "baseUrl": ".",
-      "skipLibCheck": true,
-  },
-  "exclude": ["../node_modules"],
-}
