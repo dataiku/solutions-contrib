@@ -18,7 +18,7 @@ The templates are designed in a way that also makes it easy to [deploy the appli
 :::{topic} Note
 
 - Cookiecutter is a command-line utility that rapidly generates projects from templates. In this context, we will utilize the Cookiecutter Python code environment specified in the Code Studio template
-- All web application projects should be created within the **project-lib-versioned** folder. This practice allows you to synchronize the source code and built files with the Dataiku DSS project library, facilitating the application deployment process.
+- All web application projects should be created within the **project-lib-versioned/webapps** folder. This practice allows you to synchronize the source code and built files with the Dataiku DSS project library, facilitating the application deployment process.
   :::
 
 ### Activation
@@ -39,7 +39,7 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
 - Navigate to the following directory:
 
   ```
-  cd ~/workspace/project-lib-versioned/
+  mkdir ~/workspace/project-lib-versioned/webapps && cd ~/workspace/project-lib-versioned/webapps
   ```
 
 - Then, run the following command to create a new template using Cookiecutter:
@@ -77,7 +77,7 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
   - "Choose your Flask backend port" is the port number on which the Flask backend will run. The default is 5000.
   - "In the context of Code Studio within Dataiku, the parameters 'dss_instance' and 'dku_project' are primarily intended for use cases where the project template needs to be executed outside of Dataiku or locally. For Code Studio users, these parameters can typically be left empty, as they are not required for template customization within the Dataiku Code Studio environment."
 
-- Once you fill in the parameters, a project folder with the project name slugified will be created in the directory **project-lib-versioned**
+- Once you fill in the parameters, a project folder with the project name slugified will be created in the directory **project-lib-versioned/webapps**
 
 ## Vue
 
@@ -88,7 +88,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 - Start by navigating to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
 
   ```
-  cd ~/workspace/project-lib-versioned/__PROJECT_NAME__
+  cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
 - Install the dependencies by running
@@ -134,7 +134,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 - Navigate to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
 
   ```
-  cd ~/workspace/project-lib-versioned/__PROJECT_NAME__
+  cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
 - Run the following command
@@ -150,7 +150,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 - Start by navigating to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
 
   ```
-  cd ~/workspace/project-lib-versioned/__PROJECT_NAME__
+  cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
 - Install the dependencies by running
@@ -196,7 +196,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 - Navigate to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
 
   ```
-  cd ~/workspace/project-lib-versioned/__PROJECT_NAME__
+  cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
 - Run the following command
