@@ -124,7 +124,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 
   ```
   Flask>=0.9
-  git+https://github.com/dataiku/solutions-contrib.git@feature/packaging#egg=webaiku&subdirectory=bs-infra
+  git+https://github.com/dataiku/solutions-contrib.git@main#egg=webaiku&subdirectory=bs-infra
   python-dotenv>=0.19.0
   dataiku-api-client
   ```
@@ -186,7 +186,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 
   ```
   Flask>=0.9
-  git+https://github.com/dataiku/solutions-contrib.git@feature/packaging#egg=webaiku&subdirectory=bs-infra
+  git+https://github.com/dataiku/solutions-contrib.git@main#egg=webaiku&subdirectory=bs-infra
   python-dotenv>=0.19.0
   dataiku-api-client
   ```
