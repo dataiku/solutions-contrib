@@ -25,7 +25,7 @@ _This setup should only be done one time. Once the template is available on your
 
 ## Importing the template
 
-- Download the following [code studio template](https://github.com/dataiku/solutions-contrib/raw/feature/packaging/code-studio/dss_code_studio_template_infra.zip)
+- Download the following [code studio template](https://github.com/dataiku/solutions-contrib/raw/main/code-studio/dss_code_studio_template_infra.zip)
 
 - Click on "Upload a Code Studio template" in the code studios admin panel.
 - Import the downloaded template
