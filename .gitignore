@@ -14,3 +14,12 @@ commons/_shared/bs-lib-components/ui/dev/src/test
 !commons/_shared/bs-lib-components/ui/dev/src/test/TestRouteExample.vue
 .vscode
 commons/_shared/bs-lib-components/ui/dev/src/precompiled/localPrecompiledData.ts
+
+# Ignore everything in bs-documentation
+bs-documentation/*
+
+# Except for bs-documentation/source
+!bs-documentation/source
+
+# Ignore bs-documentation/source/conf.py
+bs-documentation/source/conf.py
