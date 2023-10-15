@@ -1,46 +1,48 @@
 # Deploy your web application
 
-In this section, you will learn how to deploy a web application developped with the code studio framework as a standard Dataiku DSS web application.
+In this section, we guide you through the process of deploying a web application created within the Code Studio, transforming deploying it as a standard Dataiku web application.
 
-```{tip}
+```{tip} Updating an Existing Deployment
 
-If you already deployed a web application, and want to update it, you can [Build the webapp](#step-1-building-the-application), [Sync the files](#step-2-sync-files-with-dataiku-dss) and restart you web application backend
+If you've previously deployed a web application and wish to update it, you can simply [Build the webapp](#step-1-building-the-application), [Synchronize the files](#step-2-synchronize-files-with-dataiku-instance) and restart you web application backend
 ```
 
+(step-1-building-the-application)=
 ## Step 1: Building the application
 
-The first step is to build the web application in your code studio.
+Initiate the build process for your web application within Code Studio by following these steps:
 
-- Navigate to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
+- Open your terminal and navigate to the project folder. Replace  **\_\_PROJECT_NAME\_\_**  with the actual name of your project directory:
 
   ```
   cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
-- Run (npm / yarn / pnpm) command to build the application
+- Execute the appropriate build command based on your choice of package manager:
 
   ```
   yarn run build
   ```
 
   :::{topic} Note
-  npm, yarn and pnpm ae globally installed in the code studio template, you can choose any package manager to work with, just replace **yarn run build** with **npm run build** or **pnpm run build**
+  npm, yarn, and pnpm are pre-installed in the Code Studio template. Feel free to switch out **yarn run build** with **npm run build** or **pnpm run build**, depending on your preferred package manager.
   :::
 
-- The built files will be created under **/workspace/project-lib-versioned/webapps/**PROJECT_NAME**/dist**
+- Upon successful compilation, the built files will be located in the **dist** folder under the directory path **/workspace/project-lib-versioned/webapps/**PROJECT_NAME**/dist**
 
-## Step 2: Sync files with Dataiku DSS
+(step-2-synchronize-files-with-dataiku-instance)=
+## Step 2: Synchronize Files with Dataiku instance
 
-- Sync the files in your <workspace>/project-lib-versioned with DSS
+- To ensure that your web application files are accessible within the Dataiku DSS environment, you'll need to synchronize the contents of your  <workspace>/project-lib-versioned folder with Dataiku
 
 ![Sync Files](assets/01-sync-files.png)
 
-## Step 3: Add webapps folder to the project python path
+## Step 3: Include Webapps Folder in Project Python Path
 
-Adding webapps to your project python path allows you to import your custom flask bluprints and python modules.
+Incorporating the **webapps** folder into your project's Python path enables the import of your custom Flask blueprints and Python modules.
 
-- In the top navigation bar, go to Libraries.
-- Edit the file **external-libraries.json** by adding webapps tp the "pythonPath"
+- Navigate to **Libraries** via the top menu bar.
+- Edit the  **external-libraries.json** file to include **webapps** in the "pythonPath":
 
   ```
   {
@@ -56,31 +58,33 @@ Adding webapps to your project python path allows you to import your custom flas
   }
   ```
 
-## Step 4: Create a new Stadard DSS web application
+By doing this, you make it possible to seamlessly integrate your custom Flask functionalities and Python modules into your Dataiku project.
 
-- In the top navigation bar, go to </> -> Webapps.
+## Step 4: Initialize a New Standard Dataiku Web Application
 
-- Click on + New Webapp on the top right, then select Code Webapp > Standard.
+- Navigate to </> -> Webapps through the top menu bar.
+
+- Click on _+ New Webapp_ button located at the top right corner of the screen, then choose _Code Webapp > Standard_.
 
 ![New Webapp](assets/02-new-webapp.png)
 
-- Remove the default code from the **CSS**, **HTML**, **JS** and **Python** tabs of your web application
+- Clear out the default code present in the  **CSS**, **HTML**, **JS** and **Python** tabs of your web application.
 
-## Step 5: Python backend
+## Step 5: Configuring the Python Backend
 
-- In the Settings panel of your created web application, select the code environment for backend development
+- Open the Settings panel in the web application you've just created. Here, select the appropriate code environment for your backend development.
 
   :::{topic} Note
 
-  - The python version of your code environment should be at least **>=3.6** .
-  - The code environement should at least have these requirements and any other specific requirements you added for your backend
+  - Ensure that the Python version in your code environment is  **>=3.6** .
+  - The code environment should at minimum meet the following requirements, in addition to any specific needs your backend might have:
 
   Flask>=0.9
   git+https://github.com/dataiku/solutions-contrib.git@main#egg=webaiku&subdirectory=bs-infra
   dataiku-api-client
   :::
 
-- Add the following code to your standard web application backend (replace {**\_\_YOUR_WEBAPPLICATION_FOLDER\_\_**} with the name of your web application folder)
+- Populate the Python backend tab of your standard web application with the following code snippet. Make sure to replace {**\_\_YOUR_WEBAPPLICATION_FOLDER\_\_**} with your actual web application folder name:
 
   ```
   from flask import Flask
@@ -94,13 +98,13 @@ Adding webapps to your project python path allows you to import your custom flas
 
   :::{topic} Note
 
-  - In the provided example we import fetch_api as it is the default blueprint in the starter template, you can import any other blueprints or packages you added throughout the development
-  - WEBAIKU is a wrapper around Flask app, it will extend the application to serve your static files from the flask server backend adress
+  - The example code imports _fetch_api_, which is the default blueprint in the starter template. Feel free to import any other blueprints or packages you've added during development.
+  - WEBAIKU s a wrapper around the Flask app. It extends the Flask app to serve your static files from the Flask server's backend address.
     :::
 
-## Step 6: JavaScript starter code
+## Step 6: Initialize JavaScript
 
-- In the JS tab of your web application, add the following code:
+- In the JavaScript tab of your web application, paste the following code:
 
   ```
   const backendURL = dataiku.getWebAppBackendUrl('fetch/bs_init?URL='+getWebAppBackendUrl(''));
@@ -114,18 +118,20 @@ Adding webapps to your project python path allows you to import your custom flas
   ```
 
   :::{topic} Note
-  This code snippet creates a full-screen iframe, displaying content from Flask server backend URL. It waits for the page to load fully and then dynamically adds the iframe to the web page, making it cover the entire viewport.
+  This JavaScript code dynamically generates a full-screen iframe upon the web page's complete loading. The iframe fetches its content from the Flask server backend using the URL specified in _backendURL_.
   :::
 
-Once you add the python and JS code snippets to your web application, you can view the deployed app.
+After inserting the provided Python and JavaScript code snippets, your web application is ready for viewing.
 
 ![Application deployed](assets/03-application-deployed.png)
 
+This concludes the JavaScript initialization step, and you should now have a fully functioning web application, developed using your preferred framework and deployed within Dataiku 
+
 ## Next steps
 
-Now that your webapp is finished, you can publish it on a [Dashboard](https://doc.dataiku.com/dss/latest/dashboards/index.html).
+With your web application fully deployed, the next action you may take is to publish it on a [Dataiku Dashboard](https://doc.dataiku.com/dss/latest/dashboards/index.html).
 
-Here are the complete versions of the code presented in this tutorial:
+Below are the complete versions of the code snippets used throughout this tutorial for easy reference:
 
 ```{dropdown} [JS Code](./assets/code.js)
 

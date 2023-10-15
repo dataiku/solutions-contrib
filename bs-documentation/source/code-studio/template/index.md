@@ -1,54 +1,63 @@
 # Code studio template
 
-````{admonition} Pre-requisites
+```{admonition} Prerequisites
 :class: important
 
-* Some familiarity with [Dataiku code studios](https://doc.dataiku.com/dss/latest/code-studios/index.html)
-* Admin access to setup the code studio template
-* Python >= 3.7 code environment with the package [cookiecutter >= 2.3.1](https://pypi.org/project/cookiecutter/) installed
-* Python >= 3.6 code environment with the following packages for Flask backend development:
+Before you begin, ensure you meet the following requirements:
 
-    ```
+- Knowledge of [Dataiku Code Studios](https://doc.dataiku.com/dss/latest/code-studios/index.html).
+  
+- Admin permissions to configure Code Studio templates.
+  
+- Python 3.7+ with [Cookiecutter 2.3.1+](https://pypi.org/project/cookiecutter/) installed.
+  
+- For Flask backend, Python 3.6+ and the following packages:
+    ```bash
     Flask>=0.9
     git+https://github.com/dataiku/solutions-contrib.git@main#egg=webaiku&subdirectory=bs-infra
     python-dotenv>=0.19.0
     dataiku-api-client
     ```
 
-````
+```
 
-In this tutorial you will learn how to setup a code studio template that will get you started on developping web applications with your favorite frontend framework, we currently support [Vue](https://vuejs.org/) & [Angular](https://angular.io/).
+
+This section walks you through the setup process of a Code Studio template specifically designed for web application development using leading frontend frameworks. Currently, we support [Vue](https://vuejs.org/) and [Angular](https://angular.io/).
 
 :::{topic} Note
-_This setup should only be done one time. Once the template is available on your instance, it can be reused by any Dataiku DSS project for web applications development_
+_Set up the configuration only once. Once established, the template is available for all Dataiku projects trequiring web application development._
 :::
 
-## Importing the template
+## Importing the template into Dataiku
 
-- Download the following [code studio template](https://github.com/dataiku/solutions-contrib/raw/main/code-studio/dss_code_studio_template_infra.zip)
+Follow these steps to import the template:
 
-- Click on "Upload a Code Studio template" in the code studios admin panel.
-- Import the downloaded template
+- Download the [code studio template](https://github.com/dataiku/solutions-contrib/raw/main/code-studio/dss_code_studio_template_infra.zip)
+
+- Navigate to the code studios admin panel and select "Upload a Code Studio Template" option.
+- Import the template you've just downloaded.
 
 ![Import code studio template](assets/01-import-code-studio-template.png)
 
-- Please note that after creating the template, you can remap the provided Cookiecutter and infra37 code environment blocks to match the names of the code environments you've set up for cookiecutter and Flask backend development.
+- After importing the template, remember to align the provided Cookiecutter and infra37 code environment blocks with the names of your pre-configured code environments for cookiecutter and Flask backend development
 
 ![Remap code environments](assets/02-remap-code-envs.png)
 
+With these steps, your Code Studio template is ready for use. This enables you to swiftly initiate web application development in Dataiku projects, leveraging frameworks like Vue and Angular.
+
 ## Manual setup
 
-This section provides instructions for manually configuring the Code Studio template without the need for downloading it. It also offers an explanation of the various blocks that make up the template.
+This section explains how to configure a Code Studio template manually. You'll learn how to add and modify the essential building blocks within the template.
 
-- Click on _+ Create code studio template_ on the top right, once the template created go to the definition panel to start adding / editing [building blocks](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#building-blocks)
+- **Create Template**: Click on _+ Create code studio template in the upper right corner. Once created, navigate to the definition panel to manage [building blocks](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#building-blocks)
 
-- **[File synchronization](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#file-synchronization)**: Exclude patterns like _node_modules/ , .angular, **pycache**_ and other patterns you deem convenient to exclude from the file synchronization between DSS instance and the Code studio.
+- **[File synchronization](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#file-synchronization)**: Use this block to specify patterns like _node_modules/ , .angular, **pycache**_ that you wish to exclude from the file synchronization between Dataiku instance instance and Code Studio..
 
-- **[Kubernetes Parameters](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#kubernetes-parameters)**
+- **[Kubernetes Parameters](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#kubernetes-parameters)**: Configure Kubernetes settings, if applicable.
 
-- Add a **[Visual Studio Code](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#visual-studio-code)** block (It is not usually needed to change any setting of this block.)
+- **[Visual Studio Code](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#visual-studio-code)** Add a Visual Studio Code block. Typically, no settings need to be changed here.
 
-- Add an **[Append to Dockerfile](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#append-to-dockerfile)** block with the following Dockerfile content:
+- **[Append to Dockerfile](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#append-to-dockerfile)** Insert this block and include the following Dockerfile content:
 
   ```
   USER root
@@ -61,6 +70,7 @@ This section provides instructions for manually configuring the Code Studio temp
       npm install yarn -g && \
       npm install @angular/cli -g
 
+  # Install or update Git (Example for Red Hat 7)
   RUN yum -y remove git && \
       yum -y remove git-* && \
       yum -y install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm && \
@@ -72,17 +82,17 @@ This section provides instructions for manually configuring the Code Studio temp
   ```
 
   :::{topic} Note
-
-  - This block installs globally npm, yarn and pnpm package managers along with angular cli
-  - It updates git to its latest version
-  - It installs typescript on vs code extensions for better linting and intelliSense
+  This Dockerfile block does the following:
+  - Installs npm, yarn, pnpm, and the Angular CLI globally.
+  - Updates Git to the latest version.
+  - Installs TypeScript for enhanced linting and IntelliSense in VS Code.
     :::
 
-- **[Add an Entrypoint](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-an-entry-point)** and expose the HTML service to make the frontend accessible from the Code Studio UI when launching your web application client server. Use /$request_uri for the proxied subpath.
+- **[Add an Entrypoint for HTML](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-an-entry-point)**: Expose the HTML service to make the frontend accessible from the Code Studio UI when launching your web application client server. Use /$request_uri for the proxied subpath.
 
   ![Expose Client Port](assets/04-expose-client-port.png)
 
-- **[Add an Entrypoint](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-an-entry-point)** for the web application flask backend, this will make the server accessible by requesting its URL directly. Use /$request_uri for the proxied subpath.
+- **[Add an Entrypoint for Flask](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-an-entry-point)** Add another entry point for your Flask backend. Use /$request_uri for the proxied subpath here as well.
 
   :::{topic} Note
   _You don't need to expose the html service for this entry point_
@@ -90,12 +100,14 @@ This section provides instructions for manually configuring the Code Studio temp
 
   ![Expose Flask Port](assets/05-expose-flask-port.png)
 
-- **[Add code environments](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-a-code-environment)**: Add the two code environments you created for cookiecutter and Flask backend development.
+- **[Code environments](https://doc.dataiku.com/dss/latest/code-studios/code-studio-templates.html#add-a-code-environment)**: Finally, include the previously configured code environments for Cookiecutter and Flask backend development.
 
-## Using the template
+## Utilizing the Configured Template 
 
-- In the top navigation bar, go to </> -> Code Studios.
-- Click on + New Code Studio on the top right, then select the newly created template > Create.
+Once the template is set up, using it is straightforward:
+
+- Navigate to _</> ->_ Code Studios in the top navigation bar.
+- Click on _+ New Code Studio in the upper right and choose the template you’ve just configured.
 - Start the code studio
 
 ![Create New Code Studio](assets/06-add-new-code-studio.png)

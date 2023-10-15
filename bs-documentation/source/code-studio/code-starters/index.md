@@ -1,29 +1,29 @@
-# Angular & vue code starters
+# Quickstart with Angular & Vue Templates
 
 ```{admonition} Pre-requisites
 :class: important
 
-* Some familiarity with HTML, JavaScript and Angular or Vue for the front-end
-* Some familiarity with Python for the backend
-* [Code studio template](../template/index) set up on the Dataiku instance
+* Basic understanding of HTML, JavaScript, and either Angular or Vue for frontend development.
+* Some experience with Python for backend operations.
+* [Code Studio Template](../template/index) already configured on your Dataiku instance.
 
 ```
 
-This tutorial will guide you on how to set up a pre-configured Vue or Angular template for web application development. The primary goal of these templates is to expedite your start by quickly configuring the Node server to serve your code studio browser path and intercepting API requests to direct them to the exposed Flask backend.
+In this guide, learn how to rapidly initiate a Vue or Angular web application using pre-configured templates. These templates streamline your workflow by auto-configuring a Node server to host your Code Studio browser path, while also routing API requests to the exposed Flask backend.
 
-The templates are designed in a way that also makes it easy to [deploy the application](../deployment/index) as a standard Dataiku DSS web application.
+These templates are also designed for smooth [deployment ](../deployment/index) as a standard Dataiku web application.
 
-## Creating a new web application with cookiecutter
+## Quick Project Setup with Cookiecutter
 
 :::{topic} Note
 
-- Cookiecutter is a command-line utility that rapidly generates projects from templates. In this context, we will utilize the Cookiecutter Python code environment specified in the Code Studio template
-- All web application projects should be created within the **project-lib-versioned/webapps** folder. This practice allows you to synchronize the source code and built files with the Dataiku DSS project library, facilitating the application deployment process.
+- Cookiecutter serves as a command-line tool for swift project generation from templates. In this scenario, the Cookiecutter Python code environment, as defined in the Code Studio template, will be employed.
+- All web application projects should be initiated inside the project-lib-versioned/webapps directory. Doing so enables seamless synchronization of your source code and build files with the Dataiku project library, thereby simplifying the deployment process.
   :::
 
-### Activation
+### Activating the Cookiecutter Environment
 
-To activate your Cookiecutter environment on the Visual Studio Code (VS Code) UI panel, execute the following command:
+To activate your Cookiecutter environment in the Visual Studio Code (VS Code) UI panel, run the command bellow:
 
 ```
 source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
@@ -31,10 +31,10 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
 
 :::{topic} Note
 
-- By default, all code environments defined in the Code Studio template are located in **/opt/dataiku/python-code-envs/**. If you have altered the code environment location in the template definition, ensure that you update the path accordingly.
+- The default path for code environments specified in the Code Studio template is  **/opt/dataiku/python-code-envs/**.  If you've customized this location in the template settings, make sure to update the path in the command accordingly.
   :::
 
-### Command execution
+### Generating a New Web Application
 
 - Navigate to the following directory:
 
@@ -42,13 +42,13 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
   mkdir ~/workspace/project-lib-versioned/webapps && cd ~/workspace/project-lib-versioned/webapps
   ```
 
-- Then, run the following command to create a new template using Cookiecutter:
+- Execute the following command to instantiate a new project template with Cookiecutter:
 
   ```
   cookiecutter gh:dataiku/solutions-contrib --checkout=feature/packaging
   ```
 
-- You will be prompted to select the template you wish to create.
+- Cookiecutter will then prompt you to select a template:
 
   ```
   [1/1] Select template
@@ -58,9 +58,9 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
       Choose from [1/2/3] (1):
   ```
 
-  - You need to choose one of the available templates by entering the corresponding number (1, 2, or 3).
+  - Select the desired template by entering the corresponding number (1, 2, or 3).
 
-- After choosing a template, you will be prompted to fill in the following parameters:
+- After template selection, you'll be prompted to enter specific project parameters:
 
   ```
   [1/6] Choose your (Angular / Vue / Bs) project name (Angular Project): tutorial
@@ -71,34 +71,36 @@ source /opt/dataiku/python-code-envs/cookiecutter/bin/activate
   [6/6] dku_project ():
   ```
 
-  - "Choose your (Angular / Vue / Bs) project name" is asking for the name of your Angular project. In this example, it's set to "tutorial," but you can change it if you prefer a different name.
-  - "version" is for specifying the version of your project.
-  - "Choose your client serve port" is the port number on which the client (e.g., Angular) will serve. The default is 4200.
-  - "Choose your Flask backend port" is the port number on which the Flask backend will run. The default is 5000.
-  - "In the context of Code Studio within Dataiku, the parameters 'dss_instance' and 'dku_project' are primarily intended for use cases where the project template needs to be executed outside of Dataiku or locally. For Code Studio users, these parameters can typically be left empty, as they are not required for template customization within the Dataiku Code Studio environment."
+  - "Project Name": This is the name for your Angular, Vue, or BS project. Though the example uses "tutorial," you're free to choose any name.
+  - "Version" This is where you specify your project's version.
+  - "Client serve port" The port on which your frontend (e.g., Angular) will run. Default is 4200.
+  - "Flask backend port" The port your Flask backend will operate on. Default is 5000.
+  - "DSS Instance and DKU Project": While operating within Dataiku Code Studio, these fields are generally optional. You can safely leave them blank, unless you're configuring an external development environment that necessitates their input.
 
-- Once you fill in the parameters, a project folder with the project name slugified will be created in the directory **project-lib-versioned/webapps**
+- After entering these details, a new project folder will be generated in the **project-lib-versioned/webapps** directory
 
-## Vue
+By adhering to these steps, you'll successfully set up a new web application, ready for further development and deployment.
 
-The Vue template is an adaptation of the resulting template from [create-vue](https://github.com/vuejs/create-vue), it comes with a [Vite server](https://vitejs.dev/) configured to the right code studio base path, and an axios http client configured to forward requests to the exposed flask backend service.
+## Vue Starter Template
 
-### Running the frontend
+The Vue starter template is inspired by the resulting template from [create-vue](https://github.com/vuejs/create-vue). It features a pre-configured [Vite server](https://vitejs.dev/) aligned with the correct Code Studio base path. Additionally, an Axios HTTP client is set up to route requests to the designated Flask backend service.
 
-- Start by navigating to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
+### Launching the Frontend
+
+- Navigate to your project's directory by replacing **\_\_PROJECT_NAME\_\_** with your project folder name:
 
   ```
   cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
-- Install the dependencies by running
+- Install the required dependencies:
 
   ```
   yarn install
   ```
 
   :::{topic} Note
-  npm, yarn and pnpm ae globally installed in the code studio template, you can choose any package manager to work with, just replace **yarn install** with **npm install** or **pnpm install**
+  The Code Studio template comes pre-configured with npm, yarn, and pnpm. You can use any of these package managers to install dependencies. For instance, you can replace **yarn install** with **npm install** or **pnpm install** based on your preference.
   :::
 
 - Run the frontend server
@@ -107,20 +109,20 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
   yarn run dev
   ```
 
-- View the web application on the Dev panel
+- You can now preview the web application in the Dev panel of the Code Studio.
 
 ![Vue Web Application](assets/01-vue-template.png)
 
-### Running the backend
+### Initiating the Backend
 
-- Activate the backend code environment
+- Activate your backend code environment
 
   ```
   source /opt/dataiku/python-code-envs/infra37/bin/activate
   ```
 
   :::{topic} Note
-  If you imported the code studio template, you will have an infra37 code env with the minimum requirements to launch the provided flask server in the template, the backend requires a **python >= 3.6** and the following packages
+  If you've imported the Code Studio template, an **infra37** code environment with the essential requirements for launching the included Flask server will be available. This environment necessitates **python >= 3.6** or higher and incorporates the following packages:
 
   ```
   Flask>=0.9
@@ -131,36 +133,40 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 
   :::
 
-- Navigate to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
+- Navigate back to your project directory (again, replace **\_\_PROJECT_NAME\_\_** with your specific folder name):
 
   ```
   cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
-- Run the following command
+- Execute the following command to launch the backend:
 
   ```
   python -m backend.wsgi
   ```
 
-## Angular
+By following these steps, you'll successfully initiate both the frontend and backend of your Vue application within Dataiku's Code Studio environment.
 
-### Running the frontend
 
-- Start by navigating to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
+## Angular Starter Template
+
+
+### Launching the Frontend
+
+- Navigate to your project's directory by replacing **\_\_PROJECT_NAME\_\_** with your project folder name:
 
   ```
   cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
-- Install the dependencies by running
+- Install required dependencies:
 
   ```
   npm install
   ```
 
   :::{topic} Note
-  npm, yarn and pnpm ae globally installed in the code studio template, you can choose any package manager to work with, just replace **yarn install** with **npm install** or **pnpm install**
+  The Code Studio template comes pre-configured with npm, yarn, and pnpm. You can use any of these package managers to install dependencies. For instance, you can replace **yarn install** with **npm install** or **pnpm install** based on your preference.
   :::
 
 - Run the frontend server
@@ -169,11 +175,11 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
   npm run start
   ```
 
-- View the web application on the Dev panel
+- You can now preview the web application in the Dev panel of the Code Studio.
 
 ![Angular Web Application](assets/02-angular-template.png)
 
-### Running the backend
+### Initiating the Backend
 
 - Activate the backend code environment
 
@@ -182,7 +188,7 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
   ```
 
   :::{topic} Note
-  If you imported the code studio template, you will have an infra37 code env with the minimum requirements to launch the provided flask server in the template, the backend requires a **python >= 3.6** and the following packages
+  If you've imported the Code Studio template, an **infra37** code environment with the essential requirements for launching the included Flask server will be available. This environment necessitates **python >= 3.6** or higher and incorporates the following packages:
 
   ```
   Flask>=0.9
@@ -193,14 +199,16 @@ The Vue template is an adaptation of the resulting template from [create-vue](ht
 
   :::
 
-- Navigate to your project folder (replace **\_\_PROJECT_NAME\_\_** with the name of your folder)
+- Navigate back to your project directory (again, replace **\_\_PROJECT_NAME\_\_** with your specific folder name):
 
   ```
   cd ~/workspace/project-lib-versioned/webapps/__PROJECT_NAME__
   ```
 
-- Run the following command
+- Execute the following command to launch the backend:
 
   ```
   python -m backend.wsgi
   ```
+
+By following these steps, you'll successfully initiate both the frontend and backend of your Vue application within Dataiku's Code Studio environment.
