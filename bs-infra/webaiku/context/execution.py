@@ -24,13 +24,17 @@ class Execution(object):
     dss_code_studio_project_lib_env_var = "DKU_PROJECT_LIB_VERSIONED_LOCATION"
     dss_python_path_env_var = "PYTHONPATH"
 
-    def __init__(self, relative_path: str):
+    def __init__(self, relative_path: str, prefix: Optional[str] = None):
+        self.prefix = None
         self.__context = self.__find_context()
         self.__dss_current_project = self.__get_dss_current_project()
         self.relative_path = relative_path.lstrip(" /").rstrip(" /")
         self.__exec_path = self.__get_execution_main_path()
         if not self.__verify_exec_path():
-            raise WebaikuError("Path for web application folder is not found")
+            if self.__context == ExecutionContext.DATAIKU_DSS:
+                raise WebaikuError("Path for web application folder is not found")
+            logger.warning("Path for web application folder is not found")
+
         logger.info(
             f"Web application execution context initilized with path {self.__exec_path}"
         )
@@ -91,10 +95,12 @@ class Execution(object):
             try:
                 root_path = self.__get_root_path()
                 exec_path = os.path.join(root_path, self.relative_path)
+                if self.prefix:
+                    exec_path = os.path.join(exec_path, self.prefix)
                 if os.path.exists(exec_path):
                     return exec_path
                 else:
-                    raise WebaikuError(f"{exec_path} does not exist")
+                    logger.warning(f"{exec_path} path does not exist")
             except Exception as e:
                 raise e from None
 
@@ -125,7 +131,7 @@ class Execution(object):
             if caller_frame is not None:
                 calling_file_path = os.path.abspath(caller_frame.filename)
             else:
-                raise WebaikuError("Execution path was not found")
+                logger.warning("Execution path was not found")
 
             if calling_file_path:
                 return find_relative_path(calling_file_path, self.relative_path)

@@ -8,9 +8,10 @@ load_dotenv()
 from webaiku.extension import WEBAIKU
 
 
-
 app = Flask(__name__)
-WEBAIKU(app, "{{ cookiecutter.__project_slug }}", int(os.getenv("VITE_API_PORT")))
+WEBAIKU(
+    app, "webapps/{{ cookiecutter.__project_slug }}", int(os.getenv("VITE_API_PORT"))
+)
 WEBAIKU.extend(app, [fetch_api])
 
 if __name__ == "__main__":

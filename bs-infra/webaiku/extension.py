@@ -24,8 +24,9 @@ class WEBAIKU(object):
         app: Optional[Flask],
         relative_path: str,
         api_port: Union[str, int] = os.getenv(API_PORT_ENV_VAR, "5000"),
+        prefix: Optional[str] = None,
     ):
-        self.exec = Execution(relative_path)
+        self.exec = Execution(relative_path=relative_path, prefix=prefix)
         self.api_port = str(api_port)
         if not app is None:
             self.init_flask_app(app)
