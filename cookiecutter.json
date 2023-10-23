@@ -1,7 +1,6 @@
 {
     "template": [
-        "Angular (./bs-templates/angular)",
-        "BS (./bs-templates/bs)",
-        "Vue (./bs-templates/vue)"
+        "Vue (./bs-templates/vue)",
+        "Angular (./bs-templates/angular)"
     ]
 }
