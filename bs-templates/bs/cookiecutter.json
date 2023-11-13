@@ -6,6 +6,5 @@
     "api_port": "5000",
     "components_lib_version": [ "v1.4.2-beta.4", "v1.4.2-beta.3"],
     "dss_instance": "default",
-    "dku_project": "",
-    "__quasar_ui_bs_url": "https://gitpkg.now.sh/dataiku/solutions-ui-components/ui?{{ cookiecutter.components_lib_version }}"
+    "dku_project": ""
 }

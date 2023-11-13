@@ -8,7 +8,8 @@
         "build": "NODE_ENV=production && vite build --base=./",
         "preview": "vite preview",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-        "format": "prettier --write src/"
+        "format": "prettier --write src/",
+        "preinstall": "node scripts/install.js"
     },
     "dependencies": {
         "@quasar/extras": "1.16.3",
@@ -16,7 +17,7 @@
         "lodash": "4.17.21",
         "quasar": "2.12.0",
         "vue": "3.2.47",
-        "quasar-ui-bs": "{{ cookiecutter.__quasar_ui_bs_url }}"
+        "quasar-ui-bs": "file:tmp/ui"
     },
     "devDependencies": {
         "@quasar/vite-plugin": "^1.2.3",
