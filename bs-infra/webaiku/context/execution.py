@@ -112,7 +112,12 @@ class Execution(object):
                 return os.path.join(root_path, self.relative_path)
             else:
                 ## can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
-                ## TODO : Should it be auto-fixed
+                paths = os.environ.get(self.dss_python_path_env_var)
+                if paths:
+                    paths_splitted = paths.split(":")
+                    for path in paths_splitted:
+                        if path and root_relative_path == path.split("/")[-1]:                            
+                            return os.path.join(path.rstrip(root_relative_path), self.relative_path)                                     
                 raise WebaikuError(
                     f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
                 )
