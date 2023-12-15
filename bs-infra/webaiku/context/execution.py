@@ -116,7 +116,7 @@ class Execution(object):
                 if paths:
                     paths_splitted = paths.split(":")
                     for path in paths_splitted:
-                        if path and root_relative_path == path.split("/")[-1]:                            
+                        if root_relative_path == path.split("/")[-1]:                            
                             return os.path.join(path.rstrip(root_relative_path), self.relative_path)                                     
                 raise WebaikuError(
                     f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
