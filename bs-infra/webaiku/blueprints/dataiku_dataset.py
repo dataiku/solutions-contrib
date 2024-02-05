@@ -135,6 +135,7 @@ class DataikuDatasetBlueprint(object):
             )
 
     def _fetch_dataset_chunk(
+        self,
         dataset_name: str,
         chunksize: str,
         chunk_index: str,
