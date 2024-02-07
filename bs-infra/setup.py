@@ -9,9 +9,9 @@ with open(join(dirname(__file__), "requirements.txt"), "r") as f:
 
 setuptools.setup(
     name="webaiku",
-    version="0.0.2",
+    version="0.0.3",
     license="Apache 2.0",
-    author="Majid BOUBRIK, Anas Laaroussi",
+    author="Majid BOUBRIK, Anas Laaroussi, Hela Othmani",
     description="Web application tools for Dataiku DSS",
     long_description=long_description,
     long_description_content_type="text/markdown",

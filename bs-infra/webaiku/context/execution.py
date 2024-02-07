@@ -83,6 +83,18 @@ class Execution(object):
                 for path in paths_splitted:
                     if root_relative_path == path.split("/")[-1]:
                         return path.rstrip(root_relative_path)
+                    
+                # Check if we are in the case of a plugin
+                plugin_target_directory = "python-lib"
+                for path in paths_splitted:
+                    if path.endswith(plugin_target_directory):
+                        # You may create a folder DATA_DIR/plugins/dev/<plugin id>/resource/ 
+                        # to hold resources useful fo your plugin, 
+                        # e.g. data files; this method returns the path of this folder.
+                        # root path is then the parent of the resource folder
+                        plugin_resource = os.getenv("DKU_CUSTOM_RESOURCE_FOLDER")
+                        if root_relative_path == plugin_resource.split("/")[-1]:
+                            return plugin_resource.rstrip(root_relative_path)
 
         else:
             # No root path predefined for local env, all should be done on the exec path
