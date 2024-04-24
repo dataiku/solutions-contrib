@@ -6,7 +6,7 @@ from webaiku.utils import find_relative_path
 import logging
 from webaiku.errors import WebaikuError
 
-## TODO : Add custom exception classes, and better handle errors
+# TODO : Add custom exception classes, and better handle errors
 
 logger = logging.getLogger("webaiku")
 
@@ -73,6 +73,7 @@ class Execution(object):
                 )
         elif self.context == ExecutionContext.DATAIKU_DSS:
             paths = os.environ.get(self.dss_python_path_env_var)
+            root_relative_path = self.relative_path.split("/")[0]
             if paths:
                 target_directory = "project-python-libs"
                 paths_splitted = paths.split(":")
@@ -83,14 +84,18 @@ class Execution(object):
                             target_directory,
                             self.dss_current_project,
                         )
+                for path in paths_splitted:
+                    if root_relative_path == path.split("/")[-1]:
+                        return path.rstrip(root_relative_path)
+
         else:
-            ## No root path predefined for local env, all should be done on the exec path
+            # No root path predefined for local env, all should be done on the exec path
             return None
 
         return None
 
     def __get_execution_main_path(self):
-        ## If code studio the path should exist
+        # If code studio the path should exist
         if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
             try:
                 root_path = self.__get_root_path()
@@ -104,20 +109,20 @@ class Execution(object):
             except Exception as e:
                 raise e from None
 
-        ## The path should both exist and be in python libs
+        # The path should both exist and be in python libs
         elif self.context == ExecutionContext.DATAIKU_DSS:
             root_relative_path = self.relative_path.split("/")[0]
             root_path = self.__get_root_path()
             if root_relative_path in os.listdir(root_path):
                 return os.path.join(root_path, self.relative_path)
             else:
-                ## can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
-                ## TODO : Should it be auto-fixed
+                # can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
+                # TODO : Should it be auto-fixed
                 raise WebaikuError(
                     f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
                 )
         else:
-            ## 1- find the caller frame and abs path
+            # 1- find the caller frame and abs path
             caller_frame = None
             calling_file_path = None
             try:
