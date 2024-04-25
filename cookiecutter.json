@@ -1,6 +1,0 @@
-{
-    "template": [
-        "Vue (./bs-templates/vue)",
-        "Angular (./bs-templates/angular)"
-    ]
-}
