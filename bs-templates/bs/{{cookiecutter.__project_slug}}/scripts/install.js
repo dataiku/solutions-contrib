@@ -37,10 +37,31 @@ const deleteRepoFolder = async () => {
   }
 };
 
+const getLatestTag = () => {
+  const gitCommand = `git ls-remote --tags --exit-code --refs ${repoUrl} | sed -E 's/^[[:xdigit:]]+[[:space:]]+refs\\/tags\\/(.+)/\\1/g' | sort --version-sort | tail -n1`
+  log("\x1b[32m%s\x1b[0m", `Get latest tag for repo ${repoUrl}`); // Green color
+  return execAsync(gitCommand);
+};
+
 const cloneRepo = () => {
-  const gitCloneCommand = `git clone --depth 1 --branch ${tag} ${repoUrl} ${repoFolder}`;
-  log("\x1b[32m%s\x1b[0m", `Cloning into repo ${repoUrl} with tag ${tag}`); // Green color
-  return execAsync(gitCloneCommand);
+  if (tag == "latest") {
+    getLatestTag()
+    .then(
+      (stdout, _) => stdout["stdout"]
+    )
+    .then(
+      (latestTag) => {
+        const gitCloneCommand = `git clone --depth 1 --branch ${latestTag.trim()} ${repoUrl} ${repoFolder}`;
+        log("\x1b[32m%s\x1b[0m", `Cloning into repo ${repoUrl} with tag ${latestTag}`); // Green color
+        return execAsync(gitCloneCommand);
+      }
+    );
+  }
+  else {
+    const gitCloneCommand = `git clone --depth 1 --branch ${tag} ${repoUrl} ${repoFolder}`;
+    log("\x1b[32m%s\x1b[0m", `Cloning into repo ${repoUrl} with tag ${tag}`); // Green color
+    return execAsync(gitCloneCommand);
+  }
 };
 
 deleteRepoFolder()
