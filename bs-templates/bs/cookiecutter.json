@@ -4,7 +4,14 @@
     "version": "0.0.1",
     "port": "4200",
     "api_port": "5000",
-    "components_lib_version": [ "v1.4.2-beta.4", "v1.4.2-beta.3"],
+    "components_lib_version": [
+        "latest",
+        "v2.0.2",
+        "v2.0.1",
+        "v2.0.0",
+        "v1.4.2-beta.4",
+        "v1.4.2-beta.3"
+    ],
     "dss_instance": "default",
     "dku_project": ""
 }
