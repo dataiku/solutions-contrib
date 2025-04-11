@@ -62,28 +62,6 @@ class Execution(object):
         if not self.context == ExecutionContext.LOCAL:
             return os.environ.get(self.dss_current_project_env_var)
         return None
-    
-    def __get_root_path_from_python_lib(self) -> Optional[str]:
-        if self.context == ExecutionContext.DATAIKU_DSS:
-            paths = os.environ.get(self.dss_python_path_env_var)
-            logger.info("->>>>>  paths : %s", paths)
-            root_relative_path = self.relative_path.split("/")[0]
-            if paths:
-                # Check if we are in the case of a plugin
-                plugin_target_directory = "python-lib"
-                paths_splitted = paths.split(":")
-                for path in paths_splitted:
-                    if path.endswith(plugin_target_directory):
-                        # You may create a folder DATA_DIR/plugins/dev/<plugin id>/resource/ 
-                        # to hold resources useful fo your plugin, 
-                        # e.g. data files; this method returns the path of this folder.
-                        # root path is then the parent of the resource folder
-                        plugin_resource = os.getenv("DKU_CUSTOM_RESOURCE_FOLDER")
-                        logger.info("->>>>>  plugin_resource : %s", plugin_resource)
-                        if root_relative_path == plugin_resource.split("/")[-1]:
-                            logger.info("->>>>>  plugin_resource_path : %s", plugin_resource.rstrip(root_relative_path))
-                            return plugin_resource.rstrip(root_relative_path)
-
 
     def __get_root_path(self) -> Optional[str]:
         if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
@@ -95,24 +73,21 @@ class Execution(object):
                 )
         elif self.context == ExecutionContext.DATAIKU_DSS:
             paths = os.environ.get(self.dss_python_path_env_var)
-            logger.info("->>>>>  paths : %s", paths)
             root_relative_path = self.relative_path.split("/")[0]
             if paths:
                 target_directory = "project-python-libs"
                 paths_splitted = paths.split(":")
                 for path in paths_splitted:
                     if target_directory in path:
-                        path = os.path.join(
+                        return os.path.join(
                             path.split(target_directory)[0],
                             target_directory,
                             self.dss_current_project,
                         )
-                        logger.info(f"->>>>> target_directory : project-python-libs || path returned : {path}")
-                        return path
                 for path in paths_splitted:
                     if root_relative_path == path.split("/")[-1]:
                         return path.rstrip(root_relative_path)
-
+                    
                 # Check if we are in the case of a plugin
                 plugin_target_directory = "python-lib"
                 for path in paths_splitted:
@@ -150,16 +125,11 @@ class Execution(object):
         elif self.context == ExecutionContext.DATAIKU_DSS:
             root_relative_path = self.relative_path.split("/")[0]
             root_path = self.__get_root_path()
-            logger.info(f"->>>>>  Error with Webaiku -> root_relative_path : {root_relative_path} || root_path : {root_path}")
-            logger.info(f"->>>>> os.listdir(root_path) : {os.listdir(root_path)}")
             if root_relative_path in os.listdir(root_path):
                 return os.path.join(root_path, self.relative_path)
             else:
                 # can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
                 # TODO : Should it be auto-fixed
-                r = self.__get_root_path_from_python_lib()
-                if r:
-                    return r
                 raise WebaikuError(
                     f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
                 )
