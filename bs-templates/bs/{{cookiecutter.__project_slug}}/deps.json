@@ -1,3 +1,0 @@
-{
-    "quasar-ui-bs": "{{ cookiecutter.components_lib_version }}"
-}
