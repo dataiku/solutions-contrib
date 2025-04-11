@@ -1,6 +1,6 @@
 from enum import Enum
 import os
-from typing import Optional, Dict
+from typing import Optional, List
 import inspect
 from webaiku.utils import find_relative_path
 import logging
@@ -63,10 +63,11 @@ class Execution(object):
             return os.environ.get(self.dss_current_project_env_var)
         return None
 
-    def __get_root_path(self) -> Optional[str]:
+    def __get_root_paths(self) -> List[str]:
+        path_list = []
         if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
             if not os.environ.get(self.dss_code_studio_project_lib_env_var) is None:
-                return os.environ.get(self.dss_code_studio_project_lib_env_var)
+                path_list.append(os.environ.get(self.dss_code_studio_project_lib_env_var))
             else:
                 raise WebaikuError(
                     "Synchronization of project lib versionned is necessary for the code studio template"
@@ -79,14 +80,14 @@ class Execution(object):
                 paths_splitted = paths.split(":")
                 for path in paths_splitted:
                     if target_directory in path:
-                        return os.path.join(
+                        path_list.append(os.path.join(
                             path.split(target_directory)[0],
                             target_directory,
                             self.dss_current_project,
-                        )
+                        ))
                 for path in paths_splitted:
                     if root_relative_path == path.split("/")[-1]:
-                        return path.rstrip(root_relative_path)
+                        path_list.append(path.rstrip(root_relative_path))
                     
                 # Check if we are in the case of a plugin
                 plugin_target_directory = "python-lib"
@@ -98,41 +99,40 @@ class Execution(object):
                         # root path is then the parent of the resource folder
                         plugin_resource = os.getenv("DKU_CUSTOM_RESOURCE_FOLDER")
                         if root_relative_path == plugin_resource.split("/")[-1]:
-                            return plugin_resource.rstrip(root_relative_path)
-
-        else:
-            # No root path predefined for local env, all should be done on the exec path
-            return None
-
-        return None
+                            path_list.append(plugin_resource.rstrip(root_relative_path))
+        return path_list
 
     def __get_execution_main_path(self):
         # If code studio the path should exist
         if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
             try:
-                root_path = self.__get_root_path()
-                exec_path = os.path.join(root_path, self.relative_path)
-                if self.prefix:
-                    exec_path = os.path.join(exec_path, self.prefix)
-                if os.path.exists(exec_path):
-                    return exec_path
-                else:
-                    logger.warning(f"{exec_path} path does not exist")
+                root_paths = self.__get_root_paths()
+                for root_path in root_paths:
+                    exec_path = os.path.join(root_path, self.relative_path)
+                    if self.prefix:
+                        exec_path = os.path.join(exec_path, self.prefix)
+                    if os.path.exists(exec_path):
+                        return exec_path
+                    else:
+                        logger.warning(f"{exec_path} path does not exist")
             except Exception as e:
                 raise e from None
 
         # The path should both exist and be in python libs
         elif self.context == ExecutionContext.DATAIKU_DSS:
             root_relative_path = self.relative_path.split("/")[0]
-            root_path = self.__get_root_path()
-            if root_relative_path in os.listdir(root_path):
-                return os.path.join(root_path, self.relative_path)
-            else:
-                # can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
-                # TODO : Should it be auto-fixed
-                raise WebaikuError(
-                    f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
-                )
+            root_paths = self.__get_root_paths()
+            # Iterate over root paths to find the one that contains the relative path
+            for root_path in root_paths:
+                if root_relative_path in os.listdir(root_path):
+                    return os.path.join(root_path, self.relative_path)
+
+            # can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
+            # TODO : Should it be auto-fixed
+            raise WebaikuError(
+                f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
+            )
+
         else:
             # 1- find the caller frame and abs path
             caller_frame = None
