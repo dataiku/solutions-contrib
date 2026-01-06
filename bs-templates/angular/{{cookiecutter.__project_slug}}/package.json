@@ -3,7 +3,7 @@
     "version": "{{ cookiecutter.version }}",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --disable-host-check --configuration development --port 4200",
+    "start": "ng serve --disable-host-check --configuration development --port {{ cookiecutter.port }}",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

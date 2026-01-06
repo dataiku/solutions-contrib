@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-      "angular_project": {
+      "{{ cookiecutter.__project_slug }}": {
         "projectType": "application",
         "schematics": {
           "@schematics/angular:component": {
@@ -69,14 +69,14 @@
           "serve": {
             "builder": "@angular-builders/custom-webpack:dev-server",
             "options": {
-              "buildTarget": "angular_project:build"
+              "buildTarget": "{{ cookiecutter.__project_slug }}:build"
             },
             "configurations": {
               "production": {
-                "buildTarget": "angular_project:build:production"
+                "buildTarget": "{{ cookiecutter.__project_slug }}:build:production"
               },
               "development": {
-                "buildTarget": "angular_project:build:development"
+                "buildTarget": "{{ cookiecutter.__project_slug }}:build:development"
               }
             },
             "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
           "extract-i18n": {
             "builder": "@angular/build:extract-i18n",
             "options": {
-              "buildTarget": "angular_project:build"
+              "buildTarget": "{{ cookiecutter.__project_slug }}:build"
             }
           },
           "test": {
