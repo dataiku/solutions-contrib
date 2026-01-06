@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-      "{{ cookiecutter.__project_slug }}": {
+      "angular_project": {
         "projectType": "application",
         "schematics": {
           "@schematics/angular:component": {
@@ -69,26 +69,26 @@
           "serve": {
             "builder": "@angular-builders/custom-webpack:dev-server",
             "options": {
-              "browserTarget": "{{ cookiecutter.__project_slug }}:build"
+              "buildTarget": "angular_project:build"
             },
             "configurations": {
               "production": {
-                "browserTarget": "{{ cookiecutter.__project_slug }}:build:production"
+                "buildTarget": "angular_project:build:production"
               },
               "development": {
-                "browserTarget": "{{ cookiecutter.__project_slug }}:build:development"
+                "buildTarget": "angular_project:build:development"
               }
             },
             "defaultConfiguration": "development"
           },
           "extract-i18n": {
-            "builder": "@angular-devkit/build-angular:extract-i18n",
+            "builder": "@angular/build:extract-i18n",
             "options": {
-              "browserTarget": "{{ cookiecutter.__project_slug }}:build"
+              "buildTarget": "angular_project:build"
             }
           },
           "test": {
-            "builder": "@angular-devkit/build-angular:karma",
+            "builder": "@angular/build:karma",
             "options": {
               "polyfills": [
                 "zone.js",
@@ -108,6 +108,31 @@
           }
         }
       }
+    },
+    "schematics": {
+      "@schematics/angular:component": {
+        "type": "component"
+      },
+      "@schematics/angular:directive": {
+        "type": "directive"
+      },
+      "@schematics/angular:service": {
+        "type": "service"
+      },
+      "@schematics/angular:guard": {
+        "typeSeparator": "."
+      },
+      "@schematics/angular:interceptor": {
+        "typeSeparator": "."
+      },
+      "@schematics/angular:module": {
+        "typeSeparator": "."
+      },
+      "@schematics/angular:pipe": {
+        "typeSeparator": "."
+      },
+      "@schematics/angular:resolver": {
+        "typeSeparator": "."
+      }
     }
 }
-  

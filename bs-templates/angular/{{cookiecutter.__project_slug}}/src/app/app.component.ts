@@ -3,9 +3,10 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HelloWorldService } from './hello-world.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent {
   title = 'project';
