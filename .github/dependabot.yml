@@ -1,0 +1,49 @@
+version: 2
+updates:
+  # Python dependencies for bs-infra
+  - package-ecosystem: "pip"
+    directory: "/bs-infra"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Angular template
+  - package-ecosystem: "npm"
+    directory: "/bs-templates/angular/{{cookiecutter.__project_slug}}"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  # Vue template
+  - package-ecosystem: "npm"
+    directory: "/bs-templates/vue/{{cookiecutter.__project_slug}}"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
