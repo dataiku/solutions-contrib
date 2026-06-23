@@ -1,5 +1,7 @@
+"""Module for wrapping filters in DSS API."""
+
 from enum import Enum
-from typing import Union
+from typing import Optional, Union
 
 try:
     from typing import Literal, TypedDict
@@ -8,6 +10,8 @@ except ImportError:
 
 
 class FilterType(str, Enum):
+    """Supported column filter operators (mirrors the frontend grid filters)."""
+
     Equals = "equals"
     NotEqual = "notEqual"
     Contains = "contains"
@@ -24,12 +28,29 @@ class FilterType(str, Enum):
 
     @staticmethod
     def generate_filter_expression(
-        filter_type,
+        filter_type: "FilterType",
         sanitized_column: str,
         sanitized_val: str,
-        sanitized_to_val: str = None,
-        value_type: str = None,
-    ):
+        sanitized_to_val: Optional[str] = None,
+        value_type: Optional[str] = None,
+    ) -> str:
+        """Build the DSS formula fragment for a single column filter.
+
+        Args:
+            filter_type: The operator to apply.
+            sanitized_column: The (escaped) column name.
+            sanitized_val: The (escaped) comparison value.
+            sanitized_to_val: The (escaped) upper-bound value, used only by
+                ``InRange``.
+            value_type: The value's type (e.g. ``"string"``), used only by
+                ``InRange`` to decide between string and numeric comparison.
+
+        Returns:
+            The DSS formula expression as a string. If ``filter_type`` is not a
+            recognized :class:`FilterType` an ``"Unknown filter type: ..."``
+            message string is returned instead.
+
+        """
         if filter_type not in FilterType:
             return f"Unknown filter type: {filter_type}"
 
@@ -60,8 +81,24 @@ class FilterType(str, Enum):
 
     @staticmethod
     def _create_range_filter_from_values(
-        sanitized_column: str, sanitized_val: str, sanitized_to_val: str, isString: bool
-    ):
+        sanitized_column: str,
+        sanitized_val: str,
+        sanitized_to_val: str,
+        isString: bool,
+    ) -> str:
+        """Build an ``and(...)`` range expression from lower/upper bounds.
+
+        Args:
+            sanitized_column: The (escaped) column name.
+            sanitized_val: The (escaped) lower bound; omitted when falsy.
+            sanitized_to_val: The (escaped) upper bound; omitted when falsy.
+            isString: Whether the bounds should be quoted as strings rather than
+                compared numerically.
+
+        Returns:
+            A DSS ``and(...)`` formula combining the present bounds.
+
+        """
         expressions = []
         if sanitized_val:
             from_val = f'"{sanitized_val}"' if isString else f"{sanitized_val}"
@@ -73,10 +110,21 @@ class FilterType(str, Enum):
         return "and(" + expression + ")"
 
 
-OperatorType = Union[None, Literal["and"], Literal["or"]]
+#: Boolean operator used to combine adjacent filters, or ``None`` for the last.
+OperatorType = Union[Literal["and", "or"], None]
 
 
 class CustomFilter(TypedDict):
+    """A single column filter as sent by the frontend grid.
+
+    Attributes:
+        filterType: The operator to apply.
+        value: The comparison value (lower bound for ranges).
+        toValue: The upper bound, used only by range filters; ``None`` otherwise.
+        operator: How to combine this filter with the next one in a list.
+
+    """
+
     filterType: FilterType
     value: str
     toValue: Union[None, str]
@@ -84,6 +132,16 @@ class CustomFilter(TypedDict):
 
 
 class RangeFilter(CustomFilter, TypedDict):
+    """A :class:`CustomFilter` specialized for ``InRange`` (two-bound) filters.
+
+    Attributes:
+        filterType: Always :attr:`FilterType.InRange`.
+        toValue: The upper bound of the range; ``None`` when open-ended.
+        valueType: Whether the bounds are compared as ``"string"`` or
+            ``"number"``.
+
+    """
+
     filterType: Literal[FilterType.InRange]
     toValue: Union[None, str]
     valueType: Literal["string", "number"]
