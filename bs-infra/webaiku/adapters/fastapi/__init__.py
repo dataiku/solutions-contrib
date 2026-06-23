@@ -7,6 +7,7 @@ an ASGI middleware for Code Studio sub-path mounting.
 """
 
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -148,10 +149,12 @@ class FastAPIAdapter:
         if execution.context == ExecutionContext.DATAIKU_DSS:
             app.include_router(build_serve_router(ServeService(execution)))
             if execution.exec_path:
-                # Serve the SPA's built static assets (parity with the Flask
-                # blueprint's static_folder).
+                # Serve the SPA's built static assets and mount under the exec_path
+                # basename so the URL matches the <base> tag ServeService injects into
+                # index.html (see ServeService._static_assets_path)
+                mount_path = "/" + os.path.basename(execution.exec_path)
                 app.mount(
-                    "/static",
+                    mount_path,
                     StaticFiles(directory=execution.exec_path),
                     name="webaiku_assets",
                 )
