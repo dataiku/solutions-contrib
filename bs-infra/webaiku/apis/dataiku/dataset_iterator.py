@@ -26,12 +26,13 @@ class DatasetIterator:
             chunksize: Number of rows per chunk when not grouping.
             **kwargs: Extra keyword arguments forwarded to
                 ``Dataset.iter_dataframes`` (e.g. ``filter``).
+
         """
         # Imported lazily: improved_dataset pulls in the in-DSS `dataiku`
         # package, which is only available at request time inside DSS. Keeping
         # it out of module scope lets the package (and adapters) import without
         # a DSS runtime.
-        from .improved_dataset import Dataset
+        from .improved_dataset import Dataset  # noqa: PLC0415
 
         self.chunksize = chunksize
         self._kwargs = kwargs
@@ -65,6 +66,7 @@ class DatasetIterator:
         Returns:
             The sorted dataframe (with a reset index), or ``df`` unchanged when
             there is nothing to sort.
+
         """
         result = df
         if sort_model:
@@ -103,6 +105,7 @@ class DatasetIterator:
         Returns:
             The requested chunk as a ``DataFrame``, or ``None`` if ``index`` is
             past the end of the data.
+
         """
         generator = self._create_generator(group_key)
         try:
