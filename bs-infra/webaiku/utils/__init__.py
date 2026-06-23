@@ -1,2 +1,5 @@
+"""Main Webaiku utils module."""
+
 from .path import find_relative_path
-from .request import parse_req
+
+__all__ = ["find_relative_path"]

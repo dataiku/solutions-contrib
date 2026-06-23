@@ -1,66 +1,55 @@
+"""Public entry point.
+
+A single ``WEBAIKU`` object works with either a Flask or a FastAPI app: it
+detects the framework from the app instance (via one shared ``detect_adapter``
+helper) and uses the matching internal adapter.
 """
-Main entry, extends a flask app
-"""
+
 import logging
-from flask import Flask, Blueprint
-from typing import Optional
-from webaiku.context import Execution, ExecutionContext
-from webaiku.blueprints import ServeBlueprint, DataikuDatasetBlueprint
-from typing import List, Union
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from werkzeug.wrappers import Response
 import os
+from typing import Any, Optional, Union
+
+from webaiku.adapters import Adapter, detect_adapter
+from webaiku.constants import API_PORT_ENV_VAR, API_PREFIX, BS_API_PREFIX
+from webaiku.context import Execution
 
 logger = logging.getLogger("webaiku")
 
 
-class WEBAIKU(object):
-    BS_API_PREFIX = "/bs_api"
-    API_PREFIX = "/api"
-    API_PORT_ENV_VAR = "VITE_API_PORT"
+class WEBAIKU:
+    # Kept as class attributes for backward compatibility.
+    BS_API_PREFIX = BS_API_PREFIX
+    API_PREFIX = API_PREFIX
+    API_PORT_ENV_VAR = API_PORT_ENV_VAR
 
     def __init__(
         self,
-        app: Optional[Flask],
+        app: Optional[Any],
         relative_path: str,
-        api_port: Union[str, int] = os.getenv(API_PORT_ENV_VAR, "5000"),
+        api_port: Union[int, str] = os.getenv(API_PORT_ENV_VAR, "5000"),
         prefix: Optional[str] = None,
     ):
-        self.exec = Execution(relative_path=relative_path, prefix=prefix)
-        self.api_port = str(api_port)
-        if not app is None:
-            self.init_flask_app(app)
+        """Construct and (if ``app`` is given) bind immediately.
 
-    def __get_code_studio_base(self):
-        if (
-            self.api_port
-            and self.exec.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO
-        ):
-            code_studio_browser_path = f"DKU_CODE_STUDIO_BROWSER_PATH_{self.api_port}"
-            return os.getenv(code_studio_browser_path, None)
-        return None
+        ``app`` may be ``None`` to construct now and bind later via
+        ``init_app`` (the Flask-style app-factory / deferred-binding pattern).
+        """
+        self.execution = Execution(relative_path=relative_path, prefix=prefix)
+        self.api_port = api_port
+        self._adapter: Optional[Adapter] = None
+        if app is not None:
+            self.init_app(app)
 
-    def init_flask_app(self, app: Flask):
-        ## Only register serve blueprint for DATAIKU_DSS context
-        if self.exec.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
-            code_studio_base = self.__get_code_studio_base()
-            if code_studio_base:
-                app.wsgi_app = DispatcherMiddleware(
-                    Response("Not Found", status=404), {code_studio_base: app.wsgi_app}
-                )
-        if self.exec.context == ExecutionContext.DATAIKU_DSS:
-            serve_blueprint = ServeBlueprint(self.exec)
-            app.register_blueprint(serve_blueprint.blueprint)
-
-        bs_api_blueprints = [DataikuDatasetBlueprint().blueprint]
-        self._register_child_bs_blueprints(app, bs_api_blueprints)
-
-    def _register_child_bs_blueprints(self, app: Flask, children: List[Blueprint]):
-        for blueprint in children:
-            blueprint.url_prefix = self.BS_API_PREFIX + blueprint.url_prefix
-            app.register_blueprint(blueprint=blueprint)
+    def init_app(self, app) -> Adapter:
+        """Bind to ``app``, detecting Flask vs FastAPI and use the matching adapter."""
+        self._adapter = detect_adapter(app)
+        self._adapter.bind(app, self.execution, self.api_port)
+        return self._adapter
 
     @staticmethod
-    def extend(app: Flask, children: List[Blueprint]):
-        for blueprint in children:
-            app.register_blueprint(blueprint=blueprint)
+    def extend(app, children: list) -> None:
+        """Register the app's own routes (Flask ``Blueprint`` or FastAPI ``APIRouter``).
+
+        Dispatch on the app's framework via ``detect_adapter``.
+        """
+        detect_adapter(app).extend(app, children)
