@@ -26,9 +26,6 @@ from webaiku.errors import WebaikuError
 logger = logging.getLogger("webaiku")
 
 
-# --- Request models (3.9-safe: Optional/typing, never PEP 604 `X | Y`) --------
-
-
 class DatasetChunkRequest(BaseModel):
     """Model for dataset chunk request."""
 

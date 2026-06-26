@@ -30,8 +30,8 @@ def build_serve_blueprint(service: ServeService) -> Blueprint:
     # rewritten <base> tag (handled by ServeService).
     blueprint = Blueprint("serve", __name__, static_folder=service.execution.exec_path)
 
-    @blueprint.route("/init")
     @blueprint.route("/")
+    @blueprint.route("/init")
     @blueprint.route("/fetch/bs_init")  # backward compatibility
     def init():
         page = service.render_index(request.args.get(ServeService.URL_ARG_NAME))
@@ -42,10 +42,10 @@ def build_serve_blueprint(service: ServeService) -> Blueprint:
             f"public, max-age={ServeService.CACHE_DAYS * 86400}"
         )
 
-        expiry_time = datetime.datetime.now(
+        expiry = datetime.datetime.now(
             tz=datetime.timezone.utc,
         ) + datetime.timedelta(days=ServeService.CACHE_DAYS)
-        response.headers["Expires"] = expiry_time.strftime(
+        response.headers["Expires"] = expiry.strftime(
             "%a, %d %b %Y %H:%M:%S GMT",
         )
         return response
