@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from fastapi import APIRouter, FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pandas import DataFrame
@@ -21,7 +22,7 @@ from webaiku.adapters.fastapi.middleware import CodeStudioSubPathMiddleware
 from webaiku.constants import BS_API_PREFIX
 from webaiku.context import Execution, ExecutionContext
 from webaiku.core import ServeService, get_dataset_service
-from webaiku.errors import WebaikuError
+from webaiku.errors import WebaikuBadRequestError, WebaikuError
 
 logger = logging.getLogger("webaiku")
 
@@ -125,12 +126,42 @@ def build_dataset_router() -> APIRouter:
     return router
 
 
+def _format_validation_error(exc: RequestValidationError) -> str:
+    """Format FastAPI / Pydantic validation errors into a Webaiku message.
+
+    Drops the leading ``body`` location element and renders each error as
+    ``"<field>: <msg>"``, joined by ``; ``. This is to maintain parity with the
+    Flask adapter's error envelope.
+    """
+    parts = []
+    for err in exc.errors():
+        loc = [str(part) for part in err.get("loc", ()) if part != "body"]
+        field = ".".join(loc) if loc else "body"
+        parts.append(f"{field}: {err.get('msg', 'Invalid value')}")
+    return "; ".join(parts) if parts else "Invalid request body."
+
+
 def _register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(WebaikuError)
     async def handle_webaiku_error(request: Request, err: WebaikuError) -> JSONResponse:
         """Handle server errors across the router."""
         status = getattr(err, "status_code", 500)
         return JSONResponse({"error": str(err)}, status_code=status)
+
+    @app.exception_handler(RequestValidationError)
+    async def handle_validation_error(
+        request: Request, exc: RequestValidationError
+    ) -> JSONResponse:
+        """Normalize FastAPI's default 422 into the 400 `WebaikuError` envelope.
+
+        Maintains the original API contract by adding a handler for `RequestValidationError`.
+        Otherwise, Pydantic rejects invalid body before the route runs with 422 HTTP code.
+        Handler covers missing, extra, bad type, malformed JSON bodies.
+        """
+        return JSONResponse(
+            {"error": _format_validation_error(exc)},
+            status_code=WebaikuBadRequestError.status_code,
+        )
 
 
 class FastAPIAdapter:

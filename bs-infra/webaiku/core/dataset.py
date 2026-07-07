@@ -61,6 +61,9 @@ def _handle_grouping(
 
 
 def _coerce_int(value: Any, name: str) -> int:
+    # NOTE: ``int()`` truncates floats, so a non-int chunk arg is silently accepted here
+    # while the FastAPI adapter's Pydantic `int` rejects it.
+    # Left as-is, but documented
     try:
         return int(value)
     except (TypeError, ValueError):

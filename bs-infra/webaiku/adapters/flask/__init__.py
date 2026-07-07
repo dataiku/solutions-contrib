@@ -11,11 +11,12 @@ from typing import Optional
 
 import pandas as pd
 from flask import Blueprint, Flask, Response, jsonify, request
+from werkzeug.exceptions import BadRequest
 
 from webaiku.constants import BS_API_PREFIX
 from webaiku.context import Execution, ExecutionContext
 from webaiku.core import ServeService, get_dataset_service, parse_req
-from webaiku.errors import WebaikuError
+from webaiku.errors import WebaikuBadRequestError, WebaikuError
 
 logger = logging.getLogger("webaiku")
 
@@ -23,6 +24,21 @@ logger = logging.getLogger("webaiku")
 def _convert_df_to_response(df: Optional[pd.DataFrame]) -> Response:
     payload = df.to_json() if isinstance(df, pd.DataFrame) else "None"
     return Response(payload, mimetype="application/json")
+
+
+def _json_body(req) -> dict:
+    """Read the request body as a JSON object, or raise `WebaikuBadRequestError`.
+
+    Remaps invalid JSON request bodies to `WebaikuBadRequestError` to maintain
+    unified API contract.
+    """
+    try:
+        body = req.get_json(force=True)
+    except BadRequest:
+        raise WebaikuBadRequestError("Malformed JSON body.")
+    if not isinstance(body, dict):
+        raise WebaikuBadRequestError("Request body must be a JSON object.")
+    return body
 
 
 def build_serve_blueprint(service: ServeService) -> Blueprint:
@@ -64,7 +80,7 @@ def build_dataset_blueprint() -> Blueprint:
     @blueprint.route("/get", methods=["POST"])
     def get():
         data = parse_req(
-            request.get_json(force=True),
+            _json_body(request),
             required_fields=["dataset_name", "chunksize", "chunk_index"],
         )
         return _convert_df_to_response(
@@ -77,18 +93,18 @@ def build_dataset_blueprint() -> Blueprint:
 
     @blueprint.route("/get_schema", methods=["POST"])
     def get_schema():
-        data = parse_req(request.get_json(force=True), required_fields=["dataset_name"])
+        data = parse_req(_json_body(request), required_fields=["dataset_name"])
         return jsonify(service.get_schema(dataset_name=data["dataset_name"]))
 
     @blueprint.route("/get_generic_data", methods=["POST"])
     def get_generic_data():
-        data = parse_req(request.get_json(force=True), required_fields=["dataset_name"])
+        data = parse_req(_json_body(request), required_fields=["dataset_name"])
         return jsonify(service.get_generic_data(dataset_name=data["dataset_name"]))
 
     @blueprint.route("/get_filtered_dataset", methods=["POST"])
     def get_filtered_dataset():
         data = parse_req(
-            request.get_json(force=True),
+            _json_body(request),
             required_fields=["dataset_name", "chunksize", "chunk_index"],
             optional_fields=[
                 "filters",
