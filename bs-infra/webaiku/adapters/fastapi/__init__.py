@@ -15,7 +15,7 @@ from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pandas import DataFrame
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from webaiku.adapters.fastapi.middleware import CodeStudioSubPathMiddleware
 from webaiku.constants import BS_API_PREFIX
@@ -33,11 +33,15 @@ class DatasetChunkRequest(BaseModel):
     chunksize: int
     chunk_index: int
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class DatasetNameRequest(BaseModel):
     """Model for dataset name request."""
 
     dataset_name: str
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class FilteredDatasetRequest(BaseModel):
@@ -51,6 +55,8 @@ class FilteredDatasetRequest(BaseModel):
     group_rows: Optional[list] = None
     sort_model: Optional[list] = None
     custom_filters: Optional[dict] = None
+
+    model_config = ConfigDict(extra="forbid")
 
 
 def _df_response(df: Optional[DataFrame]) -> Response:

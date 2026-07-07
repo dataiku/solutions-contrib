@@ -38,6 +38,8 @@ def using_dataset(
             _dataset = dataset
         elif isinstance(dataset, str):
             _dataset = self.project.get_dataset(dataset_name=dataset)
+        else:
+            raise WebaikuError("Unknown dataset argument")
         return func(self, _dataset, *args, **kwargs)
 
     return inner
