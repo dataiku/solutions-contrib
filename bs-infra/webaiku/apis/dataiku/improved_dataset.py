@@ -1,39 +1,42 @@
-#!/usr/bin/env python
-# encoding: utf-8
 # TODO : Remove this file, integrate filters directly to core api
-"""
-dataset.py : Interaction with DSS datasets
+"""dataset.py : Interaction with DSS datasets
 Copyright (c) 2013-2014 Dataiku SAS. All rights reserved.
 """
 
+import json
+import logging
+import os
+import uuid
+import warnings
 from typing import Optional
+
 import numpy as np
 from dataiku.base.utils import check_base_package_version
+from dataiku.core import default_project_key, flow, intercom, schema_handling
 from dataiku.core.dataset import Schema, create_sampling_argument, unique
-import warnings
-import logging
-import uuid
+
+from webaiku.errors import WebaikuError
+
+logger = logging.getLogger(__name__)
 
 try:
     import pandas as pd
 
     check_base_package_version(
-        pd, "pandas", "0.23.0", None, "DSS requires version 0.23 or above"
+        pd,
+        "pandas",
+        "0.23.0",
+        None,
+        "DSS requires version 0.23 or above",
     )  # keep the version number in sync with install-python-packages.sh
 except ImportError as e:
-    logging.exception("Pandas import failure")
+    logger.exception("Pandas import failure")
     warnings.warn(
         "Could not import pandas (%s). Pandas support will be disabled. To enable get_dataframe and other methods, please install the pandas package"
         % (e),
         Warning,
     )
 
-from dataiku.core import default_project_key
-import json, os
-
-# Module code
-from dataiku.core import flow, schema_handling
-from dataiku.core import intercom
 
 FULL_SAMPLING = {"samplingMethod": "FULL"}
 CSV_SEP = "\t"
@@ -58,23 +61,31 @@ warnings.filterwarnings("default", category=DeprecationWarning)
     END_OF_ITERATOR,
     TERMINATED,
 ) = range(
-    5
+    5,
 )  # we reached the generator last element.
 
 
 class Dataset:
-    """This is a handle to obtain readers and writers on a dataiku Dataset.
+    """Handle to obtain readers and writers on a Dataiku Dataset.
+
     From this Dataset class, you can:
 
-    * Read a dataset as a Pandas dataframe
-    * Read a dataset as a chunked Pandas dataframe
-    * Read a dataset row-by-row
-    * Write a pandas dataframe to a dataset
-    * Write a series of chunked Pandas dataframes to a dataset
-    * Write to a dataset row-by-row
-    * Edit the schema of a dataset"""
+    - Read a dataset as a Pandas dataframe
+    - Read a dataset as a chunked Pandas dataframe
+    - Read a dataset row-by-row
+    - Write a pandas dataframe to a dataset
+    - Write a series of chunked Pandas dataframes to a dataset
+    - Write to a dataset row-by-row
+    - Edit the schema of a dataset
+    """
 
-    def __init__(self, name, project_key=None, ignore_flow=False):
+    def __init__(
+        self,
+        name: str,
+        project_key: Optional[str] = None,
+        ignore_flow: bool = False,
+    ):
+        """Init ``Dataset`` instance."""
         self.name = name
         self.cols = None
         self.partitions = None
@@ -88,7 +99,7 @@ class Dataset:
         self.ignore_flow = ignore_flow
 
         # Flow mode, initialize partitions to read and write and read/write flags
-        if flow.FLOW is not None and ignore_flow == False:
+        if flow.FLOW is not None and not ignore_flow:
             for input_dataset in flow.FLOW["in"]:
                 if (
                     input_dataset["smartName"] == self.name
@@ -109,33 +120,26 @@ class Dataset:
                     if "partition" in output_dataset:
                         self.writePartition = output_dataset["partition"]
             if not self.readable and not self.writable:
-                raise Exception(
-                    "Dataset %s cannot be used : declare it as input or output of your recipe"
-                    % self.name
-                )
-            (self.project_key, self.short_name) = self.name.split(".", 1)
+                msg = f"Dataset {self.name} cannot be used: Declare it as input or output of your recipe."
+                raise WebaikuError(msg)
 
+            self.project_key, self.short_name = self.name.split(".", 1)
         else:
             if "." not in name:
                 try:
                     self.project_key = project_key or default_project_key()
                     self.short_name = name
                     self.name = self.project_key + "." + name
-                except:
-                    logging.exception("Failure happened")
-                    raise Exception(
-                        "Dataset %s is specified with a relative name, "
-                        "but no default project was found. Please use complete name"
-                        % self.name
-                    )
+                except Exception as e:
+                    logger.exception("Failure happened")
+                    msg = f"Dataset {self.name} is specified with a relative name, but no default project was found. Please use complete name."
+                    raise WebaikuError(msg) from e
             else:
-                # use gave a full name
-                (self.project_key, self.short_name) = self.name.split(".", 1)
+                # User gave a full name
+                self.project_key, self.short_name = self.name.split(".", 1)
                 if project_key is not None and self.project_key != project_key:
-                    raise ValueError(
-                        "Project key %s incompatible with fullname dataset %s."
-                        % (project_key, name)
-                    )
+                    msg = f"Project key {project_key} is incompatible with fullname dataset {name}."
+                    raise ValueError(msg)
             self.readable = True
             self.writable = True
             self.spec_item = {"appendMode": False}  # notebook always overwrites
@@ -143,12 +147,14 @@ class Dataset:
     @property
     def full_name(
         self,
-    ):
+    ) -> str:
+        """Return full project name."""
         return self.project_key + "." + self.short_name
 
     def _repr_html_(
         self,
-    ):
+    ) -> str:
+        """Return an HTML representation of the dataset for notebooks."""
         s = "Dataset[   <b>%s</b>   ]</br>" % self.name
         s += self.read_schema()._repr_html_()
         return s
@@ -175,7 +181,7 @@ class Dataset:
         if raise_if_empty and len(self.cols) == 0:
             raise Exception(
                 "No column in schema of %s."
-                " Have you set up the schema for this dataset?" % self.name
+                " Have you set up the schema for this dataset?" % self.name,
             )
         return Schema(
             self.cols,
@@ -192,10 +198,14 @@ class Dataset:
         read_session_id=None,
         filter=None,
     ):
+        """Open a streaming read of the dataset's data.
+
+        Returns the raw ``intercom`` stream call (a context manager).
+        """
         if not self.readable:
             raise Exception(
                 "You cannot read dataset %s, "
-                "it is not declared as an input" % self.name
+                "it is not declared as an input" % self.name,
             )
         if flow.FLOW is not None:
             add_env = {"DKU_FLOW": "1"}
@@ -214,7 +224,7 @@ class Dataset:
                 "fullDatasetName": self.full_name,
                 "script": json.dumps({"steps": self.preparation_steps}),
                 "requestedOutputSchema": json.dumps(
-                    self.preparation_requested_output_schema
+                    self.preparation_requested_output_schema,
                 ),
                 "contextProjectKey": self.preparation_context_project_key,
                 "sampling": json.dumps(sampling_params),
@@ -229,28 +239,28 @@ class Dataset:
                 err_msg="Failed to read prepared data",
             )
 
-        else:
-            data = {
-                "projectKey": self.project_key,
-                "datasetName": self.short_name,
-                "sampling": json.dumps(sampling_params)
-                if sampling_params is not None
-                else None,
-                "columns": ",".join(columns) if columns is not None else None,
-                "format": "tsv-excel-noheader",
-                "partitions": ",".join(self.read_partitions)
-                if self.read_partitions is not None
-                else None,
-                "readSessionId": read_session_id,
-                "filter": filter,
-            }
-            return intercom.jek_or_backend_stream_call(
-                "datasets/read-data/",
-                data=data,
-                err_msg="Failed to read dataset stream data",
-            )
+        data = {
+            "projectKey": self.project_key,
+            "datasetName": self.short_name,
+            "sampling": json.dumps(sampling_params)
+            if sampling_params is not None
+            else None,
+            "columns": ",".join(columns) if columns is not None else None,
+            "format": "tsv-excel-noheader",
+            "partitions": ",".join(self.read_partitions)
+            if self.read_partitions is not None
+            else None,
+            "readSessionId": read_session_id,
+            "filter": filter,
+        }
+        return intercom.jek_or_backend_stream_call(
+            "datasets/read-data/",
+            data=data,
+            err_msg="Failed to read dataset stream data",
+        )
 
-    def _verify_read(self, read_session_id):
+    def _verify_read(self, read_session_id) -> None:
+        """Confirm the streamed read for ``read_session_id`` completed cleanly."""
         intercom.jek_or_backend_void_call(
             "datasets/verify-read/",
             data={"readSessionId": read_session_id},
@@ -265,7 +275,15 @@ class Dataset:
         infer_with_pandas=False,
         bool_as_str=False,
         int_as_float=False,
-    ):
+    ) -> tuple:
+        """Derive pandas read parameters from a DSS schema.
+
+        Returns:
+            A ``(names, dtypes, parse_dates)`` tuple: the ordered column names,
+            the per-column pandas dtype mapping, and the date columns (or
+            ``False``) to forward to ``pandas.read_table``.
+
+        """
         names = []
         dtypes = {}
         for col in schema:
@@ -311,8 +329,13 @@ class Dataset:
         return (names, dtypes, parse_dates)
 
     def _get_dataframe_schema(
-        self, columns=None, parse_dates=True, infer_with_pandas=False, bool_as_str=False
+        self,
+        columns=None,
+        parse_dates=True,
+        infer_with_pandas=False,
+        bool_as_str=False,
     ):
+        """Return ``get_dataframe_schema_st`` for this dataset's schema."""
         if self.preparation_steps is not None:
             return Dataset.get_dataframe_schema_st(
                 self.preparation_requested_output_schema["columns"],
@@ -321,10 +344,13 @@ class Dataset:
                 infer_with_pandas,
                 bool_as_str,
             )
-        else:
-            return Dataset.get_dataframe_schema_st(
-                self.read_schema(), columns, parse_dates, infer_with_pandas, bool_as_str
-            )
+        return Dataset.get_dataframe_schema_st(
+            self.read_schema(),
+            columns,
+            parse_dates,
+            infer_with_pandas,
+            bool_as_str,
+        )
 
     def iter_dataframes(
         self,
@@ -346,11 +372,12 @@ class Dataset:
 
         Returns a generator over pandas dataframes.
 
-        Useful is the dataset doesn't fit in RAM."""
+        Useful if the dataset doesn't fit in RAM.
+        """
         if not self.readable:
             raise Exception(
                 "You cannot read dataset %s, "
-                "it is not declared as an input" % self.name
+                "it is not declared as an input" % self.name,
             )
         (names, dtypes, parse_date_columns) = self._get_dataframe_schema(
             columns=columns,

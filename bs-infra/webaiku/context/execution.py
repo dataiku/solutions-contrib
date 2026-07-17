@@ -1,10 +1,11 @@
-from enum import Enum
-import os
-from typing import Optional, List
 import inspect
-from webaiku.utils import find_relative_path
 import logging
+import os
+from enum import Enum
+from typing import Optional, Union
+
 from webaiku.errors import WebaikuError
+from webaiku.utils import find_relative_path
 
 # TODO : Add custom exception classes, and better handle errors
 
@@ -17,7 +18,7 @@ class ExecutionContext(str, Enum):
     DATAIKU_DSS_CODE_STUDIO = "DATAIKU_DSS_CODE_STUDIO"
 
 
-class Execution(object):
+class Execution:
     dss_env_var = "DIP_HOME"
     dss_code_studio_env_var = "DKU_CODE_STUDIO_BROWSER_PATH"
     dss_current_project_env_var = "DKU_CURRENT_PROJECT_KEY"
@@ -36,7 +37,7 @@ class Execution(object):
             logger.warning("Path for web application folder is not found")
 
         logger.info(
-            f"Web application execution context initilized with path {self.__exec_path}"
+            f"Web application execution context initialized with path {self.exec_path}",
         )
 
     @property
@@ -51,6 +52,17 @@ class Execution(object):
     def dss_current_project(self):
         return self.__dss_current_project
 
+    def code_studio_base(self, api_port: Union[int, str]) -> Optional[str]:
+        """Sub-path under which the app is proxied in a Code Studio.
+
+        Returns ``None`` outside the Code Studio context. The value comes from
+        the per-port ``DKU_CODE_STUDIO_BROWSER_PATH_<port>`` env var and is the
+        prefix each adapter must strip from incoming requests.
+        """
+        if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
+            return os.getenv(f"DKU_CODE_STUDIO_BROWSER_PATH_{api_port}")
+        return None
+
     def __find_context(self) -> ExecutionContext:
         if self.dss_env_var in os.environ:
             if self.dss_code_studio_env_var in os.environ:
@@ -59,18 +71,20 @@ class Execution(object):
         return ExecutionContext.LOCAL
 
     def __get_dss_current_project(self) -> Optional[str]:
-        if not self.context == ExecutionContext.LOCAL:
+        if self.context != ExecutionContext.LOCAL:
             return os.environ.get(self.dss_current_project_env_var)
         return None
 
-    def __get_root_paths(self) -> List[str]:
+    def __get_root_paths(self) -> list[str]:
         path_list = []
         if self.context == ExecutionContext.DATAIKU_DSS_CODE_STUDIO:
-            if not os.environ.get(self.dss_code_studio_project_lib_env_var) is None:
-                path_list.append(os.environ.get(self.dss_code_studio_project_lib_env_var))
+            if os.environ.get(self.dss_code_studio_project_lib_env_var) is not None:
+                path_list.append(
+                    os.environ.get(self.dss_code_studio_project_lib_env_var),
+                )
             else:
                 raise WebaikuError(
-                    "Synchronization of project lib versionned is necessary for the code studio template"
+                    "Synchronization of project-lib-versioned is necessary for the code studio template",
                 )
         elif self.context == ExecutionContext.DATAIKU_DSS:
             paths = os.environ.get(self.dss_python_path_env_var)
@@ -80,21 +94,23 @@ class Execution(object):
                 paths_splitted = paths.split(":")
                 for path in paths_splitted:
                     if target_directory in path:
-                        path_list.append(os.path.join(
-                            path.split(target_directory)[0],
-                            target_directory,
-                            self.dss_current_project,
-                        ))
+                        path_list.append(
+                            os.path.join(
+                                path.split(target_directory)[0],
+                                target_directory,
+                                self.dss_current_project,
+                            ),
+                        )
                 for path in paths_splitted:
                     if root_relative_path == path.split("/")[-1]:
                         path_list.append(path.rstrip(root_relative_path))
-                    
+
                 # Check if we are in the case of a plugin
                 plugin_target_directory = "python-lib"
                 for path in paths_splitted:
                     if path.endswith(plugin_target_directory):
-                        # You may create a folder DATA_DIR/plugins/dev/<plugin id>/resource/ 
-                        # to hold resources useful fo your plugin, 
+                        # You may create a folder DATA_DIR/plugins/dev/<plugin id>/resource/
+                        # to hold resources useful fo your plugin,
                         # e.g. data files; this method returns the path of this folder.
                         # root path is then the parent of the resource folder
                         plugin_resource = os.getenv("DKU_CUSTOM_RESOURCE_FOLDER")
@@ -113,8 +129,7 @@ class Execution(object):
                         exec_path = os.path.join(exec_path, self.prefix)
                     if os.path.exists(exec_path):
                         return exec_path
-                    else:
-                        logger.warning(f"{exec_path} path does not exist")
+                    logger.warning(f"{exec_path} path does not exist")
             except Exception as e:
                 raise e from None
 
@@ -130,7 +145,7 @@ class Execution(object):
             # can be autofixed in DSS new versions by reading the external libs and adding relative wabapps paths
             # TODO : Should it be auto-fixed
             raise WebaikuError(
-                f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder"
+                f"You should add {root_relative_path} to your pythonPath in external-libraries.json of the current project lib folder",
             )
 
         else:
@@ -156,7 +171,7 @@ class Execution(object):
 
     def __verify_exec_path(self) -> bool:
         try:
-            if (not self.exec_path is None) and os.path.exists(self.exec_path):
+            if (self.exec_path is not None) and os.path.exists(self.exec_path):
                 return True
             return False
         except Exception as e:
