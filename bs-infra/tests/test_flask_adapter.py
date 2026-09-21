@@ -18,6 +18,8 @@ from constants import (  # noqa: E402
     LIVE_APP_PATH_ENV,
     RELATIVE_PATH,
     SERVE_ROUTES,
+    UNSAFE_BASE_URLS,
+    VALID_BASE_URLS,
 )
 from flask import Blueprint, Flask  # noqa: E402
 
@@ -69,6 +71,27 @@ def test_serve_route_renders_index_under_dss(dss_env, fake_api):
     assert resp.status_code == 200
     assert resp.mimetype == "text/html"
     assert b'<base href="/backend/myapp/">' in resp.data
+
+
+@pytest.mark.parametrize("route", sorted(SERVE_ROUTES))
+@pytest.mark.parametrize("url", UNSAFE_BASE_URLS)
+def test_serve_rejects_unsafe_base_url(dss_env, fake_api, route, url):
+    app = _new_app()
+    WEBAIKU(app, RELATIVE_PATH, API_PORT)
+    resp = app.test_client().get(route, query_string={"URL": url})
+    assert resp.status_code == 400
+    assert resp.mimetype == "application/json"
+    assert resp.get_json() == {"error": "URL must be an absolute same-origin path."}
+
+
+@pytest.mark.parametrize("route", sorted(SERVE_ROUTES))
+@pytest.mark.parametrize("url", VALID_BASE_URLS)
+def test_serve_preserves_valid_base_url(dss_env, fake_api, route, url):
+    app = _new_app()
+    WEBAIKU(app, RELATIVE_PATH, API_PORT)
+    resp = app.test_client().get(route, query_string={"URL": url})
+    assert resp.status_code == 200
+    assert f'<base href="{url.rstrip("/")}/myapp/">'.encode() in resp.data
 
 
 def test_dataset_get_returns_json_frame(dss_env, fake_api):
