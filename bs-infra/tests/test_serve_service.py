@@ -1,8 +1,13 @@
 """Unit tests for the framework-free `ServeService` (base-tag rewriting)."""
 
+from html.parser import HTMLParser
 from types import SimpleNamespace
 
+import pytest
+from constants import UNSAFE_BASE_URLS, VALID_BASE_URLS
+
 from webaiku.core.serve import RenderedPage, ServeService
+from webaiku.errors import WebaikuBadRequestError
 
 
 def _service(exec_path):
@@ -73,3 +78,51 @@ def test_local_dev_without_url_arg_still_renders(tmp_path):
     # No URL arg (dev mode) -> still renders.
     assert page.found is True
     assert b"<base" in page.html
+
+
+@pytest.mark.parametrize("url", UNSAFE_BASE_URLS)
+def test_rejects_unsafe_base_url_before_reading_index(tmp_path, monkeypatch, url):
+    service = _service(tmp_path)
+    monkeypatch.setattr(
+        service, "_read_html_file", lambda: pytest.fail("invalid URL reached file read")
+    )
+    with pytest.raises(WebaikuBadRequestError):
+        service.render_index(url)
+
+
+@pytest.mark.parametrize("url", VALID_BASE_URLS + ["/"])
+def test_preserves_same_origin_mount_path(tmp_path, url):
+    app_dir = _make_index(tmp_path, "<html><head></head></html>")
+    page = _service(app_dir).render_index(url)
+    expected = url.rstrip("/") + "/myapp/"
+    assert f'<base href="{expected}">'.encode() in page.html
+
+
+def test_static_folder_name_is_encoded_as_one_url_segment(tmp_path):
+    app_dir = tmp_path / 'my app"&?#'
+    app_dir.mkdir()
+    (app_dir / "index.html").write_text("<html><head></head></html>")
+    page = _service(app_dir).render_index("/backend")
+    assert b'<base href="/backend/my%20app%22%26%3F%23/">' in page.html
+
+
+@pytest.mark.parametrize("head", ["<head></head>", ""])
+def test_base_attribute_escapes_markup_and_preserves_literal_backslashes(tmp_path, head):
+    # Defense in depth at the HTML sink, independent of URL validation.
+    url = '/assets/" data-injected="yes&value=\\g<0>'
+    html = _service(tmp_path)._make_base_tag(url, f"<html>{head}</html>".encode())
+
+    class Elements(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.tags = []
+
+        def handle_starttag(self, tag, attrs):
+            self.tags.append((tag, attrs))
+
+    parsed = Elements()
+    parsed.feed(html.decode())
+    assert [attrs for tag, attrs in parsed.tags if tag == "base"] == [
+        [("href", url + "/")]
+    ]
+    assert all(tag in {"html", "head", "base"} for tag, _ in parsed.tags)

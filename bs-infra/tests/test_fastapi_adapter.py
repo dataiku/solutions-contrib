@@ -17,6 +17,8 @@ from constants import (  # noqa: E402
     LIVE_APP_PATH_ENV,
     RELATIVE_PATH,
     SERVE_ROUTES,
+    UNSAFE_BASE_URLS,
+    VALID_BASE_URLS,
 )
 from fastapi import APIRouter, FastAPI  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
@@ -29,7 +31,10 @@ def _new_app():
 
 
 def _paths(app):
-    return {getattr(route, "path", None) for route in app.routes}
+    # All endpoints checked here are included in OpenAPI. Use its public path
+    # map: newer FastAPI versions keep included routers as wrappers in
+    # app.routes, so reading each top-level route.path misses their endpoints.
+    return set(app.openapi()["paths"])
 
 
 # --- Registration ----------------------------------------------------------
@@ -69,6 +74,29 @@ def test_serve_route_renders_index_under_dss(dss_env, fake_api):
     assert resp.status_code == 200
     assert resp.headers["content-type"].startswith("text/html")
     assert b'<base href="/backend/myapp/">' in resp.content
+
+
+@pytest.mark.parametrize("route", sorted(SERVE_ROUTES))
+@pytest.mark.parametrize("url", UNSAFE_BASE_URLS)
+def test_serve_rejects_unsafe_base_url(dss_env, fake_api, route, url):
+    app = _new_app()
+    WEBAIKU(app, RELATIVE_PATH, API_PORT)
+    with TestClient(app) as client:
+        resp = client.get(route, params={"URL": url})
+    assert resp.status_code == 400
+    assert resp.headers["content-type"].startswith("application/json")
+    assert resp.json() == {"error": "URL must be an absolute same-origin path."}
+
+
+@pytest.mark.parametrize("route", sorted(SERVE_ROUTES))
+@pytest.mark.parametrize("url", VALID_BASE_URLS)
+def test_serve_preserves_valid_base_url(dss_env, fake_api, route, url):
+    app = _new_app()
+    WEBAIKU(app, RELATIVE_PATH, API_PORT)
+    with TestClient(app) as client:
+        resp = client.get(route, params={"URL": url})
+    assert resp.status_code == 200
+    assert f'<base href="{url.rstrip("/")}/myapp/">'.encode() in resp.content
 
 
 def test_dataset_get_returns_json_frame(dss_env, fake_api):
