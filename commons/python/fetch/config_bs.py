@@ -1,7 +1,11 @@
 
 from os.path import expanduser, exists, join, dirname, abspath
 import os
+import re
 from enum import Enum
+from urllib.parse import quote
+
+from werkzeug.exceptions import BadRequest
 
 
 # TODO : Resolve https / http replacement 
@@ -66,16 +70,36 @@ class ConfigBs(object):
             return python_lib_path.split("/")[-1]
     
     @classmethod
+    def _backend_url(cls, url_arg):
+        """Accept only a root-relative backend mount on the current origin.
+
+        Flask has already decoded the query value. Reject remaining escapes
+        and ambiguous syntax rather than trying to normalize untrusted input.
+        Missing/empty values use the same root mount as the legacy empty URL.
+        """
+        if not url_arg:
+            return "/"
+        if (
+            re.fullmatch(r"/[A-Za-z0-9._~/-]*", url_arg) is None
+            or "//" in url_arg
+            or any(part in {".", ".."} for part in url_arg.split("/"))
+        ):
+            # Werkzeug's HTTP exception stops rendering and Flask returns 400.
+            # "URL" is the parameter name; the message never echoes its value.
+            raise BadRequest("URL must be an absolute same-origin path.")
+        return url_arg
+
+    @classmethod
     def __get_lib_backend_url(cls,request):
         dir_name = cls.__get_dir_name()
-        lib_url = "/"
         if cls.__get_env_mode() == EnvMode.DSS.value:
-            lib_url += request.args.get(cls.arg_url_name)[1:] + dir_name
-            
+            backend_url = cls._backend_url(request.args.get(cls.arg_url_name))
         else:
-            lib_url += dir_name
-        
-        return lib_url
+            # Local and Code Studio development ignore the supplied URL.
+            backend_url = "/"
+        # The static mount is /python in DSS. Its name is one URL segment;
+        # append it without depending on a caller's trailing slash.
+        return backend_url.rstrip("/") + "/" + quote(dir_name, safe="")
     
     @classmethod
     def static_folder(cls):
@@ -107,4 +131,3 @@ class ConfigBs(object):
 if __name__ == "__main__":
     project_name = ConfigBs.get_project_name()
     print(project_name)
-    
